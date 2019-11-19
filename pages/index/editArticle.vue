@@ -1,0 +1,113 @@
+<template>
+	<view class="content">
+		<scroll-view scroll-y="true">
+			<view class="editBox">
+				<view class="title"><input type="text" placeholder="请输入标题" v-model="title" /></view>
+				<view class="textarea" >
+					<!-- <textarea id="editDist" placeholder="请输入正文" v-model="articleMsg"></textarea> -->
+					<editor id="editDist" placeholder="请输入正文"></editor>
+				</view>
+				<view class="pic">
+					<view class="pic" v-for="(item, index) in imgList" :key="index">
+						<image :src="item" mode="widthFix" @tap="showImg(index)"></image>
+						<icon class="iconfont icon-clear" @tap="deleteImg(index)"></icon>
+					</view>
+					<view class="upload" @tap="uploadPic"><image src="../../static/images/defaultpro.png" mode="widthFix"></image></view>
+				</view>
+			</view>
+		</scroll-view>
+		<view class="comfootBtn">发布</view>
+	</view>
+</template>
+
+<script>
+export default {
+	data() {
+		return {
+			articleMsg: '',
+			title: '',
+			imgList: []
+		};
+	},
+	methods: {
+		getPic() {
+			let img = this.$acFrame.Util.uploadPic()
+			this.imgList.push(img)
+		},
+		deleteImg(index){
+			
+		},
+		showImg(index){
+			
+		}
+	}
+};
+</script>
+
+<style lang="less">
+page,
+.content {
+	height: 100%;
+	background: #fff;
+}
+.editBox {
+	padding: 0 20rpx;
+	overflow: hidden;
+}
+.title {
+	height: 100rpx;
+	line-height: 100rpx;
+	border-bottom: 1px dashed #efefef;
+	input {
+		line-height: 100rpx;
+		height: 100%;
+		width: 100%;
+		font-size: 40rpx;
+	}
+}
+scroll-view {
+	height: calc(100% - 80rpx);
+}
+.textarea {
+	margin-top: 20rpx;
+	textarea {
+		width: 100%;
+		height: 400rpx;
+		border-radius: 0.3em;
+		background: #eee;
+		padding: 20rpx;
+		box-sizing: border-box;
+	}
+}
+.pic {
+	overflow: hidden;
+	width: 105%;
+	margin-top: 40rpx;
+	.pic {
+		float: left;
+		width: 100rpx;
+		height: 100rpx;
+		overflow: hidden;
+		margin-right: 20rpx;
+		margin-bottom: 20rpx;
+		position:relative;
+		icon{
+			position: absolute;
+			top:0;
+			right:0;
+			width: 60rpx;
+			height:60rpx;
+			text-align: center;
+			color:#b40000;
+		}
+	}
+	.upload {
+		float: left;
+		width: 100rpx;
+		height: 100rpx;
+		overflow: hidden;
+		margin-right: 20rpx;
+		margin-bottom: 20rpx;
+	}
+}
+</style>

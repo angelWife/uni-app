@@ -1,0 +1,88 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "首页"
+			}
+		},
+		{
+			"path": "pages/index/commentDetail",
+			"style": {
+				"navigationBarTitleText": "正文"
+			}
+		},
+		{
+			"path": "pages/index/reward",
+			"style": {
+				"navigationBarTitleText": "打赏"
+			}
+		},
+		{
+			"path": "pages/myshop/index",
+			"style": {
+				"navigationBarTitleText": "小店集市"
+			}
+		},
+		{
+			"path": "pages/mycenter/index",
+			"style": {
+				"navigationBarTitleText": "我的"
+			}
+		}
+	    ,{
+            "path" : "pages/index/editArticle",
+            "style" : {
+				"navigationBarTitleText": "写文章"
+			}
+        }
+        ,{
+            "path" : "pages/index/posting",
+            "style" : {
+				"navigationBarTitleText": "发帖"
+			}
+        }
+        ,{
+            "path" : "pages/index/report",
+            "style" : {"navigationBarTitleText": "举报"}
+        }
+        ,{
+            "path" : "pages/index/ranking",
+            "style" : {"navigationBarTitleText": "选择连接"}
+        }
+        ,{
+            "path" : "pages/myshop/shopDetail",
+            "style" : {}
+        }
+    ],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#ffffff",
+		"backgroundColor": "#666"
+	},
+	"tabBar": {
+		"color": "#7A7E83",
+		"selectedColor": "#3cc51f",
+		"borderStyle": "black",
+		"backgroundColor": "#f8f8f8",
+		"list": [{
+				"pagePath": "pages/index/index",
+				"iconPath": "static/images/photo.png",
+				"selectedIconPath": "static/images/photo.png",
+				"text": "首页"
+			},
+			{
+				"pagePath": "pages/myshop/index",
+				"iconPath": "static/images/shop.png",
+				"selectedIconPath": "static/images/shop.png",
+				"text": "小店集市"
+			}, {
+				"pagePath": "pages/mycenter/index",
+				"iconPath": "static/images/setting.png",
+				"selectedIconPath": "static/images/setting.png",
+				"text": "我的"
+			}
+		]
+	}
+}
