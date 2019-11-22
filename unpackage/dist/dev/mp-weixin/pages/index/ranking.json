@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "选择连接",
+  "usingComponents": {
+    "product-list": "/components/product-list",
+    "rank-list": "/components/ranking-item"
+  }
+}

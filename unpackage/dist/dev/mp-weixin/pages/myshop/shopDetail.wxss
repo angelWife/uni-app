@@ -1,0 +1,133 @@
+page,
+.content {
+  height: 100%;
+  border: 0;
+  background: #eee;
+}
+.shopHead {
+  background: rgba(0, 0, 0, 0.2) url(http://www.mypcera.com/star/mm/uploadfile/201005/4/A142330696.jpg) center center no-repeat;
+  border-bottom-left-radius: 1em;
+  border-bottom-right-radius: 1em;
+  overflow: hidden;
+  background-size: 100% auto;
+  color: #fff;
+  padding: 0 20rpx 20rpx;
+}
+.shopHead .shopMsg {
+  padding-top: 20rpx;
+}
+.shopHead .shopMsg .title {
+  font-size: 36rpx;
+}
+.shopHead .shopMsg .name {
+  width: 60%;
+  padding-top: 10rpx;
+}
+.shopHead .shopMsg .name .text {
+  height: 76rpx;
+}
+.shopHead .shopMsg .name .btn {
+  margin-top: 10rpx;
+}
+.shopHead .shopMsg .name .btn .contact {
+  border: 1px solid #fff;
+  color: #fff;
+  background: none;
+}
+.shopHead .shopMsg .name .btn .contact::after {
+  border: none;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+.shopHead .shopMsg button {
+  width: 160rpx;
+}
+.shopHead .shopMsg .right {
+  margin-left: 20rpx;
+  text-align: center;
+}
+.shopHead .shopMsg .right .pic image {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 120rpx;
+}
+.shopHead .shopMsg .right .btn {
+  margin-top: 20rpx;
+}
+.shopHead .shopMsg .right .btn button {
+  border: 1px solid #b40000;
+}
+.shopHead .shopCoupon {
+  margin-top: 20rpx;
+  height: 100rpx;
+  width: 100%;
+}
+.shopHead .shopCoupon scroll-view {
+  white-space: nowrap;
+  height: 100%;
+  overflow: hidden;
+}
+.shopHead .shopCoupon scroll-view image {
+  width: 100px;
+  margin-right: 20rpx;
+}
+.shopHead .shopCoupon scroll-view image:last-child {
+  margin-right: 0;
+}
+.shopNav {
+  padding: 20rpx;
+  overflow: hidden;
+}
+.shopNav .item {
+  width: 25%;
+  float: left;
+  text-align: center;
+  position: relative;
+}
+.shopNav .item .name {
+  display: inline-block;
+  height: 40rpx;
+  line-height: 40rpx;
+  border-bottom: 2px solid #eee;
+}
+.shopNav .item.active .name {
+  border-color: #b40000;
+  color: #b40000;
+}
+.shopNav .item .sanjiao {
+  position: absolute;
+  height: 100%;
+  right: 20%;
+  top: 0;
+  width: 20rpx;
+}
+.shopNav .item .sanjiao .up {
+  position: absolute;
+  right: 0;
+  top: 10rpx;
+  width: 0;
+  height: 0;
+  border-left: 10rpx solid transparent;
+  border-right: 10rpx solid transparent;
+  border-bottom: 10rpx solid #999;
+}
+.shopNav .item .sanjiao .up.red {
+  border-bottom-color: #b40000;
+}
+.shopNav .item .sanjiao .down {
+  position: absolute;
+  right: 0;
+  bottom: 10rpx;
+  width: 0;
+  height: 0;
+  border-left: 10rpx solid transparent;
+  border-right: 10rpx solid transparent;
+  border-top: 10rpx solid #999;
+}
+.shopNav .item .sanjiao .down.red {
+  border-top-color: #b40000;
+}
+.shopList {
+  height: calc(100% - 450rpx);
+}
+

@@ -1,0 +1,151 @@
+.listItem {
+  padding: 20rpx 24rpx;
+  border-bottom: 1px solid #efefef;
+}
+.listItem .item-head .img {
+  margin-right: 20rpx;
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 100rpx;
+  overflow: hidden;
+}
+.listItem .item-head .img image {
+  width: 100%;
+}
+.listItem .item-head .head-msg {
+  line-height: 50rpx;
+}
+.listItem .item-head .head-msg text {
+  float: left;
+  margin-right: 20rpx;
+}
+.listItem .item-head .head-msg .name {
+  max-width: 240rpx;
+  white-space: nowrap;
+  overflow: hidden;
+  -o-text-overflow: ellipsis;
+     text-overflow: ellipsis;
+}
+.listItem .item-head .head-msg .rank {
+  border-radius: 40rpx;
+  padding: 0 16rpx;
+  background: #46d88c;
+  color: #ffffff;
+  font-size: 26rpx;
+}
+.listItem .item-head .head-msg .shop {
+  border-radius: 40rpx;
+  padding: 0 16rpx;
+  background: #ffaf43;
+  color: #ffffff;
+  font-size: 26rpx;
+}
+.listItem .item-head .timer text {
+  float: left;
+  margin-right: 20rpx;
+}
+.listItem .item-head .timer .mark {
+  font-size: 22rpx;
+  border-radius: 30rpx;
+  line-height: 32rpx;
+  padding: 0 16rpx;
+  border: 1px solid #b40000;
+  color: #b40000;
+  margin-top: 10rpx;
+}
+.listItem .followBox {
+  height: 100rpx;
+  padding-top: 5rpx;
+}
+.listItem .followBox .follow {
+  width: 100rpx;
+  text-align: center;
+  display: inline-block;
+  height: 40rpx;
+  line-height: 40rpx;
+  border: 1px solid #bfbfbf;
+  font-size: 26rpx;
+  border-radius: 0.2em;
+  color: #999;
+}
+.listItem .followBox .follow.active {
+  color: #fff;
+  background: #b40000;
+  border-color: #b40000;
+}
+.listItem .articalBox {
+  margin: 20rpx auto;
+}
+.listItem .articalBox .msg text {
+  display: inline;
+}
+.listItem .articalBox .msg .name {
+  margin-right: 10rpx;
+}
+.listItem .articalBox .msg .from {
+  margin-left: 10rpx;
+}
+.listItem .articalBox .a_pic {
+  width: 160rpx;
+  margin-right: 20rpx;
+}
+.listItem .articalBox .a_main {
+  text-align: justify;
+  width: 70%;
+}
+.listItem .articalBox .a_main .msg {
+  margin-top: 4rpx;
+}
+.listItem .articalBox .lookPic {
+  display: inline-block;
+  margin-left: 20rpx;
+}
+.listItem .articalBox .lookPic icon {
+  margin-right: 10rpx;
+}
+.listItem .imgList {
+  margin: 0 -10rpx;
+}
+.listItem .imgList .imgItem {
+  float: left;
+  width: 30.55%;
+  margin: 0 10rpx 20rpx;
+  background: #f1f1f1;
+}
+.listItem .imgList .imgItem image {
+  width: 100%;
+}
+.listItem .adventBox {
+  background: #efefef;
+  margin-bottom: 20rpx;
+  padding: 16rpx 20rpx 16rpx 16rpx;
+}
+.listItem .adventBox .p_main {
+  width: 150px;
+  padding: 0 20rpx;
+}
+.listItem .adventBox .p_main text {
+  display: block;
+}
+.listItem .adventBox .p_pic {
+  width: 80rpx;
+}
+.listItem .itemOperBox {
+  text-align: center;
+  line-height: 60rpx;
+  font-size: 30rpx;
+  color: #999;
+}
+.listItem .itemOperBox .iconfont {
+  margin-right: 10rpx;
+  font-size: 40rpx;
+  position: relative;
+  top: 4rpx;
+}
+.listItem .adventPicBox .adventPic {
+  margin: 20rpx 0;
+}
+.listItem .adventPicBox .addventBtn {
+  margin: 20rpx 0;
+}
+
