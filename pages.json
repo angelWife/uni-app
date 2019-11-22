@@ -54,6 +54,10 @@
             "path" : "pages/myshop/shopDetail",
             "style" : {}
         }
+        ,{
+            "path" : "pages/myshop/productDetail",
+            "style" : {"navigationBarTitleText": "商品详情"}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

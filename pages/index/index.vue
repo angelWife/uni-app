@@ -30,26 +30,22 @@
 						<icon class="iconfont icon-delete"></icon>
 					</view>
 					<view class="h_list clearfix">
-						<block v-for="(item,index) in histroySearch" :key="index">
-							<view class="item">{{item}}</view>
+						<block v-for="(item, index) in histroySearch" :key="index">
+							<view class="item">{{ item }}</view>
 						</block>
 					</view>
 				</view>
 				<view class="hotSearch">
-					<view class="title">
-						<text>热门搜索</text>
-					</view>
+					<view class="title"><text>热门搜索</text></view>
 					<view class="h_list clearfix">
-						<block v-for="(item,index) in hotSearch" :key="index">
-							<view class="item">{{item}}</view>
+						<block v-for="(item, index) in hotSearch" :key="index">
+							<view class="item">{{ item }}</view>
 						</block>
 					</view>
 				</view>
 			</view>
 			<view class="searchList" v-else>
-				<scroll-view class="myscroll" scroll-y="true" @scrolltolower="loadMoreData">
-					<commentItem :dataList="dataList"></commentItem>
-				</scroll-view>
+				<scroll-view class="myscroll" scroll-y="true" @scrolltolower="loadMoreData"><commentItem :dataList="dataList"></commentItem></scroll-view>
 				<view class="noData flex f-row just-con-c item-center">
 					<view class="text-center">
 						<image src="/static/images/defaultpro.png" mode=""></image>
@@ -67,9 +63,7 @@
 				</block>
 			</view>
 			<view class="list-content">
-				<scroll-view class="myscroll" scroll-y="true" @scrolltolower="loadMoreData">
-					<commentItem :dataList="dataList"></commentItem>
-			    </scroll-view>
+				<scroll-view class="myscroll" scroll-y="true" @scrolltolower="loadMoreData"><commentItem :dataList="dataList"></commentItem></scroll-view>
 			</view>
 		</view>
 	</view>
@@ -127,9 +121,9 @@ export default {
 					createTime: '09-21'
 				}
 			],
-			histroySearch:["苹果的nfc怎么打开","王者的积分战队怎么玩的流","苹果手机被锁住了怎么办"],
-			hotSearch:["四大名著","护肤品","女士口红","女士香水","怎么让孩子听话"],
-			nosearch:false
+			histroySearch: ['苹果的nfc怎么打开', '王者的积分战队怎么玩的流', '苹果手机被锁住了怎么办'],
+			hotSearch: ['四大名著', '护肤品', '女士口红', '女士香水', '怎么让孩子听话'],
+			nosearch: false
 		};
 	},
 	onLoad() {
@@ -155,8 +149,8 @@ export default {
 	onShareAppMessage() {
 		uni.showShareMenu();
 	},
-	onHide(){
-		this.showOper = false
+	onHide() {
+		this.showOper = false;
 	},
 	methods: {
 		searchClick() {
@@ -231,7 +225,7 @@ page {
 			right: 0;
 			border-radius: 0.3em;
 			box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-			background:#2c2c2c;
+			background: #2c2c2c;
 			.item {
 				height: 60rpx;
 				line-height: 60rpx;
@@ -241,20 +235,19 @@ page {
 					color: #fff;
 					margin-right: 10rpx;
 				}
-				&:hover{
+				&:hover {
 					background: #4c4c4c;
 				}
 			}
-			.sanjiao{
-				position:absolute;
-				right:20rpx;
-				top:-6rpx;
-				width:0;
-				   height:0;
-				   border-left:10rpx solid transparent;
-				   border-right:10rpx solid transparent;
-				   border-bottom:10rpx solid #2c2c2c;
-				
+			.sanjiao {
+				position: absolute;
+				right: 20rpx;
+				top: -6rpx;
+				width: 0;
+				height: 0;
+				border-left: 10rpx solid transparent;
+				border-right: 10rpx solid transparent;
+				border-bottom: 10rpx solid #2c2c2c;
 			}
 		}
 	}
@@ -293,56 +286,56 @@ page {
 		}
 	}
 }
-.resBox{
+.resBox {
 	height: calc(100% - 90rpx);
-	.title{
-		padding:0 20rpx;
-		font-size:30rpx;
+	.title {
+		padding: 0 20rpx;
+		font-size: 30rpx;
 		line-height: 60rpx;
-		icon{
-			float:right;
-			color:#999;
+		icon {
+			float: right;
+			color: #999;
 		}
 	}
-	.histroy{
-		margin-top:10rpx;
-		.h_list{
-			font-size:26rpx;
-			.item{
-				float:left;
+	.histroy {
+		margin-top: 10rpx;
+		.h_list {
+			font-size: 26rpx;
+			.item {
+				float: left;
 				width: 50%;
-				padding:10rpx 20rpx;
+				padding: 10rpx 20rpx;
 				overflow: hidden;
 				text-overflow: ellipsis;
 				white-space: nowrap;
-				&:nth-child(2n){
-					border-left:1px solid #efefef;
+				&:nth-child(2n) {
+					border-left: 1px solid #efefef;
 				}
 			}
 		}
 	}
-		
-	.hotSearch{
-		margin-top:10rpx;
-		.h_list{
-			font-size:24rpx;
-			padding:0 10rpx;
-			.item{
-				float:left;
+
+	.hotSearch {
+		margin-top: 10rpx;
+		.h_list {
+			font-size: 24rpx;
+			padding: 0 10rpx;
+			.item {
+				float: left;
 				background: #eeeeee;
-				color:#999;
+				color: #999;
 				line-height: 40rpx;
-				padding:0 10rpx;
-				border-radius:0.3em;
-				margin:10rpx;
+				padding: 0 10rpx;
+				border-radius: 0.3em;
+				margin: 10rpx;
 			}
 		}
 	}
-    .searchList{
+	.searchList {
 		height: 100%;
 	}
-	.noData{
-		height:100%;
+	.noData {
+		height: 100%;
 	}
 }
 </style>
