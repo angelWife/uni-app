@@ -30,6 +30,9 @@ button {
 	&.radiuBtn {
 		border-radius: 60rpx;
 	}
+	&.noradius{
+		border-radius: 0;
+	}
 }
 .pagebg {
 	background: #eeeeee;
@@ -116,6 +119,36 @@ button {
 	background: #b40000;
 	font-size: 30rpx;
 	letter-spacing: 5px;
+}
+.comNumber{
+	border:1px solid #ccc;
+	border-radius:0.3em;
+	height:74rpx;
+	line-height: 70rpx;
+	overflow: hidden;
+	input{
+		float:left;
+		width:100rpx;
+		line-height: 70rpx;
+		height:70rpx;
+		background: #fff;
+		border:none;
+		border-left:1px solid #ccc;
+		border-right:1px solid #ccc;
+		text-align: center;
+	}
+	.iconfont{
+		float:left;
+		background: #efefef;
+		width: 70rpx;
+		line-height:70rpx;
+		height:70rpx;
+		text-align:center;
+		color:#fff;
+		&.touch{
+			background: #ccc;
+		}
+	}
 }
 icon.remove {
 	position: absolute;
