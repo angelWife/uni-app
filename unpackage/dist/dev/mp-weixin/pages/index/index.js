@@ -195,12 +195,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
-
-
-
-
-
 {
   components: {
     commentItem: commentItem },
@@ -251,8 +245,8 @@ __webpack_require__.r(__webpack_exports__);
       '09-21'), _ref)],
 
 
-      histroySearch: ["苹果的nfc怎么打开", "王者的积分战队怎么玩的流", "苹果手机被锁住了怎么办"],
-      hotSearch: ["四大名著", "护肤品", "女士口红", "女士香水", "怎么让孩子听话"],
+      histroySearch: ['苹果的nfc怎么打开', '王者的积分战队怎么玩的流', '苹果手机被锁住了怎么办'],
+      hotSearch: ['四大名著', '护肤品', '女士口红', '女士香水', '怎么让孩子听话'],
       nosearch: false };
 
   },

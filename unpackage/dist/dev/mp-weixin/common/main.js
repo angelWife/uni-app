@@ -94,18 +94,14 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0; //
-var _default =
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default =
 {
   globalData: {},
-
-
   onLaunch: function onLaunch() {
     console.log('App Launch');
   },
   onShow: function onShow() {
     console.log('App Show');
-
   },
   onHide: function onHide() {
     console.log('App Hide');

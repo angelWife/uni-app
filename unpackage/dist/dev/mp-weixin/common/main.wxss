@@ -31,6 +31,10 @@ button.radiuBtn {
 .blod {
   font-weight: 600;
 }
+.imgCirc {
+  border-radius: 100%;
+  overflow: hidden;
+}
 /*个人新增*/
 .float-left {
   float: left;
@@ -53,7 +57,7 @@ button.radiuBtn {
 .clearfix:after {
   display: block;
   clear: both;
-  content: "";
+  content: '';
 }
 .border-box {
   box-sizing: border-box;
@@ -150,6 +154,11 @@ button[type='red'] {
   background: #b40000 !important;
   color: #fff !important;
 }
+button[type='red']::after {
+  border: none !important;
+  -webkit-box-shadow: none !important;
+          box-shadow: none !important;
+}
 button[type='rednull'] {
   background: none !important;
   color: #b40000 !important;
@@ -168,9 +177,24 @@ button[type='text']::after {
   -webkit-box-shadow: none !important;
           box-shadow: none !important;
 }
+button[type='orange'] {
+  background: #ff9d19 !important;
+  color: #fff !important;
+  border: none;
+}
+button[type='orange']::after {
+  border: none !important;
+  -webkit-box-shadow: none !important;
+          box-shadow: none !important;
+}
 button[size='mini'] {
   font-size: 26rpx !important;
   line-height: 2;
+}
+button[size='mini']::after {
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  border: 0;
 }
 /*flex布局*/
 .flex {

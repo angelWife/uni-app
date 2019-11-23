@@ -13,12 +13,21 @@ page,
   color: #fff;
   padding: 0 20rpx 20rpx;
 }
+.shopHead .shopMsg {
+  padding-top: 20rpx;
+}
+.shopHead .shopMsg .title {
+  font-size: 36rpx;
+}
 .shopHead .shopMsg .name {
   width: 60%;
   padding-top: 10rpx;
 }
+.shopHead .shopMsg .name .text {
+  height: 76rpx;
+}
 .shopHead .shopMsg .name .btn {
-  text-align: center;
+  margin-top: 10rpx;
 }
 .shopHead .shopMsg .name .btn .contact {
   border: 1px solid #fff;
@@ -38,12 +47,15 @@ page,
   text-align: center;
 }
 .shopHead .shopMsg .right .pic image {
-  width: 100rpx;
-  height: 100rpx;
-  border-radius: 100rpx;
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 120rpx;
 }
 .shopHead .shopMsg .right .btn {
   margin-top: 20rpx;
+}
+.shopHead .shopMsg .right .btn button {
+  border: 1px solid #b40000;
 }
 .shopHead .shopCoupon {
   margin-top: 20rpx;
@@ -59,6 +71,9 @@ page,
   width: 100px;
   margin-right: 20rpx;
 }
+.shopHead .shopCoupon scroll-view image:last-child {
+  margin-right: 0;
+}
 .shopNav {
   padding: 20rpx;
   overflow: hidden;
@@ -67,6 +82,7 @@ page,
   width: 25%;
   float: left;
   text-align: center;
+  position: relative;
 }
 .shopNav .item .name {
   display: inline-block;
@@ -77,5 +93,41 @@ page,
 .shopNav .item.active .name {
   border-color: #b40000;
   color: #b40000;
+}
+.shopNav .item .sanjiao {
+  position: absolute;
+  height: 100%;
+  right: 20%;
+  top: 0;
+  width: 20rpx;
+}
+.shopNav .item .sanjiao .up {
+  position: absolute;
+  right: 0;
+  top: 10rpx;
+  width: 0;
+  height: 0;
+  border-left: 10rpx solid transparent;
+  border-right: 10rpx solid transparent;
+  border-bottom: 10rpx solid #999;
+}
+.shopNav .item .sanjiao .up.red {
+  border-bottom-color: #b40000;
+}
+.shopNav .item .sanjiao .down {
+  position: absolute;
+  right: 0;
+  bottom: 10rpx;
+  width: 0;
+  height: 0;
+  border-left: 10rpx solid transparent;
+  border-right: 10rpx solid transparent;
+  border-top: 10rpx solid #999;
+}
+.shopNav .item .sanjiao .down.red {
+  border-top-color: #b40000;
+}
+.shopList {
+  height: calc(100% - 450rpx);
 }
 

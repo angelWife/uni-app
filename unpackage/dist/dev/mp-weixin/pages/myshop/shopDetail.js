@@ -95,6 +95,12 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
 
 
 
+
+
+
+
+
+
 {
   components: {
     ProductList: ProductList },
@@ -104,10 +110,30 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
       tabs: [{ name: '首页', choose: true }, { name: '销量', choose: false }, { name: '新品', choose: false }, { name: '价格', choose: false }],
       dataList: [{ name: "这边的是产品的名称，最多显示两行，超出两行的省略号", price: '52.00', salesNum: 21623, pic: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1574140134898&di=9b8d75803e617d449499df2f5a8d300f&imgtype=0&src=http%3A%2F%2Fm.360buyimg.com%2Fpop%2Fjfs%2Ft24241%2F145%2F1818221682%2F18886%2F71aac218%2F5b696accN052717a7.jpg' },
       { name: "韩版新款复古水晶耳饰饰品欧美时尚高档小香耳钉耳环批发", price: '7.50', salesNum: 152000, pic: 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2786988750,209248222&fm=15&gp=0.jpg' },
-      { name: "溢彩水彩手帐本随身旅行绘画皮面便携手账本300g中粗纹进口水彩纸", price: '7.50', salesNum: 152000, pic: 'https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=123919148,3561097999&fm=15&gp=0.jpg' }] };
-
+      { name: "溢彩水彩手帐本随身旅行绘画皮面便携手账本300g中粗纹进口水彩纸", price: '7.50', salesNum: 152000, pic: 'https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=123919148,3561097999&fm=15&gp=0.jpg' }],
+      sortType: 'desc' //asc
+    };
   },
-  methods: {} };exports.default = _default;
+  methods: {
+    clickBar: function clickBar(ind) {
+      var choose = this.tabs[ind].choose;
+      if (choose) {
+        if (this.sortType == 'asc') {
+          this.sortType = 'desc';
+        } else {
+          this.sortType = 'asc';
+        }
+      } else {
+        this.sortType = 'desc';
+      }
+      this.tabs.filter(function (v, i) {
+        if (i == ind) {
+          v.choose = true;
+        } else {
+          v.choose = false;
+        }
+      });
+    } } };exports.default = _default;
 
 /***/ }),
 

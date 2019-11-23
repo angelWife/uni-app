@@ -1,0 +1,55 @@
+@charset "UTF-8";
+.uni-countdown {
+  padding: 2rpx 0;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-flex-wrap: nowrap;
+      -ms-flex-wrap: nowrap;
+          flex-wrap: nowrap;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+.uni-countdown__splitor {
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  line-height: 44rpx;
+  padding: 0 5rpx;
+  font-size: 28rpx;
+}
+.uni-countdown__splitor.noneStyle {
+  line-height: 20rpx;
+  padding: 0;
+  height: 20rpx;
+  font-size: 24rpx;
+  color: #999 !important;
+}
+.uni-countdown__number {
+  line-height: 44rpx;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  height: 44rpx;
+  border-radius: 6rpx;
+  margin: 0 5rpx;
+  font-size: 28rpx;
+  border: 1px solid #000;
+  font-size: 24rpx;
+  padding: 0 10rpx;
+}
+.uni-countdown__number.noneStyle {
+  line-height: 20rpx;
+  border: 0;
+  margin: 0;
+  height: 20rpx;
+  font-size: 24rpx;
+  color: #999 !important;
+  padding: 0;
+}
+
