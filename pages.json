@@ -54,6 +54,10 @@
             "path" : "pages/myshop/shopDetail",
             "style" : {}
         }
+        ,{
+            "path" : "pages/mycenter/mindex",
+            "style" : {"navigationBarTitleText": "我的主页"}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
