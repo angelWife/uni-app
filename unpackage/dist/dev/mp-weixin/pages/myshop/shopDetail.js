@@ -47,7 +47,7 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var ProductList = function ProductList() {return __webpack_require__.e(/*! import() | components/shop-product */ "components/shop-product").then(__webpack_require__.bind(null, /*! @/components/shop-product.vue */ 134));};var _default =
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var ProductList = function ProductList() {return __webpack_require__.e(/*! import() | components/shop-product */ "components/shop-product").then(__webpack_require__.bind(null, /*! @/components/shop-product.vue */ 158));};var _default =
 
 
 

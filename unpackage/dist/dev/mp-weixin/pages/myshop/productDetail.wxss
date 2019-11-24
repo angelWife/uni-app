@@ -300,4 +300,108 @@ page {
   overflow: hidden;
   overflow-y: auto;
 }
+.assembleDetail .detailMain {
+  padding: 14rpx 24rpx 24rpx;
+}
+.assembleDetail .detailMain .msg {
+  padding: 20rpx;
+  text-align: center;
+}
+.assembleDetail .picList {
+  text-align: center;
+  padding: 20rpx 0;
+}
+.assembleDetail .picList .item {
+  display: inline-block;
+  margin: 10rpx;
+}
+.assembleDetail .picList .item .name {
+  line-height: 40rpx;
+  padding: 0 4rpx;
+  border-radius: 40rpx;
+  color: #fff;
+  background: #b40000;
+  font-size: 24rpx;
+}
+.assembleDetail .picList .item .pic {
+  width: 100rpx;
+  height: 100rpx;
+  border: 2px solid #b40000;
+  border-radius: 100rpx;
+  overflow: hidden;
+}
+.assembleDetail .picList .item.null .name {
+  background: none;
+}
+.assembleDetail .picList .item.null .pic {
+  border: 1px dashed #ccc;
+  line-height: 96rpx;
+  text-align: center;
+}
+.assembleDetail .btnBox {
+  margin-top: 20rpx;
+}
+.specsModal .specsBody {
+  background: #fff;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+.specsModal .specsBody .md_head {
+  margin: 0 24rpx;
+  border-bottom: 1px solid #ccc;
+  padding: 20rpx;
+  position: relative;
+}
+.specsModal .specsBody .md_head .pic {
+  height: 100rpx;
+  width: 160rpx;
+  margin-right: 20rpx;
+  position: relative;
+}
+.specsModal .specsBody .md_head .pic image {
+  position: absolute;
+  bottom: 0;
+}
+.specsModal .specsBody .md_head .iconfont {
+  position: absolute;
+  width: 80rpx;
+  line-height: 80rpx;
+  text-align: center;
+  top: 0;
+  right: -24rpx;
+}
+.specsModal .spec_main .title {
+  padding: 20rpx 24rpx;
+}
+.specsModal .spec_main .specBox {
+  max-height: 160rpx;
+  padding: 0 14rpx;
+  overflow: hidden;
+  overflow-y: auto;
+}
+.specsModal .spec_main .specBox .item_child {
+  float: left;
+  width: calc((100% / 2) - 20rpx);
+  height: 60rpx;
+  text-align: center;
+  line-height: 60rpx;
+  margin: 0 10rpx 20rpx;
+  background: #EFEFEF;
+  border-radius: 0.2em;
+  padding: 0 20rpx;
+}
+.specsModal .spec_main .specBox .item_child.active {
+  color: #fff;
+  background: #B40000;
+}
+.specsModal .nums {
+  padding: 24rpx;
+}
+.specsModal .btnBox {
+  margin-top: 20rpx;
+}
+.specsModal .btnBox button {
+  line-height: 80rpx;
+}
 

@@ -122,7 +122,110 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var uniCountDown = function uniCountDown() {return __webpack_require__.e(/*! import() | components/countDown */ "components/countDown").then(__webpack_require__.bind(null, /*! @/components/countDown.vue */ 141));};var _default =
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var uniCountDown = function uniCountDown() {return __webpack_require__.e(/*! import() | components/countDown */ "components/countDown").then(__webpack_require__.bind(null, /*! @/components/countDown.vue */ 165));};var _default =
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -423,6 +526,13 @@ __webpack_require__.r(__webpack_exports__);
       imgInd: 1,
       color: '#999',
       showAssembleModal: false,
+      showAssembleDetailModal: false,
+      showSpecModal: false,
+      timeStyle: {
+        color: "#fff",
+        borderColor: "#b40000",
+        backgroundColor: "#b40000" },
+
       richNode: '<p class="text">这边是商品文案描述这边是商品文案描述这边是商品文案描述这边是商品文案描述这边是商品文案描述这边是商品文案描述这边是商品文案描述</p><p class="img"><img src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2786988750,209248222&fm=15&gp=0.jpg"/></p>' };
 
   },
@@ -434,8 +544,13 @@ __webpack_require__.r(__webpack_exports__);
     moreassemble: function moreassemble() {
       this.showAssembleModal = true;
     },
+    joinGroup: function joinGroup() {
+      this.showAssembleDetailModal = true;
+    },
     closeModal: function closeModal() {
       this.showAssembleModal = false;
+      this.showAssembleDetailModal = false;
+      this.showSpecModal = false;
     },
     confirmOrder: function confirmOrder() {
       uni.navigateTo({

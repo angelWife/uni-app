@@ -62,7 +62,7 @@
 							<uni-count-down :show-day="false" :color="color" :splitorColor="color" :show-style="false" :hour="12" :minute="12" :second="12" />
 						</view>
 					</view>
-					<view class="去拼单"><button type="orange" size="mini">去拼单</button></view>
+					<view class="去拼单"><button type="orange" size="mini" @tap="joinGroup">去拼单</button></view>
 				</view>
 				<view class="item flex item-center">
 					<view class="pic"><image src="../../static/images/head1.png" mode="widthFix"></image></view>
@@ -74,7 +74,7 @@
 							<uni-count-down :show-day="false" :color="color" :splitorColor="color" :show-style="false" :hour="12" :minute="12" :second="12" />
 						</view>
 					</view>
-					<view class="去拼单"><button type="orange" size="mini">去拼单</button></view>
+					<view class="去拼单"><button type="orange" size="mini" @tap="joinGroup">去拼单</button></view>
 				</view>
 			</view>
 		</view>
@@ -279,7 +279,110 @@
 				</view>
 			</view>
 		</view>
-
+        <view class="comDialog flex item-center just-con-c assembleDetail" v-if="showAssembleDetailModal">
+			<view class="moadl-main">
+				<view class="title">
+					参与拼单
+					<icon class="iconfont icon-remove" @tap="closeModal"></icon>
+				</view>
+				<view class="detailMain">
+					<view class="msg">
+						仅剩<text class="red">12个</text>名额，还剩
+						<uni-count-down :borderColor="timeStyle.borderColor" :backgroundColor="timeStyle.backgroundColor" :color="timeStyle.color" :show-day="false" :show-style="true" :hour="12" :minute="12" :second="12" />
+					</view>
+					<view class="picList">
+						<view class="item">
+							<view class="name">拼主</view>
+							<view class="pic">
+								<image src="../../static/images/head2.png" mode="widthFix"></image>
+							</view>
+						</view>
+						<view class="item">
+							<view class="name">成员</view>
+							<view class="pic">
+								<image src="../../static/images/head2.png" mode="widthFix"></image>
+							</view>
+						</view>
+						<view class="item">
+							<view class="name">成员</view>
+							<view class="pic">
+								<image src="../../static/images/head1.png" mode="widthFix"></image>
+							</view>
+						</view>
+						<view class="item">
+							<view class="name">成员</view>
+							<view class="pic">
+								<image src="../../static/images/head1.png" mode="widthFix"></image>
+							</view>
+						</view>
+						<view class="item null">
+							<view class="name"></view>
+							<view class="pic fs18 c666">
+								?
+							</view>
+						</view>
+					</view>
+					<view class="btnBox">
+						<button type="red">参与拼单</button>
+					</view>
+				</view>
+			</view>
+		</view>
+	    <view class="comDialog specsModal" v-if="showSpecModal">
+	    	<div class="specsBody">
+				<view class="md_head flex item-center">
+					<view class="pic">
+						<image src="../../static/images/head1.png" mode="widthFix"></image>
+					</view>
+					<view class="price flex-1">
+						<view class="red">
+							<text class="fs12">¥</text>
+							<text class="fs18">138.56</text>
+						</view>
+						<view class="">
+							请选择规格
+						</view>
+					</view>
+					<icon class="iconfont icon-remove"  @tap="closeModal"></icon>
+				</view>
+				<view class="spec_main">
+					<view class="item">
+						<view class="title">
+							颜色
+						</view>
+						<view class="specBox">
+							<view class="item_child textEllipsis">红色</view>
+							<view class="item_child textEllipsis">蓝色</view>
+							<view class="item_child textEllipsis">黄的</view>
+							<view class="item_child textEllipsis">红色</view>
+							<view class="item_child textEllipsis">蓝色</view>
+							<view class="item_child textEllipsis">黄的</view>
+						</view>
+					</view>
+					<view class="item">
+						<view class="title">
+							尺寸
+						</view>
+						<view class="specBox">
+							<view class="item_child textEllipsis">XXL</view>
+							<view class="item_child textEllipsis">XL</view>
+							<view class="item_child textEllipsis">M</view>
+						</view>
+					</view>
+				</view>
+			    <view class="nums flex item-center">
+					<view class="flex-1">购买数量</view>
+					<view class="comNumber clearfix">
+						<view class="iconfont icon-minus" hover-class="touch"></view>
+						<input type="number" value="1" />
+						<view class="iconfont icon-plus" hover-class="touch"></view>
+					</view>
+				</view>
+				<view class="btnBox">
+					<button type="red" class="noradius">确定</button>
+				</view>
+			</div>
+	    </view>
 	</view>
 </template>
 
@@ -299,6 +402,13 @@ export default {
 			imgInd: 1,
 			color:'#999',
 			showAssembleModal:false,
+			showAssembleDetailModal:false,
+			showSpecModal:false,
+			timeStyle:{
+				color:"#fff",
+				borderColor:"#b40000",
+				backgroundColor:"#b40000"
+			},
 			richNode:'<p class="text">这边是商品文案描述这边是商品文案描述这边是商品文案描述这边是商品文案描述这边是商品文案描述这边是商品文案描述这边是商品文案描述</p><p class="img"><img src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2786988750,209248222&fm=15&gp=0.jpg"/></p>'
 		};
 	},
@@ -310,8 +420,13 @@ export default {
 		moreassemble(){
 			this.showAssembleModal = true
 		},
-		closeModal(){
+		joinGroup(){
+			this.showAssembleDetailModal = true
+		},
+		closeModal(){	
 			this.showAssembleModal = false
+			this.showAssembleDetailModal = false
+			this.showSpecModal=false
 		},
 		confirmOrder(){
 			uni.navigateTo({
@@ -632,6 +747,115 @@ page {
 			max-height: 600rpx;
 			overflow: hidden;
 			overflow-y: auto;
+		}
+	}
+}
+.assembleDetail{
+	.detailMain{
+		padding: 14rpx 24rpx 24rpx;
+		.msg{padding: 20rpx;text-align: center;}
+	}
+	.picList{
+		text-align: center;
+		padding:20rpx 0;
+		.item{
+			display: inline-block;
+			margin:10rpx;
+			.name{
+				line-height: 40rpx;
+				padding:0 4rpx;
+				border-radius:40rpx;
+				color:#fff;
+				background: #b40000;
+				font-size:24rpx;
+			}
+			.pic{
+				width:100rpx;
+				height:100rpx;
+				border:2px solid #b40000;
+				border-radius:100rpx;
+				overflow: hidden;
+			}
+			&.null{
+				.name{
+					background: none;
+				}
+				.pic{
+					border:1px dashed #ccc;
+					line-height: 96rpx;
+					text-align: center;
+				}
+			}
+		}
+	}
+	.btnBox{
+		margin-top:20rpx;
+	}
+}
+.specsModal{
+	.specsBody{
+		background: #fff;
+		position:absolute;
+		bottom:0;
+		width: 100%;
+		.md_head{
+			margin:0 24rpx;
+			border-bottom:1px solid #ccc;
+			padding:20rpx;
+			position:relative;
+			.pic{
+				height:100rpx;
+				width: 160rpx;
+				margin-right:20rpx;
+				position:relative;
+				image{
+					position:absolute;
+					bottom:0;
+				}
+			}
+			.iconfont{
+				position:absolute;
+				width: 80rpx;
+				line-height: 80rpx;
+				text-align: center;
+				top:0;
+				right:-24rpx;
+			}
+		}
+	}
+    .spec_main{
+		.title{
+			padding:20rpx 24rpx;
+		}
+		.specBox{
+			max-height:160rpx;
+			padding:0 14rpx;
+			overflow: hidden;
+			overflow-y: auto;
+			.item_child{
+				float:left;
+				width: calc((100% / 2) - 20rpx);
+				height:60rpx;
+				text-align: center;
+				line-height: 60rpx;
+				margin:0 10rpx 20rpx;
+				background: #EFEFEF;
+				border-radius:0.2em;
+				padding: 0 20rpx;
+				&.active{
+					color:#fff;
+					background: #B40000;
+				}
+			}
+		}
+	}
+	.nums{
+		padding:24rpx;
+	}
+	.btnBox{
+		margin-top:20rpx;
+		button{
+			line-height: 80rpx;
 		}
 	}
 }
