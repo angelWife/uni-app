@@ -1,1 +1,0 @@
-.content{border:0}.item{padding:20rpx 0}.icon{width:40rpx;margin:0 20rpx;height:40rpx;overflow:hidden;position:relative}.icon image{position:absolute;top:0;left:0}.icon image.pic1{top:-54rpx}.icon image.pic2{top:-118rpx}.icon image.pic3{top:-182rpx}.icon image.pic4{top:-240rpx}.name{width:50%}.share{padding:0 20rpx}

@@ -1,1 +1,0 @@
-.content,page{min-height:100%}.navBar{min-height:100vh;width:200rpx;background:#f8f8f8}.navBar .item{line-height:100rpx;padding-left:30rpx;position:relative}.navBar .item.red{background:#fff}.navBar .item .line{position:absolute;background:#b40000;width:3px;height:40rpx;top:30rpx;left:0}
