@@ -259,6 +259,9 @@ page {
 .prodFoot .btn .text {
   font-size: 26rpx;
 }
+.prodFoot .buy {
+  line-height: 100rpx;
+}
 .prodFoot .btn1 {
   background: #b40000;
 }

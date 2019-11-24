@@ -10,13 +10,16 @@
     "pages/index/report",
     "pages/index/ranking",
     "pages/myshop/shopDetail",
-    "pages/myshop/productDetail"
+    "pages/myshop/productDetail",
+    "pages/myshop/confirmOrder",
+    "pages/myshop/payWay",
+    "pages/myshop/payResult"
   ],
   "subPackages": [],
   "window": {
-    "navigationBarTextStyle": "black",
+    "navigationBarTextStyle": "white",
     "navigationBarTitleText": "uni-app",
-    "navigationBarBackgroundColor": "#ffffff",
+    "navigationBarBackgroundColor": "#b40000",
     "backgroundColor": "#666"
   },
   "tabBar": {
@@ -45,6 +48,5 @@
       }
     ]
   },
-  "usingComponents": {},
-  "sitemapLocation": "sitemap82.json"
+  "usingComponents": {}
 }

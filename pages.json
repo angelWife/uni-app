@@ -58,11 +58,23 @@
             "path" : "pages/myshop/productDetail",
             "style" : {"navigationBarTitleText": "商品详情"}
         }
+        ,{
+            "path" : "pages/myshop/confirmOrder",
+            "style" : {"navigationBarTitleText": "确认订单"}
+        }
+        ,{
+            "path" : "pages/myshop/payWay",
+            "style" : {"navigationBarTitleText": "选择支付方式"}
+        }
+        ,{
+            "path" : "pages/myshop/payResult",
+            "style" : {"navigationBarTitleText": "支付结果"}
+        }
     ],
 	"globalStyle": {
-		"navigationBarTextStyle": "black",
+		"navigationBarTextStyle": "white",
 		"navigationBarTitleText": "uni-app",
-		"navigationBarBackgroundColor": "#ffffff",
+		"navigationBarBackgroundColor": "#b40000",
 		"backgroundColor": "#666"
 	},
 	"tabBar": {

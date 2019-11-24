@@ -20,14 +20,12 @@
           justify-content: center;
   line-height: 44rpx;
   padding: 0 5rpx;
-  font-size: 28rpx;
 }
 .uni-countdown__splitor.noneStyle {
   line-height: 20rpx;
   padding: 0;
   height: 20rpx;
   font-size: 24rpx;
-  color: #999 !important;
 }
 .uni-countdown__number {
   line-height: 44rpx;
@@ -38,9 +36,7 @@
   height: 44rpx;
   border-radius: 6rpx;
   margin: 0 5rpx;
-  font-size: 28rpx;
   border: 1px solid #000;
-  font-size: 24rpx;
   padding: 0 10rpx;
 }
 .uni-countdown__number.noneStyle {
@@ -49,7 +45,6 @@
   margin: 0;
   height: 20rpx;
   font-size: 24rpx;
-  color: #999 !important;
   padding: 0;
 }
 

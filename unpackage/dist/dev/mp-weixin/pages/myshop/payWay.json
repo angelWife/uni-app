@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "选择支付方式",
+  "usingComponents": {
+    "uni-count-down": "/components/countDown"
+  }
+}

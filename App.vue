@@ -168,6 +168,9 @@ icon.remove {
 .blue {
 	color: #4c8ff7;
 }
+.orange{
+	color:#FF9D19;
+}
 .c999 {
 	color: #999;
 }
@@ -192,6 +195,16 @@ button[type='text'] {
 	background: none !important;
 	color: #444 !important;
 	border: none;
+	&::after {
+		border: none !important;
+		box-shadow: none !important;
+	}
+}
+button[type='null'] {
+	background: none !important;
+	color: #666 !important;
+	border: 1px solid #ccc;
+	box-shadow: 50%;
 	&::after {
 		border: none !important;
 		box-shadow: none !important;

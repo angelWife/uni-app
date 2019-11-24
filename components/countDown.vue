@@ -2,12 +2,12 @@
 	<view class="uni-countdown">
 		<view v-if="showDay" :style="{ borderColor: borderColor, color: color, background: backgroundColor }" class="uni-countdown__number">{{ d }}</view>
 		<view v-if="showDay" :style="{ color: splitorColor }" class="uni-countdown__splitor">天</view>
-		<view :style="{ borderColor: borderColor, color: color, background: backgroundColor }" class="uni-countdown__number" :class="{ noneStyle: !showStyle }">{{ h }}</view>
-		<view :style="{ color: splitorColor }" class="uni-countdown__splitor" :class="{ noneStyle: !showStyle }">{{ showColon ? ':' : '时' }}</view>
-		<view :style="{ borderColor: borderColor, color: color, background: backgroundColor }" class="uni-countdown__number" :class="{ noneStyle: !showStyle }">{{ i }}</view>
-		<view :style="{ color: splitorColor }" class="uni-countdown__splitor" :class="{ noneStyle: !showStyle }">{{ showColon ? ':' : '分' }}</view>
-		<view :style="{ borderColor: borderColor, color: color, background: backgroundColor }" class="uni-countdown__number" :class="{ noneStyle: !showStyle }">{{ s }}</view>
-		<view v-if="!showColon" :style="{ color: splitorColor }" class="uni-countdown__splitor">秒</view>
+		<view :style="{ borderColor: borderColor, color: color, background: backgroundColor,fontSize:fontSize }" class="uni-countdown__number" :class="{ 'noneStyle': !showStyle }">{{ h }}</view>
+		<view :style="{ color: splitorColor,fontSize:fontSize }" class="uni-countdown__splitor" :class="{ 'noneStyle': !showStyle }">{{ showColon ? ':' : '时' }}</view>
+		<view :style="{ borderColor: borderColor, color: color, background: backgroundColor,fontSize:fontSize }" class="uni-countdown__number" :class="{ 'noneStyle': !showStyle }">{{ i }}</view>
+		<view :style="{ color: splitorColor,fontSize:fontSize }" class="uni-countdown__splitor" :class="{ 'noneStyle': !showStyle }">{{ showColon ? ':' : '分' }}</view>
+		<view :style="{ borderColor: borderColor, color: color, background: backgroundColor,fontSize:fontSize }" class="uni-countdown__number" :class="{ 'noneStyle': !showStyle }">{{ s }}</view>
+		<view v-if="!showColon" :style="{ color: splitorColor,fontSize:fontSize }" class="uni-countdown__splitor">秒</view>
 	</view>
 </template>
 <script>
@@ -37,6 +37,10 @@ export default {
 		color: {
 			type: String,
 			default: '#000000'
+		},
+		fontSize: {
+			type: String,
+			default: ''
 		},
 		splitorColor: {
 			type: String,
@@ -138,14 +142,12 @@ export default {
 	justify-content: center;
 	line-height: 44upx;
 	padding: 0 5upx;
-	font-size: 28upx;
 }
 .uni-countdown__splitor.noneStyle {
 	line-height: 20rpx;
 	padding: 0;
 	height: 20rpx;
 	font-size: 24rpx;
-	color: #999 !important;
 }
 
 .uni-countdown__number {
@@ -154,9 +156,7 @@ export default {
 	height: 44upx;
 	border-radius: 6upx;
 	margin: 0 5upx;
-	font-size: 28upx;
 	border: 1px solid #000;
-	font-size: 24upx;
 	padding: 0 10upx;
 }
 .uni-countdown__number.noneStyle {
@@ -165,7 +165,6 @@ export default {
 	margin: 0;
 	height: 20rpx;
 	font-size: 24rpx;
-	color: #999 !important;
 	padding: 0;
 }
 </style>

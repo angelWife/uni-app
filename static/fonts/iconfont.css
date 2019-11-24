@@ -1,5 +1,5 @@
 @font-face {font-family: "iconfont";
-  src: url('iconfont.ttf?t=1574128641798') format('truetype'); /* iOS 4.1- */
+  src: url('iconfont.ttf?t=1574560077781') format('truetype'); /* iOS 4.1- */
 }
 
 .iconfont {
@@ -26,8 +26,16 @@
   content: "\e60f";
 }
 
+.icon-location:before {
+  content: "\e601";
+}
+
 .icon-weixin:before {
   content: "\e613";
+}
+
+.icon-yezi:before {
+  content: "\e602";
 }
 
 .icon-shang:before {
@@ -36,6 +44,14 @@
 
 .icon-jubao:before {
   content: "\e661";
+}
+
+.icon-dizhi:before {
+  content: "\e605";
+}
+
+.iconshare2:before {
+  content: "\e767";
 }
 
 .icon-article:before {
@@ -78,7 +94,15 @@
   content: "\e61e";
 }
 
+.icon-right:before {
+  content: "\e603";
+}
+
 .icon-pinglun:before {
   content: "\e8b4";
+}
+
+.icon-down:before {
+  content: "\e8b5";
 }
 

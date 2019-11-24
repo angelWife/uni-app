@@ -734,7 +734,7 @@ function initData(vueOptions, context) {
     try {
       data = data.call(context); // 支持 Vue.prototype 上挂的数据
     } catch (e) {
-      if (Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
+      if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
         console.warn('根据 Vue 的 data 函数初始化小程序 data 失败，请尽量确保 data 函数中不访问 vm 对象，否则可能影响首次数据渲染速度。', data);
       }
     }
@@ -6990,7 +6990,7 @@ function type(obj) {
 
 function flushCallbacks$1(vm) {
     if (vm.__next_tick_callbacks && vm.__next_tick_callbacks.length) {
-        if (Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
+        if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
             var mpInstance = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + vm._uid +
                 ']:flushCallbacks[' + vm.__next_tick_callbacks.length + ']');
@@ -7011,14 +7011,14 @@ function nextTick$1(vm, cb) {
     //1.nextTick 之前 已 setData 且 setData 还未回调完成
     //2.nextTick 之前存在 render watcher
     if (!vm.__next_tick_pending && !hasRenderWatcher(vm)) {
-        if(Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG){
+        if(Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG){
             var mpInstance = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + vm._uid +
                 ']:nextVueTick');
         }
         return nextTick(cb, vm)
     }else{
-        if(Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG){
+        if(Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG){
             var mpInstance$1 = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance$1.is || mpInstance$1.route) + '][' + vm._uid +
                 ']:nextMPTick');
@@ -7094,7 +7094,7 @@ var patch = function(oldVnode, vnode) {
     });
     var diffData = diff(data, mpData);
     if (Object.keys(diffData).length) {
-      if (Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
+      if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
         console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + this._uid +
           ']差量更新',
           JSON.stringify(diffData));
@@ -7501,9 +7501,9 @@ module.exports = g;
 
 /***/ }),
 /* 4 */
-/*!***********************************************!*\
-  !*** D:/Work/wechatProject/myshop/pages.json ***!
-  \***********************************************/
+/*!************************************************!*\
+  !*** D:/Work/wechatProject/uni-app/pages.json ***!
+  \************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -8408,20 +8408,20 @@ module.exports = {"_from":"@dcloudio/uni-stat@next","_id":"@dcloudio/uni-stat@2.
 
 /***/ }),
 /* 7 */
-/*!****************************************************************!*\
-  !*** D:/Work/wechatProject/myshop/pages.json?{"type":"style"} ***!
-  \****************************************************************/
+/*!*****************************************************************!*\
+  !*** D:/Work/wechatProject/uni-app/pages.json?{"type":"style"} ***!
+  \*****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "pages": { "pages/index/index": { "navigationBarTitleText": "首页" }, "pages/index/commentDetail": { "navigationBarTitleText": "正文" }, "pages/index/reward": { "navigationBarTitleText": "打赏" }, "pages/myshop/index": { "navigationBarTitleText": "小店集市" }, "pages/mycenter/index": { "navigationBarTitleText": "我的" }, "pages/index/editArticle": { "navigationBarTitleText": "写文章" }, "pages/index/posting": { "navigationBarTitleText": "发帖" }, "pages/index/report": { "navigationBarTitleText": "举报" }, "pages/index/ranking": { "navigationBarTitleText": "选择连接" }, "pages/myshop/shopDetail": {}, "pages/myshop/productDetail": { "navigationBarTitleText": "商品详情" } }, "globalStyle": { "navigationBarTextStyle": "black", "navigationBarTitleText": "uni-app", "navigationBarBackgroundColor": "#ffffff", "backgroundColor": "#666" } };exports.default = _default;
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "pages": { "pages/index/index": { "navigationBarTitleText": "首页", "usingComponents": { "comment-item": "/components/comment-item" } }, "pages/index/commentDetail": { "navigationBarTitleText": "正文", "usingComponents": { "comment-item": "/components/comment-item" } }, "pages/index/reward": { "navigationBarTitleText": "打赏", "usingComponents": {} }, "pages/myshop/index": { "navigationBarTitleText": "小店集市", "usingComponents": {} }, "pages/mycenter/index": { "navigationBarTitleText": "我的", "usingComponents": { "comment-item": "/components/comment-item" } }, "pages/index/editArticle": { "navigationBarTitleText": "写文章", "usingComponents": {} }, "pages/index/posting": { "navigationBarTitleText": "发帖", "usingComponents": {} }, "pages/index/report": { "navigationBarTitleText": "举报", "usingComponents": {} }, "pages/index/ranking": { "navigationBarTitleText": "选择连接", "usingComponents": { "product-list": "/components/product-list", "rank-list": "/components/ranking-item" } }, "pages/myshop/shopDetail": { "usingComponents": { "product-list": "/components/shop-product" } }, "pages/myshop/productDetail": { "navigationBarTitleText": "商品详情", "usingComponents": { "uni-count-down": "/components/countDown" } }, "pages/myshop/confirmOrder": { "navigationBarTitleText": "确认订单", "usingComponents": {} }, "pages/myshop/payWay": { "navigationBarTitleText": "选择支付方式", "usingComponents": { "uni-count-down": "/components/countDown" } }, "pages/myshop/payResult": { "navigationBarTitleText": "支付结果", "usingComponents": {} } }, "globalStyle": { "navigationBarTextStyle": "white", "navigationBarTitleText": "uni-app", "navigationBarBackgroundColor": "#b40000", "backgroundColor": "#666" } };exports.default = _default;
 
 /***/ }),
 /* 8 */
-/*!***************************************************************!*\
-  !*** D:/Work/wechatProject/myshop/pages.json?{"type":"stat"} ***!
-  \***************************************************************/
+/*!****************************************************************!*\
+  !*** D:/Work/wechatProject/uni-app/pages.json?{"type":"stat"} ***!
+  \****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -8541,9 +8541,9 @@ function normalizeComponent (
 
 /***/ }),
 /* 15 */
-/*!******************************************************!*\
-  !*** D:/Work/wechatProject/myshop/common/acFrame.js ***!
-  \******************************************************/
+/*!*******************************************************!*\
+  !*** D:/Work/wechatProject/uni-app/common/acFrame.js ***!
+  \*******************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -9395,9 +9395,9 @@ if (hadRuntime) {
 
 /***/ }),
 /* 19 */
-/*!********************************************************!*\
-  !*** D:/Work/wechatProject/myshop/common/interface.js ***!
-  \********************************************************/
+/*!*********************************************************!*\
+  !*** D:/Work/wechatProject/uni-app/common/interface.js ***!
+  \*********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -9427,9 +9427,9 @@ Service;exports.default = _default;
 
 /***/ }),
 /* 20 */
-/*!*********************************************************!*\
-  !*** D:/Work/wechatProject/myshop/common/HttpServer.js ***!
-  \*********************************************************/
+/*!**********************************************************!*\
+  !*** D:/Work/wechatProject/uni-app/common/HttpServer.js ***!
+  \**********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -9514,9 +9514,9 @@ HttpService;exports.default = _default;
 
 /***/ }),
 /* 21 */
-/*!***************************************************!*\
-  !*** D:/Work/wechatProject/myshop/common/core.js ***!
-  \***************************************************/
+/*!****************************************************!*\
+  !*** D:/Work/wechatProject/uni-app/common/core.js ***!
+  \****************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -9705,9 +9705,9 @@ Core;exports.default = _default;
 
 /***/ }),
 /* 22 */
-/*!*****************************************************!*\
-  !*** D:/Work/wechatProject/myshop/common/config.js ***!
-  \*****************************************************/
+/*!******************************************************!*\
+  !*** D:/Work/wechatProject/uni-app/common/config.js ***!
+  \******************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -9720,9 +9720,9 @@ config;exports.default = _default;
 
 /***/ }),
 /* 23 */
-/*!***************************************************!*\
-  !*** D:/Work/wechatProject/myshop/common/util.js ***!
-  \***************************************************/
+/*!****************************************************!*\
+  !*** D:/Work/wechatProject/uni-app/common/util.js ***!
+  \****************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -9794,9 +9794,9 @@ module.exports = {
 
 /***/ }),
 /* 24 */
-/*!**************************************************************!*\
-  !*** D:/Work/wechatProject/myshop/static/fonts/iconfont.css ***!
-  \**************************************************************/
+/*!***************************************************************!*\
+  !*** D:/Work/wechatProject/uni-app/static/fonts/iconfont.css ***!
+  \***************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 

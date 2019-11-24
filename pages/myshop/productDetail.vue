@@ -59,7 +59,7 @@
 						<view>还差1人成团</view>
 						<view class="fs12 c999">
 							剩余
-							<uni-count-down :show-day="false" :show-style="false" :hour="12" :minute="12" :second="12" />
+							<uni-count-down :show-day="false" :color="color" :splitorColor="color" :show-style="false" :hour="12" :minute="12" :second="12" />
 						</view>
 					</view>
 					<view class="去拼单"><button type="orange" size="mini">去拼单</button></view>
@@ -71,7 +71,7 @@
 						<view>还差1人成团</view>
 						<view class="fs12 c999">
 							剩余
-							<uni-count-down :show-day="false" :show-style="false" :hour="12" :minute="12" :second="12" />
+							<uni-count-down :show-day="false" :color="color" :splitorColor="color" :show-style="false" :hour="12" :minute="12" :second="12" />
 						</view>
 					</view>
 					<view class="去拼单"><button type="orange" size="mini">去拼单</button></view>
@@ -163,7 +163,7 @@
 			</view>
 			<view class="flex-1 flex">
 				<view class="btn btn1 flex-1 flex f-col just-con-c">
-					<view class="">
+					<view class="buy" @tap="confirmOrder">
 						立即购买
 					</view>
 				</view>
@@ -201,7 +201,7 @@
 							</view>
 							<view class="fs12 c999">
 								剩余
-								<uni-count-down :show-day="false" :show-style="false" :hour="12" :minute="12" :second="12" />
+								<uni-count-down :show-day="false" :color="color" :splitorColor="color" :show-style="false" :hour="12" :minute="12" :second="12" />
 							</view>
 						</view>
 						<view class="去拼单"><button type="orange" size="mini">去拼单</button></view>
@@ -215,7 +215,7 @@
 							</view>
 							<view class="fs12 c999">
 								剩余
-								<uni-count-down :show-day="false" :show-style="false" :hour="12" :minute="12" :second="12" />
+								<uni-count-down :show-day="false" :color="color" :splitorColor="color" :show-style="false" :hour="12" :minute="12" :second="12" />
 							</view>
 						</view>
 						<view class="去拼单"><button type="orange" size="mini">去拼单</button></view>
@@ -229,7 +229,7 @@
 							</view>
 							<view class="fs12 c999">
 								剩余
-								<uni-count-down :show-day="false" :show-style="false" :hour="12" :minute="12" :second="12" />
+								<uni-count-down :show-day="false" :color="color" :splitorColor="color" :show-style="false" :hour="12" :minute="12" :second="12" />
 							</view>
 						</view>
 						<view class="去拼单"><button type="orange" size="mini">去拼单</button></view>
@@ -243,7 +243,7 @@
 							</view>
 							<view class="fs12 c999">
 								剩余
-								<uni-count-down :show-day="false" :show-style="false" :hour="12" :minute="12" :second="12" />
+								<uni-count-down :show-day="false" :color="color" :splitorColor="color" :show-style="false" :hour="12" :minute="12" :second="12" />
 							</view>
 						</view>
 						<view class="去拼单"><button type="orange" size="mini">去拼单</button></view>
@@ -257,7 +257,7 @@
 							</view>
 							<view class="fs12 c999">
 								剩余
-								<uni-count-down :show-day="false" :show-style="false" :hour="12" :minute="12" :second="12" />
+								<uni-count-down :show-day="false" :color="color" :splitorColor="color" :show-style="false" :hour="12" :minute="12" :second="12" />
 							</view>
 						</view>
 						<view class="去拼单"><button type="orange" size="mini">去拼单</button></view>
@@ -271,7 +271,7 @@
 							</view>
 							<view class="fs12 c999">
 								剩余
-								<uni-count-down :show-day="false" :show-style="false" :hour="12" :minute="12" :second="12" />
+								<uni-count-down :show-day="false" :color="color" :splitorColor="color" :show-style="false" :hour="12" :minute="12" :second="12" />
 							</view>
 						</view>
 						<view class="去拼单"><button type="orange" size="mini">去拼单</button></view>
@@ -297,6 +297,7 @@ export default {
 				'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2786988750,209248222&fm=15&gp=0.jpg'
 			],
 			imgInd: 1,
+			color:'#999',
 			showAssembleModal:false,
 			richNode:'<p class="text">这边是商品文案描述这边是商品文案描述这边是商品文案描述这边是商品文案描述这边是商品文案描述这边是商品文案描述这边是商品文案描述</p><p class="img"><img src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2786988750,209248222&fm=15&gp=0.jpg"/></p>'
 		};
@@ -311,6 +312,11 @@ export default {
 		},
 		closeModal(){
 			this.showAssembleModal = false
+		},
+		confirmOrder(){
+			uni.navigateTo({
+				url:'confirmOrder'
+			})
 		}
 	}
 };
@@ -586,6 +592,9 @@ page {
 		.text{
 			font-size:26rpx;
 		}
+	}
+	.buy{
+		line-height:100rpx;
 	}
 	.btn1{
 		background: #b40000;
