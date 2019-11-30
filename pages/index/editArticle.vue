@@ -8,11 +8,11 @@
 					<editor id="editDist" placeholder="请输入正文"></editor>
 				</view>
 				<view class="pic">
-					<view class="pic" v-for="(item, index) in imgList" :key="index">
+					<view class="item" v-for="(item, index) in imgList" :key="index">
 						<image :src="item" mode="widthFix" @tap="showImg(index)"></image>
 						<icon class="iconfont icon-clear" @tap="deleteImg(index)"></icon>
 					</view>
-					<view class="upload" @tap="uploadPic"><image src="../../static/images/defaultpro.png" mode="widthFix"></image></view>
+					<view class="upload" @tap="getPic"><image src="../../static/images/defaultpro.png" mode="widthFix"></image></view>
 				</view>
 			</view>
 		</scroll-view>
@@ -31,8 +31,11 @@ export default {
 	},
 	methods: {
 		getPic() {
-			let img = this.$acFrame.Util.uploadPic()
-			this.imgList.push(img)
+			let self =this
+			this.$acFrame.Util.uploadPic().then(res=>{
+				self.imgList.push(res)
+			})
+			
 		},
 		deleteImg(index){
 			
@@ -83,7 +86,7 @@ scroll-view {
 	overflow: hidden;
 	width: 105%;
 	margin-top: 40rpx;
-	.pic {
+	.item {
 		float: left;
 		width: 100rpx;
 		height: 100rpx;
@@ -95,10 +98,16 @@ scroll-view {
 			position: absolute;
 			top:0;
 			right:0;
-			width: 60rpx;
-			height:60rpx;
+			width: 40rpx;
+			height:40rpx;
 			text-align: center;
 			color:#b40000;
+			&::before{
+				position: absolute;
+				width: 100%;
+				top:10rpx;
+				left:0;
+			}
 		}
 	}
 	.upload {

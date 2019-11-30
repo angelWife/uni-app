@@ -19,32 +19,34 @@ class AcFrame {
     }
 	// 获取微信用户的code
 	this._getCode = () => {
-	  return wepy.login().then(res => {
-		wepy.setStorageSync('code', res.code)
-		return res.code
+	  return new Promise((resolve, reject)=>{
+		  uni.login({
+		  	provider: 'weixin',
+		  	success(res) {
+		  		console.log(res)
+		  		uni.setStorageSync('wxcode',res.code)
+		  		resolve(res.code)
+		  	}
+		  })
 	  })
 	}
     this.getToken = async (options = {}) => {
-      let code = await _getCode()
-      return HttpService.getToken(code).then(res => {
-        console.log('async getToken', res)
-        if (!res.hasBindPublicApp) {
-          setTimeout(() => {
-            wepy.redirectTo({
-              url: '/pages/webview'
-            })
-          }, 100)
-        }
-        this._setUser(res)
-        return res.accessToken
-      }).catch(err => {
-        console.error('async getToken', err)
-        setTimeout(() => {
-          wepy.redirectTo({
-            url: '/pages/login'
-          })
-        }, 1000)
-      })
+	  let self = this
+      let code = await self._getCode()
+	  let params={
+		  inviteCode:''
+	  }
+      return new Promise((resolve, reject)=>{
+		  self.HttpService.getToken(params).then(res => {
+		    console.log('async getToken', res)
+		    uni.setStorageSync('access_token', res.accessToken)
+			resolve(res)
+		  }).catch(err => {
+		    console.error('async getToken', err)
+		    reject(err)
+		  })
+	  })
+	  
     }
   }
 }

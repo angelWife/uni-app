@@ -1,5 +1,5 @@
 @font-face {font-family: "iconfont";
-  src: url('iconfont.ttf?t=1574560077781') format('truetype'); /* iOS 4.1- */
+  src: url('iconfont.ttf?t=1574943266205') format('truetype'); /* iOS 4.1- */
 }
 
 .iconfont {
@@ -42,6 +42,10 @@
   content: "\e671";
 }
 
+.icon-camaer:before {
+  content: "\e630";
+}
+
 .icon-jubao:before {
   content: "\e661";
 }
@@ -56,6 +60,10 @@
 
 .icon-article:before {
   content: "\e759";
+}
+
+.icon-star:before {
+  content: "\e63e";
 }
 
 .icon-tupian:before {

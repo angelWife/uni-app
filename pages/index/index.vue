@@ -1,5 +1,5 @@
 <template>
-	<view class="content">
+	<view class="content" @tap="hideTab">
 		<view class="searchBox flex">
 			<view class="flex-1 input">
 				<icon class="iconfont icon-search"></icon>
@@ -8,16 +8,16 @@
 			</view>
 			<view class="search">
 				<button v-if="isSearch" @tap="cancelSearch" size="mini" type="text" hover-class="none">取消</button>
-				<button v-else size="mini" type="red" @tap="ralease" hover-class="none">发布</button>
+				<button v-else size="mini" type="red" @tap.stop="ralease" hover-class="none">发布</button>
 				<view class="operBox" v-if="showOper">
-					<navigator class="item" url="posting" hover-class="hover">
+					<view class="item" hover-class="hover" @tap.stop="linkTo('posting')">
 						<icon class="iconfont icon-fatie"></icon>
 						<text>发帖</text>
-					</navigator>
-					<navigator class="item" url="editArticle" hover-class="hover">
+					</view>
+					<view class="item" hover-class="hover" @tap.stop="linkTo('editArticle')">
 						<icon class="iconfont icon-article"></icon>
 						<text>写文章</text>
-					</navigator>
+					</view>
 					<text class="sanjiao"></text>
 				</view>
 			</view>
@@ -145,6 +145,9 @@ export default {
 		} else {
 			this.showPic = false;
 		}
+		this.$acFrame.getToken().then(access_token => {
+			console.log(access_token)
+		})
 	},
 	onShareAppMessage() {
 		uni.showShareMenu();
@@ -155,6 +158,17 @@ export default {
 	methods: {
 		searchClick() {
 			this.isSearch = true;
+		},
+		hideTab(){
+			this.showOper = false
+		},
+		linkTo(name){
+			uni.navigateTo({
+				url: name,
+				success: res => {},
+				fail: () => {},
+				complete: () => {}
+			});
 		},
 		// searchInput(e){
 		//  this.searchVal = e.detail.val
@@ -229,7 +243,8 @@ page {
 			.item {
 				height: 60rpx;
 				line-height: 60rpx;
-				padding: 10rpx 20rpx;
+				padding: 0 20rpx;
+				box-sizing: border-box;
 				color: #fff;
 				icon {
 					color: #fff;

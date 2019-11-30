@@ -1,6 +1,6 @@
 <template>
 	<view class="content">
-		<view class="result">
+		<view class="comResult">
 			<view class="pic">
 				<image src="../../static/images/paySuc.png" mode="widthFix"></image>
 			</view>
@@ -39,18 +39,7 @@
 </script>
 
 <style lang="less">
-.result{
-	padding:70rpx 0;
-	text-align: center;
-	.pic{
-		width: 180rpx;
-		max-width: 90px;
-		margin:0 auto;
-	}
-	.text{
-		margin-top:20rpx;
-	}
-}
+
 .btnBox{
 	padding:0 24rpx;
 	.btn1{

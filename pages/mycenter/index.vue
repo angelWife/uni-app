@@ -1,200 +1,202 @@
 <template>
 	<view class="content">
-		<view class="headBox flex item-center">
-			<view class="pic">
-				<image class="grade" src="../../static/images/baihu.png" mode="widthFix"></image>
-				<image class="headpic" src="../../static/images/head2.png" mode="widthFix"></image>
-			</view>
-			<view class="msg flex-1">
-				<view class="address textEllipsis">
-					<icon class="iconfont icon-location"></icon>黑龙江哈尔滨市双城区
+		<view class="modal">
+			<view class="head flex item-center">
+				<view class="pic comHeadPic"  @tap="linkTo('evaluate')">
+					<image class="headPic" src="../../static/images/head1.png" mode="widthFix"></image>
+					<image class="grade" src="../../static/images/baihu.png" mode="widthFix"></image>
 				</view>
-				<view class="text textEllipsis">
-					<icon class="iconfont icon-yezi"></icon>最好的人，像孩子一样!
+				<view class="center flex-1">
+					<view class="name">
+						<text class="fs15 blod">唐三藏</text>
+						<text class="mark">少校</text>
+					</view>
+					<view class="text c999 fs13">
+						活跃度：123445
+					</view>
 				</view>
-				<view class="btn">
-					<text>私信</text>
-					<text>已关注</text>
+				<view class="btnBox">
+					<button class="radiuBtn" size="mini" type="red">申请开店</button>
 				</view>
-			</view>
-			<view class="offical">
-				<image class="grade" src="../../static/images/zhunwei.png" mode="widthFix"></image>
+				<view class="right" @tap="linkTo('baseInfo')">
+					<icon class="iconfont icon-right"></icon>
+				</view>
 			</view>
 		</view>
-		<view class="mydatas flex">
-			<view class="item flex-1 flex f-col just-con-c">
-				<view class="num">20</view>
-				<view class="text">帖子</view>
+		<view class="modal">
+			<view class="item flex" @tap="linkTo('mycenter')">
+				<view class="icon">
+					<image src="../../static/images/icon-homepage.png" mode="widthFix"></image>
+				</view>
+				<view class="right flex-1">
+					我的主页
+				</view>
 			</view>
-			<view class="item flex-1 flex f-col just-con-c">
-				<view class="num">20</view>
-				<view class="text">关注</view>
-			</view>
-			<view class="item flex-1 flex f-col just-con-c">
-				<view class="num">20</view>
-				<view class="text">粉丝</view>
-			</view>
-			<view class="item flex-1 flex f-col just-con-c">
-				<view class="num">20</view>
-				<view class="text">获赞</view>
-			</view>
-		</view>
-		<view class="infoTab">
-			<view class="item" v-for="(item,index) in infoTab" :key="index" :class="{'active':item.choose}">
-				{{item.name}}
+			<view class="item flex" @tap="linkTo('myWallet')">
+				<view class="icon">
+					<image src="../../static/images/icon-wallet.png" mode="widthFix"></image>
+				</view>
+				<view class="right flex-1">
+					钱包
+				</view>
 			</view>
 		</view>
-		<scroll-view class="myscroll" scroll-y="true" >
-			<view class="reward">
-				<commentItem :dataList="dataList"></commentItem>
+		<view class="modal">
+			<view class="item flex">
+				<view class="icon">
+					<image src="../../static/images/icon-mission.png" mode="widthFix"></image>
+				</view>
+				<view class="right flex-1">
+					任务
+				</view>
 			</view>
-		</scroll-view>
+			<view class="item flex">
+				<view class="icon">
+					<image src="../../static/images/icon-wallet.png" mode="widthFix"></image>
+				</view>
+				<view class="right flex-1">
+					订单
+				</view>
+			</view>
+			<view class="item flex">
+				<view class="icon">
+					<image src="../../static/images/icon-aftersale.png" mode="widthFix"></image>
+				</view>
+				<view class="right flex-1">
+					售后
+				</view>
+			</view>
+		</view>
+		<view class="modal">
+			<view class="item flex">
+				<view class="icon">
+					<image src="../../static/images/icon-ranking.png" mode="widthFix"></image>
+				</view>
+				<view class="right flex-1">
+					排行
+				</view>
+			</view>
+			<view class="item flex">
+				<view class="icon">
+					<image src="../../static/images/icon-goodfriends.png" mode="widthFix"></image>
+				</view>
+				<view class="right flex-1">
+					好友
+				</view>
+			</view>
+			<view class="item flex">
+				<view class="icon">
+					<image src="../../static/images/icon-infom.png" mode="widthFix"></image>
+				</view>
+				<view class="right flex-1">
+					消息
+				</view>
+			</view>
+			<view class="item flex">
+				<view class="icon">
+					<image src="../../static/images/icon-treasury.png" mode="widthFix"></image>
+				</view>
+				<view class="right flex-1">
+					宝库
+				</view>
+			</view>
+		</view>
+		<view class="modal">
+			<view class="item flex">
+				<view class="icon">
+					<image src="../../static/images/icon-spirit.png" mode="widthFix"></image>
+				</view>
+				<view class="right flex-1">
+					精灵
+				</view>
+			</view>
+			<view class="item flex">
+				<view class="icon">
+					<image src="../../static/images/icon-setting.png" mode="widthFix"></image>
+				</view>
+				<view class="right flex-1">
+					设置
+				</view>
+			</view>
+		</view>
 	</view>
 </template>
 
 <script>
-	import commentItem from '@/components/comment-item.vue';
 	export default {
-		components: {
-			commentItem
-		},
 		data() {
 			return {
-				infoTab:[{name:'帖子',choose:true},{name:'小店',choose:false},{name:'荣誉',choose:false},{name:'受赏',choose:false}],
-				dataList: [
-					{
-						headImg: '/static/images/head1.png',
-						name: '哈利路亚妈妈咪呀sda',
-						rank: '少校',
-						hasShop: true,
-						follow: true,
-						timer: '5分钟前',
-						showMore: false,
-						isAdvent: false,
-						imgList: ['/static/images/head1.png', '/static/images/head2.png', '/static/images/head1.png', '/static/images/head2.png']
-					},
-					{
-						headImg: '/static/images/head1.png',
-						isAdvent: false,
-						name: '哈利路亚妈妈咪呀sda',
-						rank: '少校',
-						hasShop: true,
-						follow: true,
-						timer: '5分钟前',
-						showMore: false,
-						imgList: []
-					},
-					{
-						headImg: '/static/images/head1.png',
-						isAdvent: false,
-						name: '哈利路亚妈妈咪呀sda',
-						rank: '少校',
-						hasShop: true,
-						follow: true,
-						timer: '5分钟前',
-						showMore: false,
-						imgList: [],
-						isAdvent: true,
-						adventImg: '',
-						createName: '妮维雅',
-						createTime: '09-21'
-					}
-				],
 				
 			}
 		},
 		methods: {
-			
+			linkTo(url){
+				uni.navigateTo({
+					url: url
+				});
+			}
 		}
 	}
 </script>
 
 <style lang="less">
-	page{
-		height:100%;
-	}
-.content{
-	border:0;
-	height:100%;
+page{
+	min-height:100%;
+	background: #efefef;
 }
-.headBox{
-	background: #810d21;
-	padding:20rpx 0;
-	color:#fff;
-	font-size:26rpx;
-	.pic{
-		position:relative;
-		height:100rpx;
-		width: 100rpx;
-		margin:0 20rpx;
-		.headpic{
-			border-radius: 100rpx;
-			width: 100rpx;
-		}
-		.grade{
-			position: absolute;
-			width: 120rpx;
-			top:-10rpx;
-			left:-10rpx;
-		}
-	}
-	.msg{
-		width: 50%;
-		.text{
-			padding:10rpx 0;
-		}
-		.btn{
-			margin-top:10rpx;
-			text{
-				display: inline-block;
-				padding:0 20rpx;
-				border-radius:60rpx;
-				border:1px solid #fff;
-				margin:0 10rpx;
-			}
-		}
-	}
-	.offical{
-		width: 160rpx;
-		margin:0 20rpx;
-	}
-}
-.mydatas{
-	height:100rpx;
+.modal{
+	background: #fff;
+	margin-bottom:20rpx;
 	.item{
-		width: 25%;
-		background: #d83d52;
-		text-align: center;
-		&:nth-child(2n){
-			background:#e55266 ;
+		height:80rpx;
+		line-height: 80rpx;
+		.icon{
+			width: 40rpx;
+		    margin:0 24rpx;
 		}
-		.num{
+		.right{
+			border-bottom:1px solid #ccc;
+		}
+		&:last-child{
+			.right{
+				border:0;
+			}
+			
+		}
+		
+	}
+}
+.head{
+	padding:20rpx 0;
+	.pic{
+		width: 100rpx;
+		height:100rpx;
+		margin:0 24rpx;
+	}
+	.center{
+		line-height: 40rpx;
+		.mark{
+			display: inline-block;
+			margin-left:30rpx;
+			border-radius: 40rpx;
+			padding:0 20rpx;
+			background: #46D88C;
 			color:#fff;
-		}
-		.text{
-			color:#f2a8b2;
 			font-size:24rpx;
 		}
 	}
-}
-.infoTab{
-	background: #fff;
-	height: 80rpx;
-	.item{
-		float:left;
-		color:#999;
-		border-bottom:2px solid #fff;
-		padding:0 10rpx;
-		margin:0 20rpx;
-		height:80rpx;
+	.btnBox{
+		margin-left:24rpx;
+	}
+	.right{
+		height:100rpx;
 		line-height: 100rpx;
-		&.active{
-			border-color:#b40000;
-			color:#b40000;
+		width: 80rpx;
+		text-align: center;
+		.iconfont{
+			color:#999;
 		}
 	}
 }
-.myscroll{
-	height:calc(100% - 360rpx);
-}
+
 </style>

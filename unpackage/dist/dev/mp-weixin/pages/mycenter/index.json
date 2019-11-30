@@ -1,6 +1,0 @@
-{
-  "navigationBarTitleText": "我的",
-  "usingComponents": {
-    "comment-item": "/components/comment-item"
-  }
-}

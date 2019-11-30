@@ -1,7 +1,7 @@
 /* eslint-disable eqeqeq */
 // import WxRequest from '../assets/plugins/wx-request/lib/index'
 import Core from '@/common/core'
-import __config from '@/common/config'
+import Config from '@/common/config'
 class HttpService extends Core {
 	constructor(options) {
 		super(options)
@@ -14,9 +14,7 @@ class HttpService extends Core {
 			return url
 		}
 		this.blackList = [
-			'/direct/sys/user/token/get', // 登录获取token
-			'/direct/sys/common/nopic/validcode/sms/send', // 发送验证码
-			// this.interceptors.blackList = this.blackList
+			'user/login_mp_register', // 登录获取token
 		]
 		this.interceptors = [{
 			request(request) {
@@ -28,12 +26,10 @@ class HttpService extends Core {
 					mask: true
 				})
 				let token = uni.getStorageSync('access_token')
-				let needaddtoken = !__config.blackList.includes(request.url.replace(__config.basePath, ''))
-
-				console.info('HttpService class request :', {
-					url: request.url,
-					data: request.data
-				})
+				let wxcode = uni.getStorageSync('wxcode')
+				let needaddtoken = !Config.blackList.includes(request.url.replace(Config.basePath, ''))
+                request.header['channel']='MP_WX'
+				request.header['jsCode']=wxcode
 				if (!needaddtoken) {
 					return request
 				} else {
@@ -47,9 +43,16 @@ class HttpService extends Core {
 			},
 			response(response) {
 				uni.hideLoading()
-				// console.info('HttpService class response :', response)
-				// console.info('HttpService class response :', response)
-				return response.data.data
+				console.info('HttpService class response :', response)
+				if(!response.data.success){
+					uni.showToast({
+						duration:2000,
+						icon:'none',
+						mask:true,
+						title:'接口有误'
+					})
+				}
+				return response.data
 			},
 			responseError(responseError = {}) {
 				uni.hideLoading()

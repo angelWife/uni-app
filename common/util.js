@@ -24,6 +24,16 @@ const formatNumber = n => {
   return n[1] ? n : '0' + n
 }
 
+const mytotal = (title,icon='none',mask=false,duration=2000)=>{
+	uni.showToast({
+		title: title,
+		icon:icon,
+		mask:mask,
+		duration:duration,
+		position:'center'
+	});
+}
+
 // 图片点击事件
 const showBigPic = (showSrc,list) => {
     uni.previewImage({
@@ -33,32 +43,39 @@ const showBigPic = (showSrc,list) => {
 }
 // 上传图片
 const uploadPic = (url) => {
-	uni.chooseImage({
-		count: 1,
-		sizeType: ['compressed','original'], // 可以指定是原图还是压缩图，默认二者都有
-		sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
-		success: function(res) {
-			let tempFilePaths = res.tempFilePaths;
-			return tempFilePaths[0]
-			uni.uploadFile({
-				url: app.__config.basePath + '/api/rabbit/setting/upd_imghead', // 仅为示例，非真实的接口地址
-				filePath: tempFilePaths[0],
-				header: {
-					token,
-					rabbitId,
-					channel
-				},
-				name: 'file',
-				success: function(res) {
-					return tempFilePaths[0]
-				}
-			});
-		}
-	});
+	return new Promise((resolve, reject)=>{
+		uni.chooseImage({
+			count: 1,
+			sizeType: ['compressed','original'], // 可以指定是原图还是压缩图，默认二者都有
+			sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+			success: function(res) {
+				let tempFilePaths = res.tempFilePaths;
+				resolve(tempFilePaths[0]);
+				return false;
+				uni.uploadFile({
+					url: app.__config.basePath + '/api/rabbit/setting/upd_imghead', // 仅为示例，非真实的接口地址
+					filePath: tempFilePaths[0],
+					header: {
+						token,
+						rabbitId,
+						channel
+					},
+					name: 'file',
+					success: function(res) {
+						resolve(tempFilePaths[0]);
+					},fail:(error)=>{
+						reject(error);
+					}
+				});
+			}
+		});
+	})
+	
 }
 
 module.exports = {
 	formatTime,
 	showBigPic,
-	uploadPic
+	uploadPic,
+	mytotal
 }

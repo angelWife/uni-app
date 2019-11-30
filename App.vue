@@ -2,10 +2,10 @@
 export default {
 	globalData: {},
 	onLaunch: function() {
-		console.log('App Launch');
+		
 	},
 	onShow: function() {
-		console.log('App Show');
+		
 	},
 	onHide: function() {
 		console.log('App Hide');
@@ -30,13 +30,13 @@ button {
 	&.radiuBtn {
 		border-radius: 60rpx;
 	}
-	&.noradius{
+	&.noradius {
 		border-radius: 0;
 	}
 }
 .pagebg {
 	background: #eeeeee;
-	min-height: 100%;
+	min-height: 100vh;
 }
 .content {
 	font-size: 28rpx;
@@ -119,35 +119,73 @@ button {
 	background: #b40000;
 	font-size: 30rpx;
 	letter-spacing: 5px;
+	padding-bottom: constant(safe-area-inset-bottom);
 }
-.comNumber{
-	border:1px solid #ccc;
-	border-radius:0.3em;
-	height:74rpx;
+.comNumber {
+	border: 1px solid #ccc;
+	border-radius: 0.3em;
+	height: 74rpx;
 	line-height: 70rpx;
 	overflow: hidden;
-	input{
-		float:left;
-		width:100rpx;
+	input {
+		float: left;
+		width: 100rpx;
 		line-height: 70rpx;
-		height:70rpx;
+		height: 70rpx;
 		background: #fff;
-		border:none;
-		border-left:1px solid #ccc;
-		border-right:1px solid #ccc;
+		border: none;
+		border-left: 1px solid #ccc;
+		border-right: 1px solid #ccc;
 		text-align: center;
 	}
-	.iconfont{
-		float:left;
+	.iconfont {
+		float: left;
 		background: #efefef;
 		width: 70rpx;
-		line-height:70rpx;
-		height:70rpx;
-		text-align:center;
-		color:#fff;
-		&.touch{
+		line-height: 70rpx;
+		height: 70rpx;
+		text-align: center;
+		color: #fff;
+		&.touch {
 			background: #ccc;
 		}
+	}
+}
+.comHeadPic {
+	position: relative;
+	border-radius: 100%;
+	.headPic {
+		border-radius: 100%;
+	}
+	.grade {
+		position: absolute;
+		width: calc(100% + 20rpx) !important;
+		top: -10rpx;
+		left: -10rpx;
+	}
+}
+.comListBox {
+	padding: 0 24rpx;
+	background: #fff;
+	.item {
+		height: 80rpx;
+		line-height: 80rpx;
+		border-bottom: 1px solid #ccc;
+		&:last-child {
+			border: 0;
+		}
+	}
+}
+.comResult{
+	padding:70rpx 0;
+	text-align: center;
+	.pic{
+		width: 180rpx;
+		max-width: 90px;
+		margin:0 auto;
+	}
+	.text{
+		margin-top:20rpx;
 	}
 }
 icon.remove {
@@ -201,12 +239,19 @@ icon.remove {
 .blue {
 	color: #4c8ff7;
 }
-.orange{
-	color:#FF9D19;
+.white {
+	color: #fff;
+}
+.orange {
+	color: #ff9d19;
+}
+.c666 {
+	color: #666;
 }
 .c999 {
 	color: #999;
 }
+
 /*自定义按钮*/
 button[type='red'] {
 	background: #b40000 !important;
@@ -226,7 +271,7 @@ button[type='rednull'] {
 }
 button[type='text'] {
 	background: none !important;
-	color: #444 !important;
+	color: #444;
 	border: none;
 	&::after {
 		border: none !important;
@@ -259,6 +304,15 @@ button[size='mini'] {
 		box-shadow: none;
 		border: 0;
 	}
+}
+.linear_btn {
+	height: 80rpx;
+	line-height: 80rpx;
+	text-align: center;
+	font-size: 30rpx;
+	color: #fff;
+	border-radius: 0.3em;
+	background: linear-gradient(180deg, #b40000 0%, #ef180d 100%);
 }
 /*flex布局*/
 .flex {
