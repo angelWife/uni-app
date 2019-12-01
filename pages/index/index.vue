@@ -139,15 +139,16 @@ export default {
 		// 	title: '我的首页'
 		// })
 		console.log(this.$acFrame.Util.formatTime());
+		// this.$acFrame.getToken().then(access_token => {
+		// 	console.log(access_token)
+		// })
 	},
 	onShow() {
 		if (!this.showPic) {
 		} else {
 			this.showPic = false;
 		}
-		this.$acFrame.getToken().then(access_token => {
-			console.log(access_token)
-		})
+		
 	},
 	onShareAppMessage() {
 		uni.showShareMenu();

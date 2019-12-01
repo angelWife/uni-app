@@ -9,14 +9,14 @@
 				<view class="center flex-1">
 					<view class="name">
 						<text class="fs15 blod">唐三藏</text>
-						<text class="mark">少校</text>
+						<text class="mark" @tap="linkTo('militaryRank')">少校</text>
 					</view>
-					<view class="text c999 fs13">
+					<view class="text c999 fs13" @tap="linkTo('activityLevel')">
 						活跃度：123445
 					</view>
 				</view>
 				<view class="btnBox">
-					<button class="radiuBtn" size="mini" type="red">申请开店</button>
+					<button class="radiuBtn" size="mini" type="red" @tap="linkTo('createShop')">申请开店</button>
 				</view>
 				<view class="right" @tap="linkTo('baseInfo')">
 					<icon class="iconfont icon-right"></icon>
@@ -42,7 +42,7 @@
 			</view>
 		</view>
 		<view class="modal">
-			<view class="item flex">
+			<view class="item flex"  @tap="linkTo('myTask')">
 				<view class="icon">
 					<image src="../../static/images/icon-mission.png" mode="widthFix"></image>
 				</view>
@@ -102,7 +102,7 @@
 			</view>
 		</view>
 		<view class="modal">
-			<view class="item flex">
+			<view class="item flex" @tap="linkTo('mySpirit')">
 				<view class="icon">
 					<image src="../../static/images/icon-spirit.png" mode="widthFix"></image>
 				</view>
@@ -110,7 +110,7 @@
 					精灵
 				</view>
 			</view>
-			<view class="item flex">
+			<view class="item flex" @tap="linkTo('mySettings')">
 				<view class="icon">
 					<image src="../../static/images/icon-setting.png" mode="widthFix"></image>
 				</view>
@@ -183,6 +183,9 @@ page{
 			background: #46D88C;
 			color:#fff;
 			font-size:24rpx;
+		}
+		.text{
+			margin-top:10rpx;
 		}
 	}
 	.btnBox{
