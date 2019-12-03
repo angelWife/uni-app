@@ -1,41 +1,47 @@
 {
 	"pages": [{
-			"path": "pages/index/index",
+            "path" : "pages/index/index",
+            "style": {
+            	"navigationBarTitleText": "星购"
+            }
+        }
+		,{
+			"path": "pages/home/index",
 			"style": {
 				"navigationBarTitleText": "首页"
 			}
 		},
 		{
-			"path": "pages/index/commentDetail",
+			"path": "pages/home/commentDetail",
 			"style": {
 				"navigationBarTitleText": "正文"
 			}
 		},
 		{
-			"path": "pages/index/reward",
+			"path": "pages/home/reward",
 			"style": {
 				"navigationBarTitleText": "打赏"
 			}
 		},
 		{
-			"path": "pages/index/posting",
+			"path": "pages/home/posting",
 			"style": {
 				"navigationBarTitleText": "发帖"
 			}
 		},
 		{
-			"path": "pages/index/report",
+			"path": "pages/home/report",
 			"style": {
 				"navigationBarTitleText": "举报"
 			}
 		},
 		{
-			"path": "pages/index/ranking",
+			"path": "pages/home/ranking",
 			"style": {
 				"navigationBarTitleText": "选择连接"
 			}
 		}, {
-			"path": "pages/index/editArticle",
+			"path": "pages/home/editArticle",
 			"style": {
 				"navigationBarTitleText": "写文章"
 			}
@@ -148,7 +154,7 @@
 		"borderStyle": "black",
 		"backgroundColor": "#f8f8f8",
 		"list": [{
-				"pagePath": "pages/index/index",
+				"pagePath": "pages/home/index",
 				"iconPath": "static/images/photo.png",
 				"selectedIconPath": "static/images/photo.png",
 				"text": "首页"
