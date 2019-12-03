@@ -141,6 +141,48 @@
             	"navigationBarTitleText": "星票提现"
             }
         }
+        ,{
+            "path" : "pages/mycenter/createShop",
+            "style": {
+            	"navigationBarTitleText": "开店认证"
+            }
+        }
+        ,{
+            "path" : "pages/mycenter/activityLevel",
+            "style": {
+            	"navigationBarTitleText": "活跃度"
+            }
+        }
+        ,{
+            "path" : "pages/mycenter/militaryRank",
+           "style": {
+           	"navigationBarTitleText": "军衔"
+           }
+        }
+        ,{
+            "path" : "pages/mycenter/mySpirit",
+            "style": {
+            	"navigationBarTitleText": "我的精灵"
+            }
+        }
+        ,{
+            "path" : "pages/mycenter/myTask",
+            "style": {
+            	"navigationBarTitleText": "我的任务"
+            }
+        }
+        ,{
+            "path" : "pages/mycenter/mySettings",
+            "style": {
+            	"navigationBarTitleText": "设置"
+            }
+        }
+        ,{
+            "path" : "pages/mycenter/myNews",
+            "style": {
+            	"navigationBarTitleText": "消息"
+            }
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",

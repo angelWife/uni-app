@@ -261,6 +261,9 @@ button[type='red'] {
 		box-shadow: none !important;
 	}
 }
+button[type='default'] {
+	color: #999 !important;
+}
 button[type='rednull'] {
 	background: none !important;
 	color: #b40000 !important;
