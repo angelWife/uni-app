@@ -1,108 +1,138 @@
 <template>
 	<view class="">
 		<view v-for="(item, index) in dataList" :key="index" class="listItem">
-			<view class="item-head flex item-center">
-				<view class="img item-center"><image :src="item.headImg" mode="widthFix" @error="imageError"></image></view>
-				<view class="flex-1 head-msg" v-if="item.isAdvent">
-					<view class="clearfix">
-						<text class="name fs15">{{ item.createName }}</text>
+			<block v-if="item.type == 1">
+				<view class="item-head flex item-center">
+					<view class="img item-center"><image :src="item.publishUser.imgPathHead" mode="widthFix"></image></view>
+					<view class="flex-1 head-msg">
+						<view class="clearfix">
+							<text class="name fs15">{{ item.publishUser.userName }}</text>
+							<text v-if="item.publishUser.militaryRankType" class="rank">{{ item.rank }}</text>
+							<text v-if="item.publishUser.shopId" class="shop">店铺</text>
+						</view>
+						<view class="timer c999 fs12 clearfix">
+							<block v-if="pageType == 2">
+								<text>{{ item.articleInfo.timeInfo }}</text>
+							</block>
+							<block v-else>
+								<text class="mark">受赏</text>
+								<text class="mark">置顶</text>
+							</block>
+						</view>
 					</view>
-					<view class="timer c999 fs12">{{ item.createTime }}</view>
-				</view>
-				<view class="flex-1 head-msg" v-else>
-					<view class="clearfix">
-						<text class="name fs15">{{ item.name }}</text>
-						<text v-if="item.rank" class="rank">{{ item.rank }}</text>
-						<text v-if="item.follow" class="shop">店铺</text>
-					</view>
-					<view class="timer c999 fs12 clearfix">
-						<text>{{ item.timer }}</text>
-						<text class="mark">受赏</text>
-						<text class="mark">置顶</text>
-					</view>
-				</view>
-				<view class="followBox">
-					<!-- follow -->
-					<block v-if="item.isAdvent"><text class="follow">广告</text></block>
-					<block v-else>
-						<text class="follow" v-if="item.follow">已关注</text>
+					<view class="followBox">
+						<text class="follow" v-if="item.publishUser.hasFollow">已关注</text>
 						<text class="follow active" v-else>关注</text>
-					</block>
+					</view>
 				</view>
-			</view>
-			<block v-if="item.isAdvent">
+				<block v-if="item.articleInfo.type == 1">
+					<view class="articalBox">
+						<view class="msg" :class="{ 'clamp clamp-3': !item.articleInfo.showMore && !item.articleInfo.isDetail }" @tap="linkDetail(item.articleInfo.id)">
+							<block v-for="(conitem, comind) in item.articleInfo.showContent" :key="comind">
+								<block v-if="conitem.type == 1">
+									<text class="name blue" @tap.stop="linkUser(conitem.atId)">@{{ conitem.atName }}</text>
+									<text class="text">{{ conitem.content }}</text>
+								</block>
+								<block v-else>
+									<text class="from blue" @tap.stop="linkTheme(conitem.topicId)">#{{ conitem.topicName }}#</text>
+									<text class="text">{conitem.content}}</text>
+								</block>
+							</block>
+							<!-- <view class="blue lookPic">
+								<icon class="iconfont icon-tupian"></icon>
+								查看图片
+							</view> -->
+						</view>
+						<view v-if="!item.articleInfo.isDetail">
+							<text v-if="item.articleInfo.showMore" class="blue" @tap="hideMore(index)">收起</text>
+							<text v-else class="blue" @tap="showAll(index)">全文</text>
+						</view>
+					</view>
+					<view class="imgList clearfix">
+						<view v-for="(imgItem, imgInd) in item.articleInfo.imgList" :key="imgInd" @tap="showBigImg(index, imgInd)" class="imgItem flex-1">
+							<image :src="imgItem" mode="widthFix"></image>
+						</view>
+					</view>
+				</block>
+				<block v-else>
+					<view class="articalBox news flex item-center" v-if="item.articleInfo.imgList.length > 0">
+						<view class="a_pic"><image :src="item.articleInfo.imgList[0]" mode="widthFix"></image></view>
+						<view class="a_main flex-1">
+							<view class="title blod clamp clamp-2">{{ item.articleInfo.title }}</view>
+							<view class="msg fs12 clamp clamp-2">{{ item.articleInfo.content }}</view>
+						</view>
+					</view>
+					<view class="articalBox flex item-center" v-else>
+						<view class="a_main flex-1">
+							<view class="title blod clamp clamp-2">{{ item.articleInfo.title }}</view>
+							<view class="msg fs12 clamp clamp-2">{{ item.articleInfo.content }}</view>
+						</view>
+					</view>
+				</block>
+				<block v-for="(linkitem, linkInd) in item.itemLinkList" :key="linkInd">
+					<view v-if="linkitem.type == 1" class="adventBox shopProduct flex item-center" @tap="linkProd(linkitem.goodsId)">
+						<view class="p_pic"><image :src="linkitem.imgPath" mode="widthFix"></image></view>
+						<view class="p_main flex-1">
+							<view class="name">
+								<text class="textEllipsis">{{ linkitem.goodsName }}</text>
+							</view>
+							<view class="price red fs12">{{ linkitem.priceSale }}元</view>
+						</view>
+						<view class="p_buy"><button size="mini" type="red" class="">购买</button></view>
+					</view>
+					<view v-else class="adventBox ranking flex item-center" @tap="linkRanking(linkitem.goodsId)">
+						<view class="p_pic"><image src="/static/images/defaultpro.png" mode="widthFix"></image></view>
+						<view class="p_main flex-1">邀请好友排行榜</view>
+						<view class="p_buy"><button size="mini" type="red" class="radiuBtn">去看看</button></view>
+					</view>
+				</block>
+
+				<view class="itemOperBox flex">
+					<view class="flex-1">
+						<icon class="iconfont icon-share"></icon>
+						<text>{{ item.articleInfo.numTotalShare }}</text>
+					</view>
+					<view class="flex-1">
+						<icon class="iconfont icon-pinglun"></icon>
+						<text>{{ item.articleInfo.numTotalPersonReward }}</text>
+					</view>
+					<view class="flex-1">
+						<icon class="iconfont icon-dianzan"></icon>
+						<text>{{ item.articleInfo.numTotalUp }}</text>
+					</view>
+				</view>
+			</block>
+			<block v-elid="item.type == 2">
+				<!-- item.adInfo -->
+				<view class="item-head flex item-center">
+					<view class="img item-center"><image :src="item.publishUser.imgPathHead" mode="widthFix"></image></view>
+					<view class="flex-1 head-msg">
+						<view class="clearfix">
+							<text class="name fs15">{{ item.adInfo.createName }}</text>
+						</view>
+						<view class="timer c999 fs12">{{ item.adInfo.createTime }}</view>
+					</view>
+
+					<view class="followBox">
+						<!-- follow -->
+						<text class="follow">广告</text>
+					</view>
+				</view>
 				<view class="adventPicBox">
 					<view class="adventPic"><image src="http://www.mypcera.com/star/mm/uploadfile/201005/4/A142330696.jpg" mode="widthFix"></image></view>
 					<view class="text-right addventBtn"><button size="mini" type="red">立即查看</button></view>
 				</view>
 			</block>
-			<block v-else>
-				<view class="articalBox">
-					<view class="msg" :class="{ 'clamp clamp-3': !item.showMore && !isDetail }" @tap="linkDetail">
-						<text class="name blue">@一只鱼</text>
-						<text class="text">这边是前面一个人的具体的发表文章，内容随便，想看就看</text>
-						<text class="from blue">#影视#</text>
-						<text class="text">这边是前面一个人的具体的发表文章，内容随便，想看就看，哇哦这边最多显示文字为三行，超过三行的省略号</text>
-						<view class="blue lookPic">
-							<icon class="iconfont icon-tupian"></icon>
-							查看图片
-						</view>
-					</view>
-					<view v-if="!isDetail">
-						<text v-if="item.showMore" class="blue" @tap="hideMore(index)">收起</text>
-						<text v-else class="blue" @tap="showAll(index)">全文</text>
-					</view>
+		</view>
+		<view v-if="nodata" class="noData flex f-row just-con-c item-center">
+			<view class="text-center">
+				<image src="/static/images/nodata.png" mode="widthFix"></image>
+				<view class="text-center c666 fs16">
+					这里还没有内容
 				</view>
-				<view class="articalBox news flex item-center" v-if="index == 1">
-					<view class="a_pic"><image src="http://ww1.sinaimg.cn/thumb150/6ec1a24agw1f7p6rse818j20qo0zk0wt.jpg" mode="widthFix"></image></view>
-					<view class="a_main flex-1">
-						<view class="title blod clamp clamp-2">2019天猫双十一全天成交总额2684亿元 湖南位列全国第11名</view>
-						<view class="msg fs12 clamp clamp-2">
-							火热的买买买在11月11日24时打下了一个阶段性的句号，2019天猫双11成交额为2684亿元，较去年增长25.7%。11日19时数据显示，湖南交易额位列全国第11位。
-						</view>
-					</view>
-				</view>
-				<view class="articalBox flex item-center" v-else>
-					<view class="a_main flex-1">
-						<view class="title blod clamp clamp-2">2019天猫双十一全天成交总额2684亿元 湖南位列全国第11名</view>
-						<view class="msg fs12 clamp clamp-2">
-							火热的买买买在11月11日24时打下了一个阶段性的句号，2019天猫双11成交额为2684亿元，较去年增长25.7%。11日19时数据显示，湖南交易额位列全国第11位。
-						</view>
-					</view>
-				</view>
-				<view class="imgList clearfix">
-					<view v-for="(imgItem, imgInd) in item.imgList" :key="imgInd" @tap="showBigImg(index, imgInd)" class="imgItem flex-1">
-						<image :src="imgItem" mode="widthFix"></image>
-					</view>
-				</view>
-				<view class="adventBox shopProduct flex item-center">
-					<view class="p_pic"><image src="/static/images/defaultpro.png" mode="widthFix"></image></view>
-					<view class="p_main flex-1">
-						<view class="name"><text class="textEllipsis">亚历山大电子解压器亚历山大电子解压器</text></view>
-						<view class="price red fs12">9988.00元</view>
-					</view>
-					<view class="p_buy"><button size="mini" type="red" class="">购买</button></view>
-				</view>
-				<view class="adventBox ranking flex item-center">
-					<view class="p_pic"><image src="/static/images/defaultpro.png" mode="widthFix"></image></view>
-					<view class="p_main flex-1">邀请好友排行榜</view>
-					<view class="p_buy"><button size="mini" type="red" class="radiuBtn">去看看</button></view>
-				</view>
-				<view class="itemOperBox flex">
-					<view class="flex-1">
-						<icon class="iconfont icon-share"></icon>
-						<text>122</text>
-					</view>
-					<view class="flex-1">
-						<icon class="iconfont icon-pinglun"></icon>
-						<text>122</text>
-					</view>
-					<view class="flex-1">
-						<icon class="iconfont icon-dianzan"></icon>
-						<text>122</text>
-					</view>
-				</view>
-			</block>
+				<button class="radiuBtn" @tap="linktoshop" type="rednull">随便看看</button>
+				<!-- <navigator url="/pages/home/index" class="radiuBtn" hover-class="none">随便看看</navigator> -->
+			</view>
 		</view>
 	</view>
 </template>
@@ -118,7 +148,21 @@ export default {
 				return [];
 			}
 		},
-		isDetail: { // 是否是详情
+		pageType: {
+			type: Number,
+			default() {
+				return 1;
+			}
+		},
+		nodata: {
+			// 是否是详情
+			type: Boolean,
+			default() {
+				return false;
+			}
+		},
+		isDetail: {
+			// 是否是详情
 			type: Boolean,
 			default() {
 				return false;
@@ -148,13 +192,16 @@ export default {
 			this.showPic = true;
 		},
 		loadMoreData() {},
-		linkDetail(){
-			if(!this.isDetail) {
+		linkDetail() {
+			if (!this.isDetail) {
 				uni.navigateTo({
-					url:'/pages/index/commentDetail'
-				})
+					url: '/pages/index/commentDetail'
+				});
 			}
-			
+		},
+		linktoshop(){
+			debugger
+			this.$emit('childLink');
 		}
 	},
 	watch: {}

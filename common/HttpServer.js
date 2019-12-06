@@ -29,11 +29,11 @@ class HttpService extends Core {
 				let wxcode = uni.getStorageSync('wxcode')
 				let needaddtoken = !Config.blackList.includes(request.url.replace(Config.basePath, ''))
                 request.header['channel']='MP_WX'
-				request.header['jsCode']=wxcode
 				if (!needaddtoken) {
+					request.header['jsCode']=wxcode
 					return request
 				} else {
-					request.url = request.url + '?access_token=' + token
+					request.header['token']=token
 					return request
 				}
 			},

@@ -18,15 +18,29 @@
 				
 			};
 		},
-		onLoad(){
+		onLoad(options){
 			uni.setNavigationBarColor({
-				backgroundColor: "#fff",
-				frontColor: '#333',
+				backgroundColor: "#ffffff",
+				frontColor: '#333333',
 				animation: {
-					duration: 0,
+					duration: 100,
 					timingFunc: 'easeIn'
 				}
 			})
+			var access_token = uni.getStorageSync('access_token');
+			if(!access_token){
+				this.$acFrame.getToken().then(res => {
+					if(res.success){
+						uni.switchTab({
+							url:'../home/index'
+						})
+					}
+				})
+			}else{
+				uni.switchTab({
+					url:'../home/index'
+				})
+			}
 		}
 	}
 </script>
@@ -39,25 +53,25 @@
 	overflow: hidden;
 	.top{
 		position:absolute;
-		width: 400rpx;
+		width: 480rpx;
 		top:0;
-		right:-40%;
+		right:-160rpx;
 		z-index: 1;
 	}
 	.center{
 		position:absolute;
 		width: 480rpx;
-		left:0;
-		top:0;
-		right:0;
-		bottom:0;
+		left:50%;
+		top:50%;
+		margin-left:-240rpx;
+		margin-top:-160rpx;
 		z-index: 3;
 	}
 	.foot-left{
 		position:absolute;
-		width: 400rpx;
-		bottom:-20%;
-		left:-40%;
+		width: 540rpx;
+		bottom:-100rpx;
+		left:-180rpx;
 		z-index: 1;
 	}
 	.foot-center{
@@ -73,6 +87,7 @@
 		}
 		.logo{
 			width: 80rpx;
+			margin-right:40rpx;
 		}
 		.logo-name{
 			width: 120rpx;

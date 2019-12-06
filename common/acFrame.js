@@ -5,11 +5,8 @@ import MyConfig from '@/common/config'
 class AcFrame {
   constructor() {
     this.HttpService = new Service()
-    // 常用方法
     this.Util = Util
-    // 生成权限字符串方法
     this.MyConfig = MyConfig
-    this.debug = MyConfig.debug
     // 缓存token和用户信息
     this._setUser = (res) => {
       // return new Promise((resolve, reject) => {
@@ -23,7 +20,7 @@ class AcFrame {
 		  uni.login({
 		  	provider: 'weixin',
 		  	success(res) {
-		  		console.log(res)
+		  		// console.log(res)
 		  		uni.setStorageSync('wxcode',res.code)
 		  		resolve(res.code)
 		  	}
@@ -38,9 +35,10 @@ class AcFrame {
 	  }
       return new Promise((resolve, reject)=>{
 		  self.HttpService.getToken(params).then(res => {
-		    console.log('async getToken', res)
-		    uni.setStorageSync('access_token', res.accessToken)
-			resolve(res)
+			  if(res.success){
+				  uni.setStorageSync('access_token', res.data.token)
+				  resolve(res)
+			  }
 		  }).catch(err => {
 		    console.error('async getToken', err)
 		    reject(err)

@@ -1,6 +1,11 @@
 <script>
+import MyConfig from '@/common/config'
+import AcFrame from '@/common/acFrame'
 export default {
-	globalData: {},
+	globalData: {
+		config:MyConfig,
+		comFunc:AcFrame
+	},
 	onLaunch: function() {
 		
 	},
@@ -9,7 +14,7 @@ export default {
 	},
 	onHide: function() {
 		console.log('App Hide');
-	}
+	},
 };
 </script>
 
@@ -205,6 +210,27 @@ icon.remove {
 		top: 4rpx;
 		left: 8rpx;
 		text-align: center;
+	}
+}
+.noData{
+	height:100%;
+	image{
+		width: 400rpx;
+		margin:60rpx 20rpx;
+	}
+	button{
+		margin-top:40rpx;
+		width: 240rpx;
+	}
+	navigator{
+		display: inline-block;
+		margin-top:40rpx;
+		width: 240rpx;
+		line-height: 80rpx;
+		text-align: center;
+		color:#B40000;
+		border:1px solid #B40000;
+		border-radius:80rpx;
 	}
 }
 /*字体大小*/

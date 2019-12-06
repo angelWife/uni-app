@@ -2,8 +2,9 @@
 	<view class="content" @tap="hideTab">
 		<view class="searchBox flex">
 			<view class="flex-1 input">
-				<icon class="iconfont icon-search"></icon>
-				<input type="text" value="" confirm-type="search" v-model="searchVal" @confirm="searchData" @tap="searchClick" readyonly />
+				<icon @tap="searchData" class="iconfont icon-search"></icon>
+				<input v-if="isSearch" type="text" @input="changeVal" confirm-type="search" v-model="keywords" @confirm="searchData" />
+				<input v-else type="text" value="" @tap="searchClick" readyonly />
 				<icon class="iconfont icon-clear"></icon>
 			</view>
 			<view class="search">
@@ -24,46 +25,42 @@
 		</view>
 		<view class="resBox" v-if="isSearch">
 			<view class="fastSearch" v-if="nosearch">
-				<view class="histroy">
+				<view class="histroy" v-if="historyList.length > 0">
 					<view class="title">
 						<text>历史记录</text>
-						<icon class="iconfont icon-delete"></icon>
+						<icon class="iconfont icon-delete" @tap="clearHistory"></icon>
 					</view>
 					<view class="h_list clearfix">
-						<block v-for="(item, index) in histroySearch" :key="index">
-							<view class="item">{{ item }}</view>
+						<block v-for="(item, index) in historyList" :key="index">
+							<view class="item" @tap="tapSearch(item)">{{ item }}</view>
 						</block>
 					</view>
 				</view>
-				<view class="hotSearch">
+				<view class="hotSearch" v-if="hotSearch.length > 0">
 					<view class="title"><text>热门搜索</text></view>
 					<view class="h_list clearfix">
 						<block v-for="(item, index) in hotSearch" :key="index">
-							<view class="item">{{ item }}</view>
+							<view class="item" @tap="tapSearch(item)">{{ item }}</view>
 						</block>
 					</view>
 				</view>
 			</view>
 			<view class="searchList" v-else>
-				<scroll-view class="myscroll" scroll-y="true" @scrolltolower="loadMoreData"><commentItem :dataList="dataList"></commentItem></scroll-view>
-				<view class="noData flex f-row just-con-c item-center">
-					<view class="text-center">
-						<image src="/static/images/defaultpro.png" mode=""></image>
-						<button class="radiuBtn" type="rednull" @tap="cancelSearch">随便看看</button>
-					</view>
-				</view>
+				<scroll-view class="myscroll" scroll-y="true" @scrolltolower="loadMoreData"><commentItem :nodata="nodata" :dataList="serchList"></commentItem></scroll-view>
 			</view>
 		</view>
 		<view class="listBox" v-else>
 			<view class="nav-tabs flex">
 				<block v-for="(item, index) in tabList" :key="index">
-					<view class="flex-1 tabitem c999" :class="{ active: item.active }" @tap="tabClick(index)">
+					<view class="flex-1 tabitem c999" :class="{ active: item.active }" @tap="tabClick(index, item.type)">
 						<text>{{ item.name }}</text>
 					</view>
 				</block>
 			</view>
 			<view class="list-content">
-				<scroll-view class="myscroll" scroll-y="true" @scrolltolower="loadMoreData"><commentItem :dataList="dataList"></commentItem></scroll-view>
+				<scroll-view class="myscroll" scroll-y="true" @scrolltolower="loadMoreData">
+					<commentItem :nodata="nodata" :pageType="pageType" :dataList="dataList" @childLink="myLink"></commentItem>
+				</scroll-view>
 			</view>
 		</view>
 	</view>
@@ -80,50 +77,19 @@ export default {
 			isSearch: false,
 			showOper: false, // 发布的操作
 			showPic: false, // 打开图片无需重新加载数据
-			searchVal: '',
-			tabList: [{ name: '关注', active: true }, { name: '广场', active: false }],
-			dataList: [
-				{
-					headImg: '/static/images/head1.png',
-					name: '哈利路亚妈妈咪呀sda',
-					rank: '少校',
-					hasShop: true,
-					follow: true,
-					timer: '5分钟前',
-					showMore: false,
-					isAdvent: false,
-					imgList: ['/static/images/head1.png', '/static/images/head2.png', '/static/images/head1.png', '/static/images/head2.png']
-				},
-				{
-					headImg: '/static/images/head1.png',
-					isAdvent: false,
-					name: '哈利路亚妈妈咪呀sda',
-					rank: '少校',
-					hasShop: true,
-					follow: true,
-					timer: '5分钟前',
-					showMore: false,
-					imgList: []
-				},
-				{
-					headImg: '/static/images/head1.png',
-					isAdvent: false,
-					name: '哈利路亚妈妈咪呀sda',
-					rank: '少校',
-					hasShop: true,
-					follow: true,
-					timer: '5分钟前',
-					showMore: false,
-					imgList: [],
-					isAdvent: true,
-					adventImg: '',
-					createName: '妮维雅',
-					createTime: '09-21'
-				}
-			],
-			histroySearch: ['苹果的nfc怎么打开', '王者的积分战队怎么玩的流', '苹果手机被锁住了怎么办'],
-			hotSearch: ['四大名著', '护肤品', '女士口红', '女士香水', '怎么让孩子听话'],
-			nosearch: false
+			nosearch: true,
+			nodata: false,
+			keywords: '',
+			tabList: [{ name: '关注', active: false, type: 2 }, { name: '广场', active: true, type: 1 }],
+			dataList: [],
+			serchList: [],
+			historyList: [],
+			// histroySearch: ['苹果的nfc怎么打开', '王者的积分战队怎么玩的流', '苹果手机被锁住了怎么办'],
+			hotSearch: [],
+			pageIndex: 0,
+			pageSize: 10,
+			pageType: 1,
+			pageTotal: 1
 		};
 	},
 	onLoad() {
@@ -142,12 +108,10 @@ export default {
 	},
 	onShow() {
 		if (!this.showPic) {
+			this.initData();
 		} else {
 			this.showPic = false;
 		}
-		this.$acFrame.getToken().then(access_token => {
-			console.log(access_token)
-		})
 	},
 	onShareAppMessage() {
 		uni.showShareMenu();
@@ -156,13 +120,79 @@ export default {
 		this.showOper = false;
 	},
 	methods: {
+		initData() {
+			let self = this;
+			let params = {
+				pageType: self.pageType,
+				pageIndex: self.pageIndex,
+				pageSize: self.pageSize,
+				keywords: self.keywords,
+				atId: null,
+				topicId: null
+			};
+			self.$acFrame.HttpService.postList(params).then(res => {
+				if (res.success) {
+					let _data = res.data;
+					let dataList = _data.rows;
+					self.pageTotal = _data.pageTotal;
+					if (dataList.length > 0) {
+						dataList.filter((v, i) => {
+							v.adInfo.imgList.filter(v => {
+								v = self.$acFrame.Util.setImgUrl(v);
+							});
+							v.articleInfo.imgList.filter(v => {
+								v = self.$acFrame.Util.setImgUrl(v);
+							});
+							v.itemLinkList.filter(v => {
+								v.imgPath = self.$acFrame.Util.setImgUrl(v.imgPath);
+							});
+							v.publishUser.imgPathHead = self.$acFrame.Util.setImgUrl(v.publishUser.imgPathHead);
+							if (v.type == 1) {
+								v.articleInfo.showContent = self.setContent(v.articleInfo.contentExtendList);
+								v.articleInfo.showMore = false;
+							}
+							if (v.articleInfo.content.length > 60) {
+								v.articleInfo.isDetail = false;
+							}
+						});
+						if (self.isSearch) {
+							self.serchList = self.serchList.concat(dataList);
+						} else {
+							self.dataList = self.dataList.concat(dataList);
+						}
+						self.nodata = false;
+					} else {
+						self.nodata = true;
+					}
+				} else {
+					self.$acFrame.Util.mytotal(res.code);
+				}
+			});
+		},
+		setContent(mydata) {
+			let showContent = [];
+			let type = mydata.type; //1帖子  2文章
+			let content = mydata.content;
+			let star = 0;
+			let contentExtendList = mydata.contentExtendList;
+			contentExtendList.filter((v, i) => {
+				let end = v.index;
+				let _list = v;
+				_list.content = content.slice(star, end);
+				star = end;
+				showContent.push(_list);
+			});
+			return showContent;
+		},
 		searchClick() {
 			this.isSearch = true;
+			this.historyList = uni.getStorageSync('historyList') || [];
+			this.getHotList();
 		},
-		hideTab(){
-			this.showOper = false
+		hideTab() {
+			this.showOper = false;
 		},
-		linkTo(name){
+		linkTo(name) {
 			uni.navigateTo({
 				url: name,
 				success: res => {},
@@ -170,24 +200,70 @@ export default {
 				complete: () => {}
 			});
 		},
-		// searchInput(e){
-		//  this.searchVal = e.detail.val
-		// },
+		getHotList() {
+			let self = this;
+			self.$acFrame.HttpService.hotList().then(res => {
+				if (res.success) {
+					let _data = res.data;
+					self.hotSearch = _data;
+				} else {
+					self.$acFrame.Util.mytotal(res.code);
+				}
+			});
+		},
+		changeVal(e) {
+			this.keywords = e.detail.value;
+		},
 		cancelSearch() {
 			this.isSearch = false;
 			this.searchVal = false;
+			this.keywords = '';
 		},
-		searchData() {},
+		searchData(e) {
+			let val = this.keywords;
+			this.pageIndex = 0;
+			this.pageSize = 10;
+			this.pageType = null;
+			let historyList = uni.getStorageSync('historyList') || [];
+			if (historyList.length < 10) {
+				historyList.shift(val);
+			} else {
+				historyList.splice(9, 1);
+				historyList.shift(val);
+			}
+			uni.setStorageSync('historyList', historyList);
+			this.initData();
+		},
+		tapSearch(val) {
+			this.pageIndex = 0;
+			this.pageSize = 10;
+			this.pageType = null;
+			this.keywords = val;
+			this.initData();
+		},
+		//清空历史
+		clearHistory() {
+			uni.setStorageSync('historyList', []);
+		},
 		ralease() {
 			this.showOper = !this.showOper;
 		},
-		tabClick(ind) {
+		tabClick(ind, type) {
 			this.tabList.forEach((v, i) => {
 				if (i == ind) {
 					v.active = true;
 				} else {
 					v.active = false;
 				}
+			});
+			this.pageType = type;
+			this.pageIndex = 0;
+			this.pageSize = 10;
+			this.initData();
+		},
+		myLink() {
+			wx.switchTab({
+				url: '/pages/myshop/index'
 			});
 		}
 	}

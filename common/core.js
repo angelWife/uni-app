@@ -149,6 +149,7 @@ class Core {
 	 * __http - wx.request
 	 */
 	__http(obj) {
+		let self = this
 		return new Promise((resolve, reject) => {
 			uni.request({
 				url: obj.url,
@@ -158,7 +159,7 @@ class Core {
 				method: obj.method,
 				success: (res1) => {
 					if (res1.data.code == 'NoLogin') {
-						thsi.$acFrame.getToken().then(res2 => {
+						getApp().globalData.comFunc.getToken().then(res2 => {
 							wx.setStorageSync('mytoken', res2.data.token)
 							obj.header.token = res2.data.token
 							wx.request({
