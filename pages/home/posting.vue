@@ -9,7 +9,7 @@
       />
       <view class="text-right">
         <text class="c999">{{ textNum }}/500</text>
-        <button type="red" size="mini">发布</button>
+        <button type="red" size="mini" @tap="confirmPost">发布</button>
       </view>
     </view>
     <view class="picList">
@@ -47,7 +47,7 @@
       <view class="item" @tap="linkTo('subject')">
         #
       </view>
-      <view class="item" @tap="chooseLink">
+      <view class="item" @tap="linkTo('ranking')">
         <icon class="iconfont icon-link"></icon>
       </view>
     </view>
@@ -78,11 +78,6 @@ export default {
         this.textNum = len;
       }
     },
-    chooseLink() {
-      uni.navigateTo({
-        url: "ranking"
-      });
-    },
     changeData(obj) {
       console.log(obj);
       this.linkObj = obj;
@@ -107,7 +102,10 @@ export default {
         fail: () => {},
         complete: () => {}
       });
-    },
+	},
+	setLink(obj){
+
+	},
     setVal(id, name, type) {
       
       let len = this.onlyTetxt.length;
@@ -142,13 +140,22 @@ export default {
           }
 		  let end = text.indexOf(mark);
 		  let len = mark.length;
-		  self.onlyTetxt+=text.substring(star,end);
+		  self.onlyText+=text.substring(star,end);
 		  star = end+len;
         });
       }else{
-		  self.onlyTetxt = text
+		  self.onlyText = text
 	  }
-    }
+	},
+	confirmPost(){
+		let params = {
+			content:this.onlyText,
+			extendList:this.extendList
+		}
+		this.$acFrame.HttpService.raleasePost(params).then(res=>{
+			
+		})
+	}
   }
 };
 </script>

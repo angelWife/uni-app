@@ -10,7 +10,7 @@ class Service extends HttpService {
 			ownerInfo:'app/user_info/load_owner',// 根据id加载个人资料信息
 			updateInfo:'app/user_info/load_setting_info',// 根据id加载个人资料信息
 			//文章帖子
-			
+			raleaseArtical:'article/info/publish', // 发文章
 			commentList:'article/info_comment/table_data',// 根据主题加载分页 
 			raleasePic:'article/info/publish_tie_img',// 帖子发布图片
 			raleasePost:'article/info/publish_tie',// 发布帖子

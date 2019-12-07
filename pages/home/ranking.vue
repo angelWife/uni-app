@@ -62,8 +62,8 @@
 				let pages = getCurrentPages()
 				if(pages.length>1){
 					let prePage = pages[pages.length - 2]
-					if (prePage.$vm.changeData) {
-					  prePage.$vm.changeData(obj)
+					if (prePage.$vm.setLink) {
+					  prePage.$vm.setLink(obj)
 					  wx.navigateBack({})
 					}
 				}
