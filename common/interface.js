@@ -19,6 +19,7 @@ class Service extends HttpService {
 			loadTheme:'article/topic/load_by_id',// 根据ID加载主题信息
 			listByTheme:'article/topic/table_data',// 根据主题加载分页
 			hotList:'article/info/hot_search/list_data',//热搜关键字列表
+			followPost:'app/user_follow/exc',//关注
 			//商品
 			productList:'product/goods/table_data', // 销售商品分页
 		}

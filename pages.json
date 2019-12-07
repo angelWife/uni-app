@@ -45,8 +45,20 @@
 			"style": {
 				"navigationBarTitleText": "写文章"
 			}
-		},
-		{
+		}
+		,{
+		    "path" : "pages/home/friends",
+		   "style": {
+		   	"navigationBarTitleText": "选择好友"
+		   }
+		}
+		,{
+		    "path" : "pages/home/subject",
+		   "style": {
+		   	"navigationBarTitleText": "选择话题"
+		   }
+		}
+		,{
 			"path": "pages/myshop/index",
 			"style": {
 				"navigationBarTitleText": "小店集市"
@@ -183,6 +195,7 @@
             	"navigationBarTitleText": "消息"
             }
         }
+        
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",

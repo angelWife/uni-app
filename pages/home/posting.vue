@@ -1,36 +1,20 @@
 <template>
 	<view class="content">
 		<view class="textarea">
-			<textarea value="text" placeholder="请输入" v-model="text"/>
+			<textarea value="showText" placeholder="请输入" v-model="text" @input="textChange"/>
 			<view class="text-right">
-				<text class="c999">0/500</text>
+				<text class="c999">{{textNum}}/500</text>
 				<button type="red" size="mini">发布</button>
 			</view>
 		</view>
 		<view class="picList">
-			<view class="item">
-				<image src="../../static/images/head2.png" mode="widthFix"></image>
-				<icon class="remove iconfont icon-remove"></icon>
-			</view>
-			<view class="item">
-				<image src="../../static/images/head2.png" mode="widthFix"></image>
-				<icon class="remove iconfont icon-remove"></icon>
-			</view>
-			<view class="item">
-				<image src="../../static/images/head2.png" mode="widthFix"></image>
-				<icon class="remove iconfont icon-remove"></icon>
-			</view>
-			<view class="item">
-				<image src="../../static/images/head2.png" mode="widthFix"></image>
-				<icon class="remove iconfont icon-remove"></icon>
-			</view>
-			<view class="item">
-				<image src="../../static/images/head2.png" mode="widthFix"></image>
-				<icon class="remove iconfont icon-remove" @tap="removePic"></icon>
+			<view class="item" v-for="(item,ind) in picList" :key="ind">
+				<image :src="item" mode="widthFix" @tap="showpic(ind)"></image>
+				<icon class="remove iconfont icon-remove" @tap.stop="removePic(item)"></icon>
 			</view>
 		</view>
 		<view class="picBtn">
-			<view class="upload">+</view>
+			<view class="upload" @tap="choosePic">+</view>
 		</view>
 		<view class="linkBox flex item-center" v-if="linkObj.price">
 			<view class="pic">
@@ -46,13 +30,13 @@
 			</view>
 		</view>
 		<view class="operBox">
-			<view class="item">
+			<view class="item" @tap="choosePic">
 				<icon class="iconfont icon-tupian"></icon>
 			</view>
-			<view class="item">
+			<view class="item" @tap="linkTo('friends')">
 				@
 			</view>
-			<view class="item">
+			<view class="item" @tap="linkTo('subject')">
 				#
 			</view>
 			<view class="item" @tap="chooseLink">
@@ -66,11 +50,25 @@
 	export default {
 		data() {
 			return {
-				text:"1111",
-				linkObj:{}
+				text:"",
+				linkObj:{},
+				picList:[],
+				showText:'',
+				editText:'',
+				textNum:0
 			};
 		},
 		methods:{
+			textChange(e){
+				let val = e.detail.value
+				this.editText = val
+				let len = val.length
+				if(len>500){
+					this.$acFrame.Util.mytotal('亲，放不下太多的文字了！')
+				} else {
+					this.textNum = len
+				}
+			},
 			chooseLink(){
 				uni.navigateTo({
 					url:'ranking'
@@ -79,6 +77,29 @@
 			changeData(obj){
 				console.log(obj)
 				this.linkObj = obj
+			},
+			choosePic(){
+				let self = this
+				this.$acFrame.Util.uploadPic().then(res=>{
+					self.picList.push(res)
+				})
+			},
+			removePic(ind){
+				this.picList.splice(ind,1);
+			},
+			showpic(ind){
+				this.$acFrame.Util.showBigPic(this.picList[ind],this.picList);
+			},
+			linkTo(name){
+				uni.navigateTo({
+					url: name,
+					success: res => {},
+					fail: () => {},
+					complete: () => {}
+				});
+			},
+			setVal(id,name,type){
+				
 			}
 		}
 	}
@@ -119,6 +140,7 @@
 		font-size:50px;
 		text-align: center;
 		line-height: calc((100vw - 20rpx) / 5);
+		color:#999;
 	}
 	.operBox{
 		position: fixed;

@@ -20,7 +20,7 @@
 							</block>
 						</view>
 					</view>
-					<view class="followBox">
+					<view class="followBox" @tap="guanzhu(item.articleInfo.id,index)">
 						<text class="follow" v-if="item.publishUser.hasFollow">已关注</text>
 						<text class="follow active" v-else>关注</text>
 					</view>
@@ -202,6 +202,14 @@ export default {
 		linktoshop(){
 			debugger
 			this.$emit('childLink');
+		},
+		guanzhu(id,ind){
+			let selef= this
+			this.$acFrame.HttpService.followPost({id:id}).then(res=>{
+				if(res.success){
+					selef.dataList[ind].hasFollow=!selef.dataList[ind].hasFollow
+				}
+			})
 		}
 	},
 	watch: {}
