@@ -89,7 +89,7 @@ export default {
 			historyList: [],
 			// histroySearch: ['苹果的nfc怎么打开', '王者的积分战队怎么玩的流', '苹果手机被锁住了怎么办'],
 			hotSearch: [],
-			pageIndex: 0,
+			pageIndex: 1,
 			pageSize: 10,
 			pageType: 1,
 			pageTotal: 1
@@ -110,14 +110,18 @@ export default {
 		console.log(this.$acFrame.Util.formatTime());
 	},
 	onShow() {
+		this.dataList=[]
+		this.serchList=[]
+		this.historyList=[]
+		this.hotSearch=[]
 		if (!this.showPic) {
 			this.initData();
 		} else {
 			this.showPic = false;
 		}
-		uni.navigateTo({
-			url: '/pages/home/commentDetail'
-		});
+		// uni.navigateTo({
+		// 	url: '/pages/home/commentDetail'
+		// });
 	},
 	onShareAppMessage() {
 		uni.showShareMenu();
@@ -143,18 +147,33 @@ export default {
 					self.pageTotal = _data.pageTotal;
 					if (dataList.length > 0) {
 						dataList.filter((v, i) => {
-							v.adInfo.imgList.filter(v => {
-								v = self.$acFrame.Util.setImgUrl(v);
+							if(v.adInfo){
+								v.adInfo.imgList.filter((val,i) => {
+									if(val){
+										v.adInfo.imgList[i] = self.$acFrame.Util.setImgUrl(val);
+									}
+								});
+							}
+							
+							v.articleInfo.imgList.filter((val,i) => {
+								if(val){
+									v.articleInfo.imgList[i] = self.$acFrame.Util.setImgUrl(val);
+								}
+								
 							});
-							v.articleInfo.imgList.filter(v => {
-								v = self.$acFrame.Util.setImgUrl(v);
+							v.itemLinkList.filter((val,i) => {
+								if(val.imgPath){
+									v.itemLinkList[i].imgPath = self.$acFrame.Util.setImgUrl(val.imgPath);
+								}
+								
 							});
-							v.itemLinkList.filter(v => {
-								v.imgPath = self.$acFrame.Util.setImgUrl(v.imgPath);
-							});
-							v.publishUser.imgPathHead = self.$acFrame.Util.setImgUrl(v.publishUser.imgPathHead);
+							if(v.publishUser.imgPathHead){
+								v.publishUser.imgPathHead = self.$acFrame.Util.setImgUrl(v.publishUser.imgPathHead);
+							}
 							if (v.type == 1) {
-								v.articleInfo.showContent = self.setContent(v.articleInfo.contentExtendList);
+								if(v.articleInfo.contentExtendList.length>0){
+									v.articleInfo.showContent = self.setContent(v.articleInfo.contentExtendList);
+								}
 								v.articleInfo.showMore = false;
 							}
 							if (v.articleInfo.content.length > 60) {
@@ -166,6 +185,7 @@ export default {
 						} else {
 							self.dataList = self.dataList.concat(dataList);
 						}
+						console.log(self.dataList)
 						self.nodata = false;
 					} else {
 						self.nodata = true;

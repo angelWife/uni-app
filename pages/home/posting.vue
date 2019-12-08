@@ -1,13 +1,8 @@
 <template>
-  <view class="content">
-    <view class="textarea">
-      <textarea
-        value="editText"
-        placeholder="请输入"
-        v-model="editText"
-        @input="textChange"
-      />
-      <view class="text-right">
+	<view class="content">
+		<view class="textarea">
+			<textarea value="editText" placeholder="请输入" v-model="editText" @input="textChange" />
+			<view class="text-right">
         <text class="c999">{{ textNum }}/500</text>
         <button type="red" size="mini" @tap="confirmPost">发布</button>
       </view>
@@ -64,7 +59,8 @@ export default {
       onlyText: "",
       editText: "",
       textNum: 0,
-      extendList: []
+      extendList: [],
+	  picInd:0
     };
   },
   methods: {
@@ -84,10 +80,50 @@ export default {
     },
     choosePic() {
       let self = this;
-      this.$acFrame.Util.uploadPic().then(res => {
-        self.picList.push(res);
-      });
+	  uni.chooseImage({
+	  	count: 1,
+	  	sizeType: ['compressed', 'original'], // 可以指定是原图还是压缩图，默认二者都有
+	  	sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+	  	success: function(res) {
+	  		let tempFilePaths = res.tempFilePaths;
+			self.picList.push(tempFilePaths[0]);
+	  	}
+	  });
     },
+	uploadPic(id){
+		let token = uni.getStorageSync('access_token');
+		let channel='MP_WX';
+		let self = this;
+		let _data={id:id}
+		let imgUrl = self.picList[self.picInd];
+		let len = self.picList.length;
+		if(self.picInd<len){
+wx.uploadFile({
+			url: getApp().globalData.config.basePath + 'article/info/publish_tie_img?articleTieId='+id, // 仅为示例，非真实的接口地址
+			filePath: imgUrl,
+			header: {
+				token,
+				channel
+			},
+			// formData:_data,
+			name: 'file',
+			success: function(res) {
+				let _data=JSON.parse(res.data)
+				debugger
+				if(_data.success){						
+					self.picInd++
+					self.uploadPic(id)
+				}
+			},
+			fail: (error) => {
+				self.$acFrame.Util.mytotal('error')
+			}
+		});
+		}else{
+			uni.navigateBack({})
+		}
+		
+	},
     removePic(ind) {
       this.picList.splice(ind, 1);
     },
@@ -149,6 +185,7 @@ export default {
 	},
 	confirmPost(){
 		this.getText();
+		let self = this;
 		let params = {
 			content:this.onlyText,
 			extendList:this.extendList
@@ -158,7 +195,15 @@ export default {
 			return false;
 		}
 		this.$acFrame.HttpService.raleasePost(params).then(res=>{
-			
+			if(res.success){
+				if(self.picList.length>0){
+					self.uploadPic(res.data)
+				}else{
+					uni.navigateBack({})
+				}
+				
+				
+			}
 		})
 	}
   }

@@ -122,187 +122,254 @@
 		<view class="rewardBtn" @tap="rewardPeople">
 			我要打赏
 		</view>
-		<view v-if="showmask" class="modalmask" @tap="hideModal">
-			<view class="comModal rewardModal" :class="{'showModal':showmask}">
-				<view class="title">
-					<block v-for="(item,index) in modalBar" :key="index">
-						<text :class="{'active':item.active}">{{item.name}}</text>
-					</block>
-				</view>
-				<view class="giftList">
-					<view class="item">
-						<view class="box" @tap.stop="chooseItem(11)">
-							<view class="pic">
-								<image src="/static/images/photo.png" mode="widthFix"></image>
-							</view>
-							<view class="text flex just-con-b">
-								<view>西瓜</view>
-								<view>1星票</view>
+		<view v-if="showmask" class="modalmask">
+			<view class="modalBody flex f-col">
+				<view class="nullModal flex-1"  @tap="hideModal"></view>
+				<view class="rewardModal" :class="{'showModal':showmask}">
+					<view class="title">
+						<block v-for="(item,index) in modalBar" :key="index">
+							<text :class="{'active':item.active}">{{item.name}}</text>
+						</block>
+					</view>
+					<view class="giftList">
+						<view class="item">
+							<view class="box" @tap.stop="chooseItem(11)">
+								<view class="pic">
+									<image src="/static/images/photo.png" mode="widthFix"></image>
+								</view>
+								<view class="text flex just-con-b">
+									<view>西瓜</view>
+									<view>1星票</view>
+								</view>
 							</view>
 						</view>
 					</view>
-				</view>
-				<view class="modalfoot flex item-center">
-					<view class="text">星票：800</view>
-					<view class="text">星能：800</view>
-					<view class="btn flex-1 text-right">
-						<button class="radiuBtn" type="red" size="mini" @tap.stop="rewardInit">打赏</button>
+					<view class="modalfoot flex item-center">
+						<view class="text">
+							<label>
+								<checkbox :value="usename" checked="false" color="#fff" @chang="checkChange"/><text>优先使用星票，余额800 </text>
+							</label>
+						</view>
+						<view class="btn flex-1 text-right">
+							<button class="radiuBtn" type="red" size="mini" @tap.stop="rewardInit">打赏</button>
+						</view>
 					</view>
 				</view>
 			</view>
+			
 		</view>
 	</view>
 </template>
 <script>
 	let giftModal = uni.createAnimation({
-	  duration: 300,
-	  timingFunction: "ease",
-	  delay: 0
+		duration: 300,
+		timingFunction: "ease",
+		delay: 0
 	})
 	export default {
-		name:'reward',
-		data(){
+		name: 'reward',
+		data() {
 			return {
-				showmask:false,
-				modalBar:[{name:'礼物',active:true},{name:'我的道具',active:false}],
-				animationData:{}
+				showmask: false,
+				modalBar: [{
+					name: '礼物',
+					active: true
+				}, {
+					name: '我的道具',
+					active: false
+				}],
+				animationData: {},
+				usename: 'xp'
 			}
 		},
-		onLoad(){},
-		onShow(){
-			
+		onLoad() {},
+		onShow() {
+
 		},
-		methods:{
-			rewardPeople(){
+		methods: {
+			rewardPeople() {
 				this.showmask = true
 			},
-			hideModal(){
+			hideModal() {
 				this.showmask = false
 			},
-			chooseItem(ind){
+			chooseItem(ind) {
 				console.log(ind)
 			},
-			rewardInit(){
+			rewardInit() {
 				this.showmask = false
 			}
 		}
 	}
 </script>
 <style lang="less">
-	page,.content{
-		height:100%;
+	page,
+	.content {
+		height: 100%;
 	}
-	.info{
-		height:240rpx;
+
+	.info {
+		height: 240rpx;
 		border-bottom-left-radius: 1em;
 		border-bottom-right-radius: 1em;
 		overflow: hidden;
-		background:url('http://img.taopic.com/uploads/allimg/120925/235089-12092500254595.jpg') center center no-repeat;
-		background-color: rgba(0,0,0,0.3);
+		background: url('http://img.taopic.com/uploads/allimg/120925/235089-12092500254595.jpg') center center no-repeat;
+		background-color: rgba(0, 0, 0, 0.3);
 		background-size: 100% auto;
 		text-align: center;
 		position: relative;
-		.mark{
-			position:absolute;
+
+		.mark {
+			position: absolute;
 			width: 100%;
-			height:100%;
-			top:0;
-			left:0;
-			background: rgba(0,0,0,0.3);
+			height: 100%;
+			top: 0;
+			left: 0;
+			background: rgba(0, 0, 0, 0.3);
 		}
+
 		.pic {
-			image{
+			image {
 				width: 100rpx;
 				border-radius: 100rpx;
 			}
 		}
-		.text{
-			margin-top:10rpx;
-			color:#fff;
+
+		.text {
+			margin-top: 10rpx;
+			color: #fff;
 		}
 	}
-	.rewardList{
-		height:calc(100% - 320rpx);
-		.title{
-			height:80rpx;
+
+	.rewardList {
+		height: calc(100% - 320rpx);
+
+		.title {
+			height: 80rpx;
 			line-height: 80rpx;
-			padding:0 20rpx;
+			padding: 0 20rpx;
 		}
-		scroll-view{
-			height:calc(100% - 80rpx);
+
+		scroll-view {
+			height: calc(100% - 80rpx);
 		}
-		.item{
-			height:100rpx;
+
+		.item {
+			height: 100rpx;
 			line-height: 100rpx;
-			.pic{
-				height:60rpx;
+
+			.pic {
+				height: 60rpx;
 				width: 60rpx;
 				line-height: 60rpx;
-				margin:10rpx 20rpx;
-				border-radius:60rpx;
+				margin: 10rpx 20rpx;
+				border-radius: 60rpx;
 				overflow: hidden;
 			}
-			.name,.msg{
-				border-top:1px solid #efefef;
-				padding-right:20rpx;
+
+			.name,
+			.msg {
+				border-top: 1px solid #efefef;
+				padding-right: 20rpx;
 			}
 		}
 	}
-	.rewardBtn{
+
+	.rewardBtn {
 		background: #b40000;
-		color:#fff;
-		height:80rpx;
+		color: #fff;
+		height: 80rpx;
 		line-height: 80rpx;
 		text-align: center;
 	}
-	.rewardModal{
-		bottom:-100%;
+
+	.rewardModal {
+		background: #fff;
+		// bottom: -100%;
 		transform: bottom 0.3s easy;
-		&.showModal{
-			bottom:0;
+
+		&.showModal {
+			bottom: 0;
 		}
-		.title{
-			height:80rpx;
+
+		.title {
+			height: 80rpx;
 			line-height: 80rpx;
-			
-			text{
+
+			text {
 				display: inline-block;
-				padding:0 20rpx;
+				padding: 0 20rpx;
 			}
-			.active{
-				font-size:32rpx;
-				color:#b40000;
+
+			.active {
+				font-size: 32rpx;
+				color: #b40000;
 			}
 		}
-		.giftList{
-			padding:10rpx;
+
+		.giftList {
+			padding: 10rpx;
 			overflow: hidden;
-			.item{
-				padding:10rpx;
+
+			.item {
+				padding: 10rpx;
 				width: 25%;
-				float:left;
-				.box{
-					height:calc((100vw - 20rpx) / 4 - 20rpx);
+				float: left;
+
+				.box {
+					height: calc((100vw - 20rpx) / 4 - 20rpx);
 					border-radius: 0.5em;
 					background: #eee;
-					.pic{
-						padding:20rpx 20% 0;
+
+					.pic {
+						padding: 20rpx 20% 0;
 					}
-					.text{
-						font-size:20rpx;
-						color:#999;
-						padding:10rpx 0;
-						> view{width: 50%;text-align: center;}
+
+					.text {
+						font-size: 20rpx;
+						color: #999;
+						padding: 10rpx 0;
+
+						>view {
+							width: 50%;
+							text-align: center;
+						}
 					}
 				}
 			}
 		}
-	    .modalfoot{
-			height:80rpx;
+
+		.modalfoot {
+			height: 80rpx;
 			padding: 0 20rpx;
-			.text{
-				margin-right:30rpx;
+
+			.text {
+				margin-right: 30rpx;
 			}
 		}
 	}
+.modalBody{
+	height:100%;
+}	
+/*checkbox 选项框大小  */
+checkbox .wx-checkbox-input {
+  width:40rpx;
+  height: 40rpx;
+}
+/*checkbox选中后样式  */
+checkbox .wx-checkbox-input.wx-checkbox-input-checked {
+  background: #B40000;
+}
+/*checkbox选中后图标样式  */
+checkbox .wx-checkbox-input.wx-checkbox-input-checked::before {
+  width: 28rpx;
+  height: 28rpx;
+  line-height: 28rpx;
+  text-align: center;
+  font-size: 22rpx;
+  color: #fff;
+  background: transparent;
+  transform: translate(-50%, -50%) scale(1);
+  -webkit-transform: translate(-50%, -50%) scale(1);
+}
 </style>

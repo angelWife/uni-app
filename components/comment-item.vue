@@ -25,7 +25,7 @@
 						<text class="follow active" v-else>关注</text>
 					</view>
 				</view>
-				<block v-if="item.articleInfo.type == 1">
+				<block v-if="item.articleInfo.type == 2">
 					<view class="articalBox">
 						<view class="msg" :class="{ 'clamp clamp-3': !item.articleInfo.showMore && !item.articleInfo.isDetail }" @tap="linkDetail(item)">
 							<block v-for="(conitem, comind) in item.articleInfo.showContent" :key="comind">
@@ -48,13 +48,13 @@
 							<text v-else class="blue" @tap="showAll(index)">全文</text>
 						</view>
 					</view>
-					<view class="imgList clearfix">
-						<view v-for="(imgItem, imgInd) in item.articleInfo.imgList" :key="imgInd" @tap="showBigImg(index, imgInd)" class="imgItem flex-1">
-							<image :src="imgItem" mode="widthFix"></image>
-						</view>
-					</view>
+                     <view class="imgList clearfix">
+                     	<view v-for="(imgItem, imgInd) in item.articleInfo.imgList" :key="imgInd" @tap="showBigImg(index, imgInd)" class="imgItem flex-1">
+                     		<image :src="imgItem" mode="widthFix" @error="setErrorPic(index,imgInd)"></image>
+                     	</view>
+                     </view>
 				</block>
-				<block v-else>
+				<block v-else-if="item.articleInfo.type == 1">
 					<view class="articalBox news flex item-center" v-if="item.articleInfo.imgList.length > 0">
 						<view class="a_pic"><image :src="item.articleInfo.imgList[0]" mode="widthFix"></image></view>
 						<view class="a_main flex-1">
@@ -102,7 +102,7 @@
 					</view>
 				</view>
 			</block>
-			<block v-elid="item.type == 2">
+			<block v-else-if="item.type == 2">
 				<!-- item.adInfo -->
 				<view class="item-head flex item-center">
 					<view class="img item-center"><image :src="item.publishUser.imgPathHead" mode="widthFix"></image></view>
@@ -236,6 +236,10 @@ export default {
 			uni.navigateTo({
 				url:`/pages/mycenter/mycenter?userId=${userId}`
 			})
+		},
+		setErrorPic(ind_p,ind_c){
+			this.dataList[ind_p].articleInfo.imgList[ind_c]="/images/head1.png"
+			
 		}
 	},
 	watch: {}
