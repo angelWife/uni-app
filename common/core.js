@@ -160,7 +160,6 @@ class Core {
 				success: (res1) => {
 					if (res1.data.code == 'NoLogin') {
 						getApp().globalData.comFunc.getToken().then(res2 => {
-							wx.setStorageSync('mytoken', res2.data.token)
 							obj.header.token = res2.data.token
 							wx.request({
 								url: obj.url,

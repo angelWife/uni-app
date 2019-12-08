@@ -47,6 +47,12 @@
 			}
 		}
 		,{
+		    "path" : "pages/home/topicIndex",
+		    "style": {
+		    	"navigationBarTitleText": "话题主页"
+		    }
+		}
+		,{
 		    "path" : "pages/home/friends",
 		   "style": {
 		   	"navigationBarTitleText": "选择好友"
@@ -195,7 +201,29 @@
             	"navigationBarTitleText": "消息"
             }
         }
-        
+
+        ,{
+            "path" : "pages/ranking/product",
+            "style": {
+            	"navigationBarTitleText": "产品排行"
+            }
+        }
+        ,{
+            "path" : "pages/ranking/invitation",
+            "style": {
+            	"navigationBarTitleText": "邀请排行"
+            }
+        }
+        ,{
+            "path" : "pages/ranking/post",
+            "style": {
+            	"navigationBarTitleText": "帖子排行"
+            }
+        }
+        ,{
+            "path" : "pages/home/commentList",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
@@ -205,24 +233,24 @@
 	},
 	"tabBar": {
 		"color": "#7A7E83",
-		"selectedColor": "#3cc51f",
+		"selectedColor": "#b40000",
 		"borderStyle": "black",
 		"backgroundColor": "#f8f8f8",
 		"list": [{
 				"pagePath": "pages/home/index",
-				"iconPath": "static/images/photo.png",
-				"selectedIconPath": "static/images/photo.png",
+				"iconPath": "static/images/home.png",
+				"selectedIconPath": "static/images/home_s.png",
 				"text": "首页"
 			},
 			{
 				"pagePath": "pages/myshop/index",
-				"iconPath": "static/images/shop.png",
-				"selectedIconPath": "static/images/shop.png",
+				"iconPath": "static/images/myshop.png",
+				"selectedIconPath": "static/images/myshop_s.png",
 				"text": "小店集市"
 			}, {
 				"pagePath": "pages/mycenter/index",
-				"iconPath": "static/images/setting.png",
-				"selectedIconPath": "static/images/setting.png",
+				"iconPath": "static/images/mycenter.png",
+				"selectedIconPath": "static/images/mycenter_s.png",
 				"text": "我的"
 			}
 		]

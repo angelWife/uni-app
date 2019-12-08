@@ -76,6 +76,8 @@ const showBigPic = (showSrc, list) => {
 // 上传图片
 const uploadPic = (url) => {
 	return new Promise((resolve, reject) => {
+		let token = uni.getStorageSync('access_token');
+		let channel='MP_WX';
 		uni.chooseImage({
 			count: 1,
 			sizeType: ['compressed', 'original'], // 可以指定是原图还是压缩图，默认二者都有
@@ -83,13 +85,11 @@ const uploadPic = (url) => {
 			success: function(res) {
 				let tempFilePaths = res.tempFilePaths;
 				resolve(tempFilePaths[0]);
-				return false;
 				uni.uploadFile({
-					url: app.__config.basePath + '/api/rabbit/setting/upd_imghead', // 仅为示例，非真实的接口地址
+					url: getApp().globalData.config.basePath + '/file/upload', // 仅为示例，非真实的接口地址
 					filePath: tempFilePaths[0],
 					header: {
 						token,
-						rabbitId,
 						channel
 					},
 					name: 'file',

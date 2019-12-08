@@ -4,7 +4,7 @@
       <textarea
         value="editText"
         placeholder="请输入"
-        v-model="text"
+        v-model="editText"
         @input="textChange"
       />
       <view class="text-right">
@@ -108,21 +108,21 @@ export default {
 	},
     setVal(id, name, type) {
       
-      let len = this.onlyTetxt.length;
+      let len = this.onlyText.length;
       let text = this.editText;
-
       let obj = {};
       if (type == "friend") {
         obj.atId = id;
         obj.atName = name;
-        index = len;
+        obj.index = len;
         text += "@" + name;
       } else {
         obj.atId = id;
         obj.topicName = name;
-		index = len;
+		obj.index = len;
 		text+='#'+name+'#'
 	  }
+	  this.extendList.push(obj)
 	  this.editText = text
     },
     getText() {
@@ -148,9 +148,14 @@ export default {
 	  }
 	},
 	confirmPost(){
+		this.getText();
 		let params = {
 			content:this.onlyText,
 			extendList:this.extendList
+		}
+		if(!params.content){
+			this.$acFrame.Util.mytotal('请输入帖子内容！');
+			return false;
 		}
 		this.$acFrame.HttpService.raleasePost(params).then(res=>{
 			
@@ -168,6 +173,8 @@ export default {
     textarea {
       padding: 20rpx 0;
       height: 160px;
+	  width: 100%;
+	  box-sizing: border-box;
     }
     .text-right {
       padding: 20rpx 0;

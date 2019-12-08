@@ -3,10 +3,10 @@
 		<view v-for="(item, index) in dataList" :key="index" class="listItem">
 			<block v-if="item.type == 1">
 				<view class="item-head flex item-center">
-					<view class="img item-center"><image :src="item.publishUser.imgPathHead" mode="widthFix"></image></view>
+					<view class="img item-center" @tap="userInfo(item.publishUser.userId)"><image :src="item.publishUser.imgPathHead" mode="widthFix"></image></view>
 					<view class="flex-1 head-msg">
 						<view class="clearfix">
-							<text class="name fs15">{{ item.publishUser.userName }}</text>
+							<text class="name fs15" @tap="userInfo(item.publishUser.userId)">{{ item.publishUser.userName }}</text>
 							<text v-if="item.publishUser.militaryRankType" class="rank">{{ item.rank }}</text>
 							<text v-if="item.publishUser.shopId" class="shop">店铺</text>
 						</view>
@@ -27,7 +27,7 @@
 				</view>
 				<block v-if="item.articleInfo.type == 1">
 					<view class="articalBox">
-						<view class="msg" :class="{ 'clamp clamp-3': !item.articleInfo.showMore && !item.articleInfo.isDetail }" @tap="linkDetail(item.articleInfo.id)">
+						<view class="msg" :class="{ 'clamp clamp-3': !item.articleInfo.showMore && !item.articleInfo.isDetail }" @tap="linkDetail(item)">
 							<block v-for="(conitem, comind) in item.articleInfo.showContent" :key="comind">
 								<block v-if="conitem.type == 1">
 									<text class="name blue" @tap.stop="linkUser(conitem.atId)">@{{ conitem.atName }}</text>
@@ -134,6 +134,9 @@
 				<!-- <navigator url="/pages/home/index" class="radiuBtn" hover-class="none">随便看看</navigator> -->
 			</view>
 		</view>
+		<view class="noMore" v-if="nomore">
+			到底了~
+		</view>
 	</view>
 </template>
 
@@ -155,19 +158,26 @@ export default {
 			}
 		},
 		nodata: {
-			// 是否是详情
+			// 是否有数据
 			type: Boolean,
 			default() {
 				return false;
 			}
 		},
-		isDetail: {
-			// 是否是详情
+		// isDetail: {
+		// 	// 是否是详情
+		// 	type: Boolean,
+		// 	default() {
+		// 		return false;
+		// 	}
+		// },
+		nomore:{
+			// 是否有更多数据
 			type: Boolean,
 			default() {
 				return false;
 			}
-		}
+		},
 		// showOper:{ // 距离头部多少px将其固定
 		//   type: Boolean,
 		//   default(){
@@ -192,16 +202,17 @@ export default {
 			this.showPic = true;
 		},
 		loadMoreData() {},
-		linkDetail() {
-			if (!this.isDetail) {
-				uni.navigateTo({
-					url: '/pages/index/commentDetail'
-				});
-			}
+		linkDetail(obj) {
+			uni.navigateTo({
+				url: `/pages/home/commentDetail?data=${encodeURIComponent(JSON.stringify(obj))}&pageType=${this.pageType}`
+			});
 		},
 		linktoshop(){
-			debugger
-			this.$emit('childLink');
+			// debugger
+			wx.switchTab({
+				url: '/pages/myshop/index'
+			});
+			// this.$emit('childLink');
 		},
 		guanzhu(id,ind){
 			let selef= this
@@ -209,6 +220,21 @@ export default {
 				if(res.success){
 					selef.dataList[ind].hasFollow=!selef.dataList[ind].hasFollow
 				}
+			})
+		},
+		linkUser(id){
+			uni.navigateTo({
+				url:`../pages/home/topicIndex?id=${id}`
+			})
+		},
+		linkTheme(id){
+			uni.navigateTo({
+				url:`../pages/home/topicIndex?id=${id}`
+			})
+		},
+		userInfo(userId){
+			uni.navigateTo({
+				url:`/pages/mycenter/mycenter?userId=${userId}`
 			})
 		}
 	},

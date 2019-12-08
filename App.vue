@@ -233,6 +233,12 @@ icon.remove {
 		border-radius:80rpx;
 	}
 }
+.noMore{
+	line-height: 60rpx;
+	text-align: center;
+	color:#999;
+	font-size:24rpx;
+}
 /*字体大小*/
 .fs10 {
 	font-size: 20rpx;

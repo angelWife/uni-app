@@ -46,7 +46,9 @@
 				</view>
 			</view>
 			<view class="searchList" v-else>
-				<scroll-view class="myscroll" scroll-y="true" @scrolltolower="loadMoreData"><commentItem :nodata="nodata" :dataList="serchList"></commentItem></scroll-view>
+				<scroll-view class="myscroll" scroll-y="true" @scrolltolower="loadMoreData">
+					<commentItem :nodata="nodata" :nomore="searchnomore" :dataList="serchList"></commentItem>
+				</scroll-view>
 			</view>
 		</view>
 		<view class="listBox" v-else>
@@ -59,7 +61,7 @@
 			</view>
 			<view class="list-content">
 				<scroll-view class="myscroll" scroll-y="true" @scrolltolower="loadMoreData">
-					<commentItem :nodata="nodata" :pageType="pageType" :dataList="dataList" @childLink="myLink"></commentItem>
+					<commentItem :nodata="nodata" :nomore="nomore" :pageType="pageType" :dataList="dataList"></commentItem>
 				</scroll-view>
 			</view>
 		</view>
@@ -79,6 +81,7 @@ export default {
 			showPic: false, // 打开图片无需重新加载数据
 			nosearch: true,
 			nodata: false,
+			nomore:false,
 			keywords: '',
 			tabList: [{ name: '关注', active: false, type: 2 }, { name: '广场', active: true, type: 1 }],
 			dataList: [],
@@ -112,6 +115,9 @@ export default {
 		} else {
 			this.showPic = false;
 		}
+		uni.navigateTo({
+			url: '/pages/home/commentDetail'
+		});
 	},
 	onShareAppMessage() {
 		uni.showShareMenu();
@@ -235,8 +241,7 @@ export default {
 			this.initData();
 		},
 		tapSearch(val) {
-			this.pageIndex = 0;
-			this.pageSize = 10;
+			this.resetData();
 			this.pageType = null;
 			this.keywords = val;
 			this.initData();
@@ -257,14 +262,23 @@ export default {
 				}
 			});
 			this.pageType = type;
-			this.pageIndex = 0;
-			this.pageSize = 10;
+			this.resetData();
 			this.initData();
 		},
-		myLink() {
-			wx.switchTab({
-				url: '/pages/myshop/index'
-			});
+		loadMoreData(){
+			let pageIndex = this.pageIndex
+			pageIndex++
+			if(pageIndex<=this.pageTotal){
+				this.initData()
+				this.nomore = false
+			}else{
+				this.nomore = true
+			}
+		},
+		resetData(){
+			this.pageIndex = 0;
+			this.pageSize = 10;
+			this.nomore = false
 		}
 	}
 };
@@ -298,8 +312,13 @@ page {
 			position: absolute;
 			top: 0;
 			width: 60rpx;
+			line-height: 60rpx;
 			text-align: center;
 			color: #999;
+			&::before{
+				line-height: 60rpx;
+				vertical-align: top;
+			}
 		}
 		.icon-clear {
 			right: 0;

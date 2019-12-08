@@ -4,24 +4,26 @@ class Service extends HttpService {
 		super(options)
 		this.$$path = {
 			getToken: 'user/login_mp_register', // 通用根据code获取Token
-			loginOut:'user/login_out',//退出登录
+			loginOut: 'user/login_out', //退出登录
+			//上传
+			
 			//用户
-			userInfo:'app/user_info/load_by_id',// 根据id加载个人资料信息
-			ownerInfo:'app/user_info/load_owner',// 根据id加载个人资料信息
-			updateInfo:'app/user_info/load_setting_info',// 根据id加载个人资料信息
+			userInfo: 'app/user_info/load_by_id', // 根据id加载个人资料信息
+			ownerInfo: 'app/user_info/load_owner', // 根据id加载个人资料信息
+			updateInfo: 'app/user_info/load_setting_info', // 根据id加载个人资料信息
 			//文章帖子
-			raleaseArtical:'article/info/publish', // 发文章
-			commentList:'article/info_comment/table_data',// 根据主题加载分页 
-			raleasePic:'article/info/publish_tie_img',// 帖子发布图片
-			raleasePost:'article/info/publish_tie',// 发布帖子
-			deletePost:'article/info/remove_by_id',// 删除帖子
-			postList:'article/info/table_data',//分页数据 1广场  2关注
-			loadTheme:'article/topic/load_by_id',// 根据ID加载主题信息
-			listByTheme:'article/topic/table_data',// 根据主题加载分页
-			hotList:'article/info/hot_search/list_data',//热搜关键字列表
-			followPost:'app/user_follow/exc',//关注
+			raleaseArtical: 'article/info/publish', // 发文章
+			commentList: 'article/info_comment/table_data', // 评论列表
+			raleasePic: 'article/info/publish_tie_img', // 帖子发布图片
+			raleasePost: 'article/info/publish_tie', // 发布帖子
+			deletePost: 'article/info/remove_by_id', // 删除帖子
+			postList: 'article/info/table_data', //分页数据 1广场  2关注
+			loadTopic: 'article/topic/load_by_id', // 根据ID加载主题信息
+			loadTopicList: 'article/topic/table_data', // 根据主题加载分页
+			hotList: 'article/info/hot_search/list_data', //热搜关键字列表
+			followPost: 'app/user_follow/exc', //关注
 			//商品
-			productList:'product/goods/table_data', // 销售商品分页
+			productList: 'product/goods/table_data', // 销售商品分页
 		}
 	}
 	getToken(params) {
@@ -29,20 +31,40 @@ class Service extends HttpService {
 			data: params
 		})
 	}
-	postList(params){
+	postList(params) {
 		return this.postRequest(this.$$path.postList, {
 			data: params
 		})
 	}
-	hotList(params){
+	raleasePost(params) {
+		return this.postRequest(this.$$path.raleasePost, {
+			data: params
+		})
+	}
+	raleaseArtical(params) {
+		return this.postRequest(this.$$path.raleaseArtical, {
+			data: params
+		})
+	}
+	hotList(params) {
 		return this.postRequest(this.$$path.hotList)
 	}
-	productList(params){
+	loadTopic(params) {
+		return this.postRequest(this.$$path.loadTopic, {
+			data: params
+		})
+	}
+	loadTopicList(params) {
+		return this.postRequest(this.$$path.loadTopicList, {
+			data: params
+		})
+	}
+	productList(params) {
 		return this.postRequest(this.$$path.productList, {
 			data: params
 		})
 	}
-	
+
 }
 
 export default Service

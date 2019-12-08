@@ -2,7 +2,7 @@
 	<view class="content pagebg">
 		<view v-for="(item,ind) in list" :key="ind" class="item flex item-center">
 			<view class="pic">
-				<image :src="item.img" mode="widthFix"></image>
+				<image :src="item.pic" mode="widthFix"></image>
 			</view>
 			<view class="flex-1 main flex item-center">
 				<view class="left flex-1">
@@ -32,8 +32,10 @@
 				if(pages.length>1){
 					let prePage = pages[pages.length - 2]
 					if (prePage.$vm.changeData) {
-					  prePage.$vm.setVal(obj.id,obj.name,'friend')
 					  wx.navigateBack({})
+					  setTimeout(()=>{
+						  prePage.$vm.setVal(obj.id,obj.name,'friend')
+					  },100)
 					}
 				}
 			}
