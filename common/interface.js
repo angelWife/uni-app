@@ -6,7 +6,7 @@ class Service extends HttpService {
 			getToken: 'user/login_mp_register', // 通用根据code获取Token
 			loginOut: 'user/login_out', //退出登录
 			//上传
-			
+
 			//用户
 			userInfo: 'app/user_info/load_by_id', // 根据id加载个人资料信息
 			ownerInfo: 'app/user_info/load_owner', // 根据id加载个人资料信息
@@ -24,6 +24,14 @@ class Service extends HttpService {
 			followPost: 'app/user_follow/exc', //关注
 			//商品
 			productList: 'product/goods/table_data', // 销售商品分页
+			directBuy: 'order/info/buy', //商品直接购买
+			createSpell: 'order/spell/cre', // 创建拼团
+			joinSpell: 'order/spell/join', // 加入拼单
+			productCommentList: 'product/goods_comment/table_data', //商品品论
+			productDetail: 'product/goods/load_by_id', //商品详情
+			shopDetail: 'shop/info/load_by_id', //店铺详情
+			shopFollow: 'shop/info_user/follow', //店铺关注
+			shopList: 'shop/product_goods/table_data', //店铺列表
 		}
 	}
 	getToken(params) {
@@ -64,7 +72,46 @@ class Service extends HttpService {
 			data: params
 		})
 	}
-
+	directBuy(params) {
+		return this.postRequest(this.$$path.directBuy, {
+			data: params
+		})
+	}
+	createSpell(params) {
+		return this.postRequest(this.$$path.createSpell, {
+			data: params
+		})
+	}
+	joinSpell(params) {
+		return this.postRequest(this.$$path.joinSpell, {
+			data: params
+		})
+	}
+	productCommentList(params) {
+		return this.postRequest(this.$$path.productCommentList, {
+			data: params
+		})
+	}
+	productDetail(params) {
+		return this.postRequest(this.$$path.productDetail, {
+			data: params
+		})
+	}
+	shopDetail(params) {
+		return this.postRequest(this.$$path.shopDetail, {
+			data: params
+		})
+	}
+	shopFollow(params) {
+		return this.postRequest(this.$$path.shopFollow, {
+			data: params
+		})
+	}
+	shopList(params) {
+		return this.postRequest(this.$$path.shopList, {
+			data: params
+		})
+	}
 }
 
 export default Service
