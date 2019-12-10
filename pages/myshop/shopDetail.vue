@@ -4,32 +4,36 @@
 			<view class="shopMsg flex item-center">
 				<view class="name flex-1">
 					<view class="title">
-						伊宁专卖店
+						{{shopDetail.name}}
 					</view>
 					<view class="text fs13 clamp clamp-2">
-						店铺描述店铺描述店铺描述店铺描述店铺描述店铺描述店铺描述店铺描述店铺描述店铺描述。
+						{{shopDetail.describe}}
 					</view>
-					<view class="btn">
+					<view class="btn" v-if="!shopDetail.isOwner">
 						<button class="contact radiuBtn" open-type="contact" size="mini">客服</button>
 					</view>
 				</view>
 				<view class="right">
 					<view class="pic">
-						<image src="../../static/images/head1.png" mode="widthFix"></image>
+						<image :src="setImg(shopDetail.imgPath)" mode="widthFix"></image>
 					</view>
-					<view class="btn">
-						<button type="red" class="radiuBtn" size="mini">关注</button>
+					<view class="btn" v-if="!shopDetail.isOwner">
+						<button v-if="shopDetail.hasFollow" type="red" class="radiuBtn" size="mini" @tap="followShop(shopDetail.id)">关注</button>
+						<button v-else class="contact radiuBtn" size="mini" @tap="followShop(shopDetail.id)">关注</button>
 					</view>
 				</view>
 			</view>
 			<view class="shopCoupon">
 				<scroll-view scroll-x="true">
-					<image src="../../static/images/head1.png" mode="widthFix"></image>
-					<image src="../../static/images/head1.png" mode="widthFix"></image>
-					<image src="../../static/images/head1.png" mode="widthFix"></image>
-					<image src="../../static/images/head1.png" mode="widthFix"></image>
-					<image src="../../static/images/head1.png" mode="widthFix"></image>
-					<image src="../../static/images/head1.png" mode="widthFix"></image>
+					<block  v-for="(item,ind) in shopDetail.couponList" :key="ind">
+						<view class="item" :class="{'hasReceived':item.hasReceived}">
+							<text class="doll">¥</text>
+							<text class="price blod">15</text>
+							<text class="t1 fs12" :class="{'c999':item.hasReceived}">满100元使用</text>
+							<text class="t2">优惠券</text>
+							<text class="t3 white">{{item.hasReceived?'已领取':'立即领取'}}</text>
+						</view>
+					</block>
 				</scroll-view>
 			</view>
 		</view>
@@ -44,7 +48,7 @@
 		</view>
 		<view class="shopList">
 			<scroll-view class="myscroll" scroll-y="true">
-				<ProductList :dataList="dataList"></ProductList>
+				<ProductList :nodata="nodata" :dataList="dataList"></ProductList>
 			</scroll-view>
 		</view>
 	</view>
@@ -58,14 +62,62 @@
 		},
 		data() {
 			return {
+				id:0,
+				pageIndex:1,
+				pageSize:20,
+				pageTotal:1,
 				tabs:[{name:'首页',choose:true},{name:'销量',choose:false},{name:'新品',choose:false},{name:'价格',choose:false}],
+				shopDetail:{},
 				dataList:[{name:"这边的是产品的名称，最多显示两行，超出两行的省略号",price:'52.00',salesNum:21623,pic:'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1574140134898&di=9b8d75803e617d449499df2f5a8d300f&imgtype=0&src=http%3A%2F%2Fm.360buyimg.com%2Fpop%2Fjfs%2Ft24241%2F145%2F1818221682%2F18886%2F71aac218%2F5b696accN052717a7.jpg'},
 				{name:"韩版新款复古水晶耳饰饰品欧美时尚高档小香耳钉耳环批发",price:'7.50',salesNum:152000,pic:'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2786988750,209248222&fm=15&gp=0.jpg'},
 				{name:"溢彩水彩手帐本随身旅行绘画皮面便携手账本300g中粗纹进口水彩纸",price:'7.50',salesNum:152000,pic:'https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=123919148,3561097999&fm=15&gp=0.jpg'}],
 				sortType:'desc' //asc
 			}
 		},
+		onLoad(options){
+			this.id = options.id;
+		},
+		onShow(){
+			this.resetData()
+			this.initShop()
+			this.initProduct()
+		},
 		methods: {
+			initShop(){
+				let self = this
+				let params = {
+					id:this.id
+				}
+				self.$acFrame.HttpService.shopDetail(params).then(res => {
+					if(res.success){
+						self.shopDetail = res.data
+					}
+				})
+			},
+			initProduct(){
+				let self = this
+				let params = {
+					shopId:this.id,
+					numTotalSaleAsc:null,
+					priceSaleAsc:null,
+					publishTimeAsc:null,
+					pageIndex:this.pageIndex,
+					pageSize:this.pageSize
+				}
+				self.$acFrame.HttpService.productList(params).then(res => {
+					if(res.success){
+						let list = res.data.rows
+						self.pageTotal = res.data.pageTotal
+						if(list.length>0){
+							self.dataList.push(list)
+							self.nodata = fasle
+						} else {
+							self.nodata = true
+						}
+						
+					}
+				})
+			},
 			clickBar(ind){
 				let choose = this.tabs[ind].choose
 				if(choose){
@@ -77,6 +129,7 @@
 				} else {
 					this.sortType = 'desc'
 				}
+				this.resetData()
 				this.tabs.filter((v,i)=>{
 					if(i==ind){
 						v.choose = true
@@ -84,6 +137,23 @@
 						v.choose = false
 					}
 				})
+				this.initProduct()
+			},
+			followShop(id){
+				let self = this
+				let params = {
+					id:this.id
+				}
+				self.$acFrame.HttpService.shopFollow(params).then(res => {
+					if(res.success){
+						self.shopDetail.hasFollow = res.data.hasFollow
+					}
+				})
+			},
+			resetData(){
+				this.pageIndex=1
+				this.pageSize=20
+				this.dataList=[]
 			}
 		}
 	}
@@ -156,11 +226,36 @@ page,.content{
 			white-space: nowrap;
 			height:100%;
 			overflow: hidden;
-			image{
-				width: 100px;
+			.item{
+				display: inline-block;
+				width: 200rpx;
+				height:100rpx;
 				margin-right:20rpx;
+				position:relative;
+				padding-top:20rpx;
+				background: rgb(241, 241, 63);
 				&:last-child{
 					margin-right:0;
+				}
+				&.hasReceived{
+					background: #f1f1f1;
+				}
+				.doll{
+					float:left;
+					margin-left:20rpx;
+				}
+				.price{
+					float:left;
+					font-size:60rpx;
+				}
+				.t1{
+					float:left;
+				}
+				.t2{
+					float:left;
+				}
+				.t3{
+					float:right;
 				}
 			}
 		}

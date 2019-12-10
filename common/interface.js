@@ -5,6 +5,7 @@ class Service extends HttpService {
 		this.$$path = {
 			getToken: 'user/login_mp_register', // 通用根据code获取Token
 			loginOut: 'user/login_out', //退出登录
+			hotList:'sys/cfg/hot_search/list_data', //热搜关键字列表'
 			//上传
 
 			//用户
@@ -20,7 +21,6 @@ class Service extends HttpService {
 			postList: 'article/info/table_data', //分页数据 1广场  2关注
 			loadTopic: 'article/topic/load_by_id', // 根据ID加载主题信息
 			loadTopicList: 'article/topic/table_data', // 根据主题加载分页
-			hotList: 'article/info/hot_search/list_data', //热搜关键字列表
 			followPost: 'app/user_follow/exc', //关注
 			//商品
 			productList: 'product/goods/table_data', // 销售商品分页

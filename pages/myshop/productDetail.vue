@@ -2,19 +2,19 @@
 	<view class="content">
 		<view class="productPic">
 			<swiper :indicator-dots="false" :autoplay="false" :interval="3000" :duration="400" @animationfinish="imgChange">
-				<swiper-item v-for="(item, ind) in imgList" :key="ind">
-					<view class="swiper-item"><image :src="item" mode="widthFix"></image></view>
+				<swiper-item v-for="(item, ind) in prodDetail.imgList" :key="ind">
+					<view class="swiper-item"><image :src="setImg(item)" mode="widthFix"></image></view>
 				</swiper-item>
 			</swiper>
-			<view class="page">{{ imgInd }}/{{ imgList.length }}</view>
+			<view class="page">{{ imgInd }}/{{ prodDetail.imgList.length }}</view>
 		</view>
 		<view class="modal prod1">
-			<view class="name clamp clamp-2 fs15">现摘党纪新鲜水果应季陕西苹果红富士一张整箱10斤</view>
+			<view class="name clamp clamp-2 fs15">{{prodDetail.name}}</view>
 			<view class="price red">
 				<text class="fs12">¥</text>
-				<text class="fs18">138.00</text>
+				<text class="fs18">{{prodDetail.priceSale}}</text>
 				<text class="yunfei">运费：5元</text>
-				<text class="float-right c999 fs12">销量13241件</text>
+				<text class="float-right c999 fs12">销量{{prodDetail.numTotalSale}}件</text>
 			</view>
 			<button open-type="share" class="iconfont icon-share">分享</button>
 		</view>
@@ -32,10 +32,20 @@
 			<view class="coupon flex">
 				<view class="name c999">领取</view>
 				<view class="listBox flex-1">
-					<view class="item">满100减10</view>
-					<view class="item">满200减30</view>
+					<block v-for="(item,ind) in prodDetail.couponList" :key="ind" >
+						<view v-if="!item.hasReceived" @tap="chooseCoupon(ind,item.couponId)" class="item">
+							满{{item.priceFull}}{{item.type==1?'减'+item.effectVal:item.effectVal+'折'}}
+						</view>
+					</block>
+					
 				</view>
 			</view>
+			<!-- <view class="prodModal flex">
+				<view class="name c999">规格</view>
+				<view class="listBox flex-1 text-right">
+					{{}}
+				</view>
+			</view> -->
 			<view class="service flex">
 				<view class="name c999">服务</view>
 				<view class="listBox flex-1">
@@ -46,63 +56,67 @@
 			</view>
 		</view>
 		
-		<view class="modal assemble">
+		<view class="modal assemble" v-if="prodDetail.flagSpell==1">
 			<view class="title">
 				4人在拼单，可直接参与
 				<text class="float-right red" @tap="moreassemble">查看全部</text>
 			</view>
 			<view class="list">
-				<view class="item flex item-center">
-					<view class="pic"><image src="../../static/images/head1.png" mode="widthFix"></image></view>
-					<view class="name textEllipsis">特别阿童木</view>
+				<view v-for="(item,ind) in prodDetail.orderSpellList" :key="ind" class="item flex item-center">
+					<view class="pic"><image :src="setImg(item.firstUserImgPath)" mode="widthFix"></image></view>
+					<view class="name textEllipsis">{{item.firstUserName}}</view>
 					<view class="time flex-1 text-center">
-						<view>还差1人成团</view>
+						<view>还差{{item.numUserLeft}}人成团</view>
 						<view class="fs12 c999">
 							剩余
-							<uni-count-down :show-day="false" :color="color" :splitorColor="color" :show-style="false" :hour="12" :minute="12" :second="12" />
+							<uni-count-down 
+							:show-day="false" 
+							:color="color" 
+							:splitorColor="color" 
+							:show-style="false" 
+							:hour="this.$acFrame.Util.countTime(item.endTime,'hour')" 
+							:minute="this.$acFrame.Util.countTime(item.endTime,'minute')" 
+							:second="this.$acFrame.Util.countTime(item.endTime,'second')" />
 						</view>
 					</view>
-					<view class="去拼单"><button type="orange" size="mini" @tap="joinGroup">去拼单</button></view>
-				</view>
-				<view class="item flex item-center">
-					<view class="pic"><image src="../../static/images/head1.png" mode="widthFix"></image></view>
-					<view class="name textEllipsis">特别阿童木</view>
-					<view class="time flex-1 text-center">
-						<view>还差1人成团</view>
-						<view class="fs12 c999">
-							剩余
-							<uni-count-down :show-day="false" :color="color" :splitorColor="color" :show-style="false" :hour="12" :minute="12" :second="12" />
-						</view>
+					<view class="">
+						<block v-if="item.firstUserIsOwner">
+							<button type="blue" size="mini" open-type="share">邀请好友</button>
+						</block>
+						<block v-else>
+							<button v-if="item.hasJoin" type="green" size="mini">查看</button>
+						    <button v-else type="orange" size="mini" @tap="joinGroup(index)">去拼单</button>
+						</block>
+						
 					</view>
-					<view class="去拼单"><button type="orange" size="mini" @tap="joinGroup">去拼单</button></view>
 				</view>
 			</view>
 		</view>
 		<view class="modal prod4 flex item-center">
 			<view class="pic">
-				<image src="../../static/images/head2.png" mode="widthFix"></image>
+				<image :src="setImg(prodDetail.shopInfo.imgPath)" mode="widthFix"></image>
 			</view>
 			<view class="name flex-1">
-				<view class="title blod">老七诚信旗舰店</view>
-				<view class="textEllipsis c999 fs13">描述信息描述信息描述信息</view>
+				<view class="title blod">{{prodDetail.shopInfo.name}}</view>
+				<view class="textEllipsis c999 fs13">{{prodDetail.shopInfo.describe}}</view>
 			</view>
 			<view class="btn">
-				<button class="radiuBtn" type="red" size="mini">进店逛逛</button>
+				<button class="radiuBtn" type="red" size="mini" @tap="shopDetail(prodDetail.shopInfo.id)">进店逛逛</button>
 			</view>
 		</view>
 		<view class="modal prod5">
 			<view class="title">
-				商品评价（103条）
-				<text class="red float-right">查看全部</text>
+				商品评价（{{prodDetail.numTotalComment}}条）
+				<text class="red float-right" @tap="showAllComment(prodDetail.goodsId)">查看全部</text>
 			</view>
 			<view class="list">
-				<view class="item">
+				<view v-for="(item,ind) in prodDetail.commentList" :key="ind" class="item">
 					<view class="item-top flex item-center">
 						<view class="pic imgCirc">
-							<image src="../../static/images/head2.png" mode="widthFix"></image>
+							<image :src="setImg(item.userImgHead)" mode="widthFix"></image>
 						</view>
 						<view class="name flex-1 textEllipsis">
-							殷桃丸子
+							{{item.name}}
 						</view>
 						<view class="star">
 							<block  v-for="(item,ind) in [1,2,3,4,5]" :key="ind">
@@ -112,18 +126,18 @@
 						</view>
 					</view>
 					<view class="text clamp clamp-2">
-						针对于事物进行主观或客观的自我印象阐述。评论易 让人听到不利于自己的一面，因此评论的话语容…
+						{{item.content}}
 					</view>
 					<view class="time fs12 c999">
-						<text>红色/XL</text>
-						<text>2019-12-12</text>
+						<text>{{item.propValue}}</text>
+						<text>{{item.commentTime}}</text>
 					</view>
 				</view>
 			</view>
 		</view>
 		<view class="modal productDetail">
 			<view class="title blod">
-商品详情				
+				商品详情				
 			</view>
 			<view class="goodsAttr">
 				<view class="flex">
@@ -143,9 +157,9 @@
 					</view>
 				</view>
 			</view>
-		<view class="goodsMsg">
-			<rich-text :nodes="richNode"></rich-text>
-		</view>
+			<view class="goodsMsg">
+				<rich-text :nodes="richNode"></rich-text>
+			</view>
 		</view>
 		<view class="prodFoot flex item-center">
 			<view class="item">
@@ -162,27 +176,31 @@
 				<button open-type="share"></button>
 			</view>
 			<view class="flex-1 flex">
-				<view class="btn btn1 flex-1 flex f-col just-con-c">
+				<block v-if="prodDetail.flagSpell==1">
+					<view class="btn btn2 flex-1 flex f-col just-con-c">
+						<view class="price">
+							¥ 955
+						</view>
+						<view class="text">
+							单独购买
+						</view>
+					</view>
+					<view class="btn btn1 flex-1 flex f-col just-con-c">
+						<view class="price">
+							¥ 955
+						</view>
+						<view class="text">
+							发起拼单
+						</view>
+					</view>
+				</block>
+				<block v-else>
+					<view class="btn btn1 flex-1 flex f-col just-con-c">
 					<view class="buy" @tap="confirmOrder">
 						立即购买
 					</view>
 				</view>
-				<!-- <view class="btn btn2 flex-1 flex f-col just-con-c">
-					<view class="price">
-						¥ 955
-					</view>
-					<view class="text">
-						单独购买
-					</view>
-				</view>
-				<view class="btn btn1 flex-1 flex f-col just-con-c">
-					<view class="price">
-						¥ 955
-					</view>
-					<view class="text">
-						发起拼单
-					</view>
-				</view> -->
+				</block>
 			</view>
 		</view>
 		<view class="comDialog assembleModal flex item-center just-con-c" v-if="showAssembleModal">
@@ -192,89 +210,33 @@
 					<icon class="iconfont icon-remove" @tap="closeModal"></icon>
 				</view>
 				<view class="assemble listBox">
-					<view class="item flex item-center">
-						<view class="pic"><image src="../../static/images/head1.png" mode="widthFix"></image></view>
-						<view class="time flex-1">
-							<view class="clearfix">
-								<view class="float-left name textEllipsis">特别阿童木</view>
-								<text class="float-left">还差1人</text>
-							</view>
+					<view v-for="(item,ind) in prodDetail.orderSpellList" :key="ind" class="item flex item-center">
+						<view class="pic"><image :src="setImg(item.firstUserImgPath)" mode="widthFix"></image></view>
+						<view class="name textEllipsis">{{item.firstUserName}}</view>
+						<view class="time flex-1 text-center">
+							<view>还差{{item.numUserLeft}}人成团</view>
 							<view class="fs12 c999">
 								剩余
-								<uni-count-down :show-day="false" :color="color" :splitorColor="color" :show-style="false" :hour="12" :minute="12" :second="12" />
+								<uni-count-down 
+								:show-day="false" 
+								:color="color" 
+								:splitorColor="color" 
+								:show-style="false" 
+								:hour="this.$acFrame.Util.countTime(item.endTime,'hour')" 
+								:minute="this.$acFrame.Util.countTime(item.endTime,'minute')" 
+								:second="this.$acFrame.Util.countTime(item.endTime,'second')" />
 							</view>
 						</view>
-						<view class="去拼单"><button type="orange" size="mini">去拼单</button></view>
-					</view>
-					<view class="item flex item-center">
-						<view class="pic"><image src="../../static/images/head1.png" mode="widthFix"></image></view>
-						<view class="time flex-1">
-							<view class="clearfix">
-								<view class="float-left name textEllipsis">特别阿童木</view>
-								<text class="float-left">还差1人</text>
-							</view>
-							<view class="fs12 c999">
-								剩余
-								<uni-count-down :show-day="false" :color="color" :splitorColor="color" :show-style="false" :hour="12" :minute="12" :second="12" />
-							</view>
+						<view class="">
+							<block v-if="item.firstUserIsOwner">
+								<button type="blue" size="mini" open-type="share">邀请好友</button>
+							</block>
+							<block v-else>
+								<button v-if="item.hasJoin" type="green" size="mini">查看</button>
+								<button v-else type="orange" size="mini" @tap="joinGroup(index)">去拼单</button>
+							</block>
+							
 						</view>
-						<view class="去拼单"><button type="orange" size="mini">去拼单</button></view>
-					</view>
-					<view class="item flex item-center">
-						<view class="pic"><image src="../../static/images/head1.png" mode="widthFix"></image></view>
-						<view class="time flex-1">
-							<view class="clearfix">
-								<view class="float-left name textEllipsis">特别阿童木</view>
-								<text class="float-left">还差1人</text>
-							</view>
-							<view class="fs12 c999">
-								剩余
-								<uni-count-down :show-day="false" :color="color" :splitorColor="color" :show-style="false" :hour="12" :minute="12" :second="12" />
-							</view>
-						</view>
-						<view class="去拼单"><button type="orange" size="mini">去拼单</button></view>
-					</view>
-					<view class="item flex item-center">
-						<view class="pic"><image src="../../static/images/head1.png" mode="widthFix"></image></view>
-						<view class="time flex-1">
-							<view class="clearfix">
-								<view class="float-left name textEllipsis">特别阿童木</view>
-								<text class="float-left">还差1人</text>
-							</view>
-							<view class="fs12 c999">
-								剩余
-								<uni-count-down :show-day="false" :color="color" :splitorColor="color" :show-style="false" :hour="12" :minute="12" :second="12" />
-							</view>
-						</view>
-						<view class="去拼单"><button type="orange" size="mini">去拼单</button></view>
-					</view>
-					<view class="item flex item-center">
-						<view class="pic"><image src="../../static/images/head1.png" mode="widthFix"></image></view>
-						<view class="time flex-1">
-							<view class="clearfix">
-								<view class="float-left name textEllipsis">特别阿童木</view>
-								<text class="float-left">还差1人</text>
-							</view>
-							<view class="fs12 c999">
-								剩余
-								<uni-count-down :show-day="false" :color="color" :splitorColor="color" :show-style="false" :hour="12" :minute="12" :second="12" />
-							</view>
-						</view>
-						<view class="去拼单"><button type="orange" size="mini">去拼单</button></view>
-					</view>
-					<view class="item flex item-center">
-						<view class="pic"><image src="../../static/images/head1.png" mode="widthFix"></image></view>
-						<view class="time flex-1">
-							<view class="clearfix">
-								<view class="float-left name textEllipsis">特别阿童木</view>
-								<text class="float-left">还差1人</text>
-							</view>
-							<view class="fs12 c999">
-								剩余
-								<uni-count-down :show-day="false" :color="color" :splitorColor="color" :show-style="false" :hour="12" :minute="12" :second="12" />
-							</view>
-						</view>
-						<view class="去拼单"><button type="orange" size="mini">去拼单</button></view>
 					</view>
 				</view>
 			</view>
@@ -332,12 +294,12 @@
 	    	<div class="specsBody">
 				<view class="md_head flex item-center">
 					<view class="pic">
-						<image src="../../static/images/head1.png" mode="widthFix"></image>
+						<image :src="setImg(prodDetail.imgList[0])" mode="widthFix"></image>
 					</view>
 					<view class="price flex-1">
 						<view class="red">
 							<text class="fs12">¥</text>
-							<text class="fs18">138.56</text>
+							<text class="fs18">{{prodDetail.priceSale}}</text>
 						</view>
 						<view class="">
 							请选择规格
@@ -347,19 +309,16 @@
 				</view>
 				<view class="spec_main">
 					<view class="item">
-						<view class="title">
-							颜色
-						</view>
+						<!-- <view class="title">
+							{{item.propValue}}
+						</view> -->
 						<view class="specBox">
-							<view class="item_child textEllipsis">红色</view>
-							<view class="item_child textEllipsis">蓝色</view>
-							<view class="item_child textEllipsis">黄的</view>
-							<view class="item_child textEllipsis">红色</view>
-							<view class="item_child textEllipsis">蓝色</view>
-							<view class="item_child textEllipsis">黄的</view>
+							<block v-if="(item,ind) in prodDetail.skuList" :key="ind" >
+								<view @tap="chooseSku(ind)" class="item_child textEllipsis">{{item.propValue}}</view>
+							</block>
 						</view>
 					</view>
-					<view class="item">
+					<!-- <view class="item">
 						<view class="title">
 							尺寸
 						</view>
@@ -368,18 +327,18 @@
 							<view class="item_child textEllipsis">XL</view>
 							<view class="item_child textEllipsis">M</view>
 						</view>
-					</view>
+					</view> -->
 				</view>
 			    <view class="nums flex item-center">
 					<view class="flex-1">购买数量</view>
 					<view class="comNumber clearfix">
 						<view class="iconfont icon-minus" hover-class="touch"></view>
-						<input type="number" value="1" />
+						<input type="number" v-modal="goodsNum" />
 						<view class="iconfont icon-plus" hover-class="touch"></view>
 					</view>
 				</view>
 				<view class="btnBox">
-					<button type="red" class="noradius">确定</button>
+					<button type="red" class="noradius" @tap="confirmOrder('confModal')">确定</button>
 				</view>
 			</div>
 	    </view>
@@ -394,12 +353,18 @@ export default {
 	},
 	data() {
 		return {
+			id:0,
+			prodDetail:{},
 			imgList: [
 				'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1574140134898&di=9b8d75803e617d449499df2f5a8d300f&imgtype=0&src=http%3A%2F%2Fm.360buyimg.com%2Fpop%2Fjfs%2Ft24241%2F145%2F1818221682%2F18886%2F71aac218%2F5b696accN052717a7.jpg',
 				'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2786988750,209248222&fm=15&gp=0.jpg',
 				'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2786988750,209248222&fm=15&gp=0.jpg'
 			],
 			imgInd: 1,
+			goodsNum:1,//数量
+			prodModal:'请选择',
+			couponList:[],//已选择的优惠券
+			chooseSpec:{},//已选择的规格型号
 			color:'#999',
 			showAssembleModal:false,
 			showAssembleDetailModal:false,
@@ -412,7 +377,25 @@ export default {
 			richNode:'<p class="text">这边是商品文案描述这边是商品文案描述这边是商品文案描述这边是商品文案描述这边是商品文案描述这边是商品文案描述这边是商品文案描述</p><p class="img"><img src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2786988750,209248222&fm=15&gp=0.jpg"/></p>'
 		};
 	},
+	onLoad(options){
+		this.id = options.id;
+		this.initData();
+	},
+	onShow(){
+		
+	},
 	methods: {
+		initData(){
+			let self = this
+			let params = {
+				id:this.id
+			}
+			self.$acFrame.HttpService.productDetail(params).then(res => {
+				if(res.success){
+					self.prodDetail = res.data
+				}
+			})
+		},
 		imgChange(event) {
 			console.log(event);
 			this.imgInd = event.detail.current + 1;
@@ -429,9 +412,38 @@ export default {
 			this.showSpecModal=false
 		},
 		confirmOrder(){
-			uni.navigateTo({
-				url:'confirmOrder'
-			})
+			let detail = this.prodDetail
+			delete detail.commentList
+			delete detail.couponList
+			delete detail.skuList
+			delete detail.orderSpellList
+            let obj={
+				couponList:this.couponList,
+				chooseSpec:this.chooseSpec,
+				prod:tdetail,
+				goodsNum:this.goodsNum
+			}
+			if(chooseSpec.goodsSkuId){
+				uni.navigateTo({
+					url:'confirmOrder?details='+JSON.stringify(obj)
+				})
+			} else {
+				this.showSpecModal = true
+			}
+			
+		},
+		// 选择拼单对象
+		chooseCoupon(ind,id){
+			let list = prodDetail.couponList
+			this.couponList.push(id);
+			prodDetail.couponList[ind].hasReceived = true
+		},
+		// 选择属性
+		chooseSku(ind){
+
+		},
+		setImg(src){
+			return  this.$acFrame.Util.setImgUrl(src);
 		}
 	}
 };
@@ -544,6 +556,9 @@ page {
 	.service .item {
 		background: #efefef;
 		color: #666;
+	}
+	.prodModal{
+
 	}
 }
 .assemble {

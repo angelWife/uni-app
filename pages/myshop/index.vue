@@ -2,94 +2,112 @@
 	<view class="content">
 		<view class="searchBox flex">
 			<view class="flex-1 input">
-				<icon class="iconfont icon-search"></icon>
-				<input type="text" value="" confirm-type="search" v-model="searchVal" @confirm="searchData" @tap="searchClick" readyonly />
+				<icon @tap="searchData" class="iconfont icon-search"></icon>
+				<input v-if="isSearch" type="text" @input="changeVal" confirm-type="search" v-model="keywords" @confirm="searchData" />
+				<input v-else type="text" value="" @tap="searchClick" disabled />
 				<icon class="iconfont icon-clear"></icon>
 			</view>
 			<view class="search" v-if="isSearch"><button @tap="cancelSearch" size="mini" type="text" hover-class="none">取消</button></view>
 		</view>
 		<view class="resBox" v-if="isSearch">
-			<view class="fastSearch" v-if="!nosearch">
-				<view class="histroy">
+			<view class="fastSearch" v-if="nosearch">
+				<view class="histroy" v-if="historyList.length > 0">
 					<view class="title">
 						<text>历史记录</text>
-						<icon class="iconfont icon-delete"></icon>
+						<icon class="iconfont icon-delete" @tap="clearHistory"></icon>
 					</view>
 					<view class="h_list clearfix">
-						<block v-for="(item, index) in histroySearch" :key="index">
-							<view class="item">{{ item }}</view>
+						<block v-for="(item, index) in historyList" :key="index">
+							<view class="item" @tap="tapSearch(item)">{{ item }}</view>
 						</block>
 					</view>
 				</view>
-				<view class="hotSearch">
+				<view class="hotSearch" v-if="hotSearch.length > 0">
 					<view class="title"><text>热门搜索</text></view>
 					<view class="h_list clearfix">
 						<block v-for="(item, index) in hotSearch" :key="index">
-							<view class="item">{{ item }}</view>
+							<view class="item" @tap="tapSearch(item)">{{ item }}</view>
 						</block>
 					</view>
 				</view>
 			</view>
 			<view class="searchList" v-else>
-				<scroll-view class="myscroll" scroll-y="true" @scrolltolower="loadMoreData"><commentItem :dataList="dataList"></commentItem></scroll-view>
-				<view class="noData flex f-row just-con-c item-center">
-					<view class="text-center">
-						<image src="/static/images/defaultpro.png" mode=""></image>
-						<button class="radiuBtn" type="rednull" @tap="cancelSearch">随便看看</button>
+				<scroll-view class="myscroll" scroll-y="true" @scrolltolower="loadMoreData">
+					<view class="shopList">
+						<view class="item" v-for="(item,ind) in dataList" :key="ind">
+							<view class="shopMsg flex item-center" @tap="shopDetail(item.id)">
+								<view class="pic">
+									<image :src="setImg(item.imgPath)" mode="widthFix"></image>
+								</view>
+								<view class="flex-1">
+									<view class="name clearfix">
+										<view class="shopname float-left textEllipsis">{{item.name}}</view>
+										<text class="float-left">广告</text>
+										<view class="fs12 c999 float-right">已被6000人圈粉</view>
+									</view>
+									<view class="text c999 textEllipsis">{{item.describe}}</view>
+								</view>
+							</view>
+							<scroll-view scroll-x="true">
+								<view class="proItem" v-for="(proItem,proInd) in item.goodsList" :key="proInd" @tap="productDetail(proItem.goodsId)">
+									<view class="pic"><image :src="setImg(proItem.imgPath)" mode="widthFix"></image></view>
+									<view class="name textEllipsis">{{proItem.goodsName}}</view>
+									<view class="price red">
+										<text class="fs12">¥</text>
+										<text class="fs15">{{proItem.priceSale}}</text>
+										<text class="mark">拼</text>
+									</view>
+								</view>
+							</scroll-view>
+						</view>
 					</view>
-				</view>
+					<view v-if="nodata" class="noData flex f-row just-con-c item-center">
+						<view class="text-center">
+							<image src="/static/images/nodata.png" mode="widthFix"></image>
+							<view class="text-center c666 fs16">
+								这里还没有内容
+							</view>
+						</view>
+					</view>
+				</scroll-view>
 			</view>
 		</view>
 		<view class="listBox" v-else>
 			<view class="title">精品小店</view>
 			<view class="shopList">
-				<view class="item">
-					<view class="shopMsg flex item-center" @tap="shopDetail">
-						<view class="pic"><image src="../../static/images/head1.png" mode="widthFix"></image></view>
+				<view class="item" v-for="(item,ind) in dataList" :key="ind">
+					<view class="shopMsg flex item-center" @tap="shopDetail(item.id)">
+						<view class="pic">
+							<image :src="setImg(item.imgPath)" mode="widthFix"></image>
+						</view>
 						<view class="flex-1">
 							<view class="name clearfix">
-								<view class="shopname float-left textEllipsis">这边是店铺的名称</view>
+								<view class="shopname float-left textEllipsis">{{item.name}}</view>
 								<text class="float-left">广告</text>
 								<view class="fs12 c999 float-right">已被6000人圈粉</view>
 							</view>
-							<view class="text c999 textEllipsis">这边相关店铺的描述</view>
+							<view class="text c999 textEllipsis">{{item.describe}}</view>
 						</view>
 					</view>
 					<scroll-view scroll-x="true">
-						<view class="proItem" v-for="(item,ind) in dataList" :key="ind" @tap="productDetail">
-							<view class="pic"><image :src="item.pic" mode="widthFix"></image></view>
-							<view class="name textEllipsis">{{item.name}}</view>
+						<view class="proItem" v-for="(proItem,proInd) in item.goodsList" :key="proInd" @tap="productDetail(proItem.goodsId)">
+							<view class="pic"><image :src="setImg(proItem.imgPath)" mode="widthFix"></image></view>
+							<view class="name textEllipsis">{{proItem.goodsName}}</view>
 							<view class="price red">
 								<text class="fs12">¥</text>
-								<text class="fs15">{{item.price}}</text>
+								<text class="fs15">{{proItem.priceSale}}</text>
 								<text class="mark">拼</text>
 							</view>
 						</view>
 					</scroll-view>
 				</view>
-				<view class="item">
-					<view class="shopMsg flex item-center">
-						<view class="pic"><image src="../../static/images/head1.png" mode="widthFix"></image></view>
-						<view class="flex-1">
-							<view class="name clearfix">
-								<view class="shopname float-left textEllipsis">这边是店铺的名称</view>
-								<text class="float-left">广告</text>
-								<view class="fs12 c999 float-right">已被6000人圈粉</view>
-							</view>
-							<view class="text c999 textEllipsis">这边相关店铺的描述</view>
-						</view>
+			</view>
+			<view v-if="nodata" class="noData flex f-row just-con-c item-center">
+				<view class="text-center">
+					<image src="/static/images/nodata.png" mode="widthFix"></image>
+					<view class="text-center c666 fs16">
+						这里还没有内容
 					</view>
-					<scroll-view scroll-x="true">
-						<view class="proItem" v-for="(item,ind) in dataList" :key="ind">
-							<view class="pic"><image :src="item.pic" mode="widthFix"></image></view>
-							<view class="name textEllipsis">{{item.name}}</view>
-							<view class="price red">
-								<text class="fs12">¥</text>
-								<text class="fs15">{{item.price}}</text>
-								<text class="mark">拼</text>
-							</view>
-						</view>
-					</scroll-view>
 				</view>
 			</view>
 		</view>
@@ -103,10 +121,10 @@ export default {
 			isSearch: false,
 			showOper: false, // 发布的操作
 			showPic: false, // 打开图片无需重新加载数据
-			searchVal: '',
-			histroySearch: ['苹果的nfc怎么打开', '王者的积分战队怎么玩的流', '苹果手机被锁住了怎么办'],
+			keywords: '',
+			historyList: ['苹果的nfc怎么打开', '王者的积分战队怎么玩的流', '苹果手机被锁住了怎么办'],
 			hotSearch: ['四大名著', '护肤品', '女士口红', '女士香水', '怎么让孩子听话'],
-			nosearch: false,
+			nosearch: true,
 			dataList: [
 				{
 					name: '这边的是产品的名称，最多显示两行，超出两行的省略号',
@@ -146,27 +164,91 @@ export default {
 					salesNum: 152000,
 					pic: 'https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=123919148,3561097999&fm=15&gp=0.jpg'
 				}
-			]
+			],
+			pagesize:100,
+			pageIndex:1,
+			pageTotal:1,
+			nodata:false
 		};
 	},
+	onShow(){
+		this.initData();
+	},
 	methods: {
+		initData(){
+			let self = this
+			let params = {
+				keywords:'',
+				pageIndex:this.pageIndex,
+				pageSize:this.pageSize
+			}
+			self.$acFrame.HttpService.shopList(params).then(res => {
+                if(res.success){
+					let list = res.data.rows
+					self.pageTotal = res.data.pageTotal
+					if(list.length>0){
+						self.nodata=false
+						self.dataList = list
+					}else{
+						self.nodata=true
+						self.dataList = []
+					}
+					if(self.isSearch){
+						self.nosearch = false
+					}
+				}else{
+
+				}
+			})
+		},
 		searchClick() {
 			this.isSearch = true;
+			this.dataList = []
+			this.historyList = uni.getStorageSync('historyList') || [];
+			this.hotSearch = this.$acFrame.Util.getHotList(2);
 		},
 		cancelSearch() {
 			this.isSearch = false;
 			this.searchVal = false;
+			this.nosearch = true
 		},
-		searchData() {},
-		shopDetail(){
+		searchData() {
+			let val = this.keywords;
+			this.pageIndex = 0;
+			this.pageSize = 10;
+			this.pageType = null;
+			let historyList = uni.getStorageSync('historyList') || [];
+			if (historyList.length < 10) {
+				historyList.shift(val);
+			} else {
+				historyList.splice(9, 1);
+				historyList.shift(val);
+			}
+			uni.setStorageSync('historyList', historyList);
+			this.initData();
+		},
+		//清空历史
+		clearHistory() {
+			uni.setStorageSync('historyList', []);
+		},
+		tapSearch(val) {
+			this.resetData();
+			this.pageType = null;
+			this.keywords = val;
+			this.initData();
+		},
+		shopDetail(id){
 			wx.navigateTo({
-				url:"shopDetail"
+				url:`shopDetail?id=${id}`
 			})
 		},
 		productDetail(){
 			wx.navigateTo({
 				url:"productDetail"
 			})
+		},
+		setImg(src){
+			return  this.$acFrame.Util.setImgUrl(src);
 		}
 	}
 };

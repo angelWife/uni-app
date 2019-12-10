@@ -23,7 +23,23 @@ const formatNumber = n => {
 	n = n.toString()
 	return n[1] ? n : '0' + n
 }
-
+//倒计时间
+const countTime=(time,type)=>{
+	const nowdate = new Date().getTime()
+	const enddate = new Date(time).getTime()
+	const milli = enddate-nowdate;
+	const second=milli/1000
+	const minute= second/60
+	const hour = minute/60
+	if(type == 'hour'){
+		return hour
+	} else if(type == 'minute'){
+		return minute
+	} else if(type == 'second'){
+		return second
+	}
+	
+}
 const mytotal = (title, icon = 'none', mask = false, duration = 2000) => {
 	uni.showToast({
 		title: title,
@@ -106,11 +122,30 @@ const uploadPic = (url) => {
 
 }
 
+//获取热搜关键字  type:1:帖子  2商品
+const getHotList = (type) => {
+	let self = this;
+	let params = {
+		type:type
+	}
+	self.$acFrame.HttpService.hotList(params).then(res => {
+		if (res.success) {
+			let _data = res.data;
+			return _data;
+		} else {
+			self.$acFrame.Util.mytotal(res.code);
+			return []
+		}
+	});
+}
+
 module.exports = {
 	formatTime,
 	showBigPic,
 	uploadPic,
 	mytotal,
 	shareUrl,
-	setImgUrl
+	setImgUrl,
+	getHotList,
+	countTime
 }

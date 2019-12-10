@@ -332,6 +332,15 @@ button[type='orange'] {
 		box-shadow: none !important;
 	}
 }
+button[type='blue'] {
+	background: #4c8ff7 !important;
+	color: #fff !important;
+	border: none;
+	&::after {
+		border: none !important;
+		box-shadow: none !important;
+	}
+}
 button[size='mini'] {
 	font-size: 26rpx !important;
 	line-height: 2;

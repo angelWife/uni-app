@@ -186,11 +186,19 @@ export default {
 							self.dataList = self.dataList.concat(dataList);
 						}
 						console.log(self.dataList)
+						
 						self.nodata = false;
 					} else {
+						
 						self.nodata = true;
 					}
+					if(self.isSearch){
+						self.nosearch = false
+					}
 				} else {
+					if(self.isSearch){
+						self.nosearch = true
+					}
 					self.$acFrame.Util.mytotal(res.code);
 				}
 			});
@@ -212,8 +220,9 @@ export default {
 		},
 		searchClick() {
 			this.isSearch = true;
+			this.dataList = []
 			this.historyList = uni.getStorageSync('historyList') || [];
-			this.getHotList();
+			this.hotSearch = this.$acFrame.Util.getHotList(1);
 		},
 		hideTab() {
 			this.showOper = false;
@@ -226,17 +235,7 @@ export default {
 				complete: () => {}
 			});
 		},
-		getHotList() {
-			let self = this;
-			self.$acFrame.HttpService.hotList().then(res => {
-				if (res.success) {
-					let _data = res.data;
-					self.hotSearch = _data;
-				} else {
-					self.$acFrame.Util.mytotal(res.code);
-				}
-			});
-		},
+		
 		changeVal(e) {
 			this.keywords = e.detail.value;
 		},

@@ -1,13 +1,21 @@
 <template>
 	<view class="content">
 		<view v-for="(item, index) in list" :key="index" class="item flex item-center">
-			<view class="pic"><image :src="item.pic" mode="widthFix" @tap="showPic(item.pic)"></image></view>
+			<view class="pic"><image :src="setImg(item.imgPath)" mode="widthFix" @tap="showPic(item.pic)"></image></view>
 			<view class="msg flex-1" @tap="choosePord(item)">
-				<view class="name clamp clamp-2">{{ item.name }}</view>
-				<view class="nums c999">已售{{ item.salesNum }}件</view>
+				<view class="name clamp clamp-2">{{ item.goodsName }}</view>
+				<view class="nums c999">已售{{ item.numTotalSale }}件</view>
 				<view class="price red">
 					<text>¥</text>
-					<text class="fs18">{{ item.price }}</text>
+					<text class="fs18">{{ item.priceSale }}</text>
+				</view>
+			</view>
+		</view>
+		<view v-if="nodata" class="noData flex f-row just-con-c item-center">
+			<view class="text-center">
+				<image src="/static/images/nodata.png" mode="widthFix"></image>
+				<view class="text-center c666 fs16">
+					这里还没有内容
 				</view>
 			</view>
 		</view>
@@ -31,7 +39,14 @@ export default {
 			default() {
 				return false;
 			}
-		}
+		},
+		nodata: {
+			// 是否是详情
+			type: Boolean,
+			default() {
+				return false;
+			}
+		},
 	},
 	data() {
 		return {};
@@ -41,8 +56,14 @@ export default {
 			this.$acFrame.Util.showBigPic(src, [src]);
 		},
 		choosePord(obj){
-			this.$emit('setProduct',obj)
-		}
+			// this.$emit('setProduct',obj)
+			uni.navigateTo({
+				 url: 'productDetail?id='+obj.goodsId
+			});
+		},
+		setImg(src){
+			return  this.$acFrame.Util.setImgUrl(src);
+		},
 	}
 };
 </script>
