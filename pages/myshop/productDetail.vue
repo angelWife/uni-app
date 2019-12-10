@@ -1,3 +1,4 @@
+
 <template>
 	<view class="content">
 		<view class="productPic">
@@ -40,12 +41,6 @@
 					
 				</view>
 			</view>
-			<!-- <view class="prodModal flex">
-				<view class="name c999">规格</view>
-				<view class="listBox flex-1 text-right">
-					{{}}
-				</view>
-			</view> -->
 			<view class="service flex">
 				<view class="name c999">服务</view>
 				<view class="listBox flex-1">
@@ -241,7 +236,8 @@
 				</view>
 			</view>
 		</view>
-        <view class="comDialog flex item-center just-con-c assembleDetail" v-if="showAssembleDetailModal">
+       
+		<view class="comDialog flex item-center just-con-c assembleDetail" v-if="showAssembleDetailModal">
 			<view class="moadl-main">
 				<view class="title">
 					参与拼单
@@ -301,7 +297,7 @@
 							<text class="fs12">¥</text>
 							<text class="fs18">{{prodDetail.priceSale}}</text>
 						</view>
-						<view class="">
+						<view class="text">
 							请选择规格
 						</view>
 					</view>
@@ -313,21 +309,11 @@
 							{{item.propValue}}
 						</view> -->
 						<view class="specBox">
-							<block v-if="(item,ind) in prodDetail.skuList" :key="ind" >
+							<block v-for="(item,ind) in prodDetail.skuList" :key="ind" >
 								<view @tap="chooseSku(ind)" class="item_child textEllipsis">{{item.propValue}}</view>
 							</block>
 						</view>
 					</view>
-					<!-- <view class="item">
-						<view class="title">
-							尺寸
-						</view>
-						<view class="specBox">
-							<view class="item_child textEllipsis">XXL</view>
-							<view class="item_child textEllipsis">XL</view>
-							<view class="item_child textEllipsis">M</view>
-						</view>
-					</view> -->
 				</view>
 			    <view class="nums flex item-center">
 					<view class="flex-1">购买数量</view>
@@ -379,7 +365,7 @@ export default {
 	},
 	onLoad(options){
 		this.id = options.id;
-		this.initData();
+		// this.initData();
 	},
 	onShow(){
 		

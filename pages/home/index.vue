@@ -220,7 +220,7 @@ export default {
 		},
 		searchClick() {
 			this.isSearch = true;
-			this.dataList = []
+			//this.dataList = []
 			this.historyList = uni.getStorageSync('historyList') || [];
 			this.hotSearch = this.$acFrame.Util.getHotList(1);
 		},
@@ -246,7 +246,7 @@ export default {
 		},
 		searchData(e) {
 			let val = this.keywords;
-			this.pageIndex = 0;
+			this.pageIndex = 1;
 			this.pageSize = 10;
 			this.pageType = null;
 			let historyList = uni.getStorageSync('historyList') || [];
@@ -288,6 +288,7 @@ export default {
 			let pageIndex = this.pageIndex
 			pageIndex++
 			if(pageIndex<=this.pageTotal){
+				this.pageIndex = pageIndex
 				this.initData()
 				this.nomore = false
 			}else{
@@ -295,8 +296,10 @@ export default {
 			}
 		},
 		resetData(){
-			this.pageIndex = 0;
+			this.pageIndex = 1;
 			this.pageSize = 10;
+			this.dataList=[];
+			this.nodate=false;
 			this.nomore = false
 		}
 	}
