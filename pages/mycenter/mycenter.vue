@@ -40,23 +40,52 @@
 			</view>
 		</view>
 		<view class="infoTab">
-			<view class="item" v-for="(item, index) in infoTab" :key="index" :class="{ active: item.choose }">{{ item.name }}</view>
+			<view class="item" v-for="(item, index) in infoTab" :key="index" :class="{ active: item.choose }" @tap="tapClick(index)">{{ item.name }}</view>
 		</view>
 		<scroll-view class="myscroll" scroll-y="true">
-			<view class="reward"><commentItem :dataList="dataList"></commentItem></view>
+			<view class="post" v-if="modalName=='reward'">
+				<commentItem :dataList="dataList"></commentItem>
+			</view>
+			<view class="shop" v-if="modalName=='shop'">
+				<productList :nodata="prodNodata" :dataList="dataList"></productList>
+			</view>
+			<view class="honor" v-if="modalName=='honor'">
+				<view class="topMsg flex">
+					<view>打赏记录</view>
+					<view class="flex-1 text-right c999">我收到过100次打赏</view>
+				</view>
+				<view class="comItem flex">
+					<view class="pic">
+						<image src="../../static/images/head1.png" mode="widthFix" />
+					</view>
+					<view class="main">
+					<view class="flex-1">
+						<view class="title fs16"></view>
+						<view class="text fs12 c999"></view>
+					</view>
+					<view class="right-pic"></view>
+					</view>
+				</view>
+			</view>
+			<view class="reward" v-if="modalName=='reward'"></view>
 		</scroll-view>
 	</view>
 </template>
 
 <script>
 import commentItem from '@/components/comment-item.vue';
+import productList from '@/components/shop-product.vue'
 export default {
 	components: {
-		commentItem
+		commentItem,
+		productList
 	},
 	data() {
 		return {
-			infoTab: [{ name: '帖子', choose: true }, { name: '小店', choose: false }, { name: '荣誉', choose: false }, { name: '受赏', choose: false }],
+			infoTab: [{ name: '帖子', choose: true ,type:"post"}, 
+			{ name: '小店', choose: false ,type:"shop"}, 
+			{ name: '荣誉', choose: false ,type:"honor"}, 
+			{ name: '受赏', choose: false ,type:"reward"}],
 			dataList: [
 				{
 					headImg: '/static/images/head1.png',
@@ -95,10 +124,24 @@ export default {
 					createName: '妮维雅',
 					createTime: '09-21'
 				}
-			]
+			],
+			prodNodata:false,
+			modalName:'post'
 		};
 	},
-	methods: {}
+	methods: {
+		tapClick(ind){
+			let self = this
+			this.infoTab.filter((v,i)=>{
+				if(i==ind){
+					v.choose = true
+					self.modalName = v.type
+				} else {
+					v.choose = false
+				}
+			})
+		},
+	}
 };
 </script>
 
@@ -204,5 +247,14 @@ page {
 }
 .myscroll {
 	height: calc(100% - 360rpx);
+	.topMsg{
+		padding:20rpx 24rpx;
+		border-bottom:1px solid #ccc;
+	}
+	.comItem{
+		.main{
+			padding:10rpx 0;
+		}
+	}
 }
 </style>
