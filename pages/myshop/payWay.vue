@@ -78,13 +78,13 @@
 					</block>
 				</view>
 				<view class="pwdBox">
-					<view class="textBox" bindtap='getFocus'>
-						<input v:for="item in pwdVO.Length" :key="item" :value="[pwdVO.Value.length>=index+1?pwdVO.Value[index]:'']" 
-      disabled password='{{ispassword}}' catchtap='Tap'/>
+					<view class="textBox" @tap='getFocus'>
+						<block v:for="(item,ind) in pwdVO.myArr" :key="ind">
+							<input :value="pwdVO.Value[ind]" disabled :password='pwdVO.ispassword' @tap.stop='Tap'/>
+						</block>
 					</view>
-					<input name="password" :password="pwdVO.true" class='password-input' :maxlength="pwdVO.Length" :focus="pwdVO.isFocus"   @input="password_input"/>
+					<input type="number" :password="pwdVO.ispassword" class='password-input' :maxlength="pwdVO.myArr.length" :focus="pwdVO.isFocus"   @input="password_input"/>
 				</view>
-				
 			</view>
 		</view>
 	</view>
@@ -109,9 +109,9 @@
 				payVO:{},
 				pwdVO:{
 					focus: false,
-					Length: 6,        //输入框个数  
+					myArr: [0,1,2,3,4,5],        //输入框个数  
 					isFocus: true,    //聚焦  
-					Value: "",        //输入的内容  
+					Value: [],        //输入的内容  
 					ispassword: false, //是否密文显示 true为密文， false为明文。
 				}
 			};
@@ -191,22 +191,30 @@
 			password_input: function (e) {
 				let inputValue = e.detail.value;
 				let self = this;
-				this.pwdVO.Value = inputValue
-				if(inputValue.length == this.pwdVO.Length){
+				let _arr=[]
+				if(inputValue.length>0){
+					for(let i=0;i<inputValue.length;i++){
+						let val = inputValue.substr(i,1);
+						_arr.push(val)
+					}
+				}
+				self.pwdVO.Value = _arr
+				if(_arr.length == this.pwdVO.Length){
 					let params ={
 						type:1,
                         passwd:inputValue
 					}
 					self.$acFrame.checkPaypwd.checkPaypwd(params).then(res => {
-					if(res.success){
-						//密码验证成功后  去支付
-						//1.支付星票
-						//2.支付钱
-					}
-				})
+						if(res.success){
+							//密码验证成功后  去支付
+							//1.支付星票
+							//2.支付钱
+						}
+					})
 				}
 			},
-            payOther(){
+            payOtherWay(){
+				let self = this
 				let params ={
 					bizId:0,
 					passPay:false,

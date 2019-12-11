@@ -74,11 +74,16 @@ const shareUrl = (res, _data, title) => {
 //处理图片的路径
 const setImgUrl = (imgPath) => {
 	let picPath = ''
-	if (imgPath.indexOf('http') >= 0) {
-		picPath = imgPath
+	if(imgPath){
+		if (imgPath.indexOf('http') >= 0) {
+			picPath = imgPath
+		} else {
+			picPath = getApp().globalData.config.basePath + imgPath
+		}
 	} else {
-		picPath = getApp().globalData.config.basePath + imgPath
+		picPath='/static/iamges/head1.png'
 	}
+	
 	return picPath
 
 }
