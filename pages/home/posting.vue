@@ -1,8 +1,13 @@
 <template>
-	<view class="content">
-		<view class="textarea">
-			<textarea value="editText" placeholder="请输入" v-model="editText" @input="textChange" />
-			<view class="text-right">
+  <view class="content">
+    <view class="textarea">
+      <textarea
+        value="editText"
+        placeholder="请输入"
+        v-model="editText"
+        @input="textChange"
+      />
+      <view class="text-right">
         <text class="c999">{{ textNum }}/500</text>
         <button type="red" size="mini" @tap="confirmPost">发布</button>
       </view>
@@ -60,7 +65,7 @@ export default {
       editText: "",
       textNum: 0,
       extendList: [],
-	  picInd:0
+      picInd: 0
     };
   },
   methods: {
@@ -80,50 +85,52 @@ export default {
     },
     choosePic() {
       let self = this;
-	  uni.chooseImage({
-	  	count: 1,
-	  	sizeType: ['compressed', 'original'], // 可以指定是原图还是压缩图，默认二者都有
-	  	sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
-	  	success: function(res) {
-	  		let tempFilePaths = res.tempFilePaths;
-			self.picList.push(tempFilePaths[0]);
-	  	}
-	  });
+      uni.chooseImage({
+        count: 1,
+        sizeType: ["compressed", "original"], // 可以指定是原图还是压缩图，默认二者都有
+        sourceType: ["album", "camera"], // 可以指定来源是相册还是相机，默认二者都有
+        success: function(res) {
+          let tempFilePaths = res.tempFilePaths;
+          self.picList.push(tempFilePaths[0]);
+        }
+      });
     },
-	uploadPic(id){
-		let token = uni.getStorageSync('access_token');
-		let channel='MP_WX';
-		let self = this;
-		let _data={id:id}
-		let imgUrl = self.picList[self.picInd];
-		let len = self.picList.length;
-		if(self.picInd<len){
-wx.uploadFile({
-			url: getApp().globalData.config.basePath + 'article/info/publish_tie_img?articleTieId='+id, // 仅为示例，非真实的接口地址
-			filePath: imgUrl,
-			header: {
-				token,
-				channel
-			},
-			// formData:_data,
-			name: 'file',
-			success: function(res) {
-				let _data=JSON.parse(res.data)
-				debugger
-				if(_data.success){						
-					self.picInd++
-					self.uploadPic(id)
-				}
-			},
-			fail: (error) => {
-				self.$acFrame.Util.mytotal('error')
-			}
-		});
-		}else{
-			uni.navigateBack({})
-		}
-		
-	},
+    uploadPic(id) {
+      let token = uni.getStorageSync("access_token");
+      let channel = "MP_WX";
+      let self = this;
+      let _data = { id: id };
+      let imgUrl = self.picList[self.picInd];
+      let len = self.picList.length;
+      if (self.picInd < len) {
+        wx.uploadFile({
+          url:
+            getApp().globalData.config.basePath +
+            "article/info/publish_tie_img?articleTieId=" +
+            id, // 仅为示例，非真实的接口地址
+          filePath: imgUrl,
+          header: {
+            token,
+            channel
+          },
+          // formData:_data,
+          name: "file",
+          success: function(res) {
+            let _data = JSON.parse(res.data);
+            debugger;
+            if (_data.success) {
+              self.picInd++;
+              self.uploadPic(id);
+            }
+          },
+          fail: error => {
+            self.$acFrame.Util.mytotal("error");
+          }
+        });
+      } else {
+        uni.navigateBack({});
+      }
+    },
     removePic(ind) {
       this.picList.splice(ind, 1);
     },
@@ -131,19 +138,16 @@ wx.uploadFile({
       this.$acFrame.Util.showBigPic(this.picList[ind], this.picList);
     },
     linkTo(name) {
-	  this.getText()
+      this.getText();
       uni.navigateTo({
         url: name,
         success: res => {},
         fail: () => {},
         complete: () => {}
       });
-	},
-	setLink(obj){
-
-	},
+    },
+    setLink(obj) {},
     setVal(id, name, type) {
-      
       let len = this.onlyText.length;
       let text = this.editText;
       let obj = {};
@@ -155,15 +159,15 @@ wx.uploadFile({
       } else {
         obj.atId = id;
         obj.topicName = name;
-		obj.index = len;
-		text+='#'+name+'#'
-	  }
-	  this.extendList.push(obj)
-	  this.editText = text
+        obj.index = len;
+        text += "#" + name + "#";
+      }
+      this.extendList.push(obj);
+      this.editText = text;
     },
     getText() {
-	  let text = this.editText;
-	  let self = this
+      let text = this.editText;
+      let self = this;
       if (this.extendList.length > 0) {
         let star = 0;
         this.extendList.filter((v, i) => {
@@ -174,38 +178,36 @@ wx.uploadFile({
           } else {
             mark = "#" + v.topicName + "#";
           }
-		  let end = text.indexOf(mark);
-		  let len = mark.length;
-		  self.onlyText+=text.substring(star,end);
-		  star = end+len;
+          let end = text.indexOf(mark);
+          let len = mark.length;
+          self.onlyText += text.substring(star, end);
+          star = end + len;
         });
-      }else{
-		  self.onlyText = text
-	  }
-	},
-	confirmPost(){
-		this.getText();
-		let self = this;
-		let params = {
-			content:this.onlyText,
-			extendList:this.extendList
-		}
-		if(!params.content){
-			this.$acFrame.Util.mytotal('请输入帖子内容！');
-			return false;
-		}
-		this.$acFrame.HttpService.raleasePost(params).then(res=>{
-			if(res.success){
-				if(self.picList.length>0){
-					self.uploadPic(res.data)
-				}else{
-					uni.navigateBack({})
-				}
-				
-				
-			}
-		})
-	}
+      } else {
+        self.onlyText = text;
+      }
+    },
+    confirmPost() {
+      this.getText();
+      let self = this;
+      let params = {
+        content: this.onlyText,
+        extendList: this.extendList
+      };
+      if (!params.content) {
+        this.$acFrame.Util.mytotal("请输入帖子内容！");
+        return false;
+      }
+      this.$acFrame.HttpService.raleasePost(params).then(res => {
+        if (res.success) {
+          if (self.picList.length > 0) {
+            self.uploadPic(res.data);
+          } else {
+            uni.navigateBack({});
+          }
+        }
+      });
+    }
   }
 };
 </script>
@@ -218,8 +220,8 @@ wx.uploadFile({
     textarea {
       padding: 20rpx 0;
       height: 160px;
-	  width: 100%;
-	  box-sizing: border-box;
+      width: 100%;
+      box-sizing: border-box;
     }
     .text-right {
       padding: 20rpx 0;

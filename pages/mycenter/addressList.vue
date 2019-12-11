@@ -1,28 +1,29 @@
 <template>
 	<view class="content">
-		<view class="item">
+		<view class="item" v-for="(item,ind) in addrList" :key="ind">
 			<view class="top">
-				<text class="fs15">花木兰</text>
-				<text class="c999">19215616512</text>
+				<text class="fs15">{{item.name}}</text>
+				<text class="c999">{{item.phone}}</text>
 			</view>
 			<view class="center flex">
 				<view class="text flex-1">
-					上海市常烈区天海路街道星星路星能小区30号301室
+					{{item.areaProvince}}{{item.areaCity}}{{item.areaCounty}}{{item.address}}
 				</view>
 				<view class="btn">
-					<button type="null" size="mini">使用</button>
+					<button type="null" size="mini" @change="chooseAddr(ind)">使用</button>
 				</view>
 			</view>
 			<view class="foot flex item-center">
 				<view class="flex-1">
-					<label class="radio c999"><radio value="r1" checked="false" color="#B40000"/>设为默认</label>
+					<label class="radio" :class="[item.isDefault?'red':'c999']">
+						<radio :value="item.id" :checked="item.isDefault" @change="changeDefault" color="#B40000"/>设为默认</label>
 				</view>
 				<view class="c999">
-					<text class="c999">编辑</text>
+					<text class="c999" @tap="editAddr(ind)">编辑</text>
 					<text class="c999">置顶</text>
 				</view>
 			</view>
-			<icon class="iconfont icon-clear"></icon>
+			<icon class="iconfont icon-clear" @tap="deleteAddr(ind)"></icon>
 		</view>
 		<view class="addBtn" @tap="showModal">
 			<icon class="iconfont icon-add"></icon>
@@ -37,10 +38,10 @@
 				<view class="modalCenter">
 					<view class="flex border">
 						<view class="flex-1 input border-right">
-							<input type="text" value="" placeholder="收货人姓名"/>
+							<input type="text" :value="addrVO.name" @input="changeVal(event,'name')" placeholder="收货人姓名"/>
 						</view>
 						<view class="flex-1 input">
-							<input type="text" value="" placeholder="联系电话"/>
+							<input type="text" :value="addrVO.phone" @input="changeVal(event,'phone')" placeholder="联系电话"/>
 						</view>
 					</view>
 					<view class="input border">
@@ -49,7 +50,7 @@
 						</picker>
 					</view>
 					<view class="input border">
-						<input type="text" value=""  placeholder="详细地址（如街道、小区、乡镇、村)"/>
+						<input type="text" :value="addrVO.address" @input="changeVal(event,'address')"  placeholder="详细地址（如街道、小区、乡镇、村)"/>
 						<view class="location">
 							<icon class="iconfont icon-dizhi"></icon>
 							<view class="fs10">定位</view>
@@ -57,7 +58,7 @@
 					</view>
 				</view>
 				<view class="foot">
-					<button type="red">保存</button>
+					<button type="red" @tap="save">保存</button>
 				</view>
 			</view>
 		</view>
@@ -68,21 +69,119 @@
 	export default {
 		data() {
 			return {
+				addrList:[],
 				modalTitle:'新增收货地址',
 				region: ['', '', '请选择'],
 				customItem: '全部',
-				showAddrModal:false
+				showAddrModal:false,
+				addrVO:{},
+				type:'add'
 			};
 		},
+		onLoad(options){},
+		onShow(){
+			this.getList()
+		},
 		methods:{
+			getList(){
+				let self = this
+				self.$acFrame.HttpService.addrList().then(res => {
+					if(res.success){
+						self.addrList = res.data
+					}
+				})
+			},
+			editAddr(ind){
+				this.type = 'edit'
+				this.modalTitle='编辑收货地址'
+				let addrVO = this.addrList[ind];
+				this.addrVO = addrVO
+				this.region = [addrVO.areaProvince, addrVO.areaCity, addrVO.areaCounty]
+			},
+			deleteAddr(ind){
+				let self = this
+				let params = {
+					id:this.addrVO.id
+				}
+				uni.showModal({
+					title: '提示',
+					content: '是否删除改收货地址？',
+					success: function (res) {
+						if (res.confirm) {
+							self.$acFrame.HttpService.deleteAddr(params).then(res => {
+								if(res.success){	
+									self.getList()
+								}
+							})	
+						} else if (res.cancel) {
+							
+						}
+					}
+				});
+				
+			},
+			changeVal(e,name){
+				this.addrVO[name]=e.detail.value
+			},
+			save(){
+				let self = this
+				let params = this.addrVO
+                if(this.type=='add'){
+					self.$acFrame.HttpService.addAddr(params).then(res => {
+						if(res.success){
+							self.$acFrame.Util.mytotal('新增成功')
+							self.getList()
+						}
+					})	
+				} else {
+					self.$acFrame.HttpService.deitAddr(params).then(res => {
+						if(res.success){
+							self.$acFrame.Util.mytotal('编辑成功')
+							self.getList()
+						}
+					})	
+				}
+				
+			},
+			changeDefault(e){
+				let val = e.detail.value
+				if(val){
+					this.addrList.filter(v=>{
+						if(v.id==val){
+
+						}else{
+
+						}
+					})
+				}               
+			},
 			bindAreaChange(e){
-				this.region= e.detail.value
+				let vals = e.detail.value
+				this.region= vals
+				this.addrVO.areaProvince=vals[0]
+				this.addrVO.areaCity=vals[1] 
+				this.addrVO.areaCounty=vals[2]
 			},
 			showModal(){
 				this.showAddrModal = true
+				this.modalTitle = '新增收货地址'
+				this.type = 'add'
+				this.addrVO={}
+				this.region = ['', '', '请选择']
 			},
 			closeModal(){
 				this.showAddrModal = false
+			},
+			chooseAddr(ind){
+				let pages = getCurrentPages()
+				let addrVO = this.addrList[ind]
+				if(pages.length>1){
+					let prePage = pages[pages.length - 2]
+					if (prePage.$vm.setAddr) {
+					  prePage.$vm.setAddr(obj)
+					  wx.navigateBack({})
+					}
+				}
 			}
 		}
 	}

@@ -1,6 +1,6 @@
 <template>
 	<view class="content pagebg">
-		<view v-for="(item,ind) in list" :key="ind" class="item flex item-center">
+		<view v-for="(item,ind) in list" :key="ind" class="item flex item-center" @tap="detail(item.id)">
 			<view class="pic">
 				<image :src="item.img" mode="widthFix"></image>
 			</view>
@@ -14,7 +14,7 @@
 					</view>
 				</view>
 				<view class="btnBox">
-					<button type="red" class="radiuBtn" size="mini" @tap="chooseIt(ind)">@他</button>
+					<button type="red" class="radiuBtn" size="mini" @tap.stop="chooseIt(ind)">参与话题</button>
 				</view>
 			</view>
 		</view>
@@ -39,6 +39,11 @@
 					  wx.navigateBack({})
 					}
 				}
+			},
+			detail(id){
+				uni.navigateTo({
+					 url: 'topicIndex?id='+id
+				});
 			}
 		}
 	}

@@ -407,7 +407,8 @@ export default {
 				couponList:this.couponList,
 				chooseSpec:this.chooseSpec,
 				prod:tdetail,
-				goodsNum:this.goodsNum
+				goodsNum:this.goodsNum,
+				spellId:this.spellId,
 			}
 			if(chooseSpec.goodsSkuId){
 				uni.navigateTo({

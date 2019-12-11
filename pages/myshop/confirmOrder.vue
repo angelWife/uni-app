@@ -5,40 +5,45 @@
 				<icon class="iconfont icon-dizhi"></icon>
 			</view>
 			<view class="msg flex-1">
-				<view class="name">
-					<text class="fs15">阿童木</text>
-					<text class="c999">18755641514</text>
-				</view>
-				<view class="detail">
-					上海市常烈区天海路街道星星路星能小区30号301室
-				</view>
+				<block v-if="addrVO.id">
+					<view class="name">
+						<text class="fs15">{{addrVO.name}}</text>
+						<text class="c999">{{addrVO.phone}}</text>
+					</view>
+					<view class="detail">
+						{{addrVO.areaProvince}}{{addrVO.areaCity}}{{addrVO.areaCounty}}{{addrVO.address}}
+					</view>
+				</block>
+				<block v-else>
+                     <view class="c999 text-right">请选择收货地址</view>
+				</block>
+				
 			</view>
 			<view class="chooseAddress">
 				<icon class="iconfont icon-right"></icon>
 			</view>
 		</view>
 		<view class="modal order_detail">
-			<view class="shopName fs15">湖南弘道图书专营店</view>
+			<view class="shopName fs15">{{details.shopInfo.name}}</view>
 			<view class="product flex">
 				<view class="pic">
-					<image src="../../static/images/head1.png" mode="widthFix"></image>
+					<image :src="this.$acFrame.Util.setImgUrl(details.imgList[0])" mode="widthFix"></image>
 				</view>
 				<view class="center">
 					<view class="name clamp clamp-2">
-						商品名称商品名称商品 名商品名称商品…
+						{{details.name}}
 					</view>
 					<view class="spec">
-						<text>XL/180</text>
-						<text>j黑色</text>
+						{{details.chooseSpec}}
 					</view>
 				</view>
 				<view class="price text-right">
 					<view class="">
 						<text class="fs12">¥</text>
-						<text>1935.24</text>
+						<text>{{details.priceSale}}</text>
 					</view>
 					<view class="c999">
-						x1
+						x{{details.goodsQty}}
 					</view>
 				</view>
 			</view>
@@ -72,14 +77,14 @@
 		<view class="modal texarea flex">
 			<view class="name">买家留言：</view>
 			<view class="flex-1">
-				<textarea value="" placeholder="选填，请先和商家协商一致请先和商家协商一致" />
+				<textarea :value="messageBuyer" @input="changeText" placeholder="选填，请先和商家协商一致请先和商家协商一致" />
 			</view>
 		</view>
 		<view class="footBtn flex">
 			<view class="flex-1">
 				<text class="fs13">实付：</text>
 				<text class="fs13 red">¥</text>
-				<text class="fs18 red">1258.66</text>
+				<text class="fs18 red">{{payTotal}}</text>
 			</view>
 			<view class="btn" @tap="choosePayWay">
 				立即付款
@@ -92,23 +97,38 @@
 					<icon class="iconfont icon-remove" @tap="closeModal"></icon>
 				</view>
 				<view class="list">
-					<view class="item flex red item-center">
+					<view v-for="(item,ind) in couponList" :key="ind" class="item flex red item-center">
 						<view class="left">
-							<text class="fs40 blod">7</text>
+							<block v-if="item.effectType == 1">
+							<text class="fs12">满减</text>
+							<text class="fs40 blod">{{item.effectVal}}</text>
+							</block>
+							<block v-else>
+							<text class="fs40 blod">{item.effectVal}}</text>
 							<text class="fs12">折</text>
+							</block>
+							
 						</view>
 						<view class="center flex-1">
-							<view class="text blod">满1000可使用</view>
+							<view class="text blod">满{{item.priceFull}}可使用</view>
 							<view class="fs12">
-								部分商品使用
+								{{item.type==1?"本店通用":"部分商品使用"}}
 							</view>
 							<view class="fs12">
-								2019.10.27-2019.11.11
+								{{item.timeStart}}-2{{item.timeEnd}}
 							</view>
 						</view>
-						<view class="right fs15 blod">
-							立即使用
-						</view>
+						<block v-if="item.hasReceived">
+							<view class="right fs15 blod">
+								已领取
+							</view>
+						</block>
+						<block v-else>
+							<view class="right fs15 blod" @tap="useCoupon(item.couponId)">
+								立即使用
+							</view>
+						</block>
+						
 					</view>
 				</view>
 			    <view class="foot">
@@ -125,11 +145,57 @@
 	export default {
 		data() {
 			return {
+				details:{},//带过来胡产品信息
+				couponList:[],//优惠券列表
+				addrVO:{},
 				checked:false,
-				showCouponModal:false
+				showCouponModal:false,
+				messageBuyer:'',
+				payTotal:0.00
 			}
 		},
+		onLoad(options){
+            this.details = JSON.parse(options.details);
+		},
+		onShow(){
+
+		},
 		methods: {
+			getCoupon(){
+				let self = this
+				let params = {
+					goodsId:self.details.goodsId
+				}
+				self.$acFrame.HttpService.couponList(params).then(res => {
+					if(res.success){
+						self.couponList = res.data
+					}
+				})
+			},
+			getAddress(){
+				let self = this
+				self.$acFrame.HttpService.defaultAddr().then(res => {
+					if(res.success){
+						self.addrVO = res.data
+					}
+				})
+			},
+			logistPrice(){
+				let self = this
+				let params = {
+					addressId:this.addrVO.id,
+					buyNum:this.details.goodsQty,
+					goodsSkuId:this.details.chooseSpec.goodsSkuId
+				}
+				self.$acFrame.HttpService.logistPrice(params).then(res => {
+					if(res.success){
+						return res.data
+					}
+				})
+			},
+			changeText(e){
+				this.messageBuyer = e.detail.value
+			},
 			closeModal(){
 				this.showCouponModal = false
 			},
@@ -140,9 +206,20 @@
 				this.checked = !this.checked
 			},
 			choosePayWay(){
+				let obj={
+					addressId: this.addrVO.id,
+					buyNum: his.details.goodsQty,
+					couponIdReceiveList: [],
+					goodsId: this.details.goodsId,
+					goodsSkuId: this.details.chooseSpec.goodsSkuId,
+					messageBuyer: this.messageBuyer
+				}
 				uni.navigateTo({
-					url:'payWay'
+					url:'payWay?details='+JSON.stringify(obj)
 				})
+			},
+			setAddr(addrVO){
+				this.addrVO = addrVO
 			}
 		}
 	}

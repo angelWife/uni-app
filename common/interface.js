@@ -12,6 +12,14 @@ class Service extends HttpService {
 			userInfo: 'app/user_info/load_by_id', // 根据id加载个人资料信息
 			ownerInfo: 'app/user_info/load_owner', // 根据id加载个人资料信息
 			updateInfo: 'app/user_info/load_setting_info', // 根据id加载个人资料信息
+			defaultAddr:'app/user_address/load_dft',//默认地址
+			addrList:'app/user_address/list',//地址列表
+			addAddr:'app/user_address/add',//新增地址
+			deleteAddr:'app/user_address/del',//删除地址
+			deitAddr:'app/user_address/modify',//修改地址
+			checkPaypwd:'app/user_account/check_pay_pd',//校验支付密码
+			payByOther:'app/user_account/pay_by_ticket',//星票支付
+
 			//文章帖子
 			raleaseArtical: 'article/info/publish', // 发文章
 			commentList: 'article/info_comment/table_data', // 评论列表
@@ -27,11 +35,13 @@ class Service extends HttpService {
 			directBuy: 'order/info/buy', //商品直接购买
 			createSpell: 'order/spell/cre', // 创建拼团
 			joinSpell: 'order/spell/join', // 加入拼单
+			couponList: 'product/coupon/load_by_goodsId',//确认订单是的额优惠券
 			productCommentList: 'product/goods_comment/table_data', //商品品论
 			productDetail: 'product/goods/load_by_id', //商品详情
 			shopDetail: 'shop/info/load_by_id', //店铺详情
 			shopFollow: 'shop/info_user/follow', //店铺关注
 			shopList: 'shop/product_goods/table_data', //店铺列表
+			logistPrice:'logistics/calculate/buy',//物流运费
 		}
 	}
 	getToken(params) {
@@ -109,6 +119,37 @@ class Service extends HttpService {
 	}
 	shopList(params) {
 		return this.postRequest(this.$$path.shopList, {
+			data: params
+		})
+	}
+	couponList(params) {
+		return this.postRequest(this.$$path.couponList, {
+			data: params
+		})
+	}
+	defaultAddr(){
+		return this.postRequest(this.$$path.defaultAddr)
+	}
+	addrList(){
+		return this.postRequest(this.$$path.addrList)
+	}
+	addAddr(params) {
+		return this.postRequest(this.$$path.addAddr, {
+			data: params
+		})
+	}
+	deleteAddr(params) {
+		return this.postRequest(this.$$path.deleteAddr, {
+			data: params
+		})
+	}
+	deitAddr(params) {
+		return this.postRequest(this.$$path.deitAddr, {
+			data: params
+		})
+	}
+	logistPrice(params) {
+		return this.postRequest(this.$$path.logistPrice, {
 			data: params
 		})
 	}

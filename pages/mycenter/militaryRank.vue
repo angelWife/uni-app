@@ -10,7 +10,7 @@
 					粉丝数
 				</view>
 				<view class="dataBox flex-1">
-					<view class="markBox prev" :style="">
+					<view class="markBox prev">
 						<text class="text">111</text>
 						<text class="sanjiao"></text>
 						<text class="mark"></text>
@@ -35,7 +35,7 @@
 					购买额
 				</view>
 				<view class="dataBox flex-1">
-					<view class="markBox prev" :style="">
+					<view class="markBox prev">
 						<text class="text">111</text>
 						<text class="sanjiao"></text>
 						<text class="mark"></text>

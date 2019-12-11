@@ -2,42 +2,41 @@
 	<view class="content">
 		<view class="price text-center red">
 			<text>¥</text>
-			<text class="fs40">1862.22</text>
+			<text class="fs40">{{orderVO.pricePayTotal}}</text>
 		</view>
 		<view class="fs16 text-center">
-			支付剩余时间：<uni-count-down :show-day="false" :color="color" :splitorColor="color" :show-style="false" :fontSize="fontSize" :hour="12" :minute="12" :second="12" />
+			支付剩余时间：
+			<uni-count-down 
+			:show-day="false" 
+			:color="color" 
+			:splitorColor="color" 
+			:show-style="false" 
+			:fontSize="fontSize" 
+			:hour="this.$acFrame.Util.countTime(orderVO.endTime,'hour')" 
+			:minute="this.$acFrame.Util.countTime(orderVO.endTime,'minute')" 
+			:second="this.$acFrame.Util.countTime(orderVO.endTime,'second')" />
 		</view>
 		<view class="pay">
 			<view class="title">
 				支付方式
 			</view>
-			<view class="item flex item-center">
-				<view class="pic">
-					<!-- <image src="" mode=""></image> -->
-				</view>
-				<view class="text flex-1">
-					微信支付
-				</view>
-				<view class="">
-					<label class="radio">
-						<radio :checked="checked" color="#b40000"/><text></text>
-					</label>
-				</view>
-			</view>
-			<view class="item flex item-center">
+			<view v-for="(item,ind) in orderVO.payMethodList" :key="ind" class="item flex item-center">
 				<view class="pic">
 					<!-- <image src="" mode=""></image> -->
 				</view>
 				<view class="text flex-1">
 					<view class="">
-						星票支付
+						{{item.type == 2?'微信支付':'星票支付'}}
 					</view>
-					<view class="c999">
-						(账户余额40星票，本订单可用10）
+					<view class="c999" v-if="item.type == 1">
+						(账户余额{{item.total}}星票，本订单可用{{item.amount}}）
 					</view>
 				</view>
 				<view class="">
-					<switch @change="switchChange" color="#B40000"/>
+					<label v-if="item.type == 2" class="radio">
+						<radio :checked="payway" color="#b40000" @change="choosePayway"/><text></text>
+					</label>
+					<switch v-if="item.type == 1" :checked="payOther" @change="switchChange(event,index)" color="#B40000"/>
 				</view>
 			</view>
 		</view>
@@ -58,9 +57,16 @@
 							<text class="fs13">¥</text>
 							<text class="fs16">138.22</text>
 						</view>
+						<block>
 						<view class="text">
 							请输入支付密码
 						</view>
+						</block>
+						<block>
+						<view class="text">
+							请设置支付密码
+						</view>
+						</block>
 					</block>
 					<block v-else>
 						<view class="text">
@@ -71,14 +77,14 @@
 						</view>
 					</block>
 				</view>
-				<view class="textBox">
-					<input type="text" value="" />
-					<input type="text" value="" />
-					<input type="text" value="" />
-					<input type="text" value="" />
-					<input type="text" value="" />
-					<input type="text" value="" />
+				<view class="pwdBox">
+					<view class="textBox" bindtap='getFocus'>
+						<input v:for="item in pwdVO.Length" :key="item" :value="[pwdVO.Value.length>=index+1?pwdVO.Value[index]:'']" 
+      disabled password='{{ispassword}}' catchtap='Tap'/>
+					</view>
+					<input name="password" :password="pwdVO.true" class='password-input' :maxlength="pwdVO.Length" :focus="pwdVO.isFocus"   @input="password_input"/>
 				</view>
+				
 			</view>
 		</view>
 	</view>
@@ -96,18 +102,132 @@
 				checked:true,
 				fontSize:'30rpx',
 				showPayPass:false,
-				showPassModal:false
+				showPassModal:false,
+				payOther:false,
+				orderVO:{},
+				details:{},
+				payVO:{},
+				pwdVO:{
+					focus: false,
+					Length: 6,        //输入框个数  
+					isFocus: true,    //聚焦  
+					Value: "",        //输入的内容  
+					ispassword: false, //是否密文显示 true为密文， false为明文。
+				}
 			};
 		},
+		onLoad(options){
+			this.details = JSON.parse(options.details)
+		},
+		onShow(){
+
+		},
 		methods:{
+			createOrder(){
+				let self = this
+				let params=self.details
+				self.$acFrame.HttpService.directBuy().then(res => {
+					if(res.success){
+						self.orderVO = res.data
+					}
+				})
+			},
+			switchChange(e,ind){
+				let val = e.target.value
+				let _data = this.orderVO.payMethodList[ind]
+				this.payOther = val
+				this.payVO.amount = _data.amount
+				this.payVO.total  = _data.total
+			},
 			closeModal(){
 				this.showPassModal = false
 			},
 			payResult(){
-				uni.navigateTo({
-					url:'payResult'
+				let amount =this.payVO.amount
+				//还需判断是否设置密码，如果没有设置支付密码，跳转设置支付密码
+				if(amount>0&&amount<1000){
+					this.showPassModal = true
+					this.showPayPass = false
+				} else if(amount>=1000){
+					this.showPassModal = true
+					this.showPayPass = true
+				} else {
+					this.showPassModal = false
+					this.showPayPass = false
+					//请求支付接口
+					//支付结果:如果直接支付，直接跳转；如果拼单，增需请求拼单接口，带数据跳转
+					uni.navigateTo({
+						url:'payResult?res=&type=spell'
+					})
+				}
+				
+			},
+			//参与拼单
+            joinSpell(){
+				let self = this
+				let params={
+					addressId:this.addrVO.id,
+					goodsSkuId:this.details.chooseSpec.goodsSkuId,
+					spellId:this.details.spellId
+				}
+				self.$acFrame.HttpService.joinSpell().then(res => {
+					if(res.success){
+						self.addrVO = res.data
+					}
 				})
-			}
+			},
+			//自主拼单
+			createSpell(){
+				let self = this
+				let params={
+					
+				}
+				self.$acFrame.HttpService.couponList().then(res => {
+					if(res.success){
+						self.addrVO = res.data
+					}
+				})
+			},
+			password_input: function (e) {
+				let inputValue = e.detail.value;
+				let self = this;
+				this.pwdVO.Value = inputValue
+				if(inputValue.length == this.pwdVO.Length){
+					let params ={
+						type:1,
+                        passwd:inputValue
+					}
+					self.$acFrame.checkPaypwd.checkPaypwd(params).then(res => {
+					if(res.success){
+						//密码验证成功后  去支付
+						//1.支付星票
+						//2.支付钱
+					}
+				})
+				}
+			},
+            payOther(){
+				let params ={
+					bizId:0,
+					passPay:false,
+					type:1,
+					passwd:inputValue
+				}
+				self.$acFrame.checkPaypwd.payByOther(params).then(res => {
+					if(res.success){
+						
+					}
+
+				})
+					
+			},
+			Tap() {
+				this.pwdVO.isFocus=true
+			},
+
+			getFocus: function () {
+				this.pwdVO.focus=!this.pwdVO.focus
+			},
 		}
 	}
 </script>
@@ -193,5 +313,9 @@
 			}
 		}
 	}
+	.password-input{  
+		width: 0;  
+		height: 0;  
+	} 
 }
 </style>
