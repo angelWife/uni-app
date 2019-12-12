@@ -1,6 +1,6 @@
 <template>
   <view class="content pagebg">
-    <view class="city-box" wx:if="{{letter}}">
+    <view class="city-box" v-if="letter">
       <view class="city-left">
         <view class="scroll-view">
           <view class="city-list-box">
@@ -10,8 +10,8 @@
             >
               <view
                 class="city-first-letter"
-                data-code="{{letterItem.key}}"
-                id="{{letterItem.key == '#' ? 'NULL' : letterItem.key}}"
+                :code="letterItem.key"
+                :id="[letterItem.key == '#' ? 'NULL' : letterItem.key]"
                 @touchstart="touchstart"
                 @touchend="touchend(event, ind)"
                 >{{ letterItem.key }}
@@ -29,22 +29,23 @@
         </view>
       </view>
       <view class="city-right">
-        <repeat for="{{letter}}" key="index" index="index" item="item">
+        <block v-for="(iitem,index) in letter" :key="index">
           <text
-            class="letter-item {{item}} {{item == clickLetter ? 'active' : ''}}"
+            class="letter-item"
+			:class="[item == clickLetter ? 'active' : '']"
             @tap.stop="letterTap"
-            data-item="{{item == '#' ? 'NULL' : item}}"
+            :item="[item == '#' ? 'NULL' : item]"
             >{{ item }}
           </text>
-        </repeat>
+        </block>
       </view>
-      <view class="city-choose" wx:if="{{showCode}}">{{ showCode }}</view>
+      <view class="city-choose" v-if="showCode">{{ showCode }}</view>
     </view>
   </view>
 </template>
 
 <script>
-export default {
+export default {   //			<!-- {{item}} -->
   data() {
     return {
       letter: [], // 字母集合
