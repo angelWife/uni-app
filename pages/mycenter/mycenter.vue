@@ -54,20 +54,56 @@
 					<view>打赏记录</view>
 					<view class="flex-1 text-right c999">我收到过100次打赏</view>
 				</view>
-				<view class="comItem flex">
+				<view class="comItem flex item-center">
 					<view class="pic">
 						<image src="../../static/images/head1.png" mode="widthFix" />
 					</view>
-					<view class="main">
-					<view class="flex-1">
-						<view class="title fs16"></view>
-						<view class="text fs12 c999"></view>
-					</view>
-					<view class="right-pic"></view>
+					<view class="main flex-1 flex item-center">
+						<view class="flex-1">
+							<view class="title fs16"></view>
+							<view class="text fs12 c999"></view>
+						</view>
+						<view class="right-pic">
+							<image src="../../static/images/icon-aircraft.png" mode="widthFix" />
+						</view>
 					</view>
 				</view>
 			</view>
-			<view class="reward" v-if="modalName=='reward'"></view>
+			<view class="reward clearfix" v-if="modalName=='reward'">
+				<view class="item">
+					<view class="itemBox">
+						<view class="mydate">
+							<image class="mark" src="../../static/images/icon-label.png" mode="widthFix" />
+							<text>12月12日</text>
+						</view>
+						<view class="item-modal flex item-center just-con-c">
+							<image src="../../static/images/first.png" mode="" />
+						</view>
+					</view>
+				</view>
+				<view class="item">
+					<view class="itemBox">
+						<view class="mydate">
+							<image class="mark" src="../../static/images/icon-label.png" mode="widthFix" />
+							<text>12月12日</text>
+						</view>
+						<view class="item-modal flex item-center just-con-c">
+							<image src="../../static/images/first.png" mode="" />
+						</view>
+					</view>
+				</view>
+				<view class="item">
+					<view class="itemBox">
+						<view class="mydate">
+							<image class="mark" src="../../static/images/icon-label.png" mode="widthFix" />
+							<text>12月12日</text>
+						</view>
+						<view class="item-modal flex item-center just-con-c">
+							<image src="../../static/images/first.png" mode="" />
+						</view>
+					</view>
+				</view>
+			</view>
 		</scroll-view>
 	</view>
 </template>
@@ -255,6 +291,41 @@ page {
 		.main{
 			padding:10rpx 0;
 		}
+	}
+	.reward{
+		padding:0 10rpx;
+	   .item{
+		   float:left;
+		   width: 50%;
+		   padding: 0 10px;
+		   margin:10rpx 0;
+		   .itemBox{
+			   background: #fff;
+			   border-radius:0.5em;
+			   box-shadow: 0 0 3px rgba(0,0,0,0.1);
+			   height:calc((100vw - 20rpx) / 2 - 20rpx);
+			   position: relative;
+		   }
+		   .mydate{
+			   position:absolute;
+			   top:0;
+			   left:-10rpx;
+			   width: 120rpx;
+			   text-align: center;
+			   color:#fff;
+			   line-height: 40rpx;
+			   image{
+				   position: absolute;
+				   top:0;
+				   left:0;
+			   }
+		   }
+		   .item-modal{
+			   text-align: center;
+			   width: 80%;
+		   }
+	   }
+	   
 	}
 }
 </style>

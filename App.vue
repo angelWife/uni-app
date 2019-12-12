@@ -24,6 +24,7 @@ image {
   vertical-align: middle;
   width: 100%;
   height: 0;
+  display: inline-block;
 }
 button {
   vertical-align: middle;
@@ -35,6 +36,9 @@ button {
     border-radius: 0;
   }
 }
+text{
+  display: inline-block;
+}
 .pagebg {
   background: #eeeeee;
   min-height: 100vh;
@@ -43,6 +47,9 @@ button {
   font-size: 28rpx;
   color: #444;
   border-top: 1px solid #e1e1e1;
+}
+.m-r-20{
+  margin-right:20rpx;
 }
 .myscroll {
   height: 100%;
