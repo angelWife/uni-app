@@ -84,7 +84,7 @@
 					好友
 				</view>
 			</view>
-			<view class="item flex"  @tap="linkTo('myNews')">
+			<view class="item flex" @tap="linkTo('myNews')">
 				<view class="icon">
 					<image src="../../static/images/icon-infom.png" mode="widthFix"></image>
 				</view>

@@ -40,23 +40,88 @@
 			</view>
 		</view>
 		<view class="infoTab">
-			<view class="item" v-for="(item, index) in infoTab" :key="index" :class="{ active: item.choose }">{{ item.name }}</view>
+			<view class="item" v-for="(item, index) in infoTab" :key="index" :class="{ active: item.choose }" @tap="tapClick(index)">{{ item.name }}</view>
 		</view>
 		<scroll-view class="myscroll" scroll-y="true">
-			<view class="reward"><commentItem :dataList="dataList"></commentItem></view>
+			<view class="post" v-if="modalName=='reward'">
+				<commentItem :dataList="dataList"></commentItem>
+			</view>
+			<view class="shop" v-if="modalName=='shop'">
+				<productList :nodata="prodNodata" :dataList="dataList"></productList>
+			</view>
+			<view class="honor" v-if="modalName=='honor'">
+				<view class="topMsg flex">
+					<view>打赏记录</view>
+					<view class="flex-1 text-right c999">我收到过100次打赏</view>
+				</view>
+				<view class="comItem flex item-center">
+					<view class="pic">
+						<image src="../../static/images/head1.png" mode="widthFix" />
+					</view>
+					<view class="main flex-1 flex item-center">
+						<view class="flex-1">
+							<view class="title fs16"></view>
+							<view class="text fs12 c999"></view>
+						</view>
+						<view class="right-pic">
+							<image src="../../static/images/icon-aircraft.png" mode="widthFix" />
+						</view>
+					</view>
+				</view>
+			</view>
+			<view class="reward clearfix" v-if="modalName=='reward'">
+				<view class="item">
+					<view class="itemBox">
+						<view class="mydate">
+							<image class="mark" src="../../static/images/icon-label.png" mode="widthFix" />
+							<text>12月12日</text>
+						</view>
+						<view class="item-modal flex item-center just-con-c">
+							<image src="../../static/images/first.png" mode="" />
+						</view>
+					</view>
+				</view>
+				<view class="item">
+					<view class="itemBox">
+						<view class="mydate">
+							<image class="mark" src="../../static/images/icon-label.png" mode="widthFix" />
+							<text>12月12日</text>
+						</view>
+						<view class="item-modal flex item-center just-con-c">
+							<image src="../../static/images/first.png" mode="" />
+						</view>
+					</view>
+				</view>
+				<view class="item">
+					<view class="itemBox">
+						<view class="mydate">
+							<image class="mark" src="../../static/images/icon-label.png" mode="widthFix" />
+							<text>12月12日</text>
+						</view>
+						<view class="item-modal flex item-center just-con-c">
+							<image src="../../static/images/first.png" mode="" />
+						</view>
+					</view>
+				</view>
+			</view>
 		</scroll-view>
 	</view>
 </template>
 
 <script>
 import commentItem from '@/components/comment-item.vue';
+import productList from '@/components/shop-product.vue'
 export default {
 	components: {
-		commentItem
+		commentItem,
+		productList
 	},
 	data() {
 		return {
-			infoTab: [{ name: '帖子', choose: true }, { name: '小店', choose: false }, { name: '荣誉', choose: false }, { name: '受赏', choose: false }],
+			infoTab: [{ name: '帖子', choose: true ,type:"post"}, 
+			{ name: '小店', choose: false ,type:"shop"}, 
+			{ name: '荣誉', choose: false ,type:"honor"}, 
+			{ name: '受赏', choose: false ,type:"reward"}],
 			dataList: [
 				{
 					headImg: '/static/images/head1.png',
@@ -95,10 +160,24 @@ export default {
 					createName: '妮维雅',
 					createTime: '09-21'
 				}
-			]
+			],
+			prodNodata:false,
+			modalName:'post'
 		};
 	},
-	methods: {}
+	methods: {
+		tapClick(ind){
+			let self = this
+			this.infoTab.filter((v,i)=>{
+				if(i==ind){
+					v.choose = true
+					self.modalName = v.type
+				} else {
+					v.choose = false
+				}
+			})
+		},
+	}
 };
 </script>
 
@@ -204,5 +283,49 @@ page {
 }
 .myscroll {
 	height: calc(100% - 360rpx);
+	.topMsg{
+		padding:20rpx 24rpx;
+		border-bottom:1px solid #ccc;
+	}
+	.comItem{
+		.main{
+			padding:10rpx 0;
+		}
+	}
+	.reward{
+		padding:0 10rpx;
+	   .item{
+		   float:left;
+		   width: 50%;
+		   padding: 0 10px;
+		   margin:10rpx 0;
+		   .itemBox{
+			   background: #fff;
+			   border-radius:0.5em;
+			   box-shadow: 0 0 3px rgba(0,0,0,0.1);
+			   height:calc((100vw - 20rpx) / 2 - 20rpx);
+			   position: relative;
+		   }
+		   .mydate{
+			   position:absolute;
+			   top:0;
+			   left:-10rpx;
+			   width: 120rpx;
+			   text-align: center;
+			   color:#fff;
+			   line-height: 40rpx;
+			   image{
+				   position: absolute;
+				   top:0;
+				   left:0;
+			   }
+		   }
+		   .item-modal{
+			   text-align: center;
+			   width: 80%;
+		   }
+	   }
+	   
+	}
 }
 </style>
