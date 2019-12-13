@@ -144,6 +144,20 @@ const getHotList = (type) => {
 	});
 }
 
+//处理订单状态
+const setOrderStatus=(status)=>{
+	let name = ''
+	self.$acFrame.HttpService.hotList(params).then(res => {
+		if (res.success) {
+			let _data = res.data;
+			return _data;
+		} else {
+			self.$acFrame.Util.mytotal(res.code);
+			return []
+		}
+	});
+}
+
 module.exports = {
 	formatTime,
 	showBigPic,

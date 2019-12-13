@@ -210,6 +210,12 @@
             "style": {
             	"navigationBarTitleText": "好友"
             }
+		}
+		,{
+            "path" : "pages/mycenter/follow",
+            "style": {
+            	"navigationBarTitleText": ""
+            }
         }
         ,{
             "path" : "pages/ranking/product",

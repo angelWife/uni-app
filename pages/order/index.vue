@@ -30,7 +30,36 @@ import OrderItem from '@/components/order-item.vue'
                     {imgPath:'',shopName:'',}
                 ],
                 orderType:'all',
-                nodata:fasle
+                nodata:fasle,
+                pageSize:10,
+                pageTotal:1,
+                pageIndex:1,
+            }
+        },
+        onLoad(options){},
+        onShow(){},
+        methods:{
+            getList(){
+                let self = this
+                let params = {
+                    status:self.orderType,
+                    pageSize:self.pageSize,
+                    pageIndex:self.pageIndex,
+                }
+                self.$acFrame.HttpService.orderList(params).then(res => {
+                if(res.success){
+					let list = res.data.rows
+					self.pageTotal = res.data.pageTotal
+					if(list.length>0){
+						self.nodata=false
+						self.dataList.push(list)
+					}else{
+						self.nodata=true
+					}
+				}else{
+
+				}
+			})
             }
         }
     }

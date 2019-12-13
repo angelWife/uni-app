@@ -42,6 +42,13 @@ class Service extends HttpService {
 			shopFollow: 'shop/info_user/follow', //店铺关注
 			shopList: 'shop/product_goods/table_data', //店铺列表
 			logistPrice:'logistics/calculate/buy',//物流运费
+			
+			//订单
+			orderList:'order/info/table_data', //订单列表
+			//排行
+			articleRank:'ranking_top/article', // 帖子排行
+			prodRank:'ranking_top/goods', //商品排行
+			inviteRank:'ranking_top/invite_user', //用户排行
 		}
 	}
 	getToken(params) {
@@ -149,6 +156,11 @@ class Service extends HttpService {
 		})
 	}
 	logistPrice(params) {
+		return this.postRequest(this.$$path.logistPrice, {
+			data: params
+		})
+	}
+	orderList(params) {
 		return this.postRequest(this.$$path.logistPrice, {
 			data: params
 		})

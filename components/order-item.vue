@@ -3,19 +3,19 @@
     <view v-for="(item, index) in dataList" :key="index" class="item">
       <view class="item_head flex item-center">
         <view class="pic">
-          <image src="../../static/images/head1.png" mode="widthFix" />
+          <image :src="setImg(item.shopInfo.imgPath)" mode="widthFix" />
         </view>
-        <view class="name flex-1 textEllipsis"></view>
+        <view class="name flex-1 textEllipsis">{{item.shopInfo.name}}</view>
         <view class="status orange">
-          <text class="mr20">待付款</text>
-          <uni-count-down
+          <text class="mr20">{{item.status}}</text>
+          <!-- <uni-count-down
             :color="timeStyle.color"
             :show-day="false"
             :show-style="true"
             :hour="12"
             :minute="12"
             :second="12"
-          />
+          /> -->
         </view>
       </view>
       <view class="item_body flex">

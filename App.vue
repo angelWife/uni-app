@@ -36,7 +36,7 @@ button {
     border-radius: 0;
   }
 }
-text{
+text {
   display: inline-block;
 }
 .pagebg {
@@ -48,8 +48,8 @@ text{
   color: #444;
   border-top: 1px solid #e1e1e1;
 }
-.m-r-20{
-  margin-right:20rpx;
+.m-r-20 {
+  margin-right: 20rpx;
 }
 .myscroll {
   height: 100%;
@@ -176,34 +176,34 @@ text{
   background: #fff;
   .listBox {
     position: relative;
-	height: 140rpx;
-	.btn{
-		height:100%;
-		width: 140rpx;
-		text-align: center;
-		line-height: 140rpx;
-		color:#fff;
-	}
-	.look{
-		background: #4C8FF7;
-	}
-	.delete{
-		background: #B40000;
-	}
+    height: 140rpx;
+    .btn {
+      height: 100%;
+      width: 140rpx;
+      text-align: center;
+      line-height: 140rpx;
+      color: #fff;
+    }
+    .look {
+      background: #4c8ff7;
+    }
+    .delete {
+      background: #b40000;
+    }
   }
   .newBox {
-	position: absolute;
-	top:0;
-	left:0;
-	z-index: 2;
-	background: #fff;
-	transition: left 0.3s ease;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    background: #fff;
+    transition: left 0.3s ease;
     .pic {
       width: 100rpx;
       height: 100rpx;
       overflow: hidden;
       border-radius: 100rpx;
-      margin:0 40rpx;
+      margin: 0 40rpx;
     }
     .main {
       border-bottom: 1px solid #ccc;
@@ -226,20 +226,20 @@ text{
     }
   }
 }
-.comItem{
-  .pic{
-    margin:0 24rpx;
-    height:60rpx;
+.comItem {
+  .pic {
+    margin: 0 24rpx;
+    height: 60rpx;
     line-height: 60rpx;
     border-radius: 60rpx;
     overflow: hidden;
   }
-  .main{
-    padding:20rpx 0;
-    border-bottom:1px solid #ccc;
+  .main {
+    padding: 20rpx 0;
+    border-bottom: 1px solid #ccc;
   }
-  .right-pic{
-    height:80rpx;
+  .right-pic {
+    height: 80rpx;
     line-height: 80rpx;
   }
 }

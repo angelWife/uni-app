@@ -20,8 +20,12 @@
                 v-for="(item,index) in letterItem.customerList"
                 :key="index"
               >
-                <view class="city-name" @tap="jumpOrder(item)">
-                  <text class="name">{{ item }}</text>
+                <view class="city-name flex item-center">
+                  <view class="pic"></view>
+                  <view class="flex-1">
+                    <text class="name"></text>
+                    <text class="float-right c999">256324关注</text>
+                  </view>
                 </view>
               </block>
             </block>
@@ -33,8 +37,7 @@
           <text
             class="letter-item"
 			:class="[item == clickLetter ? 'active' : '']"
-            @tap.stop="letterTap"
-            :item="[item == '#' ? 'NULL' : item]"
+            @tap.stop="letterTap(item)"
             >{{ item }}
           </text>
         </block>
@@ -45,7 +48,7 @@
 </template>
 
 <script>
-export default {   //			<!-- {{item}} -->
+export default {
   data() {
     return {
       letter: [], // 字母集合
@@ -211,17 +214,18 @@ export default {   //			<!-- {{item}} -->
 }
 
 .city-name {
-  display: flex;
-  justify-content: space-between;
-  line-height: 98rpx;
-  height: 98rpx;
-  border-bottom: 2rpx solid #ededf2;
-  font-size: 30rpx;
-  color: #333;
-  margin-right: 24rpx;
-  margin-left: 24rpx;
-  background-color: #fff;
-
+  line-height: 100rpx;
+  height: 100rpx;
+  .pic{
+    height:80rpx;
+    width: 80rpx;
+    border-radius:80rpx;
+    overflow: hidden;
+    margin:0 24rpx;
+  }
+  .flex-1{
+border-bottom:1px solid #ccc;
+  }
   &:last-child {
     border-bottom: 0 none;
   }
