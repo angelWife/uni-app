@@ -12,7 +12,7 @@ class Service extends HttpService {
 			userInfo: 'app/user_info/load_by_code', // 根据id加载个人资料信息
 			ownerInfo: 'app/user_info/load_owner', // 根据id加载个人资料信息
 			ownerInfoMain: 'app/user_info/load_owner_main', // 根据id加载个人资料信息
-			updateInfo: 'app/user_info/load_setting_info', // 根据id加载个人资料信息
+			settingsInfo: 'app/user_info/load_setting_info', // 根据id加载个人资料信息
 			defaultAddr:'app/user_address/load_dft',//默认地址
 			addrList:'app/user_address/list',//地址列表
 			addAddr:'app/user_address/add',//新增地址
@@ -21,6 +21,8 @@ class Service extends HttpService {
 			checkPaypwd:'app/user_account/check_pay_pd',//校验支付密码
 			payByOther:'app/user_account/pay_by_ticket',//星票支付
 			rankList:'dict/app/userMilitaryRankTypeList',//军衔
+			sendMark:'sys/sms_send/exc_by_type',//发送验证码
+			submitMark:'sys/sms_send/use_by_type',//提交
 
 			//文章帖子
 			raleaseArtical: 'article/info/publish', // 发文章
@@ -67,6 +69,9 @@ class Service extends HttpService {
 		return this.postRequest(this.$$path.ownerInfoMain, {
 			data: params
 		})
+	}
+	settingsInfo(){
+		return this.postRequest(this.$$path.settingsInfo)
 	}
 	userInfo(params) {
 		return this.postRequest(this.$$path.userInfo, {
@@ -184,6 +189,16 @@ class Service extends HttpService {
 	}
 	rankList(){
 		return this.getRequest(this.$$path.rankList)
+	}
+	sendMark(params) {
+		return this.postRequest(this.$$path.sendMark, {
+			data: params
+		})
+	}
+	submitMark(params) {
+		return this.postRequest(this.$$path.submitMark, {
+			data: params
+		})
 	}
 }
 

@@ -63,14 +63,14 @@
 				</block>
 				<block v-else-if="item.articleInfo.type == 1">
 					<view class="articalBox news flex item-center" v-if="item.articleInfo.imgList.length > 0">
-						<view class="a_pic"><image :src="item.articleInfo.imgList[0]" mode="widthFix"></image></view>
-						<view class="a_main flex-1">
+						<view class="a_pic"><image :src="item.articleInfo.imgList[0]" mode="widthFix" @tap="showBigImg(index, 0)"></image></view>
+						<view class="a_main flex-1" @tap="linkDetail(item)">
 							<view class="title blod clamp clamp-2">{{ item.articleInfo.title }}</view>
 							<view class="msg fs12 clamp clamp-2">{{ item.articleInfo.content }}</view>
 						</view>
 					</view>
 					<view class="articalBox flex item-center" v-else>
-						<view class="a_main flex-1">
+						<view class="a_main flex-1" @tap="linkDetail(item)">
 							<view class="title blod clamp clamp-2">{{ item.articleInfo.title }}</view>
 							<view class="msg fs12 clamp clamp-2">{{ item.articleInfo.content }}</view>
 						</view>
@@ -203,7 +203,6 @@ export default {
 			this.dataList[ind].showMore = false;
 		},
 		showBigImg(listInd, imgInd) {
-			debugger
 			let info = this.dataList[listInd];
 			let imgList = info.articleInfo.imgList;
 			this.$acFrame.Util.showBigPic(imgList[imgInd], imgList);
@@ -224,6 +223,7 @@ export default {
 		},
 		guanzhu(id,ind){
 			let selef= this
+			
 			this.$acFrame.HttpService.followPost({id:id}).then(res=>{
 				if(res.success){
 					selef.dataList[ind].hasFollow=!selef.dataList[ind].hasFollow

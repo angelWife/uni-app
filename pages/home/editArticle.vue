@@ -41,7 +41,8 @@
 				articleMsg: "",
 				textDetail: "",
 				title: "",
-				imgList: []
+				imgList: [],
+				textContent:''
 			};
 		},
 		methods: {
@@ -49,6 +50,7 @@
 				let self = this;
 				this.$acFrame.Util.uploadPic().then(res => {
 					let url = res;
+					self.imgList.push(src);
 					self.textDetail=self.articleMsg+`<br><img src="${url}"/><br>`
 					self.articleMsg+=`<br><img src="${url}"/><br>`
 				});
@@ -58,8 +60,11 @@
 				this.title=val
 			},
 			changeInput(e) {
+				debugger
 				let val = e.detail.html
+				let text = e.detail.text
 				this.articleMsg = val
+				this.textContent =text
 			},
 			changeClass() {
 
@@ -68,7 +73,9 @@
 				debugger
 				let params = {
 					content:this.textDetail,
-					title:this.title
+					title:this.title,
+					imgPathList :this.imgList[0]||[],
+					zyao:self.textContent
 				}
 				if(!params.title){
 					this.$acFrame.Util.mytotal('请输入标题！');
@@ -79,9 +86,14 @@
 					return false;
 				}
 				this.$acFrame.HttpService.raleaseArtical(params).then(res => {
-					let url = res;
-					self.textDetail=self.articleMsg+url
-					self.articleMsg+=`<br><img src="${url}"/><br>`
+					if(res.success){
+						this.$acFrame.Util.mytotal('发布成功！！');
+						setTimeout(function() {
+							uni.navigateBack({
+								
+							})
+						}, 1000);
+					}
 				});
 			},
 			deleteImg(index) {},
