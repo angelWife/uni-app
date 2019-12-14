@@ -25,8 +25,8 @@
 			</view>
 			<view class="item flex item-center" @tap="linkTo('bindPhone')">
 				<view class="name">手机号码</view>
-				<view class="text c999 flex-1">未绑定</view>
-				<view class="oper"><icon class="iconfont icon-right"></icon></view>
+				<view class="text c999 flex-1">{{userInfo.mobilePhone?userInfo.mobilePhone:'未绑定'}}</view>
+				<view class="oper"><icon v-if="!userInfo.mobilePhone" class="iconfont icon-right"></icon></view>
 			</view>
 			<view class="item flex item-center" @tap="linkTo('mycenter')">
 				<view class="name">地区</view>
@@ -85,10 +85,22 @@ export default {
 			array:['白虎','青龙','玄武','朱雀'],
 			index:0,
 			region: ['广东省', '广州市', '海珠区'],
-			customItem: '全部'
+			customItem: '全部',
+			userInfo:{}
 		};
 	},
+	onShow(){
+		this.initData()
+	},
 	methods: {
+		initData(){ //settingsInfo
+			let self = this
+			this.$acFrame.HttpService.settingsInfo().then(res=>{
+				if(res.success){
+					self.userInfo = res.data
+				}
+			})
+		},
 		upLoadPic() {
 			let img = this.$acFrame.Util.uploadPic();
 			this.headPic = img;
@@ -103,6 +115,9 @@ export default {
 			this.region= e.detail.value
 		},
 		linkTo(name){
+			if(name=='bindPhone'&&userInfo.mobilePhone){
+				return false
+			}
 			uni.navigateTo({
 				url:name
 			})
@@ -173,6 +188,7 @@ page {
 			padding-right: 60rpx;
 		}
 		.oper {
+			width: 60rpx;
 			&.abs_right {
 				position: absolute;
 				right: 0;
