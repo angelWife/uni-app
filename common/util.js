@@ -54,6 +54,7 @@ const mytotal = (title, icon = 'none', mask = false, duration = 2000) => {
 const shareUrl = (res, _data, title) => {
 	let pagePath = '',
 		imageUrl = ''
+		
 	if (res.from === 'button') {
 		if (_data.productId) {
 			pagePath = '?pagePath=/pages/shopmall/shopDetail/shopDetail&productId=' + _data.productId + '&productType=' + _data
@@ -78,10 +79,10 @@ const setImgUrl = (imgPath) => {
 		if (imgPath.indexOf('http') >= 0) {
 			picPath = imgPath
 		} else {
-			picPath = getApp().globalData.config.basePath + imgPath
+			picPath = getApp().globalData.config.imgPath + imgPath
 		}
 	} else {
-		picPath='/static/iamges/head1.png'
+		picPath='../../static/images/head1.png'
 	}
 	
 	return picPath

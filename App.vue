@@ -4,7 +4,8 @@ import AcFrame from "@/common/acFrame";
 export default {
   globalData: {
     config: MyConfig,
-    comFunc: AcFrame
+    comFunc: AcFrame,
+	userCode:''
   },
   onLaunch: function() {},
   onShow: function() {},

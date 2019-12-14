@@ -3,7 +3,7 @@
 		<view class="headBox flex item-center">
 			<view class="pic">
 				<image class="grade" src="../../static/images/baihu.png" mode="widthFix"></image>
-				<image class="headpic" src="../../static/images/head2.png" mode="widthFix"></image>
+				<image class="headpic" :src="this.$acFrame.Util.setImgUrl(userInfo.imgHeadPath )" mode="widthFix"></image>
 			</view>
 			<view class="msg flex-1">
 				<view class="text textEllipsis">
@@ -122,6 +122,7 @@ export default {
 			{ name: '小店', choose: false ,type:"shop"}, 
 			{ name: '荣誉', choose: false ,type:"honor"}, 
 			{ name: '受赏', choose: false ,type:"reward"}],
+			userInfo:{},
 			dataList: [
 				{
 					headImg: '/static/images/head1.png',
@@ -162,10 +163,29 @@ export default {
 				}
 			],
 			prodNodata:false,
-			modalName:'post'
+			modalName:'post',
+			userCode:''
 		};
 	},
+	onLoad(options){
+		let userCode=options.userCode;
+		this.userCode=userCode?userCode:uni.getStorageSync('userCode')
+	},
+	onShow(){
+		this.getUserInfo()
+	},
 	methods: {
+		getUserInfo(){
+			let self=this
+			let params = {
+				userCode:self.userCode
+			}
+			this.$acFrame.HttpService.userInfo(params).then(res=>{
+				if(res.success){
+					self.userInfo = res.data
+				}
+			})
+		},
 		tapClick(ind){
 			let self = this
 			this.infoTab.filter((v,i)=>{

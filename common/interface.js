@@ -9,8 +9,9 @@ class Service extends HttpService {
 			//上传
 
 			//用户
-			userInfo: 'app/user_info/load_by_id', // 根据id加载个人资料信息
+			userInfo: 'app/user_info/load_by_code', // 根据id加载个人资料信息
 			ownerInfo: 'app/user_info/load_owner', // 根据id加载个人资料信息
+			ownerInfoMain: 'app/user_info/load_owner_main', // 根据id加载个人资料信息
 			updateInfo: 'app/user_info/load_setting_info', // 根据id加载个人资料信息
 			defaultAddr:'app/user_address/load_dft',//默认地址
 			addrList:'app/user_address/list',//地址列表
@@ -53,6 +54,21 @@ class Service extends HttpService {
 	}
 	getToken(params) {
 		return this.postRequest(this.$$path.getToken, {
+			data: params
+		})
+	}
+	ownerInfo(params) {
+		return this.postRequest(this.$$path.ownerInfo, {
+			data: params
+		})
+	}
+	ownerInfoMain(params) {
+		return this.postRequest(this.$$path.ownerInfoMain, {
+			data: params
+		})
+	}
+	userInfo(params) {
+		return this.postRequest(this.$$path.userInfo, {
 			data: params
 		})
 	}

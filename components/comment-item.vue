@@ -3,7 +3,9 @@
 		<view v-for="(item, index) in dataList" :key="index" class="listItem">
 			<block v-if="item.type == 1">
 				<view class="item-head flex item-center">
-					<view class="img item-center" @tap="userInfo(item.publishUser.userId)"><image :src="item.publishUser.imgPathHead" mode="widthFix"></image></view>
+					<view class="img item-center" @tap="userInfo(item.publishUser.userId)">
+						<image :src="item.publishUser.imgPathHead" mode="widthFix"></image>
+						</view>
 					<view class="flex-1 head-msg">
 						<view class="clearfix">
 							<text class="name fs15" @tap="userInfo(item.publishUser.userId)">{{ item.publishUser.userName }}</text>
@@ -28,6 +30,7 @@
 				<block v-if="item.articleInfo.type == 2">
 					<view class="articalBox">
 						<view class="msg" :class="{ 'clamp clamp-3': !item.articleInfo.showMore && !item.articleInfo.isDetail }" @tap="linkDetail(item)">
+							<block v-if="item.articleInfo.showContent.length>0">
 							<block v-for="(conitem, comind) in item.articleInfo.showContent" :key="comind">
 								<block v-if="conitem.type == 1">
 									<text class="name blue" @tap.stop="linkUser(conitem.atId)">@{{ conitem.atName }}</text>
@@ -35,8 +38,12 @@
 								</block>
 								<block v-else>
 									<text class="from blue" @tap.stop="linkTheme(conitem.topicId)">#{{ conitem.topicName }}#</text>
-									<text class="text">{conitem.content}}</text>
+									<text class="text">{{conitem.content}}</text>
 								</block>
+							</block>
+							</block>
+							<block v-else>
+								<text class="text">{{item.articleInfo.content}}</text>
 							</block>
 							<!-- <view class="blue lookPic">
 								<icon class="iconfont icon-tupian"></icon>
@@ -164,13 +171,13 @@ export default {
 				return false;
 			}
 		},
-		// isDetail: {
-		// 	// 是否是详情
-		// 	type: Boolean,
-		// 	default() {
-		// 		return false;
-		// 	}
-		// },
+		isDetail: {
+			// 是否是详情
+			type: Boolean,
+			default() {
+				return false;
+			}
+		},
 		nomore:{
 			// 是否有更多数据
 			type: Boolean,

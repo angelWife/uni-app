@@ -37,6 +37,8 @@ class AcFrame {
 		  self.HttpService.getToken(params).then(res => {
 			  if(res.success){
 				  uni.setStorageSync('access_token', res.data.token)
+				  uni.setStorageSync('userCode', res.data.userCode)
+				  getApp().globalData.userCode=res.data.userCode
 				  resolve(res)
 			  }
 		  }).catch(err => {

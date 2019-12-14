@@ -169,15 +169,22 @@ export default {
 							});
 							if(v.publishUser.imgPathHead){
 								v.publishUser.imgPathHead = self.$acFrame.Util.setImgUrl(v.publishUser.imgPathHead);
+							} else {
+								v.publishUser.imgPathHead='../static/images/head1.png'
 							}
 							if (v.type == 1) {
 								if(v.articleInfo.contentExtendList.length>0){
 									v.articleInfo.showContent = self.setContent(v.articleInfo.contentExtendList);
+								} else {
+									v.articleInfo.showContent=[]
 								}
+									
 								v.articleInfo.showMore = false;
 							}
 							if (v.articleInfo.content.length > 60) {
 								v.articleInfo.isDetail = false;
+							} else {
+								v.articleInfo.isDetail = true;
 							}
 						});
 						if (self.isSearch) {

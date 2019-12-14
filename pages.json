@@ -212,7 +212,7 @@
             }
 		}
 		,{
-            "path" : "pages/mycenter/follow",
+            "path" : "pages/mycenter/followList",
             "style": {
             	"navigationBarTitleText": ""
             }
