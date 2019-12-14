@@ -20,6 +20,7 @@ class Service extends HttpService {
 			deitAddr:'app/user_address/modify',//修改地址
 			checkPaypwd:'app/user_account/check_pay_pd',//校验支付密码
 			payByOther:'app/user_account/pay_by_ticket',//星票支付
+			rankList:'dict/app/userMilitaryRankTypeList',//军衔
 
 			//文章帖子
 			raleaseArtical: 'article/info/publish', // 发文章
@@ -180,6 +181,9 @@ class Service extends HttpService {
 		return this.postRequest(this.$$path.logistPrice, {
 			data: params
 		})
+	}
+	rankList(){
+		return this.getRequest(this.$$path.rankList)
 	}
 }
 

@@ -203,8 +203,9 @@ export default {
 			this.dataList[ind].showMore = false;
 		},
 		showBigImg(listInd, imgInd) {
+			debugger
 			let info = this.dataList[listInd];
-			let imgList = info.imgList;
+			let imgList = info.articleInfo.imgList;
 			this.$acFrame.Util.showBigPic(imgList[imgInd], imgList);
 			this.showPic = true;
 		},
@@ -255,9 +256,10 @@ export default {
 
 <style lang="less">
 .listItem {
-	padding: 20rpx 24rpx;
+	padding: 20rpx 0;
 	border-bottom: 1px solid #efefef;
 	.item-head {
+		padding:0 24rpx;
 		.img {
 			margin-right: 20rpx;
 			width: 100rpx;
@@ -333,7 +335,7 @@ export default {
 		}
 	}
 	.articalBox {
-		margin: 20rpx auto;
+		margin: 20rpx 24rpx;
 		.msg {
 			text {
 				display: inline;
@@ -365,15 +367,13 @@ export default {
 		}
 	}
 	.imgList {
-		margin: 0 -10rpx;
+		padding:0 14rpx;
 		.imgItem {
 			float: left;
-			width: 30.55%;
-			margin: 0 10rpx 20rpx;
-			background: #f1f1f1;
-			image {
-				width: 100%;
-			}
+			width:33.3333%;
+			padding:0 10rpx;
+			height:calc((100vw - 24rpx) / 3 - 20rpx);
+			overflow: hidden;
 		}
 	}
 	.adventBox {

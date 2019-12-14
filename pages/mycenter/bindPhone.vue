@@ -1,14 +1,17 @@
 <template>
-	<view class="content">
-		<view class="input">
-			<input type="text" placeholder="请输入手机号码"/>
-		</view>
-		<view class="input">
-			<input class="border0" type="text" placeholder="验证码"/>
-			<button type="text" class="c999" @tap="sendMark">{{btntext}}</button>
-		</view>
-		<view class="btnBox">
-			<button type="red">立即绑定</button>
+	<view class="content pagebg">
+		<view class="formBox">
+			<view class="item">
+				<input type="number" value="" placeholder="请输入手机号码" />
+			</view>
+			<view class="item flex">
+				<view class="flex-1">
+					<input type="number" value="" placeholder="验证码" />
+				</view>
+				<view :class="[isSend?'#c999':'blue']">
+					{{message}}
+				</view>
+			</view>
 		</view>
 	</view>
 </template>
@@ -17,65 +20,49 @@
 	export default {
 		data() {
 			return {
-				btntext:'发送验证码',
-				cansend:true,
+				message:'发送验证码',
+				isSend:false
 			};
 		},
 		methods:{
 			sendMark(){
-				let t= 10
+				let num =10;
 				let self = this
-				let timer;
-				if(!this.cansend){
-					return false;
-				}
-				this.cansend = false;
-				function uptime(){
-					if(t>0){
-						self.btntext =  t+'s后重新发送'
-						t--;
-					} else {
-						clearInterval(timer);
-						self.btntext = '发送验证码'
-						self.cansend = true;
+				const downCount=()=>{
+					if(num>0){
+						isSend = true
+						self.message= num+'s后重新发送'
+						num--
+					}else{
+						isSend=false
+						self.message= '发送验证码'
 					}
 				}
-				timer = setInterval(uptime,1000);
+				setInterval(()=>{
+					downCount()
+				},1000)
 			}
 		}
 	}
 </script>
 
 <style lang="less">
-page {
-	min-height: 100%;
-	background: #efefef;
-	padding-top:20rpx;
-}
-.input{
-	padding:0 24rpx;
-	position:relative;
-	height:80rpx;
+.formBox{
+	margin:20rpx 0 ;
 	background: #fff;
-	line-height: 80rpx;
-	input{
-		height:80rpx;
-		line-height: 80rpx;
-		border-bottom:1px solid #ccc;
+	padding:0 24rpx;
+	.item{
+		height:96rpx;
+		line-height: 96rpx;
+		input{
+			display: block;
+			height:96rpx;
+			line-height: 96rpx;
+		}
+		border-bottom:1px solid #fff;
+		&:last-child{
+			border:0;
+		}
 	}
-	button{
-		position: absolute;
-		right:0;
-		top:0;
-		color:#999;
-		z-index: 5;
-	}
-	.border0{
-		border:0;
-	}
-}
-.btnBox{
-	padding: 24rpx;
-	margin-top:20rpx;
 }
 </style>

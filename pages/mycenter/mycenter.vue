@@ -12,30 +12,32 @@
 				</view>
 				<view class="text textEllipsis">
 					<icon class="iconfont icon-yezi"></icon>
-					最好的人，像孩子一样!
+					{{userInfo.introduce}}
 				</view>
 				<view class="btn">
-					<text>私信</text>
-					<text>已关注</text>
+					<block v-if="!userInfo.isOwner">
+						<text>私信</text>
+						<text>已关注</text>
+					</block>
 				</view>
 			</view>
 			<view class="offical"><image class="grade" src="../../static/images/zhunwei.png" mode="widthFix"></image></view>
 		</view>
 		<view class="mydatas flex">
 			<view class="item flex-1 flex f-col just-con-c">
-				<view class="num">20</view>
+				<view class="num">{{userInfo.numTotalArticle}}</view>
 				<view class="text">帖子</view>
 			</view>
 			<view class="item flex-1 flex f-col just-con-c">
-				<view class="num">20</view>
+				<view class="num">{{userInfo.numTotalFollow}}</view>
 				<view class="text">关注</view>
 			</view>
 			<view class="item flex-1 flex f-col just-con-c">
-				<view class="num">20</view>
+				<view class="num">{{userInfo.numTotalFans}}</view>
 				<view class="text">粉丝</view>
 			</view>
 			<view class="item flex-1 flex f-col just-con-c">
-				<view class="num">20</view>
+				<view class="num">{{userInfo.numTotalUp}}</view>
 				<view class="text">获赞</view>
 			</view>
 		</view>

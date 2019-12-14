@@ -148,15 +148,47 @@ const getHotList = (type) => {
 //处理订单状态
 const setOrderStatus=(status)=>{
 	let name = ''
-	self.$acFrame.HttpService.hotList(params).then(res => {
-		if (res.success) {
-			let _data = res.data;
-			return _data;
-		} else {
-			self.$acFrame.Util.mytotal(res.code);
-			return []
-		}
-	});
+	let list = uni.getStorageSync('rankList');
+	if(list){
+		
+	} else {
+		self.$acFrame.HttpService.rankList().then(res => {
+			if (res.success) {
+				let _data = res.data;
+				return _data;
+			} else {
+				self.$acFrame.Util.mytotal(res.code);
+				return []
+			}
+		});
+	}
+	
+}
+
+//处理军衔
+const setRankName=(type)=>{
+	let list = uni.getStorageSync('rankList');
+	let rankName=''
+	if(list){
+		list.filter(v=>{
+			if(v.key==militaryRankType){
+				rankName = v.val
+			}
+		})
+	} else {
+		self.$acFrame.HttpService.rankList().then(res => {
+			if (res.success) {
+				uni.setStorageSync('rankList',res.data);
+				if(v.key==militaryRankType){
+					rankName = v.val
+				}
+			} else {
+				self.$acFrame.Util.mytotal(res.message);
+			}
+		});
+	}
+	
+	return name;
 }
 
 module.exports = {

@@ -155,13 +155,13 @@ export default {
 								});
 							}
 							
-							v.articleInfo.imgList.filter((val,i) => {
+							v.articleInfo.imgList&&v.articleInfo.imgList.filter((val,i) => {
 								if(val){
 									v.articleInfo.imgList[i] = self.$acFrame.Util.setImgUrl(val);
 								}
 								
 							});
-							v.itemLinkList.filter((val,i) => {
+							v.itemLinkList&&v.itemLinkList.filter((val,i) => {
 								if(val.imgPath){
 									v.itemLinkList[i].imgPath = self.$acFrame.Util.setImgUrl(val.imgPath);
 								}
@@ -173,7 +173,7 @@ export default {
 								v.publishUser.imgPathHead='../static/images/head1.png'
 							}
 							if (v.type == 1) {
-								if(v.articleInfo.contentExtendList.length>0){
+								if(v.articleInfo.contentExtendList&&v.articleInfo.contentExtendList.length>0){
 									v.articleInfo.showContent = self.setContent(v.articleInfo.contentExtendList);
 								} else {
 									v.articleInfo.showContent=[]
