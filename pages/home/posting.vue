@@ -171,6 +171,7 @@ export default {
     },
     getText() {
       let text = this.editText;
+	  debugger
       let self = this;
       if (this.extendList.length > 0) {
         let star = 0;

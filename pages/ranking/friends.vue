@@ -28,7 +28,8 @@
 			
 		</view>
 		<view class="list">
-			<view v-for="(item,index) in dataList" :key="index" v-if="index>2" class="item flex item-center" @tap="userInfo(item.userCode )">
+			<block v-for="(item,index) in dataList" :key="index">
+			<view v-if="index > 2" class="item flex item-center" @tap="userInfo(item.userCode )">
 				<view class="num c666">
 					{{index+1}}
 				</view>
@@ -45,6 +46,7 @@
 					</view>
 				</view>
 			</view>
+			</block>
 		</view>
 	</view>
 </template>

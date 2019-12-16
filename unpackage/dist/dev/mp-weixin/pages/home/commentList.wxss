@@ -1,0 +1,96 @@
+.content {
+  padding-bottom: 100rpx;
+}
+.item {
+  padding: 0 30rpx;
+}
+.item .img {
+  margin-right: 20rpx;
+  margin-top: 20rpx;
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 100rpx;
+  overflow: hidden;
+}
+.item .img image {
+  width: 100%;
+}
+.item .head-msg {
+  padding: 20rpx;
+  border-bottom: 1px solid #ccc;
+}
+.item .head-msg text {
+  float: left;
+  margin-right: 20rpx;
+}
+.item .head-msg .text {
+  padding: 10rpx 0;
+}
+.item .head-msg .name {
+  max-width: 240rpx;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.item .head-msg .dianzan {
+  margin-top: -10rpx;
+}
+.item .head-msg .dianzan.red {
+  color: #B40000;
+}
+.item .head-msg .rank {
+  margin-top: 4rpx;
+  border-radius: 40rpx;
+  padding: 0 16rpx;
+  background: #46d88c;
+  color: #ffffff;
+  font-size: 26rpx;
+}
+.item .head-msg .shop {
+  border-radius: 40rpx;
+  padding: 0 16rpx;
+  background: #ffaf43;
+  color: #ffffff;
+  font-size: 26rpx;
+}
+.item .head-msg .look {
+  margin-top: 10rpx;
+}
+.item .timer text {
+  float: left;
+  margin-right: 20rpx;
+}
+.item .timer .mark {
+  font-size: 22rpx;
+  border-radius: 30rpx;
+  line-height: 32rpx;
+  padding: 0 16rpx;
+  border: 1px solid #b40000;
+  color: #b40000;
+  margin-top: 10rpx;
+}
+.item.selfComment {
+  border-bottom: 1px solid #ccc;
+}
+.item.selfComment .head-msg {
+  border: 0;
+}
+.footInput {
+  height: 100rpx;
+  position: fixed;
+  width: 100%;
+  left: 0;
+  bottom: 0;
+  padding: 18rpx 24rpx;
+  border-top: 1px solid #ccc;
+}
+.footInput input {
+  height: 64rpx;
+  line-height: 64rpx;
+  padding: 0 20rpx;
+  border-radius: 64rpx;
+  border: 1px solid #ccc;
+  width: 100%;
+  box-sizing: border-box;
+}
+
