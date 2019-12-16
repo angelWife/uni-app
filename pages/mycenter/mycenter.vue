@@ -1,9 +1,9 @@
 <template>
 	<view class="content">
 		<view class="headBox flex item-center">
-			<view class="pic">
+			<view class="pic comHeadPic">
 				<image class="grade" src="../../static/images/baihu.png" mode="widthFix"></image>
-				<image class="headpic" :src="this.$acFrame.Util.setImgUrl(userInfo.imgHeadPath )" mode="widthFix"></image>
+				<image class="headpic" :src="this.$acFrame.Util.setImgUrl(userInfo.imgHeadPath )"></image>
 			</view>
 			<view class="msg flex-1">
 				<view class="text textEllipsis">
@@ -45,11 +45,12 @@
 			<view class="item" v-for="(item, index) in infoTab" :key="index" :class="{ active: item.choose }" @tap="tapClick(index)">{{ item.name }}</view>
 		</view>
 		<scroll-view class="myscroll" scroll-y="true">
-			<view class="post" v-if="modalName=='reward'">
-				<commentItem :dataList="dataList"></commentItem>
+			<view class="post" v-if="modalName=='post'">
+				<commentItem :nodata="nodata" :nomore="nomore" :dataList="dataList" @dianzan="dianzan"
+				 @followPost="followPost"></commentItem>
 			</view>
 			<view class="shop" v-if="modalName=='shop'">
-				<productList :nodata="prodNodata" :dataList="dataList"></productList>
+				<productList :nodata="nodata" :dataList="dataList"></productList>
 			</view>
 			<view class="honor" v-if="modalName=='honor'">
 				<view class="topMsg flex">
@@ -125,48 +126,15 @@ export default {
 			{ name: '荣誉', choose: false ,type:"honor"}, 
 			{ name: '受赏', choose: false ,type:"reward"}],
 			userInfo:{},
-			dataList: [
-				{
-					headImg: '/static/images/head1.png',
-					name: '哈利路亚妈妈咪呀sda',
-					rank: '少校',
-					hasShop: true,
-					follow: true,
-					timer: '5分钟前',
-					showMore: false,
-					isAdvent: false,
-					imgList: ['/static/images/head1.png', '/static/images/head2.png', '/static/images/head1.png', '/static/images/head2.png']
-				},
-				{
-					headImg: '/static/images/head1.png',
-					isAdvent: false,
-					name: '哈利路亚妈妈咪呀sda',
-					rank: '少校',
-					hasShop: true,
-					follow: true,
-					timer: '5分钟前',
-					showMore: false,
-					imgList: []
-				},
-				{
-					headImg: '/static/images/head1.png',
-					isAdvent: false,
-					name: '哈利路亚妈妈咪呀sda',
-					rank: '少校',
-					hasShop: true,
-					follow: true,
-					timer: '5分钟前',
-					showMore: false,
-					imgList: [],
-					isAdvent: true,
-					adventImg: '',
-					createName: '妮维雅',
-					createTime: '09-21'
-				}
-			],
+			dataList: [],
 			prodNodata:false,
 			modalName:'post',
-			userCode:''
+			userCode:'',
+			nodata: false,
+			nomore: false,
+			pageTotal:1,
+			pageSize:10,
+			pageIndex:1,
 		};
 	},
 	onLoad(options){
@@ -174,9 +142,129 @@ export default {
 		this.userCode=userCode?userCode:uni.getStorageSync('userCode')
 	},
 	onShow(){
-		this.getUserInfo()
+		this.getUserInfo();
+		this.initData();
 	},
 	methods: {
+		initData() {
+			let self = this;
+			console.error(self.keywords)
+			let params = {
+				checkShop: 1,
+				pageIndex: self.pageIndex,
+				pageSize: self.pageSize,
+				pageType:0,
+				userCode:this.userCode
+			};
+			self.$acFrame.HttpService.postList(params).then(res => {
+				if (res.success) {
+					let _data = res.data;
+					let dataList = _data.rows;
+					self.pageTotal = _data.pageTotal;
+					if (dataList.length > 0) {
+						dataList.filter((v, i) => {
+							if (v.adInfo) {
+								v.adInfo.imgList.filter((val, i) => {
+									if (val) {
+										v.adInfo.imgList[i] = self.$acFrame.Util.setImgUrl(val);
+									}
+								});
+							}
+							if (v.publishUser) {
+								v.publishUser.militaryRankType = self.$acFrame.Util.setRankName(v.publishUser.militaryRankType)
+							}
+		
+							v.articleInfo.imgList && v.articleInfo.imgList.filter((val, i) => {
+								if (val) {
+									v.articleInfo.imgList[i] = self.$acFrame.Util.setImgUrl(val);
+								}
+		
+							});
+							v.itemLinkList && v.itemLinkList.filter((val, i) => {
+								if (val.type == 2) {
+									switch (val.rankType) {
+										case 1:
+											val.name = `邀请好友`
+											break;
+										case 2:
+											val.name = '热帖排行'
+											break;
+										case 3:
+											val.name = `话题排行`
+											break;
+										case 4:
+											val.name = `热卖排行`
+											break;
+										default:
+											break;
+									}
+									return false
+								} else {
+									if (val.goods.imgPath) {
+										v.itemLinkList[i].goods.imgPath = self.$acFrame.Util.setImgUrl(val.goods.imgPath);
+									}
+								}
+							});
+							if (v.publishUser.imgPathHead) {
+								v.publishUser.imgPathHead = self.$acFrame.Util.setImgUrl(v.publishUser.imgPathHead);
+							} else {
+								v.publishUser.imgPathHead = '/static/images/head1.png'
+							}
+							if (v.type == 1) {
+								if (v.articleInfo.contentExtendList && v.articleInfo.contentExtendList.length > 0) {
+									v.articleInfo.showContent = self.setContent(v.articleInfo.contentExtendList);
+								} else {
+									v.articleInfo.showContent = []
+								}
+		
+								v.articleInfo.showMore = false;
+							}
+							if (v.articleInfo.content.length > 60) {
+								v.articleInfo.isDetail = false;
+							} else {
+								v.articleInfo.isDetail = true;
+							}
+						});
+						self.dataList = [...self.dataList, ...dataList];
+		
+						self.nodata = false;
+					} else {
+						self.nodata = true;
+					}
+					if (self.isSearch) {
+						self.nosearch = false
+					}
+				} else {
+					if (self.isSearch) {
+						self.nosearch = true
+					}
+					self.$acFrame.Util.mytotal(res.code);
+				}
+			});
+		},
+		getProdList(){ // shopList
+			let self = this
+			let params = {
+				loadOwner:true,
+				shopUserCode:this.userCode,
+				pageIndex:this.pageIndex,
+				pageSize:this.pageSize
+			}
+			self.$acFrame.HttpService.productList(params).then(res => {
+				if(res.success){
+					let list = res.data.rows
+					self.pageTotal = res.data.pageTotal
+					if(list.length>0){
+						self.dataList=self.dataList.concat(list)
+						console.log(self.dataList)
+						self.nodata = false
+					} else {
+						self.nodata = true
+					}
+					
+				}
+			})
+		},
 		getUserInfo(){
 			let self=this
 			let params = {
@@ -190,6 +278,11 @@ export default {
 		},
 		tapClick(ind){
 			let self = this
+			self.pageTotal=1
+			self.pageSize=10
+			self.pageIndex=1
+			self.nodata = false
+			self.dataList=[]
 			this.infoTab.filter((v,i)=>{
 				if(i==ind){
 					v.choose = true
@@ -198,6 +291,11 @@ export default {
 					v.choose = false
 				}
 			})
+			if(self.modalName == 'post'){
+				self.initData()
+			} else if(self.modalName == 'shop'){
+				self.getProdList()
+			}
 		},
 	}
 };
@@ -206,6 +304,9 @@ export default {
 <style lang="less">
 page {
 	height: 100%;
+}
+.myscroll{
+	padding-top:20rpx;
 }
 .content {
 	border: 0;
@@ -224,6 +325,7 @@ page {
 		.headpic {
 			border-radius: 100rpx;
 			width: 100rpx;
+			height:100rpx;
 		}
 		.grade {
 			position: absolute;
@@ -306,7 +408,7 @@ page {
 .myscroll {
 	height: calc(100% - 360rpx);
 	.topMsg{
-		padding:20rpx 24rpx;
+		padding:20rpx 30rpx;
 		border-bottom:1px solid #ccc;
 	}
 	.comItem{
