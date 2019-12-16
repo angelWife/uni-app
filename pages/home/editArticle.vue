@@ -72,6 +72,7 @@
 				this.title=val
 			},
 			changeInput(e) {
+				debugger
 				let val = e.detail.html
 				let text = e.detail.text
 				this.articleMsg = val

@@ -277,6 +277,19 @@ class Service extends HttpService {
 	inviteRank(){
 		return this.postRequest(this.$$path.inviteRank)
 	}
+	rankList(){
+		return this.getRequest(this.$$path.rankList)
+	}
+	sendMark(params) {
+		return this.postRequest(this.$$path.sendMark, {
+			data: params
+		})
+	}
+	submitMark(params) {
+		return this.postRequest(this.$$path.submitMark, {
+			data: params
+		})
+	}
 }
 
 export default Service
