@@ -4,7 +4,7 @@
 			<text>¥</text>
 			<text class="fs40">{{orderVO.pricePayTotal}}</text>
 		</view>
-		<view class="fs16 text-center">
+		<view class="fs16 text-center" v-if="show_time==1" >
 			支付剩余时间：
 			<uni-count-down 
 			:show-day="false" 
@@ -12,9 +12,10 @@
 			:splitorColor="color" 
 			:show-style="false" 
 			:fontSize="fontSize" 
-			:hour="this.$acFrame.Util.countTime(orderVO.endTime,'hour')" 
-			:minute="this.$acFrame.Util.countTime(orderVO.endTime,'minute')" 
-			:second="this.$acFrame.Util.countTime(orderVO.endTime,'second')" />
+			:hour="hour" 
+			:minute="minute" 
+			:second="second"
+			 />
 		</view>
 		<view class="pay">
 			<view class="title">
@@ -24,6 +25,7 @@
 				<view class="pic">
 					<!-- <image src="" mode=""></image> -->
 				</view>
+				
 				<view class="text flex-1">
 					<view class="">
 						{{item.type == 2?'微信支付':'星票支付'}}
@@ -113,14 +115,28 @@
 					isFocus: true,    //聚焦  
 					Value: [],        //输入的内容  
 					ispassword: false, //是否密文显示 true为密文， false为明文。
-				}
+				},
+				orderId:1,
+				order:{},
+				amount:100,
+				hour:0,
+				minute:0,
+				second:0,
+				show_time:0
 			};
 		},
 		onLoad(options){
-			this.details = JSON.parse(options.details)
+			this.orderVO = JSON.parse(options.order);
+			var time = new Date(this.orderVO.endTime);
+			console.log(time);
+			this.hour = time.getHours();
+			this.minute = time.getMinutes();
+			this.second = time.getSeconds(); 
+			this.show_time=1;
+			console.log("hour---"+this.hour+"----"+this.minute+"----"+this.second);
 		},
 		onShow(){
-
+	
 		},
 		methods:{
 			createOrder(){

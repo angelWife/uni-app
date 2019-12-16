@@ -49,7 +49,7 @@ class HttpService extends Core {
 						duration:2000,
 						icon:'none',
 						mask:true,
-						title:'接口有误'
+						title:response.data.message||'接口有误'
 					})
 				}
 				return response.data

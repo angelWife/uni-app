@@ -3,8 +3,8 @@
 		<view class="modal">
 			<view class="head flex item-center">
 				<view class="pic comHeadPic"  @tap="linkTo('baseInfo')">
-					<image class="headPic" :src="this.$acFrame.Util.setImgUrl(userInfo.imgHeadPath )" mode="widthFix"></image>
-					<image class="grade" src="../../static/images/baihu.png" mode="widthFix"></image>
+					<image class="headPic" :src="this.$acFrame.Util.setImgUrl(userInfo.imgHeadPath )"></image>
+					<image class="grade" src="../../static/images/baihu.png"  mode="widthFix"></image>
 				</view>
 				<view class="center flex-1">
 					<view class="name">
@@ -52,7 +52,7 @@
 					任务
 				</view>
 			</view>
-			<view class="item flex">
+			<view class="item flex"  @tap="linkTo('../order/index')">
 				<view class="icon">
 					<image src="../../static/images/icon-wallet.png" mode="widthFix"></image>
 				</view>

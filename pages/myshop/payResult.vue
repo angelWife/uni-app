@@ -45,8 +45,9 @@
 			};
 		},
 		onLoad(options){
-			let resdata  = JSON.parse(options.res)
-			this.type = options.type
+			//let resdata  = JSON.parse(options.res)
+			let resdata  = {success:true};
+			this.type = options.type;
 			if(resdata.success){
 				this.resdata = resdata.data
 				this.resText = '支付成功'

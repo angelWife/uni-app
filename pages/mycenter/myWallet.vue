@@ -96,7 +96,7 @@ page{
 	margin-top:20rpx;
 }
 .listBox{
-	padding:0 24rpx;
+	padding:0 30rpx;
 	.item{
 		height:80rpx;
 		line-height: 80rpx;

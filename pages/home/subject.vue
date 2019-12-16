@@ -25,10 +25,26 @@
 	export default {
 		data() {
 			return {
-				list:[{name:'测试',msg:'话题描述',pic:'../../static/images/head1.png',id:0}]
+				list:[],
 			};
 		},
+		onShow(){
+			this.list=[]
+			this.intData()
+		},
 		methods:{
+			intData(){
+				let self =this
+				let params ={
+					pageIndex: 1,
+					pageSize: 100
+				}
+				this.$acFrame.HttpService.getToicList().then(res => {
+				  if (res.success) {
+				    self.list = res.data
+				  }
+				});
+			},
 			chooseIt(ind){
 				let pages = getCurrentPages()
 				let obj=this.list[ind]
@@ -57,7 +73,7 @@
 		height:80rpx;
 		border-radius: 80rpx;
 		overflow: hidden;
-		margin:0 24rpx;
+		margin:0 30rpx;
 	}
 	.main{
 		padding:20rpx 0;
@@ -66,7 +82,7 @@
 			width: 60%;
 		}
 		.btnBox{
-			margin:0 24rpx;
+			margin:0 30rpx;
 		}
 	}
 }

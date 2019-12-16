@@ -1,7 +1,12 @@
 <template>
 	<view class="content">
 		<view v-for="(item, index) in list" :key="index" class="item flex item-center">
-			<view class="pic"><image :src="setImg(item.imgPath)" mode="widthFix" @tap="showPic(item.pic)"></image></view>
+			<view class="pic" :style="'background:url('+setImg(item.imgPath)+') center center no-repeat;background-size:100% auto;'" @tap="showPic(item.imgPath)">
+				<!-- <image :src="" mode="widthFix" @tap="showPic(item.imgPath)">
+					
+				</image> -->
+				<text v-if="showNum" class="shownum" :class="'num'+index">item</text>
+			</view>
 			<view class="msg flex-1" @tap="choosePord(item)">
 				<view class="name clamp clamp-2">{{ item.goodsName }}</view>
 				<view class="nums c999">已售{{ item.numTotalSale }}件</view>
@@ -56,10 +61,10 @@ export default {
 			this.$acFrame.Util.showBigPic(src, [src]);
 		},
 		choosePord(obj){
-			// this.$emit('setProduct',obj)
-			uni.navigateTo({
+			 this.$emit('setProduct',obj)
+			/* uni.navigateTo({
 				 url: 'productDetail?id='+obj.goodsId
-			});
+			}); */
 		},
 		setImg(src){
 			return  this.$acFrame.Util.setImgUrl(src);
@@ -80,6 +85,19 @@ export default {
 	height: 200rpx;
 	overflow: hidden;
 	border-radius: 0.3em;
+	position: relative;
+	.shownum{
+		position:absolute;
+		background: #f6f6f6;
+		text-align: center;
+		height:40rpx;
+		width: 40rpx;
+		line-height: 40rpx;
+		border-radius: 40rpx;
+		color:#999;
+		left:10rpx;
+		top:10rpx;
+	}
 }
 .nums{
 	padding:10rpx 0;

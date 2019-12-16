@@ -10,7 +10,7 @@
 					{{item.areaProvince}}{{item.areaCity}}{{item.areaCounty}}{{item.address}}
 				</view>
 				<view class="btn">
-					<button type="null" size="mini" @change="chooseAddr(ind)">使用</button>
+					<button type="null" size="mini" @tap="chooseAddr(ind)">使用</button>
 				</view>
 			</view>
 			<view class="foot flex item-center">
@@ -38,19 +38,19 @@
 				<view class="modalCenter">
 					<view class="flex border">
 						<view class="flex-1 input border-right">
-							<input type="text" :value="addrVO.name" @input="changeVal(event,'name')" placeholder="收货人姓名"/>
+							<input type="text" v-model="name" placeholder="收货人姓名"/>
 						</view>
 						<view class="flex-1 input">
-							<input type="text" :value="addrVO.phone" @input="changeVal(event,'phone')" placeholder="联系电话"/>
+							<input type="text" v-model="mobilePhone" placeholder="联系电话"/>
 						</view>
 					</view>
 					<view class="input border">
-						<picker class="mypicker" @change="bindAreaChange" mode="region" :value="region" :custom-item="customItem">
+						<picker class="mypicker" @change="bindAreaChange" mode="region" :value="region">
 							<view class="uni-input">{{region[0]}}{{region[1]}}{{region[2]}}</view>
 						</picker>
 					</view>
 					<view class="input border">
-						<input type="text" :value="addrVO.address" @input="changeVal(event,'address')"  placeholder="详细地址（如街道、小区、乡镇、村)"/>
+						<input type="text" v-model="address"  placeholder="详细地址（如街道、小区、乡镇、村)"/>
 						<view class="location">
 							<icon class="iconfont icon-dizhi"></icon>
 							<view class="fs10">定位</view>
@@ -75,11 +75,15 @@
 				customItem: '全部',
 				showAddrModal:false,
 				addrVO:{},
-				type:'add'
+				type:'add',
+				name:'',
+				mobilePhone:'',
+				address:''
 			};
 		},
 		onLoad(options){},
 		onShow(){
+			this.addrList=[]
 			this.getList()
 		},
 		methods:{
@@ -95,9 +99,14 @@
 				this.type = 'edit'
 				this.modalTitle='编辑收货地址'
 				let addrVO = this.addrList[ind];
-				this.addrVO = addrVO
-				this.region = [addrVO.areaProvince, addrVO.areaCity, addrVO.areaCounty]
-			},
+				this.addrVO = addrVO;
+				this.name=addrVO.name;
+				this.mobilePhone = addrVO.mobilePhone;
+				this.address = addrVO.address;
+				console.log(addrVO);
+				this.region = [addrVO.areaProvince, addrVO.areaCity, addrVO.areaCounty];
+				this.showAddrModal = true;
+			}, 
 			deleteAddr(ind){
 				let self = this
 				let params = {
@@ -124,20 +133,27 @@
 				this.addrVO[name]=e.detail.value
 			},
 			save(){
-				let self = this
-				let params = this.addrVO
+				let self = this;
+				let params = this.addrVO;
+				params["name"]=this.name;
+				params["mobilePhone"]=this.mobilePhone;
+				params["address"]=this.address;
+				params["flagTop"]=1;
                 if(this.type=='add'){
 					self.$acFrame.HttpService.addAddr(params).then(res => {
 						if(res.success){
 							self.$acFrame.Util.mytotal('新增成功')
 							self.getList()
+							self.showAddrModal = false;
 						}
 					})	
 				} else {
+		
 					self.$acFrame.HttpService.deitAddr(params).then(res => {
 						if(res.success){
-							self.$acFrame.Util.mytotal('编辑成功')
-							self.getList()
+							self.$acFrame.Util.mytotal('编辑成功');
+							self.getList();
+							self.showAddrModal = false;
 						}
 					})	
 				}
@@ -166,7 +182,10 @@
 				this.showAddrModal = true
 				this.modalTitle = '新增收货地址'
 				this.type = 'add'
-				this.addrVO={}
+				this.addrVO={},
+				this.name='';
+				this.mobilePhone = '';
+				this.address = '';
 				this.region = ['', '', '请选择']
 			},
 			closeModal(){
@@ -178,7 +197,7 @@
 				if(pages.length>1){
 					let prePage = pages[pages.length - 2]
 					if (prePage.$vm.setAddr) {
-					  prePage.$vm.setAddr(obj)
+					  prePage.$vm.setAddr(addrVO)
 					  wx.navigateBack({})
 					}
 				}

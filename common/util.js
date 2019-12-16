@@ -1,4 +1,5 @@
 // 获取时间
+import AcFrame from '@/common/acFrame'
 const formatTime = (type, date) => {
 	const _date = date ? new Date(date) : new Date()
 	const year = _date.getFullYear()
@@ -28,9 +29,13 @@ const countTime=(time,type)=>{
 	const nowdate = new Date().getTime()
 	const enddate = new Date(time).getTime()
 	const milli = enddate-nowdate;
-	const second=milli/1000
-	const minute= second/60
-	const hour = minute/60
+	const timer = new Date(milli)
+	// const second=milli/1000
+	// const minute= second/60
+	// const hour = minute/60
+	const hour = timer.getHours();
+	const minute = timer.getMinutes();
+	const second = timer.getSeconds(); 
 	if(type == 'hour'){
 		return hour
 	} else if(type == 'minute'){
@@ -50,28 +55,6 @@ const mytotal = (title, icon = 'none', mask = false, duration = 2000) => {
 	});
 }
 
-//分享
-const shareUrl = (res, _data, title) => {
-	let pagePath = '',
-		imageUrl = ''
-		
-	if (res.from === 'button') {
-		if (_data.productId) {
-			pagePath = '?pagePath=/pages/shopmall/shopDetail/shopDetail&productId=' + _data.productId + '&productType=' + _data
-				.productType + '&inviteCode=' + getApp().globalData.rabbitInfo.inviteCode
-			imageUrl = _data.imgMainList[0]
-			title = '在商城发现好物' + _data.name
-		}
-	} else {
-		pagePath = '?inviteCode=' + getApp().globalData.rabbitInfo.inviteCode
-	}
-	return {
-		title: title,
-		path: '/pages/loading/loading' + pagePath,
-		imageUrl: imageUrl
-	}
-}
-
 //处理图片的路径
 const setImgUrl = (imgPath) => {
 	let picPath = ''
@@ -82,7 +65,7 @@ const setImgUrl = (imgPath) => {
 			picPath = getApp().globalData.config.imgPath + imgPath
 		}
 	} else {
-		picPath='../../static/images/head1.png'
+		picPath='/static/images/head1.png'
 	}
 	
 	return picPath
@@ -96,7 +79,7 @@ const showBigPic = (showSrc, list) => {
 	})
 }
 // 上传图片
-const uploadPic = (url) => {
+const uploadPic = (a_url) => {
 	return new Promise((resolve, reject) => {
 		let token = uni.getStorageSync('access_token');
 		let channel='MP_WX';
@@ -106,9 +89,12 @@ const uploadPic = (url) => {
 			sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
 			success: function(res) {
 				let tempFilePaths = res.tempFilePaths;
-				resolve(tempFilePaths[0]);
+				//resolve(tempFilePaths[0]);
+				if(!a_url){
+					a_url = '/file/upload';
+				}
 				uni.uploadFile({
-					url: getApp().globalData.config.basePath + '/file/upload', // 仅为示例，非真实的接口地址
+					url: getApp().globalData.config.basePath + a_url, // 仅为示例，非真实的接口地址
 					filePath: tempFilePaths[0],
 					header: {
 						token,
@@ -116,7 +102,8 @@ const uploadPic = (url) => {
 					},
 					name: 'file',
 					success: function(res) {
-						resolve(tempFilePaths[0]);
+						let _data = JSON.parse(res.data)
+						resolve(_data.data.fullPath);
 					},
 					fail: (error) => {
 						reject(error);
@@ -134,12 +121,12 @@ const getHotList = (type) => {
 	let params = {
 		type:type
 	}
-	self.$acFrame.HttpService.hotList(params).then(res => {
+	AcFrame.HttpService.hotList(params).then(res => {
 		if (res.success) {
 			let _data = res.data;
 			return _data;
 		} else {
-			self.$acFrame.Util.mytotal(res.code);
+			mytotal(res.code);
 			return []
 		}
 	});
@@ -152,12 +139,12 @@ const setOrderStatus=(status)=>{
 	if(list){
 		
 	} else {
-		self.$acFrame.HttpService.rankList().then(res => {
+		AcFrame.HttpService.rankList().then(res => {
 			if (res.success) {
 				let _data = res.data;
 				return _data;
 			} else {
-				self.$acFrame.Util.mytotal(res.code);
+				mytotal(res.code);
 				return []
 			}
 		});
@@ -171,24 +158,44 @@ const setRankName=(type)=>{
 	let rankName=''
 	if(list){
 		list.filter(v=>{
-			if(v.key==militaryRankType){
+			if(v.key==type){
 				rankName = v.val
 			}
 		})
 	} else {
-		self.$acFrame.HttpService.rankList().then(res => {
+		AcFrame.HttpService.rankList().then(res => {
 			if (res.success) {
 				uni.setStorageSync('rankList',res.data);
-				if(v.key==militaryRankType){
+				if(v.key==type){
 					rankName = v.val
 				}
 			} else {
-				self.$acFrame.Util.mytotal(res.message);
+				mytotal(res.message);
 			}
 		});
 	}
 	
-	return name;
+	return rankName;
+}
+
+//分享
+const shareUrl = (res, settings) => {
+	let title=''
+	let imageUrl= ''
+	let pagePath=''
+	debugger
+  if (res.from === 'button') {
+    title = settings.title
+	imageUrl = settings.imageUrl
+	pagePath = settings.pagePath
+  } else {
+    
+  }
+  return {
+    title: title,
+    path: pagePath,
+    imageUrl: imageUrl
+  }
 }
 
 module.exports = {
@@ -199,5 +206,6 @@ module.exports = {
 	shareUrl,
 	setImgUrl,
 	getHotList,
-	countTime
+	countTime,
+	setRankName
 }

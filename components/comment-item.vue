@@ -3,26 +3,24 @@
 		<view v-for="(item, index) in dataList" :key="index" class="listItem">
 			<block v-if="item.type == 1">
 				<view class="item-head flex item-center">
-					<view class="img item-center" @tap="userInfo(item.publishUser.userId)">
-						<image :src="item.publishUser.imgPathHead" mode="widthFix"></image>
-						</view>
+					<view class="img item-center comHeadPic" @tap="userInfo(item.publishUser.userId)">
+						<image class="headPic" :src="item.publishUser.imgPathHead"></image>
+						<image class="grade" src="../static/images/baihu.png" mode="widthFix"></image>
+					</view>
 					<view class="flex-1 head-msg">
 						<view class="clearfix">
 							<text class="name fs15" @tap="userInfo(item.publishUser.userId)">{{ item.publishUser.userName }}</text>
-							<text v-if="item.publishUser.militaryRankType" class="rank">{{ item.rank }}</text>
+							<text v-if="item.publishUser.militaryRankType" class="rank">{{ item.publishUser.militaryRankType }}</text>
 							<text v-if="item.publishUser.shopId" class="shop">店铺</text>
+							<text v-if="showNum" classs="numMark">{{index}}</text>
 						</view>
 						<view class="timer c999 fs12 clearfix">
-							<block v-if="pageType == 2">
-								<text>{{ item.articleInfo.timeInfo }}</text>
-							</block>
-							<block v-else>
-								<text class="mark">受赏</text>
-								<text class="mark">置顶</text>
-							</block>
+							<text>{{item.articleInfo.timeInfo}}</text>
+							<!-- <text class="mark">受赏</text>
+							<text class="mark">置顶</text> -->
 						</view>
 					</view>
-					<view class="followBox" @tap="guanzhu(item.articleInfo.id,index)">
+					<view class="followBox" v-if="!item.isOwner" @tap="guanzhu(item.publishUser.userCode,index)">
 						<text class="follow" v-if="item.publishUser.hasFollow">已关注</text>
 						<text class="follow active" v-else>关注</text>
 					</view>
@@ -31,16 +29,16 @@
 					<view class="articalBox">
 						<view class="msg" :class="{ 'clamp clamp-3': !item.articleInfo.showMore && !item.articleInfo.isDetail }" @tap="linkDetail(item)">
 							<block v-if="item.articleInfo.showContent.length>0">
-							<block v-for="(conitem, comind) in item.articleInfo.showContent" :key="comind">
-								<block v-if="conitem.type == 1">
-									<text class="name blue" @tap.stop="linkUser(conitem.atId)">@{{ conitem.atName }}</text>
-									<text class="text">{{ conitem.content }}</text>
+								<block v-for="(conitem, comind) in item.articleInfo.showContent" :key="comind">
+									<block v-if="conitem.type == 1">
+										<text class="name blue" @tap.stop="linkUser(conitem.atId)">@{{ conitem.atName }}</text>
+										<text class="text">{{ conitem.content }}</text>
+									</block>
+									<block v-else>
+										<text class="from blue" @tap.stop="linkTheme(conitem.topicId)">#{{ conitem.topicName }}#</text>
+										<text class="text">{{conitem.content}}</text>
+									</block>
 								</block>
-								<block v-else>
-									<text class="from blue" @tap.stop="linkTheme(conitem.topicId)">#{{ conitem.topicName }}#</text>
-									<text class="text">{{conitem.content}}</text>
-								</block>
-							</block>
 							</block>
 							<block v-else>
 								<text class="text">{{item.articleInfo.content}}</text>
@@ -55,64 +53,72 @@
 							<text v-else class="blue" @tap="showAll(index)">全文</text>
 						</view>
 					</view>
-                     <view class="imgList clearfix">
-                     	<view v-for="(imgItem, imgInd) in item.articleInfo.imgList" :key="imgInd" @tap="showBigImg(index, imgInd)" class="imgItem flex-1">
-                     		<image :src="imgItem" mode="widthFix" @error="setErrorPic(index,imgInd)"></image>
-                     	</view>
-                     </view>
+					<view class="imgList clearfix">
+						<view v-for="(imgItem, imgInd) in item.articleInfo.imgList" :key="imgInd" @tap="showBigImg(index, imgInd)" class="imgItem flex-1">
+							<image :src="imgItem" mode="widthFix" @error="setErrorPic(index,imgInd)"></image>
+						</view>
+					</view>
 				</block>
 				<block v-else-if="item.articleInfo.type == 1">
 					<view class="articalBox news flex item-center" v-if="item.articleInfo.imgList.length > 0">
-						<view class="a_pic"><image :src="item.articleInfo.imgList[0]" mode="widthFix" @tap="showBigImg(index, 0)"></image></view>
+						<view class="a_pic">
+							<image :src="item.articleInfo.imgList[0]" mode="widthFix" @tap="showBigImg(index, 0)"></image>
+						</view>
 						<view class="a_main flex-1" @tap="linkDetail(item)">
 							<view class="title blod clamp clamp-2">{{ item.articleInfo.title }}</view>
-							<view class="msg fs12 clamp clamp-2">{{ item.articleInfo.content }}</view>
+							<view class="msg fs12 clamp clamp-2">{{ item.articleInfo.zyao }}</view>
 						</view>
 					</view>
 					<view class="articalBox flex item-center" v-else>
 						<view class="a_main flex-1" @tap="linkDetail(item)">
 							<view class="title blod clamp clamp-2">{{ item.articleInfo.title }}</view>
-							<view class="msg fs12 clamp clamp-2">{{ item.articleInfo.content }}</view>
+							<view class="msg fs12 clamp clamp-2">{{ item.articleInfo.zyao }}</view>
 						</view>
 					</view>
 				</block>
 				<block v-for="(linkitem, linkInd) in item.itemLinkList" :key="linkInd">
-					<view v-if="linkitem.type == 1" class="adventBox shopProduct flex item-center" @tap="linkProd(linkitem.goodsId)">
-						<view class="p_pic"><image :src="linkitem.imgPath" mode="widthFix"></image></view>
+					<view v-if="linkitem.type == 1" class="adventBox shopProduct flex item-center" @tap="linkProd(linkitem.goods.goodsId)">
+						<view class="p_pic">
+							<image :src="linkitem.goods.imgPath"></image>
+						</view>
 						<view class="p_main flex-1">
 							<view class="name">
-								<text class="textEllipsis">{{ linkitem.goodsName }}</text>
+								<text class="textEllipsis">{{ linkitem.goods.goodsName }}</text>
 							</view>
-							<view class="price red fs12">{{ linkitem.priceSale }}元</view>
+							<view class="price red fs12">{{ linkitem.goods.priceSale }}元</view>
 						</view>
 						<view class="p_buy"><button size="mini" type="red" class="">购买</button></view>
 					</view>
-					<view v-else class="adventBox ranking flex item-center" @tap="linkRanking(linkitem.goodsId)">
-						<view class="p_pic"><image src="/static/images/defaultpro.png" mode="widthFix"></image></view>
-						<view class="p_main flex-1">邀请好友排行榜</view>
+					<view v-else class="adventBox ranking flex item-center" @tap="linkRanking(linkitem.rankType)">
+						<view class="p_pic">
+							<image src="/static/images/defaultpro.png"></image>
+						</view>
+						<view class="p_main flex-1">{{linkitem.name}}</view>
 						<view class="p_buy"><button size="mini" type="red" class="radiuBtn">去看看</button></view>
 					</view>
 				</block>
 
 				<view class="itemOperBox flex">
-					<view class="flex-1">
+					<button class="flex-1" type="share" :data-index="index" open-type="share">
 						<icon class="iconfont icon-share"></icon>
 						<text>{{ item.articleInfo.numTotalShare }}</text>
-					</view>
-					<view class="flex-1">
+					</button>
+					<button class="flex-1" type="share" @tap="linkDetail(item,'isComment')">
 						<icon class="iconfont icon-pinglun"></icon>
-						<text>{{ item.articleInfo.numTotalPersonReward }}</text>
-					</view>
-					<view class="flex-1">
+						<text>{{item.articleInfo.numTotalComment}}</text>
+					</button>
+					<button class="flex-1" type="share" :class="{'red':item.articleInfo.hasUp}" @tap="dianzan(item.articleInfo.id,index)">
 						<icon class="iconfont icon-dianzan"></icon>
 						<text>{{ item.articleInfo.numTotalUp }}</text>
-					</view>
+					</button>
 				</view>
 			</block>
 			<block v-else-if="item.type == 2">
 				<!-- item.adInfo -->
 				<view class="item-head flex item-center">
-					<view class="img item-center"><image :src="item.publishUser.imgPathHead" mode="widthFix"></image></view>
+					<view class="img item-center">
+						<image :src="item.publishUser.imgPathHead" mode="widthFix"></image>
+					</view>
 					<view class="flex-1 head-msg">
 						<view class="clearfix">
 							<text class="name fs15">{{ item.adInfo.createName }}</text>
@@ -126,7 +132,9 @@
 					</view>
 				</view>
 				<view class="adventPicBox">
-					<view class="adventPic"><image src="http://www.mypcera.com/star/mm/uploadfile/201005/4/A142330696.jpg" mode="widthFix"></image></view>
+					<view class="adventPic">
+						<image src="http://www.mypcera.com/star/mm/uploadfile/201005/4/A142330696.jpg" mode="widthFix"></image>
+					</view>
 					<view class="text-right addventBtn"><button size="mini" type="red">立即查看</button></view>
 				</view>
 			</block>
@@ -148,268 +156,354 @@
 </template>
 
 <script>
-export default {
-	name: 'comment-item',
-	props: {
-		dataList: {
-			// 要显示的数组
-			type: Array,
-			default() {
-				return [];
-			}
-		},
-		pageType: {
-			type: Number,
-			default() {
-				return 1;
-			}
-		},
-		nodata: {
-			// 是否有数据
-			type: Boolean,
-			default() {
-				return false;
-			}
-		},
-		isDetail: {
-			// 是否是详情
-			type: Boolean,
-			default() {
-				return false;
-			}
-		},
-		nomore:{
-			// 是否有更多数据
-			type: Boolean,
-			default() {
-				return false;
-			}
-		},
-		// showOper:{ // 距离头部多少px将其固定
-		//   type: Boolean,
-		//   default(){
-		//     return false;
-		//   }
-		// }
-	},
-	data() {
-		return {};
-	},
-	methods: {
-		showAll(ind) {
-			this.dataList[ind].showMore = true;
-		},
-		hideMore(ind) {
-			this.dataList[ind].showMore = false;
-		},
-		showBigImg(listInd, imgInd) {
-			let info = this.dataList[listInd];
-			let imgList = info.articleInfo.imgList;
-			this.$acFrame.Util.showBigPic(imgList[imgInd], imgList);
-			this.showPic = true;
-		},
-		loadMoreData() {},
-		linkDetail(obj) {
-			uni.navigateTo({
-				url: `/pages/home/commentDetail?data=${encodeURIComponent(JSON.stringify(obj))}&pageType=${this.pageType}`
-			});
-		},
-		linktoshop(){
-			// debugger
-			wx.switchTab({
-				url: '/pages/myshop/index'
-			});
-			// this.$emit('childLink');
-		},
-		guanzhu(id,ind){
-			let selef= this
-			
-			this.$acFrame.HttpService.followPost({id:id}).then(res=>{
-				if(res.success){
-					selef.dataList[ind].hasFollow=!selef.dataList[ind].hasFollow
+	export default {
+		name: 'comment-item',
+		props: {
+			dataList: {
+				// 要显示的数组
+				type: Array,
+				default () {
+					return [];
 				}
-			})
+			},
+			pageType: {
+				type: Number,
+				default () {
+					return 1;
+				}
+			},
+			nodata: {
+				// 是否有数据
+				type: Boolean,
+				default () {
+					return false;
+				}
+			},
+			showNum: {
+				// 是否有数据
+				type: Boolean,
+				default () {
+					return false;
+				}
+			},
+			isDetail: {
+				// 是否是详情
+				type: Boolean,
+				default () {
+					return false;
+				}
+			},
+			nomore: {
+				// 是否有更多数据
+				type: Boolean,
+				default () {
+					return false;
+				}
+			},
+			// showOper:{ // 距离头部多少px将其固定
+			//   type: Boolean,
+			//   default(){
+			//     return false;
+			//   }
+			// }
 		},
-		linkUser(id){
-			uni.navigateTo({
-				url:`../pages/home/topicIndex?id=${id}`
-			})
+		data() {
+			return {};
 		},
-		linkTheme(id){
-			uni.navigateTo({
-				url:`../pages/home/topicIndex?id=${id}`
-			})
+		methods: {
+			showAll(ind) {
+				this.dataList[ind].showMore = true;
+			},
+			hideMore(ind) {
+				this.dataList[ind].showMore = false;
+			},
+			setImg(src) {
+				this.$emit('setImg', src)
+			},
+			showBigImg(listInd, imgInd) {
+				let info = this.dataList[listInd];
+				let imgList = info.articleInfo.imgList;
+				this.$acFrame.Util.showBigPic(imgList[imgInd], imgList);
+				getApp().globalData.isShowPic = true
+			},
+			loadMoreData() {},
+			linkDetail(obj, isComment) {
+				uni.navigateTo({
+					url: `/pages/home/commentDetail?data=${encodeURIComponent(JSON.stringify(obj))}&pageType=${this.pageType}&isComment=${isComment?isComment:''}`
+				});
+			},
+			linktoshop() {
+				// debugger
+				wx.switchTab({
+					url: '/pages/myshop/index'
+				});
+				// this.$emit('childLink');
+			},
+			guanzhu(code, ind) {
+				let selef = this
+				this.$emit('followPost', code, ind)
+			},
+			linkUser(id) {
+				uni.navigateTo({
+					url: `../pages/home/topicIndex?id=${id}`
+				})
+			},
+			linkTheme(id) {
+				uni.navigateTo({
+					url: `../pages/home/topicIndex?id=${id}`
+				})
+			},
+			userInfo(userId) {
+				uni.navigateTo({
+					url: `/pages/mycenter/mycenter?userId=${userId}`
+				})
+			},
+			setErrorPic(ind_p, ind_c) {
+				this.dataList[ind_p].articleInfo.imgList[ind_c] = "/images/head1.png"
+
+			},
+			dianzan(id, ind) {
+				this.$emit('dianzan', id, ind)
+			},
+			linkProd(id) {
+				uni.navigateTo({
+					url: `/pages/myshop/productDetail?goodsId=${id}`
+				})
+			},
+			linkRanking(type) {
+				let url = ''
+				switch (type) {
+					case 1:
+						url = `/pages/ranking/friends?type=${type}`
+						break;
+					case 2:
+						url = `/pages/ranking/post?type=${type}`
+						break;
+					case 3:
+						url = `/pages/ranking/invitation?type=${type}`
+						break;
+						case 4:
+							url = `/pages/ranking/product?type=${type}`
+							break;
+					default:
+						break;
+				}
+				uni.navigateTo({
+					url: url
+				})
+			}
 		},
-		userInfo(userId){
-			uni.navigateTo({
-				url:`/pages/mycenter/mycenter?userId=${userId}`
-			})
-		},
-		setErrorPic(ind_p,ind_c){
-			this.dataList[ind_p].articleInfo.imgList[ind_c]="/images/head1.png"
-			
-		}
-	},
-	watch: {}
-};
+		watch: {}
+	};
 </script>
 
 <style lang="less">
-.listItem {
-	padding: 20rpx 0;
-	border-bottom: 1px solid #efefef;
-	.item-head {
-		padding:0 24rpx;
-		.img {
-			margin-right: 20rpx;
-			width: 100rpx;
-			height: 100rpx;
-			border-radius: 100rpx;
-			overflow: hidden;
-			image {
-				width: 100%;
-			}
-		}
-		.head-msg {
-			line-height: 50rpx;
-			text {
-				float: left;
-				margin-right: 20rpx;
-			}
-			.name {
-				max-width: 240rpx;
-				white-space: nowrap;
-				overflow: hidden;
-				text-overflow: ellipsis;
-			}
-			.rank {
-				border-radius: 40rpx;
-				padding: 0 16rpx;
-				background: #46d88c;
-				color: #ffffff;
-				font-size: 26rpx;
-			}
-			.shop {
-				border-radius: 40rpx;
-				padding: 0 16rpx;
-				background: #ffaf43;
-				color: #ffffff;
-				font-size: 26rpx;
-			}
-		}
-		.timer {
-			text {
-				float: left;
-				margin-right: 20rpx;
-			}
-			.mark {
-				font-size: 22rpx;
-				border-radius: 30rpx;
-				line-height: 32rpx;
-				padding: 0 16rpx;
-				border: 1px solid #b40000;
-				color: #b40000;
-				margin-top: 10rpx;
-			}
-		}
-	}
+	.listItem {
+		padding: 20rpx 0;
+		border-bottom: 1px solid #efefef;
 
-	.followBox {
-		height: 100rpx;
-		padding-top: 5rpx;
-		.follow {
-			width: 100rpx;
-			text-align: center;
-			display: inline-block;
-			height: 40rpx;
-			line-height: 40rpx;
-			border: 1px solid #bfbfbf;
-			font-size: 26rpx;
-			border-radius: 0.2em;
-			color: #999;
-			&.active {
-				color: #fff;
-				background: #b40000;
-				border-color: #b40000;
+		.item-head {
+			padding: 0 30rpx;
+            
+			.img {
+				margin-right: 20rpx;
+				width: 100rpx;
+				height: 100rpx;
+				border-radius: 100rpx;
+
+				image {
+					width: 100%;
+				}
+			}
+
+			.head-msg {
+				line-height: 50rpx;
+                
+				text {
+					float: left;
+					margin-right: 20rpx;
+				}
+
+				.name {
+					max-width: 240rpx;
+					white-space: nowrap;
+					overflow: hidden;
+					text-overflow: ellipsis;
+				}
+
+				.rank {
+					border-radius: 40rpx;
+					padding: 0 16rpx;
+					background: #46d88c;
+					color: #ffffff;
+					font-size: 26rpx;
+				}
+
+				.shop {
+					border-radius: 40rpx;
+					padding: 0 16rpx;
+					background: #ffaf43;
+					color: #ffffff;
+					font-size: 26rpx;
+				}
+				.numMark{
+					margin-left: 20rpx;
+					height:40rpx;
+					line-height: 40rpx;
+					border-radius:40rpx;
+					width:40rpx;
+					text-align: center;
+					background: #f6f6f6;
+					color:#999;
+				}
+			}
+
+			.timer {
+				text {
+					float: left;
+					margin-right: 20rpx;
+				}
+
+				.mark {
+					font-size: 22rpx;
+					border-radius: 30rpx;
+					line-height: 32rpx;
+					padding: 0 16rpx;
+					border: 1px solid #b40000;
+					color: #b40000;
+					margin-top: 10rpx;
+				}
 			}
 		}
-	}
-	.articalBox {
-		margin: 20rpx 24rpx;
-		.msg {
-			text {
-				display: inline;
-			}
-			.name {
-				margin-right: 10rpx;
-			}
-			.from {
-				margin-left: 10rpx;
+
+		.followBox {
+			height: 100rpx;
+			padding-top: 5rpx;
+
+			.follow {
+				width: 100rpx;
+				text-align: center;
+				display: inline-block;
+				height: 40rpx;
+				line-height: 40rpx;
+				border: 1px solid #bfbfbf;
+				font-size: 26rpx;
+				border-radius: 0.2em;
+				color: #999;
+
+				&.active {
+					color: #fff;
+					background: #b40000;
+					border-color: #b40000;
+				}
 			}
 		}
-		.a_pic {
-			width: 160rpx;
-			margin-right: 20rpx;
-		}
-		.a_main {
-			text-align: justify;
-			width: 70%;
+
+		.articalBox {
+			margin: 20rpx 30rpx 0;
+
 			.msg {
-				margin-top: 4rpx;
+				text {
+					display: inline;
+				}
+
+				.name {
+					margin-right: 10rpx;
+				}
+
+				.from {
+					margin-left: 10rpx;
+				}
+			}
+
+			.a_pic {
+				width: 160rpx;
+				margin-right: 20rpx;
+			}
+
+			.a_main {
+				text-align: justify;
+				width: 70%;
+
+				.msg {
+					margin-top: 4rpx;
+				}
+			}
+
+			.lookPic {
+				display: inline-block;
+				margin-left: 20rpx;
+
+				icon {
+					margin-right: 10rpx;
+				}
 			}
 		}
-		.lookPic {
-			display: inline-block;
-			margin-left: 20rpx;
-			icon {
+
+		.imgList {
+			padding: 20rpx 14rpx 0;
+
+			.imgItem {
+				float: left;
+				width: 33.3333%;
+				padding: 0 10rpx;
+				height: calc((100vw - 24rpx) / 3 - 20rpx);
+				overflow: hidden;
+			}
+		}
+
+		.adventBox {
+			background: #efefef;
+			margin: 20rpx 30rpx 0;
+			padding: 16rpx 20rpx 16rpx 16rpx;
+			box-sizing: border-box;
+
+			.p_main {
+				width: 150px;
+				padding: 0 20rpx;
+
+				text {
+					display: block;
+				}
+			}
+
+			.p_pic {
+				width: 96rpx;
+				height: 96rpx;
+				image{
+					height: 96rpx;
+				}
+			}
+		}
+
+		.itemOperBox {
+			text-align: center;
+			font-size: rpx;
+			color: #999;
+			padding-top:20rpx;
+            button{
+				line-height: 1.2;
+			}
+			&.red {
+				color: #B40000;
+			}
+
+			.iconfont {
 				margin-right: 10rpx;
+				font-size: 40rpx;
+				position: relative;
+				top: 4rpx;
+			}
+		}
+
+		.adventPicBox {
+			.adventPic {
+				margin: 20rpx 0;
+			}
+
+			.addventBtn {
+				margin: 20rpx 0;
 			}
 		}
 	}
-	.imgList {
-		padding:0 14rpx;
-		.imgItem {
-			float: left;
-			width:33.3333%;
-			padding:0 10rpx;
-			height:calc((100vw - 24rpx) / 3 - 20rpx);
-			overflow: hidden;
-		}
-	}
-	.adventBox {
-		background: #efefef;
-		margin-bottom: 20rpx;
-		padding: 16rpx 20rpx 16rpx 16rpx;
-		.p_main {
-			width: 150px;
-			padding: 0 20rpx;
-			text {
-				display: block;
-			}
-		}
-		.p_pic {
-			width: 80rpx;
-		}
-	}
-	.itemOperBox {
-		text-align: center;
-		line-height: 60rpx;
-		font-size: 30rpx;
-		color: #999;
-		.iconfont {
-			margin-right: 10rpx;
-			font-size: 40rpx;
-			position: relative;
-			top: 4rpx;
-		}
-	}
-	.adventPicBox {
-		.adventPic {
-			margin: 20rpx 0;
-		}
-		.addventBtn {
-			margin: 20rpx 0;
-		}
-	}
-}
 </style>

@@ -43,7 +43,7 @@
 
 <style lang="less">
 .comModal{
-	padding:24rpx;
+	padding:24rpx 30rpx;
 	textarea{
 		height:240rpx;
 		width: 100%;

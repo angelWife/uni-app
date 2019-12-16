@@ -128,14 +128,14 @@
 		width: 80rpx;
 		height:80rpx;
 		overflow: hidden;
-		margin:20rpx 24rpx;
+		margin:20rpx 30rpx;
 	}
 	.msg{
 		height:100%;
 		border-bottom:1px solid #ccc;
 	}
 	.btn{
-		margin:0 24rpx;
+		margin:0 30rpx;
 		button{
 			min-width:160rpx;
 		}
