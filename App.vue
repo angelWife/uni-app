@@ -4,7 +4,9 @@ import AcFrame from "@/common/acFrame";
 export default {
   globalData: {
     config: MyConfig,
-    comFunc: AcFrame
+    comFunc: AcFrame,
+	userCode:'',
+	isShowPic:false
   },
   onLaunch: function() {},
   onShow: function() {},
@@ -164,6 +166,7 @@ text {
   border-radius: 100%;
   .headPic {
     border-radius: 100%;
+	height:100%;
   }
   .grade {
     position: absolute;
@@ -375,6 +378,18 @@ button[type="text"] {
     box-shadow: none !important;
   }
 }
+button[type="share"] {
+  background: none !important;
+  border: none;
+  color:inherit;
+  &::after {
+    border: none !important;
+    box-shadow: none !important;
+  }
+  &.red{
+	 color:#B40000; 
+  }
+}
 button[type="null"] {
   background: none !important;
   color: #666 !important;
@@ -405,7 +420,7 @@ button[type="blue"] {
 }
 button[size="mini"] {
   font-size: 26rpx !important;
-  line-height: 2;
+  line-height: 72rpx;
   &::after {
     box-shadow: none;
     border: 0;

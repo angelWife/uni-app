@@ -109,7 +109,7 @@
 
 <style lang="less">
 .head{
-	padding:24rpx;
+	padding:24rpx 30rpx;
 	border-bottom:1px solid #ccc;
 	.title{
 		margin-bottom:20rpx;

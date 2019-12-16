@@ -8,13 +8,15 @@
 		,{
 			"path": "pages/home/index",
 			"style": {
-				"navigationBarTitleText": "首页"
+				"navigationBarTitleText": "首页",
+				"enablePullDownRefresh": true
 			}
 		},
 		{
 			"path": "pages/home/commentDetail",
 			"style": {
-				"navigationBarTitleText": "正文"
+				"navigationBarTitleText": "正文",
+				"enablePullDownRefresh": true
 			}
 		},
 		{
@@ -212,7 +214,7 @@
             }
 		}
 		,{
-            "path" : "pages/mycenter/follow",
+            "path" : "pages/mycenter/followList",
             "style": {
             	"navigationBarTitleText": ""
             }
@@ -220,13 +222,14 @@
         ,{
             "path" : "pages/ranking/product",
             "style": {
-            	"navigationBarTitleText": "产品排行"
+            	"navigationBarTitleText": "产品排行",
+				"enablePullDownRefresh": true
             }
         }
         ,{
             "path" : "pages/ranking/invitation",
             "style": {
-            	"navigationBarTitleText": "邀请排行"
+            	"navigationBarTitleText": "话题排行"
             }
         }
         ,{
@@ -235,6 +238,12 @@
             	"navigationBarTitleText": "帖子排行"
             }
         }
+		,{
+		    "path" : "pages/ranking/friends",
+		    "style": {
+		    	"navigationBarTitleText": "邀请排行"
+		    }
+		}
 		,{
             "path" : "pages/order/index",
             "style": {
@@ -271,6 +280,7 @@
             	"navigationBarTitleText": "处理中"
             }
         }
+        
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
@@ -301,5 +311,6 @@
 				"text": "我的"
 			}
 		]
-	}
+	},
+	"debug":true
 }

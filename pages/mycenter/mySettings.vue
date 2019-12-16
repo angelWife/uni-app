@@ -73,11 +73,11 @@
 
 <style lang="less">
 	.content{
-		padding-left:24rpx;
+		padding-left:30rpx;
 	}
 .item{
 	border-bottom:1px solid #ccc;
 	height: 100rpx;
-	padding-right:24rpx;
+	padding-right:30rpx;
 }
 </style>

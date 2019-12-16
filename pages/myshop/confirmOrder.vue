@@ -1,6 +1,6 @@
 <template>
 	<view class="content">
-		<view class="modal address flex item-center">
+		<view class="modal address flex item-center" @tap="add_address" >
 			<view class="pic">
 				<icon class="iconfont icon-dizhi"></icon>
 			</view>
@@ -8,9 +8,9 @@
 				<block v-if="addrVO.id">
 					<view class="name">
 						<text class="fs15">{{addrVO.name}}</text>
-						<text class="c999">{{addrVO.phone}}</text>
+						<text class="c999">{{addrVO.mobilePhone}}</text>
 					</view>
-					<view class="detail">
+					<view class="detail" >
 						{{addrVO.areaProvince}}{{addrVO.areaCity}}{{addrVO.areaCounty}}{{addrVO.address}}
 					</view>
 				</block>
@@ -26,33 +26,37 @@
 		<view class="modal order_detail">
 			<view class="shopName fs15">{{details.shopInfo.name}}</view>
 			<view class="product flex">
-				<view class="pic">
-					<image :src="this.$acFrame.Util.setImgUrl(details.imgList[0])" mode="widthFix"></image>
+				<view class="pic" style="overflow: hidden;" >
+					<image :src="this.$acFrame.Util.setImgUrl(details.img)" mode="widthFix"></image>
 				</view>
 				<view class="center">
 					<view class="name clamp clamp-2">
-						{{details.name}}
+						{{details.name}} 
 					</view>
 					<view class="spec">
-						{{details.chooseSpec}}
+						{{details.chooseSpec && details.chooseSpec.propValue?details.chooseSpec.propValue:''}}
 					</view>
 				</view>
 				<view class="price text-right">
 					<view class="">
 						<text class="fs12">¥</text>
-						<text>{{details.priceSale}}</text>
+						<text>{{details.sum_price}}</text>
 					</view>
 					<view class="c999">
-						x{{details.goodsQty}}
+						x{{details.goodsNum}}
 					</view>
 				</view>
 			</view>
 			<view class="orderMsg fs13">
 				<view class="item flex">
 					<view class="name">运费</view>
-					<view class="flex-1 text-right">
+					<view class="flex-1 text-right" v-if="details.freight==0" >
 						免运费
 					</view>
+					<view class="flex-1 text-right" v-else >
+						￥{{details.freight}}
+					</view>
+					
 				</view>
 				<view class="item flex" @tap="chooseCoupon">
 					<view class="name">优惠券</view>
@@ -63,13 +67,13 @@
 				<view class="item flex">
 					<view class="name">精灵折扣</view>
 					<view class="flex-1 text-right">
-						已减免126
+						已减免0
 					</view>
 				</view>
-				<view class="item flex">
+				<view class="item flex"   >
 					<view class="name">减免</view>
 					<view class="flex-1 text-right">
-						200
+						0
 					</view>
 				</view>
 			</view>
@@ -84,7 +88,7 @@
 			<view class="flex-1">
 				<text class="fs13">实付：</text>
 				<text class="fs13 red">¥</text>
-				<text class="fs18 red">{{payTotal}}</text>
+				<text class="fs18 red">{{details.sum_price}}</text>
 			</view>
 			<view class="btn" @tap="choosePayWay">
 				立即付款
@@ -156,6 +160,8 @@
 		},
 		onLoad(options){
             this.details = JSON.parse(options.details);
+			this.operType=options.type
+			this.getAddress();
 		},
 		onShow(){
 
@@ -164,13 +170,23 @@
 			getCoupon(){
 				let self = this
 				let params = {
-					goodsId:self.details.goodsId
+					goodsId:self.details.goodsId,
+					buyNum:self.details.goodsNum,
+					goodsSkuId:self.details.goodsSkuId
 				}
-				self.$acFrame.HttpService.couponList(params).then(res => {
+				/* self.$acFrame.HttpService.couponList(params).then(res => {
 					if(res.success){
 						self.couponList = res.data
 					}
 				})
+				 */
+				self.$acFrame.HttpService.post('product/coupon_receive/can_use',params).then(res => {
+					if(res.success){
+						self.couponList = res.data
+					}
+				})
+				
+				
 			},
 			getAddress(){
 				let self = this
@@ -206,20 +222,85 @@
 				this.checked = !this.checked
 			},
 			choosePayWay(){
+				debugger
+				if(this.operType=='order'){
+					this.createOrder()  //直接购买
+				}else if(this.operType=='spell'){
+					this.createSpell()  //发起拼单
+				}else{
+					//加入拼单
+					this.joinSpell()
+				}
+				
+			},
+			createOrder(){
 				let obj={
-					addressId: this.addrVO.id,
-					buyNum: his.details.goodsQty,
+					addressId: this.addrVO.id?this.addrVO.id:'',
+					buyNum: this.details.goodsNum,
 					couponIdReceiveList: [],
 					goodsId: this.details.goodsId,
-					goodsSkuId: this.details.chooseSpec.goodsSkuId,
+					goodsSkuId: this.details.chooseSpec.goodsSkuId?this.details.chooseSpec.goodsSkuId:'',
 					messageBuyer: this.messageBuyer
 				}
-				uni.navigateTo({
-					url:'payWay?details='+JSON.stringify(obj)
+				console.log(obj);
+				var self = this;
+				this.$acFrame.HttpService.post('order/info/buy',obj).then(res => {
+					if(res.success){
+						console.log(res);
+						var info = res.data;
+						uni.navigateTo({
+							url:'payWay?order='+JSON.stringify(info)
+						}) 
+					}
+				})
+			},
+			createSpell(){//createSpell
+				let obj={
+					addressId: this.addrVO.id?this.addrVO.id:'',
+					buyNum: this.details.goodsNum,
+					goodsId: this.details.goodsId,
+					goodsSkuId: this.details.chooseSpec.goodsSkuId?this.details.chooseSpec.goodsSkuId:'',
+				}
+				console.log(obj);
+				var self = this;
+				this.$acFrame.HttpService.createSpell(obj).then(res => {
+					if(res.success){
+						console.log(res);
+						var info = res.data;
+						uni.navigateTo({
+							url:'payWay?order='+JSON.stringify(info)
+						}) 
+					}
+				})
+			},
+			joinSpell(){
+				let obj={
+					addressId: this.addrVO.id?this.addrVO.id:'',
+					buyNum: this.details.goodsNum,
+					goodsId: this.details.goodsId,
+					goodsSkuId: this.details.chooseSpec.goodsSkuId?this.details.chooseSpec.goodsSkuId:'',
+					spellId:this.details.spellId
+				}
+				console.log(obj);
+				var self = this;
+				this.$acFrame.HttpService.joinSpell(obj).then(res => {
+					if(res.success){
+						console.log(res);
+						var info = res.data;
+						uni.navigateTo({
+							url:'payWay?order='+JSON.stringify(info)
+						}) 
+					}
 				})
 			},
 			setAddr(addrVO){
 				this.addrVO = addrVO
+			},
+			add_address(){
+				console.log(4444444);
+				uni.navigateTo({
+					url:'../mycenter/addressList'
+				})
 			}
 		}
 	}

@@ -1,14 +1,14 @@
 <template>
 	<view class="content">
-		<view class="item flex item-center" v-for="(item,index) in list" :key="index">
+		<view class="item flex item-center" v-for="(item,index) in list" :key="index" @tap="chooseRank(item)">
 			<view class="icon">
-				<image :src="item.icon" :class="'pic'+index" mode="widthFix"></image>
+				<image src="../static/images/icon.png" :class="'pic'+index" mode="widthFix"></image>
 			</view>
-			<view class="name flex-1" @tap="chooseRank(item)">
-				{{item.name}}
+			<view class="name flex-1">
+				{{item.val}}
 			</view>
 			<view class="share">
-				<button type="red" class="radiuBtn" size="mini" open-type="share">分享</button>
+				<button type="red" class="radiuBtn" size="mini">邀请</button>
 			</view>
 		</view>
 	</view>

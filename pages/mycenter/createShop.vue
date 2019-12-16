@@ -9,11 +9,11 @@
 			</view>
 		</view>
 		<view class="formBox">
-			<input class="input" type="text" value="" placeholder="请输入店铺名称"/>
-			<input class="input" type="text" value="" placeholder="请输入店主姓名"/>
-			<input class="input" type="idcard" value="" placeholder="请输入省份证号"/>
+			<input class="input" type="text" v-model="name" value="" placeholder="请输入店铺名称" />
+			<input class="input" type="text" v-model="userName" placeholder="请输入店主姓名" />
+			<input class="input" type="idcard" value="" placeholder="请输入省份证号" />
 			<textarea class="input" value="" placeholder="主营业介绍" />
-		</view>
+			</view>
 		<view class="uploadCard">
 			<view class="title">上传身份证</view>
 			<view class="flex uploadBox">
@@ -45,7 +45,7 @@
 			<text url="">星购服务条款</text>
 		</view>
 		<view class="btnBox">
-			<button type="red" v-if="aggrement">立即认证</button>
+			<button type="red" v-if="aggrement"  @click="submit" >立即认证</button>
 			<button type="default" v-else hover-class="none">立即认证</button>
 		</view>
 		<view class="fs10 c999 text-center">
@@ -62,7 +62,9 @@
 				card:{
 					front:'../../static/images/card1.png',
 					back:'../../static/images/card2.png'
-				}
+				},
+				name:"",
+				userName:""
 			};
 		},
 		methods:{
@@ -74,9 +76,43 @@
 				this.$acFrame.Util.uploadPic().then((res)=>{
 					self.card[name] = res
 				})
-			}
+			},
+			submit(){
+							let self =this
+							if(!self.name){
+								this.$acFrame.Util.mytotal('请输入店铺名称！');
+								return false;
+							}
+							if(!self.userName){
+								this.$acFrame.Util.mytotal('请输入店主姓名！');
+								return false;
+							}
+							this.$acFrame.HttpService.shopInfoApply({name:self.name,userName:self.userName}).then(res => {
+									console.log(res)
+									if(res.success){
+										self.$acFrame.Util.mytotal('提交成功，店铺审核中，请耐心等待');
+										setTimeout(()=>{
+											uni.navigateBack({
+												
+											})
+										},1500)
+									}else{
+										
+										if(res.code=='NEED_BIND_MOBILE'){
+											 console.log(res.code);
+											uni.navigateTo({
+												url: "bindPhone",
+												success: res => {},
+												fail: () => {},
+												complete: () => {}
+											});
+											
+										}
+									}
+			})
 		}
 	}
+}
 </script>
 
 <style lang="less">

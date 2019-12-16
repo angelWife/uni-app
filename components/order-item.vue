@@ -3,7 +3,7 @@
     <view v-for="(item, index) in dataList" :key="index" class="item">
       <view class="item_head flex item-center">
         <view class="pic">
-          <image :src="setImg(item.shopInfo.imgPath)" mode="widthFix" />
+          <image :src="setImg(item.shopInfo.imgPath?item.shopInfo.imgPath:'')" mode="widthFix" />
         </view>
         <view class="name flex-1 textEllipsis">{{item.shopInfo.name}}</view>
         <view class="status orange">
@@ -18,26 +18,31 @@
           /> -->
         </view>
       </view>
-      <view class="item_body flex">
-        <view class="pic"></view>
+      <view class="item_body flex" v-for="(ditem,dind) in item.detailList " :key = "dind"  >
+        <view class="pic">
+			<image :src="setImg(ditem.goodsImgPath?ditem.goodsImgPath:'')" mode="widthFix" />
+		</view>
         <view class="flex-1">
           <view class="flex">
             <view class="name flex-1 clamp clamp-2">
-              商品名称
+              {{ditem.goodsName}}
             </view>
             <view class="text-right">
-              <view class="salePrice">¥139.20</view>
-              <view class="nums fs12 c999">x1</view>
+              <view class="salePrice">¥{{ditem.priceBuy}}</view>
+              <view class="nums fs12 c999">x{{ditem.buyNum}}</view>
             </view>
           </view>
           <view class="spec">
-            <text>红色/XL</text>
+            <text>{{ditem.goodsSkuPropValue}}</text>
           </view>
         </view>
+      </view> 
+      <view class="payprice text-right red" v-if="item.status==1" >
+        实付：<text class="fs12">¥</text><text>{{item.pricePayWait}}</text>
       </view>
-      <view class="payprice text-right red">
-        实付：<text class="fs12">¥</text><text>39.20</text>
-      </view>
+	  <view class="payprice text-right red" v-else >
+	    实付：<text class="fs12">¥</text><text>{{item.pricePay}}</text>
+	  </view>
       <view class="orderBtn text-right">
         <button type="red">邀请好友拼单</button>
         <button type="rednull">付款</button>

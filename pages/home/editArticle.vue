@@ -5,7 +5,7 @@
 				<view class="title"><input type="text" placeholder="请输入标题" v-model="title"  @input="changeTitle"/></view>
 				<view class="textarea">
 					<!-- <textarea id="editDist" placeholder="请输入正文" v-model="articleMsg"></textarea> -->
-					<editor id="editDist" placeholder="请输入正文" value="articleMsg" @input="changeInput" @statuschange="changeClass"></editor>
+					<editor id="editDist" placeholder="请输入正文" :value="articleMsg" @input="changeInput" @statuschange="changeClass"></editor>
 				</view>
 				<!-- <view class="pic">
 					<view class="item" v-for="(item, index) in imgList" :key="index">
@@ -41,16 +41,30 @@
 				articleMsg: "",
 				textDetail: "",
 				title: "",
-				imgList: []
+				imgList: [],
+				textContent:'',
+				editModal:''
 			};
+		},
+		onReady(){
+			// this.editModal = uni.createSelectorQuery().select('#editDist');
 		},
 		methods: {
 			choosePic() {
 				let self = this;
 				this.$acFrame.Util.uploadPic().then(res => {
 					let url = res;
-					self.textDetail=self.articleMsg+`<br><img src="${url}"/><br>`
-					self.articleMsg+=`<br><img src="${url}"/><br>`
+					self.imgList.push(url);
+					// self.textDetail=self.articleMsg+`<br><img src="${url}"/><br>`
+					// self.articleMsg+=`<br><img src="${url}"/><br>`
+					//let editModal = uni.createSelectorQuery().in(self).select('#editDist')
+					// debugger
+					// self.editModal.editorContext.insertImage({
+					// 	src:url,
+					// 	success:(res)=>{
+					// 		console.log(res)
+					// 	}
+					// })
 				});
 			},
 			changeTitle(e) {
@@ -59,16 +73,20 @@
 			},
 			changeInput(e) {
 				let val = e.detail.html
+				let text = e.detail.text
 				this.articleMsg = val
+				this.textContent = text
 			},
 			changeClass() {
 
 			},
 			postActical(){
-				debugger
+				let self = this
 				let params = {
-					content:this.textDetail,
-					title:this.title
+					content:this.articleMsg,
+					title:this.title,
+					imgPathList :this.imgList[0]||[],
+					zyao:this.textContent
 				}
 				if(!params.title){
 					this.$acFrame.Util.mytotal('请输入标题！');
@@ -79,14 +97,19 @@
 					return false;
 				}
 				this.$acFrame.HttpService.raleaseArtical(params).then(res => {
-					let url = res;
-					self.textDetail=self.articleMsg+url
-					self.articleMsg+=`<br><img src="${url}"/><br>`
+					if(res.success){
+						self.$acFrame.Util.mytotal('发布成功！！');
+						setTimeout(function() {
+							uni.navigateBack({
+								
+							})
+						}, 1000);
+					}
 				});
 			},
 			deleteImg(index) {},
 			showImg(index) {}
-		}
+		},
 	};
 </script>
 

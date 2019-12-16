@@ -35,17 +35,16 @@
 				<scroll-view class="myscroll" scroll-y="true" @scrolltolower="loadMoreData">
 					<view class="shopList">
 						<view class="item" v-for="(item,ind) in dataList" :key="ind">
-							<view class="shopMsg flex item-center" @tap="shopDetail(item.id)">
+							<view class="shopMsg flex item-center" @tap="shopDetail(item.shopInfoVo.id)">
 								<view class="pic">
-									<image :src="setImg(item.imgPath)" mode="widthFix"></image>
+									<image :src="setImg(item.shopInfoVo.imgPath)" mode="widthFix"></image>
 								</view>
 								<view class="flex-1">
 									<view class="name clearfix">
-										<view class="shopname float-left textEllipsis">{{item.name}}</view>
-										<text class="float-left">广告</text>
-										<view class="fs12 c999 float-right">已被6000人圈粉</view>
+										<view class="shopname float-left textEllipsis">{{item.shopInfoVo.name}}</view>
+										<view class="fs12 c999 float-right">已被{{item.shopInfoVo.numTotalFollow}}人圈粉</view>
 									</view>
-									<view class="text c999 textEllipsis">{{item.describe}}</view>
+									<view class="text c999 textEllipsis">{{item.shopInfoVo.describe}}</view>
 								</view>
 							</view>
 							<scroll-view scroll-x="true">
@@ -55,10 +54,13 @@
 									<view class="price red">
 										<text class="fs12">¥</text>
 										<text class="fs15">{{proItem.priceSale}}</text>
-										<text class="mark">拼</text>
+										<text class="mark" v-if="proItem.flagSpell==1">拼</text>
 									</view>
 								</view>
 							</scroll-view>
+							<view class="advent c999 fs10" v-if="item.type==2">
+								广告
+							</view>
 						</view>
 					</view>
 					<view v-if="nodata" class="noData flex f-row just-con-c item-center">
@@ -76,17 +78,16 @@
 			<view class="title">精品小店</view>
 			<view class="shopList">
 				<view class="item" v-for="(item,ind) in dataList" :key="ind">
-					<view class="shopMsg flex item-center" @tap="shopDetail(item.id)">
+					<view class="shopMsg flex item-center"  @tap="shopDetail(item.shopInfoVo.id)">
 						<view class="pic">
-							<image :src="setImg(item.imgPath)" mode="widthFix"></image>
+							<image :src="setImg(item.shopInfoVo.imgPath)" mode="widthFix"></image>
 						</view>
 						<view class="flex-1">
 							<view class="name clearfix">
-								<view class="shopname float-left textEllipsis">{{item.name}}</view>
-								<text class="float-left">广告</text>
-								<view class="fs12 c999 float-right">已被6000人圈粉</view>
+								<view class="shopname float-left textEllipsis">{{item.shopInfoVo.name}}</view>
+								<view class="fs12 c999 float-right">已被{{item.shopInfoVo.numTotalFollow}}人圈粉</view>
 							</view>
-							<view class="text c999 textEllipsis">{{item.describe}}</view>
+							<view class="text c999 textEllipsis">{{item.shopInfoVo.describe}}</view>
 						</view>
 					</view>
 					<scroll-view scroll-x="true">
@@ -96,10 +97,13 @@
 							<view class="price red">
 								<text class="fs12">¥</text>
 								<text class="fs15">{{proItem.priceSale}}</text>
-								<text class="mark">拼</text>
+								<text class="mark" v-if="proItem.flagSpell==1">拼</text>
 							</view>
 						</view>
 					</scroll-view>
+					<view class="advent c999 fs10" v-if="item.type==2">
+						广告
+					</view>
 				</view>
 			</view>
 			<view v-if="nodata" class="noData flex f-row just-con-c item-center">
@@ -238,13 +242,15 @@ export default {
 			this.initData();
 		},
 		shopDetail(id){
+			
 			wx.navigateTo({
 				url:`shopDetail?id=${id}`
 			})
 		},
-		productDetail(){
+		productDetail(id){
+			console.log(id);
 			wx.navigateTo({
-				url:"productDetail"
+				url:"productDetail?id="+id
 			})
 		},
 		setImg(src){
@@ -261,6 +267,9 @@ page {
 }
 .content {
 	padding-top: 90rpx;
+	.advent{
+		margin-top:10rpx;
+	}
 }
 .searchBox {
 	padding: 20rpx 24rpx 10rpx;
@@ -407,6 +416,7 @@ page {
 					.pic {
 						width: 100%;
 						height: 200rpx;
+						overflow: hidden;
 					}
 					.name{
 						padding:10rpx 0;

@@ -3,7 +3,7 @@
 		<view class="headBox flex item-center">
 			<view class="pic">
 				<image class="grade" src="../../static/images/baihu.png" mode="widthFix"></image>
-				<image class="headpic" src="../../static/images/head2.png" mode="widthFix"></image>
+				<image class="headpic" :src="this.$acFrame.Util.setImgUrl(userInfo.imgHeadPath )" mode="widthFix"></image>
 			</view>
 			<view class="msg flex-1">
 				<view class="text textEllipsis">
@@ -12,30 +12,32 @@
 				</view>
 				<view class="text textEllipsis">
 					<icon class="iconfont icon-yezi"></icon>
-					最好的人，像孩子一样!
+					{{userInfo.introduce}}
 				</view>
 				<view class="btn">
-					<text>私信</text>
-					<text>已关注</text>
+					<block v-if="!userInfo.isOwner">
+						<text>私信</text>
+						<text>已关注</text>
+					</block>
 				</view>
 			</view>
 			<view class="offical"><image class="grade" src="../../static/images/zhunwei.png" mode="widthFix"></image></view>
 		</view>
 		<view class="mydatas flex">
 			<view class="item flex-1 flex f-col just-con-c">
-				<view class="num">20</view>
+				<view class="num">{{userInfo.numTotalArticle}}</view>
 				<view class="text">帖子</view>
 			</view>
 			<view class="item flex-1 flex f-col just-con-c">
-				<view class="num">20</view>
+				<view class="num">{{userInfo.numTotalFollow}}</view>
 				<view class="text">关注</view>
 			</view>
 			<view class="item flex-1 flex f-col just-con-c">
-				<view class="num">20</view>
+				<view class="num">{{userInfo.numTotalFans}}</view>
 				<view class="text">粉丝</view>
 			</view>
 			<view class="item flex-1 flex f-col just-con-c">
-				<view class="num">20</view>
+				<view class="num">{{userInfo.numTotalUp}}</view>
 				<view class="text">获赞</view>
 			</view>
 		</view>
@@ -122,6 +124,7 @@ export default {
 			{ name: '小店', choose: false ,type:"shop"}, 
 			{ name: '荣誉', choose: false ,type:"honor"}, 
 			{ name: '受赏', choose: false ,type:"reward"}],
+			userInfo:{},
 			dataList: [
 				{
 					headImg: '/static/images/head1.png',
@@ -162,10 +165,29 @@ export default {
 				}
 			],
 			prodNodata:false,
-			modalName:'post'
+			modalName:'post',
+			userCode:''
 		};
 	},
+	onLoad(options){
+		let userCode=options.userCode;
+		this.userCode=userCode?userCode:uni.getStorageSync('userCode')
+	},
+	onShow(){
+		this.getUserInfo()
+	},
 	methods: {
+		getUserInfo(){
+			let self=this
+			let params = {
+				userCode:self.userCode
+			}
+			this.$acFrame.HttpService.userInfo(params).then(res=>{
+				if(res.success){
+					self.userInfo = res.data
+				}
+			})
+		},
 		tapClick(ind){
 			let self = this
 			this.infoTab.filter((v,i)=>{
@@ -284,7 +306,7 @@ page {
 .myscroll {
 	height: calc(100% - 360rpx);
 	.topMsg{
-		padding:20rpx 24rpx;
+		padding:20rpx 30rpx;
 		border-bottom:1px solid #ccc;
 	}
 	.comItem{

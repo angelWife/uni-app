@@ -3,42 +3,44 @@
 		<view class="detail listItem">
 			<block v-if="dataInfo.type == 1">
 				<view class="item-head flex item-center">
-					<view class="img item-center" @tap="userInfo(dataInfo.publishUser.userId)">
-						<image :src="dataInfo.publishUser.imgPathHead" mode="widthFix"></image>
+					<view class="img item-center comHeadPic" @tap="userInfo(dataInfo.publishUser.userId)">
+						<image class="headPic" :src="dataInfo.publishUser.imgPathHead"></image>
+						<image class="grade" src="../../static/images/baihu.png" mode="widthFix"></image>
 					</view>
 					<view class="flex-1 head-msg">
 						<view class="clearfix">
 							<text class="name fs15" @tap="userInfo(dataInfo.publishUser.userId)">{{ dataInfo.publishUser.userName }}</text>
-							<text v-if="dataInfo.publishUser.militaryRankType" class="rank">{{ dataInfo.rank }}</text>
+							<text v-if="dataInfo.publishUser.militaryRankType" class="rank">{{ dataInfo.publishUser.militaryRankType }}</text>
 							<text v-if="dataInfo.publishUser.shopId" class="shop">店铺</text>
 						</view>
 						<view class="timer c999 fs12 clearfix">
-							<block v-if="pageType == 2">
 								<text>{{ dataInfo.articleInfo.timeInfo }}</text>
-							</block>
-							<block v-else>
 								<text class="mark">受赏</text>
 								<text class="mark">置顶</text>
-							</block>
 						</view>
 					</view>
-					<view class="followBox" @tap="guanzhu(dataInfo.articleInfo.id,index)">
+					<view class="followBox" v-if="!dataInfo.isOwner" @tap="guanzhu(dataInfo.publishUser.userCode)">
 						<text class="follow" v-if="dataInfo.publishUser.hasFollow">已关注</text>
 						<text class="follow active" v-else>关注</text>
 					</view>
 				</view>
-				<block v-if="dataInfo.articleInfo.type == 1">
+				<block v-if="dataInfo.articleInfo.type == 2">
 					<view class="articalBox">
 						<view class="msg" @tap="linkDetail(item)">
-							<block v-for="(conitem, comind) in dataInfo.articleInfo.showContent" :key="comind">
-								<block v-if="conitem.type == 1">
-									<text class="name blue" @tap.stop="linkUser(conitem.atId)">@{{ conitem.atName }}</text>
-									<text class="text">{{ conitem.content }}</text>
+							<block v-if="dataInfo.articleInfo.showContent.length>0">
+								<block v-for="(conitem, comind) in dataInfo.articleInfo.showContent" :key="comind">
+									<block v-if="conitem.type == 1">
+										<text class="name blue" @tap.stop="linkUser(conitem.atId)">@{{ conitem.atName }}</text>
+										<text class="text">{{ conitem.content }}</text>
+									</block>
+									<block v-else>
+										<text class="from blue" @tap.stop="linkTheme(conitem.topicId)">#{{ conitem.topicName }}#</text>
+										<text class="text">{conitem.content}}</text>
+									</block>
 								</block>
-								<block v-else>
-									<text class="from blue" @tap.stop="linkTheme(conitem.topicId)">#{{ conitem.topicName }}#</text>
-									<text class="text">{conitem.content}}</text>
-								</block>
+							</block>
+							<block v-else>
+								<text class="text">{{dataInfo.articleInfo.content}}</text>
 							</block>
 							<!-- <view class="blue lookPic">
 								<icon class="iconfont icon-tupian"></icon>
@@ -60,13 +62,16 @@
 						</view>
 						<view class="a_main flex-1">
 							<view class="title blod clamp clamp-2">{{ dataInfo.articleInfo.title }}</view>
-							<view class="msg fs12 clamp clamp-2">{{ dataInfo.articleInfo.content }}</view>
+							<view class="msg fs12">
+								
+								<rich-text :nodes="dataInfo.articleInfo.content"></rich-text>
+							</view>
 						</view>
 					</view>
 					<view class="articalBox flex item-center" v-else>
 						<view class="a_main flex-1">
 							<view class="title blod clamp clamp-2">{{ dataInfo.articleInfo.title }}</view>
-							<view class="msg fs12 clamp clamp-2">{{ dataInfo.articleInfo.content }}</view>
+							<view class="msg fs12"><rich-text :nodes="dataInfo.articleInfo.content"></rich-text></view>
 						</view>
 					</view>
 				</block>
@@ -83,11 +88,11 @@
 						</view>
 						<view class="p_buy"><button size="mini" type="red" class="">购买</button></view>
 					</view>
-					<view v-else class="adventBox ranking flex item-center" @tap="linkRanking(linkitem.goodsId)">
+					<view v-else class="adventBox ranking flex item-center" @tap="linkRanking(linkitem.rankType)">
 						<view class="p_pic">
 							<image src="/static/images/defaultpro.png" mode="widthFix"></image>
 						</view>
-						<view class="p_main flex-1">邀请好友排行榜</view>
+						<view class="p_main flex-1">{{linkitem.name}}</view>
 						<view class="p_buy"><button size="mini" type="red" class="radiuBtn">去看看</button></view>
 					</view>
 				</block>
@@ -125,26 +130,20 @@
 						</view>
 					</view>
 					<view class="item">
-						<view class="mybtn">
+						<view class="mybtn" :class="{'item_red':dataInfo.articleInfo.hasUp}" @tap="dianzan">
 							<icon class="iconfont icon-dianzan"></icon>
-							<text>999</text>
+							<text>{{dataInfo.articleInfo.numTotalUp}}</text>
 						</view>
 					</view>
 					<view class="item">
-						<view class="mybtn">
+						<button type="share" class="mybtn" open-type="share">
 							<icon class="iconfont icon-share"></icon>
 							<text>分享</text>
-						</view>
-					</view>
-				</view>
-				<view class="adventPicBox" v-if="dataInfo.isAdvent">
-					<view class="adventPic">
-						<image src="http://www.mypcera.com/star/mm/uploadfile/201005/4/A142330696.jpg" mode="widthFix"></image>
-						<text>广告</text>
+						</button>
 					</view>
 				</view>
 			</block>
-			<block v-elid="dataInfo.type == 2">
+			<block v-else-if="dataInfo.type == 2">
 				<!-- dataInfo.adInfo -->
 				<view class="item-head flex item-center">
 					<view class="img item-center">
@@ -171,13 +170,12 @@
 			</block>
 
 		</view>
-
 		<view class="comment">
-			<view class="title">评论 23</view>
+			<view class="title">评论 {{dataInfo.articleInfo.numTotalComment}}</view>
 			<view class="commentList">
 				<view class="item flex" v-for="(item,ind) in listData" :key="ind">
 					<view class="pic">
-						<image :src="item.headPic" mode="widthFix"></image>
+						<image :src="setImg(item.headPic)" mode="widthFix"></image>
 					</view>
 					<view class="flex-1">
 						<view class="name">
@@ -187,13 +185,12 @@
 						<view class="msg">{{item.content}}</view>
 						<view class="oper flex item-center">
 							<view class="timer c999 fs12 flex-1">{{item.timeInfo}}</view>
-							<view class="operIocn clearfix" v-if="item.childs.length>0" @tap="commentDetail(item.id)">
-								<icon class="iconfont icon-dianzan"></icon>
-								<text>{{item.numTotalReply}}</text>
+							<view class="operIocn c999" @tap="commentDetail(item)">
+								回复{{item.numTotalReply>0?'('+item.numTotalReply+')':''}}
 							</view>
-							<view class="operIocn clearfix" :class="{'hasUp':item.hasUp}">
+							<view class="operIocn clearfix" :class="{'red':item.hasUp}" @tap="commentDianzan(item.id,ind)">
 								<icon class="iconfont icon-dianzan"></icon>
-								<text>100</text>
+								<text>{{item.numTotalUp }}</text>
 							</view>
 						</view>
 					</view>
@@ -206,20 +203,24 @@
 				<input type="text" value="" disabled="true" placeholder="说点什么吧"  @tap="showComment"/>
 			</view>
 			<!-- @tap="commentClick" -->
-			<view class="oper flex f-col" @tap="commentDetail(11)">
+			<view class="oper flex f-col" @tap="commentClick">
 				<icon class="iconfont icon-comment"></icon>
-				<text>评论266</text>
+				<text>评论</text>
+				<text v-if="dataInfo.articleInfo.numTotalComment>0" class="mark">{{dataInfo.articleInfo.numTotalComment}}</text>
 			</view>
-			<view class="oper flex f-col">
+			<view class="oper flex f-col" :class="{'red':dataInfo.articleInfo.hasUp}" @tap="dianzan">
 				<icon class="iconfont icon-dianzan"></icon>
-				<text>赞255</text>
+				<text>赞</text>
 			</view>
-			<view class="oper flex f-col">
+			<button type="share" class="oper flex f-col shareBtn" open-type="share">
 				<icon class="iconfont icon-share-b"></icon>
 				<text>分享</text>
-			</view>
+			</button>
 		</view>
 		<commentModal :showModal="showModal" @relaseComment="relaseComment" @cancelRelase="cancelRelase"></commentModal>
+		<view class="noData" v-if="showFoot">
+			~没有更多~
+		</view>
 	</view>
 </template>
 
@@ -251,26 +252,77 @@
 				pageIndex:1,
 				pageSize:10,
 				pageTotal:1,
-				showModal:false
+				showModal:false,
+				showFoot:false,
+				isComent:false,//是否滚动到底部
 			};
 		},
 		onLoad(options) {
 			let detail = JSON.parse(decodeURIComponent(options.data));
+			this.isComent = options.isComment
 			this.pageType = options.pageType
 			this.dataInfo = detail
+		},
+		onShow(){
+			if(getApp().globalData.isShowPic){
+				getApp().globalData.isShowPic = false
+			} else {
+				this.listData=[]
+				this.getCommentList()
+			}
+			
+		},
+		onShareAppMessage(res) {
+			let settings = {}
+			let self = this
+			debugger
+			if(self.dataInfo.articleInfo.type == 1){
+				// settings.type='article'
+				settings.title =self.dataInfo.articleInfo.title 
+				settings.imageUrl = self.dataInfo.articleInfo.imgList[0]
+				settings.pagePath = `/pages/home/commentDetail?data=${encodeURIComponent(JSON.stringify(self.dataInfo))}&pageType=${this.pageType}`
+			}else{
+				// settings.type='article'
+				settings.title =self.dataInfo.articleInfo.content.substr(0,24) 
+				settings.imageUrl = '/static/images/icon-loading.png'
+				settings.pagePath = `/pages/home/commentDetail?data=${encodeURIComponent(JSON.stringify(self.dataInfo))}&pageType=${this.pageType}`
+			}
+			getApp().globalData.isShowPic=true
+			return settings
+			
+			//this.$acFrame.Util.shareUrl(res,settings);
+		},
+		onReachBottom(){
+			if(this.pageTotal>this.pageIndex){
+				this.pageIndex++
+				this.getCommentList()
+				this.showFoot = false
+			}else{
+				this.showFoot = true
+			}
 		},
 		methods: {
 			getCommentList(){
 				let self=this
 				let params = {
-					id:this.dataInfo.userId,
+					articleId:this.dataInfo.articleInfo.id,
 					pageIndex:this.pageIndex,
 					pageSize:this.pageSize
 				}
 				self.$acFrame.HttpService.commentList(params).then(res => {
 					if(res.success){
-						self.listData = res.data.rows
+						let _row = res.data.rows
+						_row.filter(v=>{
+							v.militaryRankType = self.$acFrame.Util.setRankName(v.militaryRankType)
+						})
+						self.listData=self.listData.concat(_row);
 						self.pageTotal  = res.data.pageTotal
+						if(self.isComent){
+							self.isComent=false
+							setTimeout(()=>{
+								self.commentClick()
+							},300)
+						}
 					}
 				})
 			},
@@ -278,7 +330,7 @@
 				const query = uni.createSelectorQuery().in(this);
 				query.select('#myContent').boundingClientRect(data => {
 					uni.pageScrollTo({
-						scrollTop: data.bottom,
+						scrollTop: 230,
 						duration: 300
 					})
 				}).exec();
@@ -293,29 +345,109 @@
 					url: '/pages/home/report'
 				})
 			},
-			guanzhu(id, ind) {
-				let selef = this
+			guanzhu(code) {
+				let self = this
 				this.$acFrame.HttpService.followPost({
-					id: id
+					userCode: code
 				}).then(res => {
 					if (res.success) {
-						selef.dataList[ind].hasFollow = !selef.dataList[ind].hasFollow
+						self.dataInfo.publishUser.hasFollow = res.data
 					}
 				})
 			},
-			commentDetail(id){
+			commentDetail(obj){
+				obj = JSON.stringify(obj)
 				uni.navigateTo({
-					url:`/pages/home/commentList?id=${id}`
+					url:`/pages/home/commentList?obj=${obj}`
 				})
 			},
 			showComment(){
 				this.showModal=true
 			},
 			relaseComment(val){
-				console.log(val)
+				let self = this
+				let params={
+					articleId:this.dataInfo.articleInfo.id,
+					content:val
+				}
+				self.$acFrame.HttpService.relasePublish(params).then(res => {
+					if(res.success){
+						self.$acFrame.Util.mytotal('评论成功！');
+						self.showModal=false
+						self.listData = []
+						self.getCommentList()
+					}
+				})
 			},
 			cancelRelase(){
 				this.showModal=false
+			},
+			dianzan(){  //likeComment
+				let self = this
+				let params={
+					articleId:this.dataInfo.articleInfo.id,
+				}
+				self.$acFrame.HttpService.likeComment(params).then(res => {
+					if(res.success){
+						if(res.data){
+							self.$acFrame.Util.mytotal('点赞成功！');
+							self.dataInfo.articleInfo.numTotalUp++
+						}else{
+							self.dataInfo.articleInfo.numTotalUp--
+							self.$acFrame.Util.mytotal('已取消！');
+						}
+                        self.dataInfo.articleInfo.hasUp=res.data
+					}
+				})
+			},
+			commentDianzan(id,ind){
+				let self = this
+				let params={
+					articleCommentId:id,
+				}
+				self.$acFrame.HttpService.commentPublish(params).then(res => {
+					if(res.success){
+						if(res.data){
+							self.$acFrame.Util.mytotal('点赞成功！');
+							self.listData[ind].numTotalUp++
+						}else{
+							self.listData[ind].numTotalUp--
+							self.$acFrame.Util.mytotal('已取消！');
+						}
+				        self.listData[ind].hasUp=res.data
+					}
+				})
+			},
+			setImg(src) {
+			    return this.$acFrame.Util.setImgUrl(src);
+			},
+			linkProd(id) {
+				uni.navigateTo({
+					url: `/pages/myshop/productDetail?goodsId=${id}`
+				})
+			},
+			linkRanking(type) {
+				let url = ''
+				debugger
+				switch (type) {
+					case 1:
+						url = `/pages/ranking/friends?type=${type}`
+						break;
+					case 2:
+						url = `/pages/ranking/post?type=${type}`
+						break;
+					case 3:
+						url = `/pages/ranking/invitation?type=${type}`
+						break;
+					case 4:
+						url = `/pages/ranking/product?type=${type}`
+						break;
+					default:
+						break;
+				}
+				uni.navigateTo({
+					url: url
+				})
 			}
 		}
 	};
@@ -332,7 +464,17 @@
 	}
 
 	.content {
-		padding-bottom: 100rpx;
+		padding-bottom: 160rpx;
+		position:relative;
+		.noData{
+			position:absolute;
+			height:auto;
+			width: 100%;
+			line-height: 40rpx;
+			bottom:110rpx;
+			left:0;
+			text-align: center;
+		}
 	}
 
 	.detail {
@@ -346,8 +488,6 @@
 				width: 100rpx;
 				height: 100rpx;
 				border-radius: 100rpx;
-				overflow: hidden;
-
 				image {
 					width: 100%;
 				}
@@ -427,7 +567,7 @@
 		}
 
 		.articalBox {
-			margin: 20rpx auto;
+			margin: 20rpx auto 0;
 
 			.msg {
 				text {
@@ -469,22 +609,19 @@
 
 		.imgList {
 			margin: 0 -10rpx;
-
+            padding: 20rpx 0 0;
 			.imgItem {
 				float: left;
-				width: 30.55%;
-				margin: 0 10rpx 20rpx;
-				background: #f1f1f1;
-
-				image {
-					width: 100%;
-				}
+				width: 33.3333%;
+				padding: 0 10rpx;
+				height: calc((100vw - 24rpx) / 3 - 20rpx);
+				overflow: hidden;
 			}
 		}
-
+        
 		.adventBox {
 			background: #efefef;
-			margin-bottom: 20rpx;
+			margin-top: 20rpx;
 			padding: 16rpx 20rpx 16rpx 16rpx;
 
 			.p_main {
@@ -545,9 +682,11 @@
 				font-size: 40rpx;
 			}
 		}
-
+        .readNums{
+			margin-top:20rpx;
+		}
 		.operBox {
-			padding: 20rpx 0;
+			padding: 20rpx 0 0;
 			text-align: center;
 			overflow: hidden;
 			margin: 0 -10rpx;
@@ -561,7 +700,13 @@
 					line-height: 50rpx;
 					border-radius: 50rpx;
 					color: #999;
+					background: #fff;
 					border: 1px solid #9f9f9f;
+					&.item_red {
+                	background: #b40000;
+                	border-color: #b40000;
+                	color: #fff;
+                }
 				}
 				.iconfont {
 					height: 40rpx;
@@ -573,11 +718,7 @@
 						line-height: 100%;
 					}
 				}
-                .item_red {
-                	background: #b40000;
-                	border-color: #b40000;
-                	color: #fff;
-                }
+                
 				
 			}
 
@@ -601,7 +742,10 @@
 
 			.pic {
 				width: 80rpx;
+				height:80rpx;
 				margin-right: 20rpx;
+				border-radius:80rpx;
+				overflow: hidden;
 			}
 
 			.name {
@@ -634,7 +778,9 @@
 			.operIocn {
 				margin-left: 20rpx;
 				color: #999;
-
+                &.red{
+					color:#B40000;
+				}
 				.iconfont {
 					position: relative;
 					top: -6rpx;
@@ -658,11 +804,10 @@
 		position: fixed;
 		z-index: 10;
 		width: 100%;
-		height: 100rpx;
 		left: 0;
 		bottom: 0;
 		padding-bottom: env(safe-area-inset-bottom);
-		box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+		box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
 		background: #fff;
 
 		input {
@@ -676,12 +821,30 @@
 		}
 
 		.oper {
-			width: 120rpx;
+			width: 80rpx;
+			height:100rpx;
 			text-align: center;
 			color: #999;
-
+			position:relative;
 			text {
 				font-size: 24rpx;
+			}
+			&.shareBtn{
+				line-height: 1.3;
+				padding:0;
+			}
+			.mark{
+				position:absolute;
+				background: #B40000;
+				font-size:20rpx;
+				width: 30rpx;
+				height:30rpx;
+				border-radius: 30rpx;
+				line-height: 30rpx;
+				text-align: center;
+				color:#fff;
+				top:10rpx;
+				right:0rpx;
 			}
 		}
 	}

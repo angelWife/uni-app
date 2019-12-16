@@ -51,7 +51,7 @@
 		height:80rpx;
 		border-radius: 80rpx;
 		overflow: hidden;
-		margin:0 24rpx;
+		margin:0 30rpx;
 	}
 	.main{
 		padding:20rpx 0;
@@ -60,7 +60,7 @@
 			width: 60%;
 		}
 		.btnBox{
-			margin:0 24rpx;
+			margin:0 30rpx;
 		}
 	}
 }

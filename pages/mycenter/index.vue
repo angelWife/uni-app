@@ -2,21 +2,23 @@
 	<view class="content">
 		<view class="modal">
 			<view class="head flex item-center">
-				<view class="pic comHeadPic"  @tap="linkTo('evaluate')">
-					<image class="headPic" src="../../static/images/head1.png" mode="widthFix"></image>
-					<image class="grade" src="../../static/images/baihu.png" mode="widthFix"></image>
+				<view class="pic comHeadPic"  @tap="linkTo('baseInfo')">
+					<image class="headPic" :src="this.$acFrame.Util.setImgUrl(userInfo.imgHeadPath )"></image>
+					<image class="grade" src="../../static/images/baihu.png"  mode="widthFix"></image>
 				</view>
 				<view class="center flex-1">
 					<view class="name">
-						<text class="fs15 blod">唐三藏</text>
+						<text class="fs15 blod">{{userInfo.nickName}}</text>
 						<text class="mark" @tap="linkTo('militaryRank')">少校</text>
 					</view>
 					<view class="text c999 fs13" @tap="linkTo('activityLevel')">
-						活跃度：123445
+						活跃度：{{userInfo.totalActive}}
 					</view>
 				</view>
 				<view class="btnBox">
-					<button class="radiuBtn" size="mini" type="red" @tap="linkTo('createShop')">申请开店</button>
+					<button v-if="userInfo.shopIngType==3" class="radiuBtn" size="mini" type="red" @tap="linkTo('createShop')">申请开店</button>
+					<button v-else-if="userInfo.shopIngType==1" class="radiuBtn" size="mini" type="red">店主</button>
+					<button v-else-if="userInfo.shopIngType==2" class="radiuBtn" size="mini" type="red">审核中</button>
 				</view>
 				<view class="right" @tap="linkTo('baseInfo')">
 					<icon class="iconfont icon-right"></icon>
@@ -50,7 +52,7 @@
 					任务
 				</view>
 			</view>
-			<view class="item flex">
+			<view class="item flex"  @tap="linkTo('../order/index')">
 				<view class="icon">
 					<image src="../../static/images/icon-wallet.png" mode="widthFix"></image>
 				</view>
@@ -126,10 +128,21 @@
 	export default {
 		data() {
 			return {
-				
+				userInfo:{}
 			}
 		},
+		onShow(){
+			this.infoData()
+		},
 		methods: {
+			infoData(){
+				let self=this
+				this.$acFrame.HttpService.ownerInfoMain().then(res=>{
+					if(res.success){
+						self.userInfo = res.data
+					}
+				})
+			},
 			linkTo(url){
 				uni.navigateTo({
 					url: url

@@ -1,13 +1,8 @@
 <template>
-  <view class="content">
-    <view class="textarea">
-      <textarea
-        value="editText"
-        placeholder="请输入"
-        v-model="editText"
-        @input="textChange"
-      />
-      <view class="text-right">
+	<view class="content">
+		<view class="textarea">
+			<textarea value="editText" placeholder="请输入" v-model="editText" @input="textChange" />
+			<view class="text-right">
         <text class="c999">{{ textNum }}/500</text>
         <button type="red" size="mini" @tap="confirmPost">发布</button>
       </view>
@@ -24,15 +19,15 @@
     <view class="picBtn">
       <view class="upload" @tap="choosePic">+</view>
     </view>
-    <view class="linkBox flex item-center" v-if="linkObj.price">
+    <view class="linkBox flex item-center" v-if="linkObj.type">
       <view class="pic">
-        <image :src="linkObj.pic" mode="widthFix"></image>
+        <image :src="setImg(linkObj.pic)" mode="widthFix"></image>
       </view>
       <view class="msg flex-1">
-        <view class="name textEllipsis">{{ linkObj.name }}</view>
-        <view class="price red">
+        <view class="name textEllipsis">{{ linkObj.goodsName||linkObj.val }}</view>
+        <view class="price red" v-if="linkObj.priceSale" >
           <text class="fs12">¥</text>
-          <text class="fs16">{{ linkObj.price }}</text>
+          <text class="fs16">{{ linkObj.priceSale }}</text>
         </view>
         <icon class="remove iconfont icon-remove" @tap="removeLink"></icon>
       </view>
@@ -87,7 +82,7 @@ export default {
       let self = this;
       uni.chooseImage({
         count: 1,
-        sizeType: ["compressed", "original"], // 可以指定是原图还是压缩图，默认二者都有
+        sizeType: ["compressed"], // 可以指定是原图还是压缩图，默认二者都有
         sourceType: ["album", "camera"], // 可以指定来源是相册还是相机，默认二者都有
         success: function(res) {
           let tempFilePaths = res.tempFilePaths;
@@ -95,6 +90,9 @@ export default {
         }
       });
     },
+	setImg(src){
+		return  this.$acFrame.Util.setImgUrl(src);
+	},
     uploadPic(id) {
       let token = uni.getStorageSync("access_token");
       let channel = "MP_WX";
@@ -146,7 +144,13 @@ export default {
         complete: () => {}
       });
     },
-    setLink(obj) {},
+    setLink(obj) {
+		console.log(obj);
+		this.linkObj = obj;
+	},
+	removeLink(){
+		this.linkObj = null;
+	},
     setVal(id, name, type) {
       let len = this.onlyText.length;
       let text = this.editText;
@@ -167,6 +171,7 @@ export default {
     },
     getText() {
       let text = this.editText;
+	  debugger
       let self = this;
       if (this.extendList.length > 0) {
         let star = 0;
@@ -178,9 +183,13 @@ export default {
           } else {
             mark = "#" + v.topicName + "#";
           }
+		  let len = text.length
           let end = text.indexOf(mark);
-          let len = mark.length;
-          self.onlyText += text.substring(star, end);
+          let _len = mark.length;
+		  star = _len+end
+		  let aftertetxt = text.substring(star, len);
+		  
+          self.onlyText += aftertetxt
           star = end + len;
         });
       } else {
@@ -192,8 +201,19 @@ export default {
       let self = this;
       let params = {
         content: this.onlyText,
-        extendList: this.extendList
+        extendList: this.extendList,
+		itemLinkList:[],
       };
+		let _obj = {
+			linkType:self.linkObj.type,
+		};
+		if(self.linkObj.type==1){
+			 _obj.goodsId  = self.linkObj.goodsId
+			 params.itemLinkList.push(_obj)
+		}else if(self.linkObj.type==2){
+			_obj.rankType   = self.linkObj.key
+			params.itemLinkList.push(_obj)
+		}
       if (!params.content) {
         this.$acFrame.Util.mytotal("请输入帖子内容！");
         return false;
@@ -256,12 +276,12 @@ export default {
     width: 100%;
     left: 0;
     bottom: 0;
-    height: 100rpx;
     padding-bottom: constant(safe-area-inset-bottom);
     background: #eee;
     .item {
       width: 20%;
       float: left;
+	  height:100rpx;
       line-height: 100rpx;
       text-align: center;
       color: #999;

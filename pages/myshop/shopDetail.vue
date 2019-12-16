@@ -41,8 +41,8 @@
 			<view class="item" v-for="(item,ind) in tabs" :key="ind" :class="{'active':item.choose}" @tap="clickBar(ind)">
 				<text class="name">{{item.name}}</text>
 				<view class="sanjiao" v-if="item.choose">
-					<text class="up" :class="{'red':sortType=='asc'}"></text>
-					<text class="down" :class="{'red':sortType=='desc'}"></text>
+					<text class="up" :class="{'red':sortType}"></text>
+					<text class="down" :class="{'red':!sortType}"></text>
 				</view>
 			</view>
 		</view>
@@ -66,12 +66,13 @@
 				pageIndex:1,
 				pageSize:20,
 				pageTotal:1,
-				tabs:[{name:'首页',choose:true},{name:'销量',choose:false},{name:'新品',choose:false},{name:'价格',choose:false}],
+				tabs:[{name:'首页',choose:true,type:2},{name:'销量',choose:false,type:3},{name:'新品',choose:false,type:4},{name:'价格',choose:false,type:5}],
 				shopDetail:{},
 				dataList:[{name:"这边的是产品的名称，最多显示两行，超出两行的省略号",price:'52.00',salesNum:21623,pic:'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1574140134898&di=9b8d75803e617d449499df2f5a8d300f&imgtype=0&src=http%3A%2F%2Fm.360buyimg.com%2Fpop%2Fjfs%2Ft24241%2F145%2F1818221682%2F18886%2F71aac218%2F5b696accN052717a7.jpg'},
 				{name:"韩版新款复古水晶耳饰饰品欧美时尚高档小香耳钉耳环批发",price:'7.50',salesNum:152000,pic:'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2786988750,209248222&fm=15&gp=0.jpg'},
 				{name:"溢彩水彩手帐本随身旅行绘画皮面便携手账本300g中粗纹进口水彩纸",price:'7.50',salesNum:152000,pic:'https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=123919148,3561097999&fm=15&gp=0.jpg'}],
-				sortType:'desc' //asc
+				sortType:false,
+				pageType:2,
 			}
 		},
 		onLoad(options){
@@ -98,9 +99,8 @@
 				let self = this
 				let params = {
 					shopId:this.id,
-					numTotalSaleAsc:null,
-					priceSaleAsc:null,
-					publishTimeAsc:null,
+					shopPageType :this.pageType,
+					shopPageSortAsc:this.sortType,
 					pageIndex:this.pageIndex,
 					pageSize:this.pageSize
 				}
@@ -109,8 +109,9 @@
 						let list = res.data.rows
 						self.pageTotal = res.data.pageTotal
 						if(list.length>0){
-							self.dataList.push(list)
-							self.nodata = fasle
+							self.dataList=self.dataList.concat(list)
+							console.log(self.dataList)
+							self.nodata = false
 						} else {
 							self.nodata = true
 						}
@@ -121,18 +122,19 @@
 			clickBar(ind){
 				let choose = this.tabs[ind].choose
 				if(choose){
-					if(this.sortType == 'asc'){
-						this.sortType = 'desc'
+					if(this.sortType){
+						this.sortType = false
 					} else {
-						this.sortType = 'asc'
+						this.sortType = true
 					}
 				} else {
-					this.sortType = 'desc'
+					this.sortType = false
 				}
 				this.resetData()
 				this.tabs.filter((v,i)=>{
 					if(i==ind){
 						v.choose = true
+						this.pageType = v.type
 					} else {
 						v.choose = false
 					}
@@ -154,6 +156,9 @@
 				this.pageIndex=1
 				this.pageSize=20
 				this.dataList=[]
+			},
+			setImg(src){
+				return  this.$acFrame.Util.setImgUrl(src);
 			}
 		}
 	}
@@ -195,6 +200,9 @@ page,.content{
 						box-shadow: none;
 					}
 				}
+			}
+			button{
+				line-height: 50rpx;
 			}
 		}
 		button{

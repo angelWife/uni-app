@@ -67,7 +67,7 @@
 
 <style lang="less">
 .desc{
-	padding:20rpx 24rpx;
+	padding:20rpx 30rpx;
 	.pic{
 		width: 200rpx;
 		margin-left:20rpx;
@@ -82,7 +82,7 @@
 	
 }
 .swiperBox{
-		margin:24rpx;
+		margin:24rpx 30rpx;
 		height:calc(100vw - 48rpx);
 		swiper{
 			height:100%;
