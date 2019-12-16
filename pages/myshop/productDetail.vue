@@ -14,7 +14,7 @@
 			<view class="price red">
 				<text class="fs12">¥</text>
 				<text class="fs18">{{prodDetail.priceSale}}</text>
-				<text class="yunfei">运费：5元</text>
+				<text class="yunfei"  v-if="freight>0" >运费：{{freight}}元</text>
 				<text class="float-right c999 fs12">销量{{prodDetail.numTotalSale}}件</text>
 			</view>
 			<button open-type="share" class="iconfont icon-share">分享</button>
@@ -51,10 +51,10 @@
 			</view>
 		</view>
 		
-		<view class="modal assemble" v-if="prodDetail.flagSpell==1">
+		<view class="modal assemble" v-if="prodDetail.flagSpell==1&&prodDetail.orderSpellList.length>0">
 			<view class="title">
-				4人在拼单，可直接参与
-				<text class="float-right red" @tap="moreassemble">查看全部</text>
+				{{prodDetail.orderSpellList.length}}人在拼单，可直接参与
+				<text class="float-right red" @tap="moreassemble()">查看全部</text>
 			</view>
 			<view class="list">
 				<view v-for="(item,ind) in prodDetail.orderSpellList" :key="ind" class="item flex item-center">
@@ -62,16 +62,16 @@
 					<view class="name textEllipsis">{{item.firstUserName}}</view>
 					<view class="time flex-1 text-center">
 						<view>还差{{item.numUserLeft}}人成团</view>
-						<view class="fs12 c999">
+						<view class="fs12 c999" v-if="item.showTimer">
 							剩余
 							<uni-count-down 
 							:show-day="false" 
 							:color="color" 
 							:splitorColor="color" 
 							:show-style="false" 
-							:hour="this.$acFrame.Util.countTime(item.endTime,'hour')" 
-							:minute="this.$acFrame.Util.countTime(item.endTime,'minute')" 
-							:second="this.$acFrame.Util.countTime(item.endTime,'second')" />
+							:hour="item.hour" 
+							:minute="item.minute" 
+							:second="item.second" />
 						</view>
 					</view>
 					<view class="">
@@ -80,7 +80,7 @@
 						</block>
 						<block v-else>
 							<button v-if="item.hasJoin" type="green" size="mini">查看</button>
-						    <button v-else type="orange" size="mini" @tap="joinGroup(index)">去拼单</button>
+						    <button v-else type="orange" size="mini" @tap="joinGroup(item.orderSpellId)">去拼单</button>
 						</block>
 						
 					</view>
@@ -89,7 +89,7 @@
 		</view>
 		<view class="modal prod4 flex item-center">
 			<view class="pic">
-				<image :src="setImg(prodDetail.shopInfo.imgPath)" mode="widthFix"></image>
+				<image :src="setImg(prodDetail.shopInfo && prodDetail.shopInfo.imgPath ?prodDetail.shopInfo.imgPath:'')" mode="widthFix"></image>
 			</view>
 			<view class="name flex-1">
 				<view class="title blod">{{prodDetail.shopInfo.name}}</view>
@@ -101,7 +101,7 @@
 		</view>
 		<view class="modal prod5">
 			<view class="title">
-				商品评价（{{prodDetail.numTotalComment}}条）
+				商品评价（{{prodDetail.numTotalComment?prodDetail.numTotalComment:0}}条）
 				<text class="red float-right" @tap="showAllComment(prodDetail.goodsId)">查看全部</text>
 			</view>
 			<view class="list">
@@ -172,17 +172,17 @@
 			</view>
 			<view class="flex-1 flex">
 				<block v-if="prodDetail.flagSpell==1">
-					<view class="btn btn2 flex-1 flex f-col just-con-c">
+					<view class="btn btn2 flex-1 flex f-col just-con-c" @tap="setSpecInfo('order')" >
 						<view class="price">
-							¥ 955
+							¥ {{sum_price}}
 						</view>
 						<view class="text">
 							单独购买
 						</view>
 					</view>
-					<view class="btn btn1 flex-1 flex f-col just-con-c">
+					<view class="btn btn1 flex-1 flex f-col just-con-c" @tap="setSpecInfo('spell')">
 						<view class="price">
-							¥ 955
+							¥ {{sum_price}}
 						</view>
 						<view class="text">
 							发起拼单
@@ -191,7 +191,7 @@
 				</block>
 				<block v-else>
 					<view class="btn btn1 flex-1 flex f-col just-con-c">
-					<view class="buy" @tap="confirmOrder">
+					<view class="buy" @tap="setSpecInfo('order')">
 						立即购买
 					</view>
 				</view>
@@ -210,16 +210,16 @@
 						<view class="name textEllipsis">{{item.firstUserName}}</view>
 						<view class="time flex-1 text-center">
 							<view>还差{{item.numUserLeft}}人成团</view>
-							<view class="fs12 c999">
+							<view class="fs12 c999" v-if="item.showTimer">
 								剩余
-								<uni-count-down 
+								<uni-count-down
 								:show-day="false" 
 								:color="color" 
 								:splitorColor="color" 
 								:show-style="false" 
-								:hour="this.$acFrame.Util.countTime(item.endTime,'hour')" 
-								:minute="this.$acFrame.Util.countTime(item.endTime,'minute')" 
-								:second="this.$acFrame.Util.countTime(item.endTime,'second')" />
+								:hour="item.hour" 
+								:minute="item.minute" 
+								:second="item.second" />
 							</view>
 						</view>
 						<view class="">
@@ -228,7 +228,7 @@
 							</block>
 							<block v-else>
 								<button v-if="item.hasJoin" type="green" size="mini">查看</button>
-								<button v-else type="orange" size="mini" @tap="joinGroup(index)">去拼单</button>
+								<button v-else type="orange" size="mini" @tap="joinGroup(item.orderSpellId)">去拼单</button>
 							</block>
 							
 						</view>
@@ -281,7 +281,7 @@
 						</view>
 					</view>
 					<view class="btnBox">
-						<button type="red">参与拼单</button>
+						<button type="red" @tap="joinSpell(id)">参与拼单</button>
 					</view>
 				</view>
 			</view>
@@ -290,7 +290,7 @@
 	    	<div class="specsBody">
 				<view class="md_head flex item-center">
 					<view class="pic">
-						<image :src="setImg(prodDetail.imgList[0])" mode="widthFix"></image>
+					   <image :src="setImg(prodDetail.imgList && prodDetail.imgList.length >0 ?prodDetail.imgList[0]:'')"></image>
 					</view>
 					<view class="price flex-1">
 						<view class="red">
@@ -310,7 +310,7 @@
 						</view> -->
 						<view class="specBox">
 							<block v-for="(item,ind) in prodDetail.skuList" :key="ind" >
-								<view @tap="chooseSku(ind)" class="item_child textEllipsis">{{item.propValue}}</view>
+								<view @tap="chooseSku(ind)" class="item_child textEllipsis" :class="{'active':item.choose}">{{item.propValue}}</view>
 							</block>
 						</view>
 					</view>
@@ -318,13 +318,13 @@
 			    <view class="nums flex item-center">
 					<view class="flex-1">购买数量</view>
 					<view class="comNumber clearfix">
-						<view class="iconfont icon-minus" hover-class="touch"></view>
-						<input type="number" v-modal="goodsNum" />
-						<view class="iconfont icon-plus" hover-class="touch"></view>
+						<view class="iconfont icon-minus" hover-class="touch" style="color:#333333" @tap="minus()" >-</view>
+						<input type="number" v-model="goodsNum" value="1" />
+						<view class="iconfont icon-plus" hover-class="touch" style="color:#333333" @tap="plus()" >+</view>
 					</view>
 				</view>
 				<view class="btnBox">
-					<button type="red" class="noradius" @tap="confirmOrder('confModal')">确定</button>
+					<button type="red" class="noradius" @tap="confirmOrder">确定</button>
 				</view>
 			</div>
 	    </view>
@@ -360,15 +360,21 @@ export default {
 				borderColor:"#b40000",
 				backgroundColor:"#b40000"
 			},
+			freight:0,
+			sum_price:100,
+			cur_price:0,
+			operType:'',
+			spellId:'',
 			richNode:'<p class="text">这边是商品文案描述这边是商品文案描述这边是商品文案描述这边是商品文案描述这边是商品文案描述这边是商品文案描述这边是商品文案描述</p><p class="img"><img src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2786988750,209248222&fm=15&gp=0.jpg"/></p>'
 		};
 	},
 	onLoad(options){
 		this.id = options.id;
-		// this.initData();
+		
+		//console.log(this.id);
 	},
 	onShow(){
-		
+		 this.initData();
 	},
 	methods: {
 		initData(){
@@ -378,7 +384,57 @@ export default {
 			}
 			self.$acFrame.HttpService.productDetail(params).then(res => {
 				if(res.success){
-					self.prodDetail = res.data
+					
+					
+					let mydata = res.data
+					let orderSpellList = mydata.orderSpellList
+					if(orderSpellList&&orderSpellList.length>0){
+						orderSpellList.filter((v,i)=>{
+							v.hour=self.$acFrame.Util.countTime(v.endTime,'hour')
+							v.minute=self.$acFrame.Util.countTime(v.endTime,'minute')
+							v.second=self.$acFrame.Util.countTime(v.endTime,'second')
+							v.showTimer=false
+						})
+					}
+					if(mydata.skuList && mydata.skuList.length>0){
+						var speci_list = mydata.skuList;
+						speci_list.filter((v,i)=>{
+							v.choose=false
+							if(i==0){
+								v.choose=true
+							}
+						})
+						mydata.orderSpellList=orderSpellList
+						mydata.skuList = speci_list
+						self.chooseSpec = speci_list[0];
+						self.get_freight(speci_list[0]["goodsSkuId"]);
+						self.sum_price = speci_list[0]["priceSale"]?speci_list[0]["priceSale"]:mydata.priceSale;
+					}else{
+						self.sum_price = mydata.priceSale;
+					}
+					self.cur_price = self.sum_price;
+					self.prodDetail = mydata
+					setTimeout(()=>{
+						self.prodDetail.orderSpellList.filter(v=>{
+							v.showTimer=true
+						})
+					},500)
+				}
+			})
+		},
+		get_freight(speci_id,num=1){
+			var self = this;
+			self.$acFrame.HttpService.post("app/user_address/load_dft",{}).then(res => {
+				if(res.success){
+					console.log(self.res);
+					var address = res.data;
+					self.$acFrame.HttpService.post("logistics/calculate/buy",{addressId:address.id,buyNum:num,goodsSkuId:speci_id}).then(res => {
+						if(res.success){
+							self.freight = res.data;
+						}
+					})
+				}else{
+					self.freight = 0;
 				}
 			})
 		},
@@ -389,15 +445,29 @@ export default {
 		moreassemble(){
 			this.showAssembleModal = true
 		},
-		joinGroup(){
-			this.showAssembleDetailModal = true
+		joinGroup(id){
+			this.showSpecModal = true
+			// this.showAssembleDetailModal = true
+			this.spellId = id
+			this.operType = 'joinSpell'
+		},
+		joinSpell(id){
+			this.showAssembleDetailModal = false
+			this.showSpecModal = true
+			this.spellId = id
 		},
 		closeModal(){	
 			this.showAssembleModal = false
 			this.showAssembleDetailModal = false
 			this.showSpecModal=false
 		},
+		setSpecInfo(type){
+			this.showSpecModal = true
+			this.operType = type
+		},
 		confirmOrder(){
+			this.showSpecModal = false;
+			let self=this
 			let detail = this.prodDetail
 			delete detail.commentList
 			delete detail.couponList
@@ -406,16 +476,20 @@ export default {
             let obj={
 				couponList:this.couponList,
 				chooseSpec:this.chooseSpec,
-				prod:tdetail,
+				prod:detail,
 				goodsNum:this.goodsNum,
 				spellId:this.spellId,
+				freight:this.freight,
+				name:detail.name,
+				sum_price:this.sum_price,
+				img:detail.imgList[0],
+				goodsId:detail.goodsId,
+				goodsSkuId:this.chooseSpec.goodsSkuId?this.chooseSpec.goodsSkuId:''
 			}
-			if(chooseSpec.goodsSkuId){
+			if(this.chooseSpec.goodsSkuId){
 				uni.navigateTo({
-					url:'confirmOrder?details='+JSON.stringify(obj)
+					url:'confirmOrder?details='+JSON.stringify(obj)+'&type='+self.operType
 				})
-			} else {
-				this.showSpecModal = true
 			}
 			
 		},
@@ -427,10 +501,27 @@ export default {
 		},
 		// 选择属性
 		chooseSku(ind){
-
+			this.prodDetail.skuList.filter((v,i)=>{
+				if(i==ind){
+					v.choose=true
+					this.chooseSpec = v
+				}else{
+					v.choose=false
+				}
+			})
 		},
 		setImg(src){
 			return  this.$acFrame.Util.setImgUrl(src);
+		},
+		plus(){
+			this.goodsNum += 1;
+			this.sum_price = this.cur_price * this.goodsNum;
+		},
+		minus(){
+			if(this.goodsNum > 1){
+				this.goodsNum -= 1;
+				this.sum_price = this.cur_price * this.goodsNum;
+			}
 		}
 	}
 };
@@ -442,6 +533,7 @@ page {
 	background: #efefef;
 	padding-bottom:100rpx;
 }
+
 .productPic {
 	swiper {
 		height: 100vw;
@@ -801,9 +893,9 @@ page {
 		bottom:0;
 		width: 100%;
 		.md_head{
-			margin:0 24rpx;
+			margin:0 30rpx;
 			border-bottom:1px solid #ccc;
-			padding:20rpx;
+			padding:20rpx 0;
 			position:relative;
 			.pic{
 				height:100rpx;
@@ -812,6 +904,7 @@ page {
 				position:relative;
 				image{
 					position:absolute;
+					height:160rpx;
 					bottom:0;
 				}
 			}
@@ -831,7 +924,7 @@ page {
 		}
 		.specBox{
 			max-height:160rpx;
-			padding:0 14rpx;
+			padding:20rpx 14rpx;
 			overflow: hidden;
 			overflow-y: auto;
 			.item_child{
