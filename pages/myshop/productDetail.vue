@@ -21,16 +21,16 @@
 		</view>
 		<view class="modal prod2">
 			<view class="flex item-center">
-				<view class="flex-1 fs12">该商品入选了某某排行</view>
-				<view class="red">查看排行</view>
+				<view class="flex-1">该商品入选了某某排行</view>
+				<view class="c999">查看排行</view>
 			</view>
 			<view class="flex item-center">
 				<view class="flex-1 c999">精灵</view>
-				<view class="red">持有喵喵精灵可享5折</view>
+				<view class="c999">持有喵喵精灵可享5折</view>
 			</view>
 		</view>
 		<view class="modal prod3">
-			<view class="coupon flex">
+			<view class="coupon flex" v-if="prodDetail.couponList.length>0">
 				<view class="name c999">领取</view>
 				<view class="listBox flex-1">
 					<block v-for="(item,ind) in prodDetail.couponList" :key="ind" >
@@ -609,11 +609,11 @@ page {
 }
 .prod2 {
 	padding: 10rpx 24rpx;
-	line-height: 40rpx;
+	line-height: 60rpx;
 }
 .prod3 {
 	padding: 20rpx 0 0;
-	line-height: 50rpx;
+	line-height: 60rpx;
 	.name {
 		padding: 0 24rpx;
 	}
@@ -624,6 +624,7 @@ page {
 			text-align: center;
 			min-width: 180rpx;
 			border-radius: 50rpx;
+			line-height: 50rpx;
 			margin-right: 20rpx;
 			margin-bottom: 20rpx;
 		}
@@ -635,9 +636,6 @@ page {
 	.service .item {
 		background: #efefef;
 		color: #666;
-	}
-	.prodModal{
-
 	}
 }
 .assemble {

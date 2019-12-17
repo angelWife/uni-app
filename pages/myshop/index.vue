@@ -95,8 +95,8 @@
 							<view class="pic"><image :src="setImg(proItem.imgPath)" mode="widthFix"></image></view>
 							<view class="name textEllipsis">{{proItem.goodsName}}</view>
 							<view class="price red">
-								<text class="fs12">¥</text>
-								<text class="fs15">{{proItem.priceSale}}</text>
+								<text class="fs10">¥</text>
+								<text class="fs16">{{proItem.priceSale}}</text>
 								<text class="mark" v-if="proItem.flagSpell==1">拼</text>
 							</view>
 						</view>
@@ -280,15 +280,15 @@ page {
 	top: 0;
 	.input {
 		position: relative;
-		height: 60rpx;
-		line-height: 60rpx;
+		height: 80rpx;
+		line-height: 80rpx;
 		background: #fff;
 		border-radius: 0.2em;
 		input {
 			width: 100%;
 			padding: 0 60rpx;
-			height: 60rpx;
-			line-height: 60rpx;
+			height: 80rpx;
+			line-height: 80rpx;
 		}
 		.iconfont {
 			position: absolute;
@@ -305,8 +305,8 @@ page {
 		position: relative;
 		margin-left: 24rpx;
 		button {
-			height: 60rpx;
-			line-height: 60rpx;
+			height: 80rpx;
+			line-height: 80rpx;
 		}
 	}
 }
@@ -373,8 +373,8 @@ page {
 		padding: 0 24rpx;
 		.item {
 			background: #fff;
-			box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-			border-radius: 0.3em;
+			box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+			border-radius: 20rpx;
 			padding: 24rpx;
 			margin-bottom:24rpx;
 			.shopMsg {
@@ -424,7 +424,7 @@ page {
 					.mark {
 						font-size: 20rpx;
 						padding: 0 6rpx;
-						border-radius: 10rpx;
+						border-radius: 20rpx;
 						border:1px solid #b40000;
 					}
 				}

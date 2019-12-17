@@ -197,9 +197,9 @@
 										}
 									});
 								}
-								if (v.publishUser) {
-									v.publishUser.militaryRankType = self.$acFrame.Util.setRankName(v.publishUser.militaryRankType)
-								}
+								// if (v.publishUser) {
+								// 	v.publishUser.militaryRankType = self.$acFrame.Util.setRankName(v.publishUser.militaryRankType)
+								// }
 
 								v.articleInfo.imgList && v.articleInfo.imgList.filter((val, i) => {
 									if (val) {
@@ -436,8 +436,8 @@
 
 		.input {
 			position: relative;
-			height: 60rpx;
-			line-height: 60rpx;
+			height: 80rpx;
+			line-height: 80rpx;
 			margin-right: 24rpx;
 			background: #eee;
 			border-radius: 0.2em;
@@ -445,20 +445,20 @@
 			input {
 				width: 100%;
 				padding: 0 60rpx;
-				height: 60rpx;
-				line-height: 60rpx;
+				height: 80rpx;
+				line-height: 80rpx;
 			}
 
 			.iconfont {
 				position: absolute;
 				top: 0;
 				width: 60rpx;
-				line-height: 60rpx;
+				line-height: 80rpx;
 				text-align: center;
 				color: #999;
 
 				&::before {
-					line-height: 60rpx;
+					line-height: 80rpx;
 					vertical-align: top;
 				}
 			}
@@ -482,8 +482,8 @@
 				background: #2c2c2c;
 
 				.item {
-					height: 60rpx;
-					line-height: 60rpx;
+					height: 72rpx;
+					line-height: 72rpx;
 					padding: 0 20rpx;
 					box-sizing: border-box;
 					color: #fff;
@@ -512,8 +512,8 @@
 		}
 
 		button {
-			height: 60rpx;
-			line-height: 60rpx;
+			height: 80rpx;
+			line-height: 80rpx;
 		}
 	}
 
@@ -523,7 +523,7 @@
 		.nav-tabs {
 			background: #fff;
 			text-align: center;
-			font-size: 30rpx;
+			font-size: 34rpx;
 
 			.tabitem {
 				padding: 10rpx 0 20rpx;
@@ -537,7 +537,7 @@
 
 				&.active {
 					color: #b40000;
-
+                    font-weight:600;
 					text {
 						border-color: #b40000;
 					}

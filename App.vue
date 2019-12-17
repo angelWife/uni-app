@@ -329,6 +329,9 @@ icon.remove {
 .fs20 {
   font-size: 40rpx;
 }
+.lh42{
+  line-height: 42rpx;
+}
 /*字体颜色*/
 .red {
   color: #b40000;
