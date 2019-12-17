@@ -161,8 +161,8 @@ page{
 	background: #fff;
 	margin-bottom:20rpx;
 	.item{
-		height:80rpx;
-		line-height: 80rpx;
+		height:96rpx;
+		line-height: 96rpx;
 		.icon{
 			width: 40rpx;
 		    margin:0 24rpx;

@@ -5,13 +5,17 @@
 				<view class="item-head flex item-center">
 					<view class="img item-center comHeadPic" @tap="userInfo(item.publishUser.userId)">
 						<image class="headPic" :src="item.publishUser.imgPathHead"></image>
-						<image class="grade" src="../static/images/baihu.png" mode="widthFix"></image>
+						<image class="grade" :src="'/static/images/juewei/'+item.publishUser.nobilityType+'.png'" mode="widthFix"></image>
 					</view>
 					<view class="flex-1 head-msg">
-						<view class="clearfix">
-							<text class="name fs15" @tap="userInfo(item.publishUser.userId)">{{ item.publishUser.userName }}</text>
-							<text v-if="item.publishUser.militaryRankType" class="rank">{{ item.publishUser.militaryRankType }}</text>
-							<text v-if="item.publishUser.shopId" class="shop">店铺</text>
+						<view class="flex item-center">
+							<view class="name fs15" @tap="userInfo(item.publishUser.userId)">{{ item.publishUser.userName }}</view>
+							<block v-if="item.publishUser.militaryRankType">
+								<image :src="'/static/images/junxian/'+item.publishUser.militaryRankType+'.png'" mode="widthFix"></image>
+							</block>
+							<block v-if="item.publishUser.shopId">
+								<image src="/static/images/shop.png" mode="widthFix"></image>
+							</block>
 							<text v-if="showNum" classs="numMark">{{index}}</text>
 						</view>
 						<view class="timer c999 fs12 clearfix">
@@ -27,7 +31,7 @@
 				</view>
 				<block v-if="item.articleInfo.type == 2">
 					<view class="articalBox">
-						<view class="msg" :class="{ 'clamp clamp-3': !item.articleInfo.showMore && !item.articleInfo.isDetail }" @tap="linkDetail(item)">
+						<view class="msg lh42 fs30" :class="{ 'clamp clamp-3': !item.articleInfo.showMore && !item.articleInfo.isDetail }" @tap="linkDetail(item)">
 							<block v-if="item.articleInfo.showContent.length>0">
 								<block v-for="(conitem, comind) in item.articleInfo.showContent" :key="comind">
 									<block v-if="conitem.type == 1">
@@ -64,13 +68,13 @@
 						<view class="a_pic">
 							<image :src="item.articleInfo.imgList[0]" mode="widthFix" @tap="showBigImg(index, 0)"></image>
 						</view>
-						<view class="a_main flex-1" @tap="linkDetail(item)">
+						<view class="a_main flex-1 lh42 fs30" @tap="linkDetail(item)">
 							<view class="title blod clamp clamp-2">{{ item.articleInfo.title }}</view>
 							<view class="msg fs12 clamp clamp-2">{{ item.articleInfo.zyao }}</view>
 						</view>
 					</view>
 					<view class="articalBox flex item-center" v-else>
-						<view class="a_main flex-1" @tap="linkDetail(item)">
+						<view class="a_main flex-1  lh42 fs30" @tap="linkDetail(item)">
 							<view class="title blod clamp clamp-2">{{ item.articleInfo.title }}</view>
 							<view class="msg fs12 clamp clamp-2">{{ item.articleInfo.zyao }}</view>
 						</view>
@@ -90,8 +94,9 @@
 						<view class="p_buy"><button size="mini" type="red" class="">购买</button></view>
 					</view>
 					<view v-else class="adventBox ranking flex item-center" @tap="linkRanking(linkitem.rankType)">
-						<view class="p_pic">
-							<image src="/static/images/defaultpro.png"></image>
+						<view class="p_pic icon">
+							<image src="../static/images/icon.png" :class="'pic'+(linkitem.rankType*1-1)" mode="widthFix"></image>
+							<!-- <image :src="linkitem.goods.imgPath"></image> -->
 						</view>
 						<view class="p_main flex-1">{{linkitem.name}}</view>
 						<view class="p_buy"><button size="mini" type="red" class="radiuBtn">去看看</button></view>
@@ -234,9 +239,10 @@
 			},
 			linktoshop() {
 				// debugger
-				wx.switchTab({
-					url: '/pages/myshop/index'
-				});
+				// uni.switchTab({
+				// 	url:"pages/home/index"
+				// })
+				this.$parent.cancelSearch()
 				// this.$emit('childLink');
 			},
 			guanzhu(code, ind) {
@@ -282,9 +288,9 @@
 					case 3:
 						url = `/pages/ranking/invitation?type=${type}`
 						break;
-						case 4:
-							url = `/pages/ranking/product?type=${type}`
-							break;
+					case 4:
+						url = `/pages/ranking/product?type=${type}`
+						break;
 					default:
 						break;
 				}
@@ -304,7 +310,7 @@
 
 		.item-head {
 			padding: 0 30rpx;
-            
+
 			.img {
 				margin-right: 20rpx;
 				width: 100rpx;
@@ -318,13 +324,14 @@
 
 			.head-msg {
 				line-height: 50rpx;
-                
-				text {
-					float: left;
+
+				image {
 					margin-right: 20rpx;
+					width: 60rpx;
 				}
 
 				.name {
+					margin-right: 20rpx;
 					max-width: 240rpx;
 					white-space: nowrap;
 					overflow: hidden;
@@ -346,15 +353,16 @@
 					color: #ffffff;
 					font-size: 26rpx;
 				}
-				.numMark{
+
+				.numMark {
 					margin-left: 20rpx;
-					height:40rpx;
+					height: 40rpx;
 					line-height: 40rpx;
-					border-radius:40rpx;
-					width:40rpx;
+					border-radius: 40rpx;
+					width: 40rpx;
 					text-align: center;
 					background: #f6f6f6;
-					color:#999;
+					color: #999;
 				}
 			}
 
@@ -441,7 +449,7 @@
 		}
 
 		.imgList {
-			padding: 20rpx 14rpx 0;
+			padding: 20rpx 20rpx 0;
 
 			.imgItem {
 				float: left;
@@ -453,8 +461,9 @@
 		}
 
 		.adventBox {
-			background: #efefef;
+			background: #FEF6F6;
 			margin: 20rpx 30rpx 0;
+			min-height: 128rpx;
 			padding: 16rpx 20rpx 16rpx 16rpx;
 			box-sizing: border-box;
 
@@ -470,8 +479,40 @@
 			.p_pic {
 				width: 96rpx;
 				height: 96rpx;
-				image{
+
+				image {
 					height: 96rpx;
+				}
+
+				&.icon {
+					width: 40rpx;
+					margin: 0 20rpx;
+					height: 40rpx;
+					overflow: hidden;
+					position: relative;
+
+					image {
+						position: absolute;
+						top: 0;
+						left: 0;
+
+						&.pic1 {
+							top: -54rpx;
+						}
+
+						&.pic2 {
+							top: -118rpx;
+						}
+
+						&.pic3 {
+							top: -182rpx;
+						}
+
+						&.pic4 {
+							top: -240rpx;
+						}
+					}
+
 				}
 			}
 		}
@@ -480,10 +521,12 @@
 			text-align: center;
 			font-size: rpx;
 			color: #999;
-			padding-top:20rpx;
-            button{
+			padding-top: 20rpx;
+
+			button {
 				line-height: 1.2;
 			}
+
 			&.red {
 				color: #B40000;
 			}

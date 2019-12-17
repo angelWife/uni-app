@@ -304,6 +304,12 @@ icon.remove {
   color: #999;
   font-size: 24rpx;
 }
+.lh42{
+	line-height: 42rpx;
+}
+.pr30{
+	padding-right:30rpx;
+}
 /*字体大小*/
 .fs10 {
   font-size: 20rpx;

@@ -5,17 +5,21 @@
 				<view class="item-head flex item-center">
 					<view class="img item-center comHeadPic" @tap="userInfo(dataInfo.publishUser.userId)">
 						<image class="headPic" :src="dataInfo.publishUser.imgPathHead"></image>
-						<image class="grade" src="../../static/images/baihu.png" mode="widthFix"></image>
+						<image class="grade" :src="'/static/images/juewei/'+dataInfo.publishUser.nobilityType+'.png'" mode="widthFix"></image>
 					</view>
 					<view class="flex-1 head-msg">
-						<view class="clearfix">
-							<text class="name fs15" @tap="userInfo(dataInfo.publishUser.userId)">{{ dataInfo.publishUser.userName }}</text>
-							<text v-if="dataInfo.publishUser.militaryRankType" class="rank">{{ dataInfo.publishUser.militaryRankType }}</text>
-							<text v-if="dataInfo.publishUser.shopId" class="shop">店铺</text>
+						<view class="flex item-center clearfix">
+							<view class="name fs15" @tap="userInfo(dataInfo.publishUser.userId)">{{ dataInfo.publishUser.userName }}</view>
+							<block v-if="dataInfo.publishUser.militaryRankType">
+								<image :src="'/static/images/junxian/'+dataInfo.publishUser.militaryRankType+'.png'" mode="widthFix"></image>
+							</block>
+							<block v-if="dataInfo.publishUser.shopId">
+								<image src="/static/images/shop.png" mode="widthFix"></image>
+							</block>
 						</view>
 						<view class="timer c999 fs12 clearfix">
-								<text>{{ dataInfo.articleInfo.timeInfo }}</text>
-								<!-- <text class="mark">受赏</text>
+							<text>{{ dataInfo.articleInfo.timeInfo }}</text>
+							<!-- <text class="mark">受赏</text>
 								<text class="mark">置顶</text> -->
 						</view>
 					</view>
@@ -26,7 +30,7 @@
 				</view>
 				<block v-if="dataInfo.articleInfo.type == 2">
 					<view class="articalBox">
-						<view class="msg" @tap="linkDetail(item)">
+						<view class="msg lh42 fs30" @tap="linkDetail(item)">
 							<block v-if="dataInfo.articleInfo.showContent.length>0">
 								<block v-for="(conitem, comind) in dataInfo.articleInfo.showContent" :key="comind">
 									<block v-if="conitem.type == 1">
@@ -60,25 +64,26 @@
 						<view class="a_pic">
 							<image :src="dataInfo.articleInfo.imgList[0]" mode="widthFix"></image>
 						</view>
-						<view class="a_main flex-1">
+						<view class="a_main flex-1 lh42 fs30">
 							<view class="title blod clamp clamp-2">{{ dataInfo.articleInfo.title }}</view>
 							<view class="msg fs12">
-								
 								<rich-text :nodes="dataInfo.articleInfo.content"></rich-text>
 							</view>
 						</view>
 					</view>
 					<view class="articalBox flex item-center" v-else>
-						<view class="a_main flex-1">
+						<view class="a_main flex-1 lh42 fs30">
 							<view class="title blod clamp clamp-2">{{ dataInfo.articleInfo.title }}</view>
-							<view class="msg fs12"><rich-text :nodes="dataInfo.articleInfo.content"></rich-text></view>
+							<view class="msg fs12">
+								<rich-text :nodes="dataInfo.articleInfo.content"></rich-text>
+							</view>
 						</view>
 					</view>
 				</block>
 				<block v-for="(linkitem, linkInd) in dataInfo.itemLinkList" :key="linkInd">
 					<view v-if="linkitem.type == 1" class="adventBox shopProduct flex item-center" @tap="linkProd(linkitem.goodsId)">
 						<view class="p_pic">
-							<image :src="linkitem.imgPath" mode="widthFix"></image>
+							<image :src="linkitem.goods.imgPath"></image>
 						</view>
 						<view class="p_main flex-1">
 							<view class="name">
@@ -89,8 +94,9 @@
 						<view class="p_buy"><button size="mini" type="red" class="">购买</button></view>
 					</view>
 					<view v-else class="adventBox ranking flex item-center" @tap="linkRanking(linkitem.rankType)">
-						<view class="p_pic">
-							<image src="/static/images/defaultpro.png" mode="widthFix"></image>
+						<view class="p_pic icon">
+
+							<image src="/static/images/icon.png" :class="'pic'+(linkitem.rankType*1-1)" mode="widthFix"></image>
 						</view>
 						<view class="p_main flex-1">{{linkitem.name}}</view>
 						<view class="p_buy"><button size="mini" type="red" class="radiuBtn">去看看</button></view>
@@ -111,7 +117,7 @@
 						<text>{{ dataInfo.articleInfo.numTotalUp }}</text>
 					</view>
 				</view> -->
-				<view class="readNums text-right">1234阅读</view>
+				<view class="readNums text-right c999">1234阅读</view>
 				<!-- <view class="shareBox flex">
 					<view>分享到：</view>
 					<view class="flex-1"><icon class="iconfont icon-shang"></icon></view>
@@ -137,7 +143,7 @@
 					</view>
 					<view class="item">
 						<button type="share" class="mybtn" open-type="share">
-							<icon class="iconfont icon-share"></icon>
+							<icon class="iconfont iconshare2"></icon>
 							<text>分享</text>
 						</button>
 					</view>
@@ -173,34 +179,48 @@
 		<view class="comment">
 			<view class="title">评论 {{dataInfo.articleInfo.numTotalComment}}</view>
 			<view class="commentList">
-				<view class="item flex" v-for="(item,ind) in listData" :key="ind">
-					<view class="pic">
-						<image :src="setImg(item.headPic)" mode="widthFix"></image>
-					</view>
-					<view class="flex-1">
-						<view class="name">
-							<text class="blod">{{item.userName}}</text>
-							<text class="follow">{{item.militaryRankType}}</text>
+				<block v-if="listData.length>0">
+					<view class="item flex" v-for="(item,ind) in listData" :key="ind">
+						<view class="pic">
+							<image :src="setImg(item.headPic)" mode="widthFix"></image>
 						</view>
-						<view class="msg">{{item.content}}</view>
-						<view class="oper flex item-center">
-							<view class="timer c999 fs12 flex-1">{{item.timeInfo}}</view>
-							<view class="operIocn c999" @tap="commentDetail(item)">
-								回复{{item.numTotalReply>0?'('+item.numTotalReply+')':''}}
+						<view class="flex-1">
+							<view class="name">
+								<text class="blod">{{item.userName}}</text>
+								<text class="follow">{{item.militaryRankType}}</text>
 							</view>
-							<view class="operIocn clearfix" :class="{'red':item.hasUp}" @tap="commentDianzan(item.id,ind)">
-								<icon class="iconfont icon-dianzan"></icon>
-								<text>{{item.numTotalUp }}</text>
+							<view class="msg">{{item.content}}</view>
+							<view class="oper flex item-center">
+								<view class="timer c999 fs12 flex-1">{{item.timeInfo}}</view>
+								<view class="operIocn clearfix c999" @tap="commentDetail(item)">
+
+									<icon class="iconfont icon-comment"></icon>
+									<text>{{item.numTotalReply>0?item.numTotalReply:0}}</text>
+								</view>
+								<view class="operIocn clearfix" :class="{'red':item.hasUp}" @tap="commentDianzan(item.id,ind)">
+									<icon class="iconfont icon-dianzan"></icon>
+									<text>{{item.numTotalUp }}</text>
+								</view>
 							</view>
 						</view>
 					</view>
-				</view>
+				</block>
+				<block v-else>
+					<view class="noData flex f-row just-con-c item-center" style="margin-top:40px;">
+						<view class="text-center">
+							<image src="/static/images/nodata.png" mode="widthFix"></image>
+							<view class="text-center c666 fs16">
+								这里还没有内容
+							</view>
+						</view>
+					</view>
+				</block>
 			</view>
 		</view>
 		<view class="operFoot flex">
 			<view class="flex-1">
-				
-				<input type="text" value="" disabled="true" placeholder="说点什么吧"  @tap="showComment"/>
+
+				<input type="text" value="" disabled="true" placeholder="说点什么吧" @tap="showComment" />
 			</view>
 			<!-- @tap="commentClick" -->
 			<view class="oper flex f-col" @tap="commentClick">
@@ -218,9 +238,9 @@
 			</button>
 		</view>
 		<commentModal :showModal="showModal" @relaseComment="relaseComment" @cancelRelase="cancelRelase"></commentModal>
-		<view class="noData" v-if="showFoot">
+		<!-- <view class="noData" v-if="showFoot">
 			~没有更多~
-		</view>
+		</view> -->
 	</view>
 </template>
 
@@ -248,13 +268,13 @@
 						'/static/images/head2.png'
 					]
 				},
-			    listData:[],
-				pageIndex:1,
-				pageSize:10,
-				pageTotal:1,
-				showModal:false,
-				showFoot:false,
-				isComent:false,//是否滚动到底部
+				listData: [],
+				pageIndex: 1,
+				pageSize: 10,
+				pageTotal: 1,
+				showModal: false,
+				showFoot: false,
+				isComent: false, //是否滚动到底部
 			};
 		},
 		onLoad(options) {
@@ -263,65 +283,67 @@
 			this.pageType = options.pageType
 			this.dataInfo = detail
 		},
-		onShow(){
-			if(getApp().globalData.isShowPic){
+		onShow() {
+			if (getApp().globalData.isShowPic) {
 				getApp().globalData.isShowPic = false
 			} else {
-				this.listData=[]
+				this.listData = []
 				this.getCommentList()
 			}
-			
+
 		},
 		onShareAppMessage(res) {
 			let settings = {}
 			let self = this
 			debugger
-			if(self.dataInfo.articleInfo.type == 1){
+			if (self.dataInfo.articleInfo.type == 1) {
 				// settings.type='article'
-				settings.title =self.dataInfo.articleInfo.title 
+				settings.title = self.dataInfo.articleInfo.title
 				settings.imageUrl = self.dataInfo.articleInfo.imgList[0]
-				settings.pagePath = `/pages/home/commentDetail?data=${encodeURIComponent(JSON.stringify(self.dataInfo))}&pageType=${this.pageType}`
-			}else{
+				settings.pagePath =
+					`/pages/home/commentDetail?data=${encodeURIComponent(JSON.stringify(self.dataInfo))}&pageType=${this.pageType}`
+			} else {
 				// settings.type='article'
-				settings.title =self.dataInfo.articleInfo.content.substr(0,24) 
+				settings.title = self.dataInfo.articleInfo.content.substr(0, 24)
 				settings.imageUrl = '/static/images/icon-loading.png'
-				settings.pagePath = `/pages/home/commentDetail?data=${encodeURIComponent(JSON.stringify(self.dataInfo))}&pageType=${this.pageType}`
+				settings.pagePath =
+					`/pages/home/commentDetail?data=${encodeURIComponent(JSON.stringify(self.dataInfo))}&pageType=${this.pageType}`
 			}
-			getApp().globalData.isShowPic=true
+			getApp().globalData.isShowPic = true
 			return settings
-			
+
 			//this.$acFrame.Util.shareUrl(res,settings);
 		},
-		onReachBottom(){
-			if(this.pageTotal>this.pageIndex){
+		onReachBottom() {
+			if (this.pageTotal > this.pageIndex) {
 				this.pageIndex++
 				this.getCommentList()
 				this.showFoot = false
-			}else{
+			} else {
 				this.showFoot = true
 			}
 		},
 		methods: {
-			getCommentList(){
-				let self=this
+			getCommentList() {
+				let self = this
 				let params = {
-					articleId:this.dataInfo.articleInfo.id,
-					pageIndex:this.pageIndex,
-					pageSize:this.pageSize
+					articleId: this.dataInfo.articleInfo.id,
+					pageIndex: this.pageIndex,
+					pageSize: this.pageSize
 				}
 				self.$acFrame.HttpService.commentList(params).then(res => {
-					if(res.success){
+					if (res.success) {
 						let _row = res.data.rows
-						_row.filter(v=>{
+						_row.filter(v => {
 							v.militaryRankType = self.$acFrame.Util.setRankName(v.militaryRankType)
 						})
-						self.listData=self.listData.concat(_row);
-						self.pageTotal  = res.data.pageTotal
-						if(self.isComent){
-							self.isComent=false
-							setTimeout(()=>{
+						self.listData = self.listData.concat(_row);
+						self.pageTotal = res.data.pageTotal
+						if (self.isComent) {
+							self.isComent = false
+							setTimeout(() => {
 								self.commentClick()
-							},300)
+							}, 300)
 						}
 					}
 				})
@@ -355,71 +377,71 @@
 					}
 				})
 			},
-			commentDetail(obj){
+			commentDetail(obj) {
 				obj = JSON.stringify(obj)
 				uni.navigateTo({
-					url:`/pages/home/commentList?obj=${obj}`
+					url: `/pages/home/commentList?obj=${obj}`
 				})
 			},
-			showComment(){
-				this.showModal=true
+			showComment() {
+				this.showModal = true
 			},
-			relaseComment(val){
+			relaseComment(val) {
 				let self = this
-				let params={
-					articleId:this.dataInfo.articleInfo.id,
-					content:val
+				let params = {
+					articleId: this.dataInfo.articleInfo.id,
+					content: val
 				}
 				self.$acFrame.HttpService.relasePublish(params).then(res => {
-					if(res.success){
+					if (res.success) {
 						self.$acFrame.Util.mytotal('评论成功！');
-						self.showModal=false
+						self.showModal = false
 						self.listData = []
 						self.getCommentList()
 					}
 				})
 			},
-			cancelRelase(){
-				this.showModal=false
+			cancelRelase() {
+				this.showModal = false
 			},
-			dianzan(){  //likeComment
+			dianzan() { //likeComment
 				let self = this
-				let params={
-					articleId:this.dataInfo.articleInfo.id,
+				let params = {
+					articleId: this.dataInfo.articleInfo.id,
 				}
 				self.$acFrame.HttpService.likeComment(params).then(res => {
-					if(res.success){
-						if(res.data){
+					if (res.success) {
+						if (res.data) {
 							self.$acFrame.Util.mytotal('点赞成功！');
 							self.dataInfo.articleInfo.numTotalUp++
-						}else{
+						} else {
 							self.dataInfo.articleInfo.numTotalUp--
 							self.$acFrame.Util.mytotal('已取消！');
 						}
-                        self.dataInfo.articleInfo.hasUp=res.data
+						self.dataInfo.articleInfo.hasUp = res.data
 					}
 				})
 			},
-			commentDianzan(id,ind){
+			commentDianzan(id, ind) {
 				let self = this
-				let params={
-					articleCommentId:id,
+				let params = {
+					articleCommentId: id,
 				}
 				self.$acFrame.HttpService.commentPublish(params).then(res => {
-					if(res.success){
-						if(res.data){
+					if (res.success) {
+						if (res.data) {
 							self.$acFrame.Util.mytotal('点赞成功！');
 							self.listData[ind].numTotalUp++
-						}else{
+						} else {
 							self.listData[ind].numTotalUp--
 							self.$acFrame.Util.mytotal('已取消！');
 						}
-				        self.listData[ind].hasUp=res.data
+						self.listData[ind].hasUp = res.data
 					}
 				})
 			},
 			setImg(src) {
-			    return this.$acFrame.Util.setImgUrl(src);
+				return this.$acFrame.Util.setImgUrl(src);
 			},
 			linkProd(id) {
 				uni.navigateTo({
@@ -465,14 +487,15 @@
 
 	.content {
 		padding-bottom: 160rpx;
-		position:relative;
-		.noData{
-			position:absolute;
-			height:auto;
+		position: relative;
+
+		.noData {
+			position: absolute;
+			height: auto;
 			width: 100%;
 			line-height: 40rpx;
-			bottom:110rpx;
-			left:0;
+			bottom: 110rpx;
+			left: 0;
 			text-align: center;
 		}
 	}
@@ -488,6 +511,7 @@
 				width: 100rpx;
 				height: 100rpx;
 				border-radius: 100rpx;
+
 				image {
 					width: 100%;
 				}
@@ -496,12 +520,14 @@
 			.head-msg {
 				line-height: 50rpx;
 
-				text {
-					float: left;
+				image {
 					margin-right: 20rpx;
+					width: 60rpx;
 				}
 
+
 				.name {
+					margin-right: 20rpx;
 					max-width: 240rpx;
 					white-space: nowrap;
 					overflow: hidden;
@@ -609,19 +635,21 @@
 
 		.imgList {
 			margin: 0 -10rpx;
-            padding: 20rpx 0 0;
+			padding: 20rpx 0 0;
+
 			.imgItem {
 				float: left;
 				width: 33.3333%;
-				padding: 0 10rpx;
+				padding: 0 15rpx;
 				height: calc((100vw - 24rpx) / 3 - 20rpx);
 				overflow: hidden;
 			}
 		}
-        
+
 		.adventBox {
-			background: #efefef;
+			background: #FEF6F6;
 			margin-top: 20rpx;
+			height: 128rpx;
 			padding: 16rpx 20rpx 16rpx 16rpx;
 
 			.p_main {
@@ -634,7 +662,43 @@
 			}
 
 			.p_pic {
-				width: 80rpx;
+				width: 96rpx;
+				height: 96rpx;
+
+				image {
+					height: 96rpx;
+				}
+
+				&.icon {
+					width: 40rpx;
+					margin: 0 20rpx;
+					height: 40rpx;
+					overflow: hidden;
+					position: relative;
+
+					image {
+						position: absolute;
+						top: 0;
+						left: 0;
+
+						&.pic1 {
+							top: -54rpx;
+						}
+
+						&.pic2 {
+							top: -118rpx;
+						}
+
+						&.pic3 {
+							top: -182rpx;
+						}
+
+						&.pic4 {
+							top: -240rpx;
+						}
+					}
+
+				}
 			}
 		}
 
@@ -682,32 +746,38 @@
 				font-size: 40rpx;
 			}
 		}
-        .readNums{
-			margin-top:20rpx;
+
+		.readNums {
+			margin-top: 20rpx;
 		}
+
 		.operBox {
 			padding: 20rpx 0 0;
 			text-align: center;
 			overflow: hidden;
 			margin: 0 -10rpx;
+
 			.item {
-				float:left;
+				float: left;
 				width: 25%;
-				padding:0 10rpx;
+				padding: 0 10rpx;
 				overflow: hidden;
-                .mybtn{
+
+				.mybtn {
 					padding: 0 30rpx 10rpx;
 					line-height: 50rpx;
 					border-radius: 50rpx;
 					color: #999;
 					background: #fff;
 					border: 1px solid #9f9f9f;
+
 					&.item_red {
-                	background: #b40000;
-                	border-color: #b40000;
-                	color: #fff;
-                }
+						background: #b40000;
+						border-color: #b40000;
+						color: #fff;
+					}
 				}
+
 				.iconfont {
 					height: 40rpx;
 					width: 40rpx;
@@ -718,11 +788,11 @@
 						line-height: 100%;
 					}
 				}
-                
-				
+
+
 			}
 
-			
+
 		}
 	}
 
@@ -736,15 +806,22 @@
 			padding: 0 20rpx;
 		}
 
+		.commentList {
+			.noData {
+				position: relative !important;
+			}
+
+		}
+
 		.item {
 			padding: 20rpx;
 			border-top: 1px solid #e9e9e9;
 
 			.pic {
 				width: 80rpx;
-				height:80rpx;
+				height: 80rpx;
 				margin-right: 20rpx;
-				border-radius:80rpx;
+				border-radius: 80rpx;
 				overflow: hidden;
 			}
 
@@ -772,31 +849,44 @@
 			.oper {
 				line-height: 30rpx;
 
+				.iconfont {
+					float: left;
+				}
+
+				text {
+					float: left;
+					margin-left: 10rpx;
+				}
+
 				.timer {}
 			}
 
 			.operIocn {
 				margin-left: 20rpx;
 				color: #999;
-                &.red{
-					color:#B40000;
+
+				&.red {
+					color: #B40000;
 				}
+
 				.iconfont {
 					position: relative;
 					top: -6rpx;
 				}
+
 				text {
 					position: relative;
-					top: -6rpx;
+					top: 8rpx;
 				}
 			}
-			.hasUp{
-				.iconfont{
-					color:#B40000;
+
+			.hasUp {
+				.iconfont {
+					color: #B40000;
 				}
-				
+
 			}
-			
+
 		}
 	}
 
@@ -822,29 +912,32 @@
 
 		.oper {
 			width: 80rpx;
-			height:100rpx;
+			height: 100rpx;
 			text-align: center;
 			color: #999;
-			position:relative;
+			position: relative;
+
 			text {
 				font-size: 24rpx;
 			}
-			&.shareBtn{
+
+			&.shareBtn {
 				line-height: 1.3;
-				padding:0;
+				padding: 0;
 			}
-			.mark{
-				position:absolute;
+
+			.mark {
+				position: absolute;
 				background: #B40000;
-				font-size:20rpx;
+				font-size: 20rpx;
 				width: 30rpx;
-				height:30rpx;
+				height: 30rpx;
 				border-radius: 30rpx;
 				line-height: 30rpx;
 				text-align: center;
-				color:#fff;
-				top:10rpx;
-				right:0rpx;
+				color: #fff;
+				top: 10rpx;
+				right: 0rpx;
 			}
 		}
 	}

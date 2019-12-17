@@ -1,5 +1,5 @@
 @font-face {font-family: "iconfont";
-  src: url('iconfont.ttf?t=1574943266205') format('truetype'); /* iOS 4.1- */
+  src: url('iconfont.ttf?t=1576593834214') format('truetype'); /* iOS 4.1- */
 }
 
 .iconfont {
@@ -14,6 +14,10 @@
   content: "\e615";
 }
 
+.icon-minus:before {
+  content: "\e614";
+}
+
 .icon-search:before {
   content: "\e66f";
 }
@@ -26,20 +30,28 @@
   content: "\e60f";
 }
 
+.icon-shang:before {
+  content: "\e68e";
+}
+
 .icon-location:before {
   content: "\e601";
+}
+
+.icon-kefu:before {
+  content: "\e607";
 }
 
 .icon-weixin:before {
   content: "\e613";
 }
 
-.icon-yezi:before {
-  content: "\e602";
+.icon-add:before {
+  content: "\e617";
 }
 
-.icon-shang:before {
-  content: "\e671";
+.icon-yezi:before {
+  content: "\e602";
 }
 
 .icon-camaer:before {
@@ -70,6 +82,10 @@
   content: "\e734";
 }
 
+.icon-shop:before {
+  content: "\e61c";
+}
+
 .icon-share-b:before {
   content: "\e628";
 }
@@ -88,6 +104,10 @@
 
 .icon-remove:before {
   content: "\e63a";
+}
+
+.icon-plus:before {
+  content: "\e711";
 }
 
 .icon-exit:before {
