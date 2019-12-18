@@ -34,13 +34,14 @@
 						{{details.name}} 
 					</view>
 					<view class="spec">
-						{{details.chooseSpec && details.chooseSpec.propValue?details.chooseSpec.propValue:''}}
+						{{(details.chooseSpec && details.chooseSpec.propValue)?details.chooseSpec.propValue:''}}
 					</view>
 				</view>
 				<view class="price text-right">
 					<view class="">
 						<text class="fs12">¥</text>
-						<text>{{details.priceSale}}</text>
+						<text v-if="operType=='order'"> {{details.chooseSpec.priceSale}}</text>
+						<text v-else> {{details.chooseSpec.priceSpell}}</text>
 					</view>
 					<view class="c999">
 						x{{details.goodsNum}}
@@ -162,7 +163,12 @@
             this.details = JSON.parse(options.details);
 			this.operType=options.type
 			this.getAddress();
-			this.payTotal =  this.details.priceSale *  this.details.goodsNum
+			if(options.type == 'order'){
+				this.payTotal =  thi.details.chooseSpec.priceSale *  this.details.goodsNum
+			} else {
+				this.payTotal =  thi.details.chooseSpec.priceSpell *  this.details.goodsNum
+			}
+			
 		},
 		onShow(){
 
