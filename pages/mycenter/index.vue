@@ -17,8 +17,8 @@
 				</view>
 				<view class="btnBox">
 					<button v-if="userInfo.shopIngType==3" class="radiuBtn" size="mini" type="red" @tap="linkTo('createShop')">申请开店</button>
-					<button v-else-if="userInfo.shopIngType==1" class="radiuBtn" size="mini" type="red">店主</button>
-					<button v-else-if="userInfo.shopIngType==2" class="radiuBtn" size="mini" type="red">审核中</button>
+					<button v-else-if="userInfo.shopIngType==1" class="radiuBtn" size="mini" type="red" @tap="hasShop">店主</button>
+					<button v-else-if="userInfo.shopIngType==2" class="radiuBtn" size="mini" type="red" @tap="checkShop">审核中</button>
 				</view>
 				<view class="right" @tap="linkTo('baseInfo')">
 					<icon class="iconfont icon-right"></icon>

@@ -2,7 +2,7 @@
 	<view class="content">
 		<scroll-view scroll-y="true">
 			<view class="editBox">
-				<view class="title"><input type="text" placeholder="请输入标题" v-model="title"  @input="changeTitle"/></view>
+				<view class="title"><input type="text" placeholder="请输入标题" maxlength="60" v-model="title"  @input="changeTitle"/></view>
 				<view class="textarea">
 					<!-- <textarea id="editDist" placeholder="请输入正文" v-model="articleMsg"></textarea> -->
 					<editor id="editDist" placeholder="请输入正文" :value="articleMsg" @input="changeInput" @statuschange="changeClass"></editor>
@@ -100,9 +100,7 @@
 					if(res.success){
 						self.$acFrame.Util.mytotal('发布成功！！');
 						setTimeout(function() {
-							uni.navigateBack({
-								
-							})
+							uni.navigateBack({})
 						}, 1000);
 					}
 				});
