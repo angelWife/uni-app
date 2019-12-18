@@ -925,7 +925,12 @@
 				line-height: 1.3;
 				padding: 0;
 			}
-
+            .red{
+				color:#d40000;
+				.iconfont{
+					color:#d40000;
+				}
+			}
 			.mark {
 				position: absolute;
 				background: #B40000;
