@@ -86,7 +86,9 @@ export default {
         sourceType: ["album", "camera"], // 可以指定来源是相册还是相机，默认二者都有
         success: function(res) {
           let tempFilePaths = res.tempFilePaths;
-          self.picList.push(tempFilePaths[0]);
+          for(let i=0;i<tempFilePaths.length;i++){
+              self.picList.push(tempFilePaths[i]);
+          }  
         }
       });
     },
@@ -97,7 +99,6 @@ export default {
       let token = uni.getStorageSync("access_token");
       let channel = "MP_WX";
       let self = this;
-      let _data = { id: id };
       let imgUrl = self.picList[self.picInd];
       let len = self.picList.length;
       if (self.picInd < len) {
@@ -115,7 +116,6 @@ export default {
           name: "file",
           success: function(res) {
             let _data = JSON.parse(res.data);
-            debugger;
             if (_data.success) {
               self.picInd++;
               self.uploadPic(id);
