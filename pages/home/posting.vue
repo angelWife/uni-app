@@ -1,9 +1,9 @@
 <template>
 	<view class="content">
 		<view class="textarea">
-			<textarea value="editText" placeholder="请输入" maxlength="500" v-model="editText" @input="textChange" />
+			<textarea value="editText" placeholder="请输入" maxlength="300" v-model="editText" @input="textChange" />
 			<view class="text-right">
-        <text class="c999">{{ textNum }}/500</text>
+        <text class="c999">{{ textNum }}/300</text>
         <button type="red" size="mini" @tap="confirmPost">发布</button>
       </view>
     </view>
