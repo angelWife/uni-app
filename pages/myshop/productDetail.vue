@@ -297,7 +297,7 @@
 					<view class="price flex-1">
 						<view class="red">
 							<text class="fs12">¥</text>
-							<text class="fs18">{{prodDetail.priceSale}}</text>
+							<text class="fs18">{{chooseSpec.priceSale}}</text>
 						</view>
 						<view class="text">
 							请选择规格

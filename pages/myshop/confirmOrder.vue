@@ -156,17 +156,20 @@
 				checked:false,
 				showCouponModal:false,
 				messageBuyer:'',
-				payTotal:0.00
+				payTotal:0.00,
+				operType:'order'
 			}
 		},
 		onLoad(options){
             this.details = JSON.parse(options.details);
+			console.error(this.details)
+			debugger
 			this.operType=options.type
 			this.getAddress();
 			if(options.type == 'order'){
-				this.payTotal =  thi.details.chooseSpec.priceSale *  this.details.goodsNum
+				this.payTotal =  this.details.chooseSpec.priceSale *  this.details.goodsNum
 			} else {
-				this.payTotal =  thi.details.chooseSpec.priceSpell *  this.details.goodsNum
+				this.payTotal =  this.details.chooseSpec.priceSpell *  this.details.goodsNum
 			}
 			
 		},
@@ -229,7 +232,6 @@
 				this.checked = !this.checked
 			},
 			choosePayWay(){
-				debugger
 				if(this.operType=='order'){
 					this.createOrder()  //直接购买
 				}else if(this.operType=='spell'){
