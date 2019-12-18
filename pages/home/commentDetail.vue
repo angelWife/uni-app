@@ -228,7 +228,7 @@
 				<text>评论</text>
 				<text v-if="dataInfo.articleInfo.numTotalComment>0" class="mark">{{dataInfo.articleInfo.numTotalComment}}</text>
 			</view>
-			<view class="oper flex f-col" :class="{'red':dataInfo.articleInfo.hasUp}" @tap="dianzan">
+			<view class="oper flex f-col" :class="[dataInfo.articleInfo.hasUp?'red':'']" @tap="dianzan">
 				<icon class="iconfont icon-dianzan"></icon>
 				<text>赞</text>
 			</view>
@@ -848,7 +848,6 @@
 
 			.oper {
 				line-height: 30rpx;
-
 				.iconfont {
 					float: left;
 				}
@@ -864,10 +863,6 @@
 			.operIocn {
 				margin-left: 20rpx;
 				color: #999;
-
-				&.red {
-					color: #B40000;
-				}
 
 				.iconfont {
 					position: relative;
@@ -925,12 +920,15 @@
 				line-height: 1.3;
 				padding: 0;
 			}
-            .red{
-				color:#d40000;
-				.iconfont{
-					color:#d40000;
+
+			&.red {
+				color: #d40000;
+
+				.iconfont {
+					color: #d40000;
 				}
 			}
+
 			.mark {
 				position: absolute;
 				background: #B40000;
