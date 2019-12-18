@@ -10,9 +10,9 @@
 					<view class="flex-1 head-msg">
 						<view class="flex item-center">
 							<view class="name fs15" @tap="userInfo(item.publishUser.userId)">{{ item.publishUser.userName }}</view>
-							<block v-if="item.publishUser.militaryRankType">
+							<!-- <block v-if="item.publishUser.militaryRankType">
 								<image :src="'/static/images/junxian/'+item.publishUser.militaryRankType+'.png'" mode="widthFix"></image>
-							</block>
+							</block> -->
 							<block v-if="item.publishUser.shopId">
 								<image src="/static/images/shop.png" mode="widthFix"></image>
 							</block>
