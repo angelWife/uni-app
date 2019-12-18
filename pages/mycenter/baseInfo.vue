@@ -146,11 +146,17 @@
 			};
 		},
 		onShow() {
-			this.initData()
+			if(getApp().globalData.isShowPic){
+				getApp().globalData.isShowPic=false
+			}else{
+				this.initData()
+			}
+			
 		},
 		methods: {
 			initData() { //settingsInfo
 				let self = this
+				debugger
 				this.$acFrame.HttpService.settingsInfo().then(res => {
 					if (res.success) {
 						console.log(res.data);
@@ -172,12 +178,14 @@
 			},
 			upLoadPic() {
 				var self = this;
-				let img = this.$acFrame.Util.uploadPic("app/user_info/upd_img_head");
-				img.then(res => {
+				getApp().globalData.isShowPic = true
+				this.$acFrame.Util.uploadPic("app/user_info/upd_img_head").then(res => {
 					///console.log(res);
-					//self.headPic = res;
-					self.initData();
-				});
+					debugger
+					self.headPic = res;
+					// self.initData();
+				})
+				
 
 
 			},
@@ -312,9 +320,10 @@
 				height: 80rpx;
 				border-radius: 80rpx;
 				overflow: hidden;
-
+                border:1px solid #f1f1f1;
 				image {
 					vertical-align: top;
+					height:80rpx;
 				}
 			}
 

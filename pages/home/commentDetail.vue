@@ -643,6 +643,7 @@
 				padding: 0 15rpx;
 				height: calc((100vw - 24rpx) / 3 - 20rpx);
 				overflow: hidden;
+				margin-bottom:20rpx;
 			}
 		}
 

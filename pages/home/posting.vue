@@ -80,8 +80,13 @@ export default {
     },
     choosePic() {
       let self = this;
+	  let len =self.picList.length
+	  if(len==9){
+		  self.$acFrame.Util.mytotal("亲，最多上传九张图片哦");
+		  return false;
+	  }
       uni.chooseImage({
-        count: 9,
+        count: 9-len,
         sizeType: ["compressed"], // 可以指定是原图还是压缩图，默认二者都有
         sourceType: ["album", "camera"], // 可以指定来源是相册还是相机，默认二者都有
         success: function(res) {

@@ -40,7 +40,7 @@
 				<view class="price text-right">
 					<view class="">
 						<text class="fs12">¥</text>
-						<text>{{details.sum_price}}</text>
+						<text>{{details.priceSale}}</text>
 					</view>
 					<view class="c999">
 						x{{details.goodsNum}}
@@ -85,7 +85,7 @@
 			</view>
 		</view>
 		<view class="footBtn flex">
-			<view class="flex-1">
+			<view class="flex-1 text-right pr15">
 				<text class="fs13">实付：</text>
 				<text class="fs13 red">¥</text>
 				<text class="fs18 red">{{payTotal}}</text>
@@ -162,7 +162,7 @@
             this.details = JSON.parse(options.details);
 			this.operType=options.type
 			this.getAddress();
-			this.payTotal =  this.details.sum_price *  this.details.goodsNum
+			this.payTotal =  this.details.priceSale *  this.details.goodsNum
 		},
 		onShow(){
 
@@ -340,7 +340,7 @@ page{
 					position:absolute;
 					width: 100%;
 					left:0;
-					top:-24rpx;
+					top:-26rpx;
 				}
 			}
 		}
@@ -424,6 +424,9 @@ page{
 		background: #fff;
 		padding-left:24rpx;
 		box-shadow: 0 1px 5px rgba(0,0,0,0.2);
+		.pr15{
+			padding-right:30rpx;
+		}
 		text{
 			line-height: 100rpx;
 		}

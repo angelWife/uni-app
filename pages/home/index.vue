@@ -475,7 +475,7 @@
 				position: absolute;
 				z-index: 5;
 				width: 180%;
-				top: 70rpx;
+				top: 90rpx;
 				right: 0;
 				border-radius: 0.3em;
 				box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);

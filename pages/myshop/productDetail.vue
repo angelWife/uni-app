@@ -320,9 +320,9 @@
 			    <view class="nums flex item-center">
 					<view class="flex-1">购买数量</view>
 					<view class="comNumber clearfix">
-						<view class="iconfont icon-minus" hover-class="touch" style="color:#333333" @tap="minus()" >-</view>
+						<view class="iconfont icon-minus" hover-class="touch" style="color:#333333" @tap="minus()" ></view>
 						<input type="number" v-model="goodsNum" value="1" />
-						<view class="iconfont icon-plus" hover-class="touch" style="color:#333333" @tap="plus()" >+</view>
+						<view class="iconfont icon-plus" hover-class="touch" style="color:#333333" @tap="plus()" ></view>
 					</view>
 				</view>
 				<view class="btnBox">
@@ -483,6 +483,7 @@ export default {
 				spellId:this.spellId,
 				freight:this.freight,
 				name:detail.name,
+				priceSale:detail.priceSale,
 				sum_price:this.sum_price,
 				img:detail.imgList[0],
 				goodsId:detail.goodsId,
@@ -634,7 +635,6 @@ page {
 	}
 	.coupon {
 		.text{
-			text-align:right;
 			padding-right:30rpx;
 			color:#999999;
 		}

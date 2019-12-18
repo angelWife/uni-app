@@ -93,6 +93,8 @@ const uploadPic = (a_url) => {
 				if(!a_url){
 					a_url = '/file/upload';
 				}
+				// resolve(tempFilePaths[0]);
+				// return false
 				uni.uploadFile({
 					url: getApp().globalData.config.basePath + a_url, // 仅为示例，非真实的接口地址
 					filePath: tempFilePaths[0],
@@ -103,7 +105,11 @@ const uploadPic = (a_url) => {
 					name: 'file',
 					success: function(res) {
 						let _data = JSON.parse(res.data)
-						resolve(_data.data.fullPath);
+						if(a_url){
+							resolve(tempFilePaths[0]); 
+						}else{
+							resolve(_data.data.fullPath);
+						}
 					},
 					fail: (error) => {
 						reject(error);

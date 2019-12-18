@@ -40,7 +40,7 @@
 					{{item.content}}
 				</view>
 				<view class="timer c999 fs12 clearfix">
-					<text>2{{item.timeInfo}}</text>
+					<text>{{item.timeInfo}}</text>
 				</view>
 			</view>
 		</view>

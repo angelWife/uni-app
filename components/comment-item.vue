@@ -457,6 +457,7 @@
 				padding: 0 10rpx;
 				height: calc((100vw - 24rpx) / 3 - 20rpx);
 				overflow: hidden;
+				margin-bottom:20rpx;
 			}
 		}
 
