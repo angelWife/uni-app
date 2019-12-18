@@ -29,7 +29,7 @@
 				<view class="pic" style="overflow: hidden;" >
 					<image :src="this.$acFrame.Util.setImgUrl(details.img)" mode="widthFix"></image>
 				</view>
-				<view class="center">
+				<view class="center flex-1">
 					<view class="name clamp clamp-2">
 						{{details.name}} 
 					</view>
@@ -88,7 +88,7 @@
 			<view class="flex-1">
 				<text class="fs13">实付：</text>
 				<text class="fs13 red">¥</text>
-				<text class="fs18 red">{{details.sum_price}}</text>
+				<text class="fs18 red">{{payTotal}}</text>
 			</view>
 			<view class="btn" @tap="choosePayWay">
 				立即付款
@@ -162,6 +162,7 @@
             this.details = JSON.parse(options.details);
 			this.operType=options.type
 			this.getAddress();
+			this.payTotal =  this.details.sum_price *  this.details.goodsNum
 		},
 		onShow(){
 
@@ -334,6 +335,13 @@ page{
 				line-height: 60rpx;
 				width: 60rpx;
 				color:#fff;
+				position:relative;
+				&::before{
+					position:absolute;
+					width: 100%;
+					left:0;
+					top:-24rpx;
+				}
 			}
 		}
 		.msg{
@@ -411,12 +419,16 @@ page{
 		left:0;
 		bottom:0;
 		z-index: 4;
-		line-height: 100rpx;
+		
 		padding-bottom:constant(safe-area-inset-bottom);
 		background: #fff;
 		padding-left:24rpx;
 		box-shadow: 0 1px 5px rgba(0,0,0,0.2);
+		text{
+			line-height: 100rpx;
+		}
 		.btn{
+			line-height: 100rpx;
 			color:#fff;
 			background: #B40000;
 			width: 30%;

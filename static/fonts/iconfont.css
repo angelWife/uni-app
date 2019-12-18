@@ -1,6 +1,5 @@
-@font-face {
-  font-family: "iconfont";
-  src: url('iconfont.ttf?t=1576572129450') format('truetype'); /* iOS 4.1- */
+@font-face {font-family: "iconfont";
+  src: url('iconfont.ttf?t=1576593834214') format('truetype'); /* iOS 4.1- */
 }
 
 .iconfont {
@@ -37,6 +36,10 @@
 
 .icon-location:before {
   content: "\e601";
+}
+
+.icon-kefu:before {
+  content: "\e607";
 }
 
 .icon-weixin:before {
@@ -77,6 +80,10 @@
 
 .icon-tupian:before {
   content: "\e734";
+}
+
+.icon-shop:before {
+  content: "\e61c";
 }
 
 .icon-share-b:before {

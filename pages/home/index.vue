@@ -482,8 +482,8 @@
 				background: #2c2c2c;
 
 				.item {
-					height: 72rpx;
-					line-height: 72rpx;
+					height: 80rpx;
+					line-height: 80rpx;
 					padding: 0 20rpx;
 					box-sizing: border-box;
 					color: #fff;
@@ -518,7 +518,7 @@
 	}
 
 	.listBox {
-		height: calc(100% - 90rpx);
+		height: calc(100% - 110rpx);
 
 		.nav-tabs {
 			background: #fff;
@@ -537,7 +537,7 @@
 
 				&.active {
 					color: #b40000;
-                    font-weight:600;
+                    font-weight: 600;
 					text {
 						border-color: #b40000;
 					}

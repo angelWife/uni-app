@@ -51,9 +51,9 @@
 								<view class="proItem" v-for="(proItem,proInd) in item.goodsList" :key="proInd" @tap="productDetail(proItem.goodsId)">
 									<view class="pic"><image :src="setImg(proItem.imgPath)" mode="widthFix"></image></view>
 									<view class="name textEllipsis">{{proItem.goodsName}}</view>
-									<view class="price red">
-										<text class="fs12">¥</text>
-										<text class="fs15">{{proItem.priceSale}}</text>
+									<view class="price red clearfix">
+										<text class="fs10">¥</text>
+										<text class="fs18 blod">{{proItem.priceSale}}</text>
 										<text class="mark" v-if="proItem.flagSpell==1">拼</text>
 									</view>
 								</view>
@@ -94,9 +94,9 @@
 						<view class="proItem" v-for="(proItem,proInd) in item.goodsList" :key="proInd" @tap="productDetail(proItem.goodsId)">
 							<view class="pic"><image :src="setImg(proItem.imgPath)" mode="widthFix"></image></view>
 							<view class="name textEllipsis">{{proItem.goodsName}}</view>
-							<view class="price red">
+							<view class="price red clearfix">
 								<text class="fs10">¥</text>
-								<text class="fs16">{{proItem.priceSale}}</text>
+								<text class="fs18 blod">{{proItem.priceSale}}</text>
 								<text class="mark" v-if="proItem.flagSpell==1">拼</text>
 							</view>
 						</view>
@@ -276,6 +276,7 @@ page {
 	background: #eee;
 	position: fixed;
 	width: 100%;
+	z-index: 10;
 	left: 0;
 	top: 0;
 	.input {
@@ -311,7 +312,7 @@ page {
 	}
 }
 .resBox {
-	height: calc(100% - 90rpx);
+	height: calc(100% - 110rpx);
 	.title {
 		padding: 0 20rpx;
 		font-size: 30rpx;
@@ -374,7 +375,7 @@ page {
 		.item {
 			background: #fff;
 			box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-			border-radius: 20rpx;
+			border-radius: 40rpx;
 			padding: 24rpx;
 			margin-bottom:24rpx;
 			.shopMsg {
@@ -410,6 +411,7 @@ page {
 					width: 200rpx;
 					display: inline-block;
 					margin-right: 10rpx;
+					
 					&:last-child{
 						margin-right: 0;
 					}
@@ -421,11 +423,16 @@ page {
 					.name{
 						padding:10rpx 0;
 					}
-					.mark {
-						font-size: 20rpx;
-						padding: 0 6rpx;
-						border-radius: 20rpx;
-						border:1px solid #b40000;
+					.price{
+						.mark {
+							position:relative;
+							top:-4rpx;
+							margin-left:6rpx;
+							font-size: 20rpx;
+							padding: 0 6rpx;
+							border-radius: 20rpx;
+							border:1px solid #b40000;
+						}
 					}
 				}
 			}

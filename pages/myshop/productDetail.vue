@@ -32,13 +32,15 @@
 		<view class="modal prod3">
 			<view class="coupon flex" v-if="prodDetail.couponList.length>0">
 				<view class="name c999">领取</view>
-				<view class="listBox flex-1">
-					<block v-for="(item,ind) in prodDetail.couponList" :key="ind" >
-						<view v-if="!item.hasReceived" @tap="chooseCoupon(ind,item.couponId)" class="item">
-							满{{item.priceFull}}{{item.type==1?'减'+item.effectVal:item.effectVal+'折'}}
-						</view>
-					</block>
-					
+				<view class="listBox flex-1" v-if="prodDetail.couponList.length>0">
+						<block v-for="(item,ind) in prodDetail.couponList" :key="ind" >
+							<view v-if="!item.hasReceived" @tap="chooseCoupon(ind,item.couponId)" class="item">
+								满{{item.priceFull}}{{item.type==1?'减'+item.effectVal:item.effectVal+'折'}}
+							</view>
+						</block>
+				</view>
+				<view v-else class="text flex-1">
+					暂无可领取的优惠券
 				</view>
 			</view>
 			<view class="service flex">
@@ -158,15 +160,15 @@
 		</view>
 		<view class="prodFoot flex item-center">
 			<view class="item">
-				<icon class="iconfont icon-share"></icon>
+				<icon class="iconfont icon-shop"></icon>
 				<view class="fs12 c999">店铺</view>
 			</view>
 			<view class="item">
-				<icon class="iconfont icon-share"></icon>
+				<icon class="iconfont icon-kefu"></icon>
 				<view class="fs12 c999">客服</view>
 			</view>
 			<view class="item">
-				<icon class="iconfont icon-share"></icon>
+				<icon class="iconfont iconshare2"></icon>
 				<view class="fs12 c999">分享</view>
 				<button open-type="share"></button>
 			</view>
@@ -619,6 +621,7 @@ page {
 	}
 	.listBox {
 		overflow: hidden;
+		padding-top:10rpx;
 		.item {
 			float: left;
 			text-align: center;
@@ -629,9 +632,16 @@ page {
 			margin-bottom: 20rpx;
 		}
 	}
-	.coupon .item {
-		border: 1px solid #b40000;
-		color: #b40000;
+	.coupon {
+		.text{
+			text-align:right;
+			padding-right:30rpx;
+			color:#999999;
+		}
+		.item {
+			border: 1px solid #b40000;
+			color: #b40000;
+		}
 	}
 	.service .item {
 		background: #efefef;
@@ -768,6 +778,9 @@ page {
 	bottom:0;
 	background: #fff;
 	box-shadow: 0 -1px 5px rgba(0,0,0,0.1);
+	.iconfont{
+		font-size:40rpx;
+	}
 	.item{
 		width: 100rpx;
 		text-align: center;
