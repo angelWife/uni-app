@@ -40,7 +40,7 @@
 		<view class="shopNav">
 			<view class="item" v-for="(item,ind) in tabs" :key="ind" :class="{'active':item.choose}" @tap="clickBar(ind)">
 				<text class="name">{{item.name}}</text>
-				<view class="sanjiao" v-if="item.choose">
+				<view class="sanjiao" v-if="item.choose&&ind!=0">
 					<text class="up" :class="{'red':sortType}"></text>
 					<text class="down" :class="{'red':!sortType}"></text>
 				</view>
@@ -77,6 +77,14 @@
 		},
 		onLoad(options){
 			this.id = options.id;
+			wx.setNavigationBarColor({
+			  frontColor: '#000000',
+			  backgroundColor: '#ffffff',
+			  animation: {
+			    duration: 200,
+			    timingFunc: 'easeIn'
+			  }
+			})
 		},
 		onShow(){
 			this.resetData()
@@ -92,6 +100,9 @@
 				self.$acFrame.HttpService.shopDetail(params).then(res => {
 					if(res.success){
 						self.shopDetail = res.data
+						uni.setNavigationBarTitle({
+							title:res.data.name
+						})
 					}
 				})
 			},
@@ -121,6 +132,11 @@
 			},
 			clickBar(ind){
 				let choose = this.tabs[ind].choose
+				if(ind==0){
+					this.resetData()
+					this.initProduct()
+					return false
+				}
 				if(choose){
 					if(this.sortType){
 						this.sortType = false
@@ -201,12 +217,10 @@ page,.content{
 					}
 				}
 			}
-			button{
-				line-height: 50rpx;
-			}
 		}
 		button{
 			width: 160rpx;	
+			line-height: 50rpx;
 		}
 		.right{
 			margin-left:20rpx;

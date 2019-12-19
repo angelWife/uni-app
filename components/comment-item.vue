@@ -28,6 +28,9 @@
 						<text class="follow" v-if="item.publishUser.hasFollow">已关注</text>
 						<text class="follow active" v-else>关注</text>
 					</view>
+					<view class="operPost" v-else>
+						<icon v-if="showOper" class="iconfont iconcaozuo"></icon>
+					</view>
 				</view>
 				<block v-if="item.articleInfo.type == 2">
 					<view class="articalBox">
@@ -111,6 +114,10 @@
 					<button class="flex-1" type="share" @tap="linkDetail(item,'isComment')">
 						<icon class="iconfont icon-pinglun"></icon>
 						<text>{{item.articleInfo.numTotalComment}}</text>
+					</button>
+					<button class="flex-1" type="share" @tap="rewardList(item.articleInfo.id)">
+						<icon class="iconfont icon-shang"></icon>
+						<text>{{ item.articleInfo.numTotalPersonReward }}</text>
 					</button>
 					<button class="flex-1" type="share" :class="{'red':item.articleInfo.hasUp}" @tap="dianzan(item.articleInfo.id,index)">
 						<icon class="iconfont icon-dianzan"></icon>
@@ -205,22 +212,23 @@
 					return false;
 				}
 			},
-			// showOper:{ // 距离头部多少px将其固定
-			//   type: Boolean,
-			//   default(){
-			//     return false;
-			//   }
-			// }
+			showOper:{
+			  type: Boolean,
+			  default(){
+			    return false;
+			  }
+			}
 		},
 		data() {
 			return {};
 		},
 		methods: {
 			showAll(ind) {
-				this.dataList[ind].showMore = true;
+				this.$emit('showAll',ind);
 			},
 			hideMore(ind) {
-				this.dataList[ind].showMore = false;
+				this.$emit('hideMore',ind);
+				// this.dataList[ind].showMore = false;
 			},
 			setImg(src) {
 				this.$emit('setImg', src)
@@ -233,9 +241,19 @@
 			},
 			loadMoreData() {},
 			linkDetail(obj, isComment) {
+				this.$acFrame.HttpService.readPost({id:obj.articleInfo.id}).then(res=>{
+					if(res.success){
+						
+					}
+				})
 				uni.navigateTo({
 					url: `/pages/home/commentDetail?data=${encodeURIComponent(JSON.stringify(obj))}&pageType=${this.pageType}&isComment=${isComment?isComment:''}`
 				});
+			},
+			rewardList(id){
+				uni.navigateTo({
+					url:`reward?articleId=${id}`
+				})
 			},
 			linktoshop() {
 				// debugger
@@ -365,7 +383,17 @@
 					color: #999;
 				}
 			}
-
+			.operPost{
+				position:relative;
+				width: 80rpx;
+				height:80rpx;
+				.iconfont{
+					position: absolute;
+					top:0;
+					right:0;
+					color:#999;
+				}
+			}
 			.timer {
 				text {
 					float: left;
@@ -411,6 +439,8 @@
 			margin: 20rpx 30rpx 0;
 
 			.msg {
+				text-align: justify;
+				word-break: break-all;
 				text {
 					display: inline;
 				}

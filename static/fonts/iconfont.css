@@ -1,5 +1,6 @@
 @font-face {font-family: "iconfont";
-  src: url('iconfont.ttf?t=1576593834214') format('truetype'); /* iOS 4.1- */
+
+  src:url('iconfont.ttf?t=1576677397992') format('truetype'); /* iOS 4.1- */
 }
 
 .iconfont {
@@ -84,6 +85,10 @@
 
 .icon-shop:before {
   content: "\e61c";
+}
+
+.iconcaozuo:before {
+  content: "\e60a";
 }
 
 .icon-share-b:before {

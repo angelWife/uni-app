@@ -14,11 +14,11 @@
 			<view class="title flex">
 				<view class="flex-1">打赏记录</view>
 				<view class="c999 text-right">
-					他收到过100次打赏
+					他收到过{{dataList.length}}次打赏
 				</view>
 			</view>
 			<scroll-view scroll-y>
-				<view class="item flex item-center">
+				<view v-for="(item,ind) in dataList" :key="ind" class="item flex item-center">
 					<view class="pic">
 						<image src="/static/images/head1.png" mode="widthFix"></image>
 					</view>
@@ -29,92 +29,13 @@
 						打赏10个西瓜
 					</view>
 				</view>
-				<view class="item flex item-center">
-					<view class="pic">
-						<image src="/static/images/head1.png" mode="widthFix"></image>
-					</view>
-					<view class="name">
-						林丁洋
-					</view>
-					<view class="msg c999 text-right flex-1">
-						打赏10个西瓜
-					</view>
-				</view>
-				<view class="item flex item-center">
-					<view class="pic">
-						<image src="/static/images/head1.png" mode="widthFix"></image>
-					</view>
-					<view class="name">
-						林丁洋
-					</view>
-					<view class="msg c999 text-right flex-1">
-						打赏10个西瓜
-					</view>
-				</view>
-				<view class="item flex item-center">
-					<view class="pic">
-						<image src="/static/images/head1.png" mode="widthFix"></image>
-					</view>
-					<view class="name">
-						林丁洋
-					</view>
-					<view class="msg c999 text-right flex-1">
-						打赏10个西瓜
-					</view>
-				</view>
-				<view class="item flex item-center">
-					<view class="pic">
-						<image src="/static/images/head1.png" mode="widthFix"></image>
-					</view>
-					<view class="name">
-						林丁洋
-					</view>
-					<view class="msg c999 text-right flex-1">
-						打赏10个西瓜
-					</view>
-				</view>
-				<view class="item flex item-center">
-					<view class="pic">
-						<image src="/static/images/head1.png" mode="widthFix"></image>
-					</view>
-					<view class="name">
-						林丁洋
-					</view>
-					<view class="msg c999 text-right flex-1">
-						打赏10个西瓜
-					</view>
-				</view>
-				<view class="item flex item-center">
-					<view class="pic">
-						<image src="/static/images/head1.png" mode="widthFix"></image>
-					</view>
-					<view class="name">
-						林丁洋
-					</view>
-					<view class="msg c999 text-right flex-1">
-						打赏10个西瓜
-					</view>
-				</view>
-				<view class="item flex item-center">
-					<view class="pic">
-						<image src="/static/images/head1.png" mode="widthFix"></image>
-					</view>
-					<view class="name">
-						林丁洋
-					</view>
-					<view class="msg c999 text-right flex-1">
-						打赏10个西瓜
-					</view>
-				</view>
-				<view class="item flex item-center">
-					<view class="pic">
-						<image src="/static/images/head1.png" mode="widthFix"></image>
-					</view>
-					<view class="name">
-						林丁洋
-					</view>
-					<view class="msg c999 text-right flex-1">
-						打赏10个西瓜
+
+				<view v-if='dataList.length==0' class="noData flex f-row just-con-c item-center">
+					<view class="text-center">
+						<image src="/static/images/nodata.png" mode="widthFix"></image>
+						<view class="text-center c666 fs16">
+							这里还没有内容
+						</view>
 					</view>
 				</view>
 			</scroll-view>
@@ -124,7 +45,7 @@
 		</view>
 		<view v-if="showmask" class="modalmask">
 			<view class="modalBody flex f-col">
-				<view class="nullModal flex-1"  @tap="hideModal"></view>
+				<view class="nullModal flex-1" @tap="hideModal"></view>
 				<view class="rewardModal" :class="{'showModal':showmask}">
 					<view class="title">
 						<block v-for="(item,index) in modalBar" :key="index">
@@ -147,7 +68,7 @@
 					<view class="modalfoot flex item-center">
 						<view class="text">
 							<label>
-								<checkbox :value="usename" checked="false" color="#fff" @chang="checkChange"/><text>优先使用星票，余额800 </text>
+								<checkbox :value="usename" checked="false" color="#fff" @chang="checkChange" /><text>优先使用星票，余额800 </text>
 							</label>
 						</view>
 						<view class="btn flex-1 text-right">
@@ -156,7 +77,7 @@
 					</view>
 				</view>
 			</view>
-			
+
 		</view>
 	</view>
 </template>
@@ -178,15 +99,31 @@
 					name: '我的道具',
 					active: false
 				}],
+				dataList:[],
 				animationData: {},
 				usename: 'xp'
 			}
 		},
-		onLoad() {},
+		onLoad(options) {
+			this.articleId = options.articleId
+		},
 		onShow() {
-
+             this.initData()
 		},
 		methods: {
+			initData() {
+				let self = this
+				let params = {
+					articleId: this.articleId,
+					pageIndex: 1,
+					pageSize: 100
+				}
+				this.$acFrame.HttpService.rewardList(params).then(res=>{
+					if(res.success){
+						self.dataList=res.data?res.data:[]
+					}
+				})
+			},
 			rewardPeople() {
 				this.showmask = true
 			},
@@ -348,28 +285,32 @@
 			}
 		}
 	}
-.modalBody{
-	height:100%;
-}	
-/*checkbox 选项框大小  */
-checkbox .wx-checkbox-input {
-  width:40rpx;
-  height: 40rpx;
-}
-/*checkbox选中后样式  */
-checkbox .wx-checkbox-input.wx-checkbox-input-checked {
-  background: #B40000;
-}
-/*checkbox选中后图标样式  */
-checkbox .wx-checkbox-input.wx-checkbox-input-checked::before {
-  width: 28rpx;
-  height: 28rpx;
-  line-height: 28rpx;
-  text-align: center;
-  font-size: 22rpx;
-  color: #fff;
-  background: transparent;
-  transform: translate(-50%, -50%) scale(1);
-  -webkit-transform: translate(-50%, -50%) scale(1);
-}
+
+	.modalBody {
+		height: 100%;
+	}
+
+	/*checkbox 选项框大小  */
+	checkbox .wx-checkbox-input {
+		width: 40rpx;
+		height: 40rpx;
+	}
+
+	/*checkbox选中后样式  */
+	checkbox .wx-checkbox-input.wx-checkbox-input-checked {
+		background: #B40000;
+	}
+
+	/*checkbox选中后图标样式  */
+	checkbox .wx-checkbox-input.wx-checkbox-input-checked::before {
+		width: 28rpx;
+		height: 28rpx;
+		line-height: 28rpx;
+		text-align: center;
+		font-size: 22rpx;
+		color: #fff;
+		background: transparent;
+		transform: translate(-50%, -50%) scale(1);
+		-webkit-transform: translate(-50%, -50%) scale(1);
+	}
 </style>

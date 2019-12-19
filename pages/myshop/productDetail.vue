@@ -30,7 +30,7 @@
 			</view>
 		</view>
 		<view class="modal prod3">
-			<view class="coupon flex" v-if="prodDetail.couponList.length>0">
+			<view class="coupon flex">
 				<view class="name c999">领取</view>
 				<view class="listBox flex-1" v-if="prodDetail.couponList.length>0">
 						<block v-for="(item,ind) in prodDetail.couponList" :key="ind" >
@@ -82,7 +82,7 @@
 						</block>
 						<block v-else>
 							<button v-if="item.hasJoin" type="green" size="mini">查看</button>
-						    <button v-else type="orange" size="mini" @tap="joinGroup(item.orderSpellId)">去拼单</button>
+						    <button v-else type="orange" size="mini" @tap="joinGroup(item)">去拼单</button>
 						</block>
 						
 					</view>
@@ -142,7 +142,7 @@
 						商品编号
 					</view>
 					<view class="value flex-1">
-						51156415re
+						{{prodDetail.code}}
 					</view>
 				</view>
 				<view class="flex">
@@ -150,12 +150,12 @@
 						品牌
 					</view>
 					<view class="value flex-1">
-						雅思
+						{{prodDetail.brandName}}
 					</view>
 				</view>
 			</view>
 			<view class="goodsMsg">
-				<rich-text :nodes="richNode"></rich-text>
+				<rich-text :nodes="prodDetail.briefInfo"></rich-text>
 			</view>
 		</view>
 		<view class="prodFoot flex item-center">
@@ -230,7 +230,7 @@
 							</block>
 							<block v-else>
 								<button v-if="item.hasJoin" type="green" size="mini">查看</button>
-								<button v-else type="orange" size="mini" @tap="joinGroup(item.orderSpellId)">去拼单</button>
+								<button v-else type="orange" size="mini" @tap="joinGroup(item)">去拼单</button>
 							</block>
 							
 						</view>
@@ -247,40 +247,38 @@
 				</view>
 				<view class="detailMain">
 					<view class="msg">
-						仅剩<text class="red">12个</text>名额，还剩
-						<uni-count-down :borderColor="timeStyle.borderColor" :backgroundColor="timeStyle.backgroundColor" :color="timeStyle.color" :show-day="false" :show-style="true" :hour="12" :minute="12" :second="12" />
+						仅剩<text class="red">{{spellVO.numUserLeft}}个</text>名额，还剩
+						<view class="fs12 c999" v-if="spellVO.showTimer">
+							<uni-count-down
+							:show-day="false" 
+							:color="color" 
+							:splitorColor="color" 
+							:show-style="false" 
+							:hour="spellVO.hour" 
+							:minute="spellVO.minute" 
+							:second="spellVO.second" />
+						</view>
 					</view>
 					<view class="picList">
 						<view class="item">
 							<view class="name">拼主</view>
 							<view class="pic">
-								<image src="../../static/images/head2.png" mode="widthFix"></image>
+								<image :src="spellVO.firstUserImgPath" mode="widthFix"></image>
 							</view>
 						</view>
-						<view class="item">
-							<view class="name">成员</view>
+						<view class="item" v-for="(item,ind) in spellVO.userList" :key="ind">
+							<view class="name">{{item.userName}}</view>
 							<view class="pic">
-								<image src="../../static/images/head2.png" mode="widthFix"></image>
+								<image :src="item.imgHeadPath" mode="widthFix"></image>
 							</view>
 						</view>
-						<view class="item">
-							<view class="name">成员</view>
-							<view class="pic">
-								<image src="../../static/images/head1.png" mode="widthFix"></image>
-							</view>
-						</view>
-						<view class="item">
-							<view class="name">成员</view>
-							<view class="pic">
-								<image src="../../static/images/head1.png" mode="widthFix"></image>
-							</view>
-						</view>
-						<view class="item null">
+						
+						<!-- <view class="item null">
 							<view class="name"></view>
 							<view class="pic fs18 c666">
 								?
 							</view>
-						</view>
+						</view> -->
 					</view>
 					<view class="btnBox">
 						<button type="red" @tap="joinSpell(id)">参与拼单</button>
@@ -367,16 +365,36 @@ export default {
 			cur_price:0,
 			operType:'',
 			spellId:'',
+			spellVO:{},
 			richNode:'<p class="text">这边是商品文案描述这边是商品文案描述这边是商品文案描述这边是商品文案描述这边是商品文案描述这边是商品文案描述这边是商品文案描述</p><p class="img"><img src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2786988750,209248222&fm=15&gp=0.jpg"/></p>'
 		};
 	},
 	onLoad(options){
 		this.id = options.id;
 		
-		//console.log(this.id);
+		
 	},
 	onShow(){
-		 this.initData();
+		if(getApp().globalData.isShowPic){
+			getApp().globalData.isShowPic=false
+		}else{
+			this.initData();
+		}
+		 
+	},
+	onShareAppMessage(res) {
+		let settings = {}
+		
+			// settings.type='article'
+			settings.title = `发现好物【${this.prodDetail.name}】`
+			settings.imageUrl = this.prodDetail.imgList[0]
+			settings.pagePath =
+				`/pages/myshop/productDetail?id=${this.id}`
+		
+		getApp().globalData.isShowPic = true
+		return settings
+	
+		//this.$acFrame.Util.shareUrl(res,settings);
 	},
 	methods: {
 		initData(){
@@ -447,11 +465,12 @@ export default {
 		moreassemble(){
 			this.showAssembleModal = true
 		},
-		joinGroup(id){
+		joinGroup(item){
 			this.showSpecModal = true
 			// this.showAssembleDetailModal = true
-			this.spellId = id
+			this.spellId = item.orderSpellId
 			this.operType = 'joinSpell'
+			this.spellVO = item
 		},
 		joinSpell(id){
 			this.showAssembleDetailModal = false
@@ -756,6 +775,7 @@ page {
 	}
 	.goodsMsg{
 		overflow: hidden;
+		padding:24rpx;
 		.text{
 			text-align: justify;
 			padding:10rpx 24rpx;

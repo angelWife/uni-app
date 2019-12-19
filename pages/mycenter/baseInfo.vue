@@ -179,7 +179,7 @@
 			upLoadPic() {
 				var self = this;
 				getApp().globalData.isShowPic = true
-				this.$acFrame.Util.uploadPic("app/user_info/upd_img_head").then(res => {
+				this.$acFrame.Util.uploadPic("app/user_info/upd_img_head",1).then(res => {
 					///console.log(res);
 					debugger
 					self.headPic = res;

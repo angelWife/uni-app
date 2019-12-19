@@ -117,19 +117,19 @@
 						<text>{{ dataInfo.articleInfo.numTotalUp }}</text>
 					</view>
 				</view> -->
-				<view class="readNums text-right c999">1234阅读</view>
+				<view class="readNums text-right c999">{{dataInfo.articleInfo.numTotalRead}}阅读</view>
 				<!-- <view class="shareBox flex">
 					<view>分享到：</view>
 					<view class="flex-1"><icon class="iconfont icon-shang"></icon></view>
 				</view> -->
 				<view class="operBox clearfix">
-					<view class="item " @tap="reward">
+					<view class="item " @tap="reward(dataInfo.articleInfo.id)">
 						<view class="mybtn item_red">
 							<icon class="iconfont icon-shang"></icon>
 							<text>打赏</text>
 						</view>
 					</view>
-					<view class="item" @tap="report">
+					<view class="item" @tap="report(dataInfo.articleInfo.id)">
 						<view class="mybtn">
 							<icon class="iconfont icon-jubao"></icon>
 							<text>举报</text>
@@ -181,13 +181,18 @@
 			<view class="commentList">
 				<block v-if="listData.length>0">
 					<view class="item flex" v-for="(item,ind) in listData" :key="ind">
-						<view class="pic">
-							<image :src="setImg(item.headPic)" mode="widthFix"></image>
+						<view class="pic comHeadPic">
+							<image class="grade" :src="'/static/images/juewei/'+item.nobilityType+'.png'" mode="widthFix"></image>
+							<image class="headPic" :src="setImg(item.headPic)"></image>
 						</view>
+						<!-- <view class="img item-center comHeadPic" @tap="userInfo(item.publishUser.userId)">
+							<image class="headPic" :src="item.publishUser.imgPathHead"></image>
+							<image class="grade" :src="'/static/images/juewei/'+item.publishUser.nobilityType+'.png'" mode="widthFix"></image>
+						</view> -->
 						<view class="flex-1">
 							<view class="name">
 								<text class="blod">{{item.userName}}</text>
-								<text class="follow">{{item.militaryRankType}}</text>
+								<!-- <text class="follow">{{item.militaryRankType}}</text> -->
 							</view>
 							<view class="msg">{{item.content}}</view>
 							<view class="oper flex item-center">
@@ -299,13 +304,13 @@
 			if (self.dataInfo.articleInfo.type == 1) {
 				// settings.type='article'
 				settings.title = self.dataInfo.articleInfo.title
-				settings.imageUrl = self.dataInfo.articleInfo.imgList[0]
+				settings.imageUrl = '/static/images/sharePic.png'
 				settings.pagePath =
 					`/pages/home/commentDetail?data=${encodeURIComponent(JSON.stringify(self.dataInfo))}&pageType=${this.pageType}`
 			} else {
 				// settings.type='article'
 				settings.title = self.dataInfo.articleInfo.content.substr(0, 24)
-				settings.imageUrl = '/static/images/icon-loading.png'
+				settings.imageUrl = '/static/images/sharePic.png'
 				settings.pagePath =
 					`/pages/home/commentDetail?data=${encodeURIComponent(JSON.stringify(self.dataInfo))}&pageType=${this.pageType}`
 			}
@@ -334,9 +339,9 @@
 				self.$acFrame.HttpService.commentList(params).then(res => {
 					if (res.success) {
 						let _row = res.data.rows
-						_row.filter(v => {
-							v.militaryRankType = self.$acFrame.Util.setRankName(v.militaryRankType)
-						})
+						// _row.filter(v => {
+						// 	v.militaryRankType = self.$acFrame.Util.setRankName(v.militaryRankType)
+						// })
 						self.listData = self.listData.concat(_row);
 						self.pageTotal = res.data.pageTotal
 						if (self.isComent) {
@@ -357,14 +362,14 @@
 					})
 				}).exec();
 			},
-			reward() {
+			reward(id) {
 				uni.navigateTo({
-					url: '/pages/home/reward'
+					url: '/pages/home/reward?id='+id
 				})
 			},
-			report() {
+			report(id) {
 				uni.navigateTo({
-					url: '/pages/home/report'
+					url: '/pages/home/report?id='+id
 				})
 			},
 			guanzhu(code) {
@@ -596,6 +601,8 @@
 			margin: 20rpx auto 0;
 
 			.msg {
+				text-align: justify;
+				word-break: break-all;
 				text {
 					display: inline;
 				}
@@ -822,8 +829,10 @@
 				width: 80rpx;
 				height: 80rpx;
 				margin-right: 20rpx;
-				border-radius: 80rpx;
-				overflow: hidden;
+				.headPic{
+					height:100%;
+					border-radius: 80rpx;
+				}
 			}
 
 			.name {

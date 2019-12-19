@@ -41,6 +41,11 @@ class Service extends HttpService {
 			relasePublishChild:'article/info_comment/publish_child',
 			commentPublish: 'article/info_comment_up/exc', //评论带你赞
 			likeComment: 'article/info_dt_up/exc', //点赞
+			rewardList:'article/info_reward/list_data',//打赏
+			sharePost:'article/info_dt_share/exc',//统计分享
+			rewardTyps:'article/info_warn/typeList',//举报类型
+			rewardSub:'article/info_warn/publish',//举报
+			readPost:'article/info/read_by_id',//阅读
 			//商品
 			productList: 'product/goods/table_data', // 销售商品分页
 			directBuy: 'order/info/buy', //商品直接购买
@@ -276,6 +281,24 @@ class Service extends HttpService {
 	}
 	inviteRank(){
 		return this.postRequest(this.$$path.inviteRank)
+	}
+	rewardList(params) {
+		return this.postRequest(this.$$path.rewardList, {
+			data: params
+		})
+	}
+	rewardTyps(){
+		return this.getRequest(this.$$path.rewardTyps)
+	}
+	rewardSub(params) {
+		return this.postRequest(this.$$path.rewardSub, {
+			data: params
+		})
+	}
+	readPost(params) {
+		return this.postRequest(this.$$path.readPost, {
+			data: params
+		})
 	}
 }
 

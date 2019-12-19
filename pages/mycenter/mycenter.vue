@@ -47,7 +47,7 @@
 		<scroll-view class="myscroll" scroll-y="true">
 			<view class="post" v-if="modalName=='post'">
 				<commentItem :nodata="nodata" :nomore="nomore" :dataList="dataList" @dianzan="dianzan"
-				 @followPost="followPost"></commentItem>
+				 @followPost="followPost" @hideMore="hideMore" @showAll="showAll" :showOper="showOper"></commentItem>
 			</view>
 			<view class="shop" v-if="modalName=='shop'">
 				<productList :nodata="nodata" :dataList="dataList"></productList>
@@ -135,6 +135,7 @@ export default {
 			pageTotal:1,
 			pageSize:10,
 			pageIndex:1,
+			showOper:true
 		};
 	},
 	onLoad(options){
@@ -143,6 +144,7 @@ export default {
 	},
 	onShow(){
 		this.getUserInfo();
+		this.setParams();
 		this.initData();
 	},
 	methods: {
@@ -153,7 +155,7 @@ export default {
 				checkShop: 1,
 				pageIndex: self.pageIndex,
 				pageSize: self.pageSize,
-				pageType:0,
+				pageType:1,
 				userCode:this.userCode
 			};
 			self.$acFrame.HttpService.postList(params).then(res => {
@@ -219,7 +221,7 @@ export default {
 		
 								v.articleInfo.showMore = false;
 							}
-							if (v.articleInfo.content.length > 60) {
+							if (v.articleInfo.content.length > 80) {
 								v.articleInfo.isDetail = false;
 							} else {
 								v.articleInfo.isDetail = true;
@@ -278,11 +280,7 @@ export default {
 		},
 		tapClick(ind){
 			let self = this
-			self.pageTotal=1
-			self.pageSize=10
-			self.pageIndex=1
-			self.nodata = false
-			self.dataList=[]
+			self.setParams();
 			this.infoTab.filter((v,i)=>{
 				if(i==ind){
 					v.choose = true
@@ -297,6 +295,20 @@ export default {
 				self.getProdList()
 			}
 		},
+		showAll(ind) {
+			this.dataList[ind].articleInfo.showMore = true;
+		},
+		hideMore(ind) {
+			this.dataList[ind].articleInfo.showMore = false;
+		},
+		setParams(){
+			let self =this
+			self.pageTotal=1
+			self.pageSize=10
+			self.pageIndex=1
+			self.nodata = false
+			self.dataList=[]
+		}
 	}
 };
 </script>

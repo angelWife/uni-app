@@ -5,7 +5,7 @@
 				<icon @tap="searchData" class="iconfont icon-search"></icon>
 				<input v-if="isSearch" type="text" @input="changeVal" confirm-type="search" v-model="keywords" @confirm="searchData" />
 				<input v-else type="text" value="" @tap="searchClick" readyonly />
-				<icon class="iconfont icon-clear"></icon>
+				<icon v-if="isSearch&&keywords" class="iconfont icon-clear" @tap="clearSearchVal"></icon>
 			</view>
 			<view class="search">
 				<button v-if="isSearch" @tap="cancelSearch" size="mini" type="text" hover-class="none">取消</button>
@@ -24,7 +24,7 @@
 			</view>
 		</view>
 		<view class="resBox" v-if="isSearch">
-			<view class="fastSearch" v-if="nosearch">
+			<view class="fastSearch" v-if="serchList.length==0">
 				<view class="histroy" v-if="historyList.length > 0">
 					<view class="title">
 						<text>历史记录</text>
@@ -47,7 +47,8 @@
 			</view>
 			<view class="searchList" v-else>
 				<scroll-view class="myscroll" scroll-y="true" @scrolltolower="loadMoreData">
-					<commentItem :nodata="nodata" :nomore="searchnomore" :dataList="serchList" @dianzan="dianzan" @followPost="followPost"></commentItem>
+					<commentItem :nodata="nodata" :nomore="searchnomore" :dataList="serchList" @dianzan="dianzan" @followPost="followPost"
+					 @hideMore="hideMore" @showAll="showAll()"></commentItem>
 				</scroll-view>
 			</view>
 		</view>
@@ -62,7 +63,7 @@
 			<view class="list-content">
 				<scroll-view class="myscroll" scroll-y="true" @scrolltolower="loadMoreData">
 					<commentItem :nodata="nodata" :nomore="nomore" :pageType="pageType" :dataList="dataList" @dianzan="dianzan"
-					 @followPost="followPost"></commentItem>
+					 @followPost="followPost" @hideMore="hideMore" @showAll="showAll()"></commentItem>
 				</scroll-view>
 			</view>
 		</view>
@@ -101,7 +102,8 @@
 				pageIndex: 1,
 				pageSize: 10,
 				pageType: 1,
-				pageTotal: 1
+				pageTotal: 1,
+				checkShop: 1
 			};
 		},
 		onLoad() {
@@ -138,27 +140,29 @@
 			console.error('hide')
 		},
 		onUnload() {
-			
+
 		},
 		onPullDownRefresh() {
 			this.resetData();
 			this.initData();
 			wx.stopPullDownRefresh()
 		},
+
 		onShareAppMessage(res) {
 			let settings = {}
 			let index = res.target.dataset.index
 			let item = this.dataList[index];
+			this.shareStat(index);
 			if (item.articleInfo.type == 1) {
 				// settings.type='article'
 				settings.title = item.articleInfo.title
-				settings.imageUrl = item.articleInfo.imgList[0]
+				settings.imageUrl = '/static/images/sharePic.png'
 				settings.pagePath =
 					`/pages/home/commentDetail?data=${encodeURIComponent(JSON.stringify(item))}&pageType=${this.pageType}`
 			} else {
 				// settings.type='article'
 				settings.title = item.articleInfo.content.substr(0, 24)
-				settings.imageUrl = '/static/images/icon-loading.png'
+				settings.imageUrl = '/static/images/sharePic.png'
 				settings.pagePath =
 					`/pages/home/commentDetail?data=${encodeURIComponent(JSON.stringify(item))}&pageType=${this.pageType}`
 			}
@@ -175,13 +179,12 @@
 				let self = this;
 				console.error(self.keywords)
 				let params = {
-					checkShop: 1,
+					checkShop: self.checkShop,
 					pageType: self.pageType,
 					pageIndex: self.pageIndex,
 					pageSize: self.pageSize,
 					keywords: self.keywords,
-					atId: null,
-					topicId: null
+					userCode: null
 				};
 				self.$acFrame.HttpService.postList(params).then(res => {
 					if (res.success) {
@@ -246,7 +249,7 @@
 
 									v.articleInfo.showMore = false;
 								}
-								if (v.articleInfo.content.length > 60) {
+								if (v.articleInfo.content.length > 80) {
 									v.articleInfo.isDetail = false;
 								} else {
 									v.articleInfo.isDetail = true;
@@ -293,9 +296,12 @@
 			},
 			searchClick() {
 				this.isSearch = true;
-				//this.dataList = []
+				this.resetData()
 				this.historyList = uni.getStorageSync('historyList') || [];
 				this.hotSearch = this.$acFrame.Util.getHotList(1);
+			},
+			clearSearchVal() {
+				this.keywords = '';
 			},
 			hideTab() {
 				this.showOper = false;
@@ -308,7 +314,20 @@
 					complete: () => {}
 				});
 			},
-
+			shareStat(ind) {
+				let self = this
+				let listInfo = self.dataList[ind]
+				let params = {
+					articleId: listInfo.articleInfo.id,
+				}
+				
+				self.$acFrame.HttpService.sharePost(params).then(res => {
+					if (res.success) {
+						listInfo.articleInfo.numTotalShare ++
+						self.dataList[ind] = listInfo
+					}
+				})
+			},
 			changeVal(e) {
 				this.keywords = e.detail.value;
 			},
@@ -316,31 +335,39 @@
 				this.isSearch = false;
 				this.searchVal = false;
 				this.keywords = '';
+				this.tabList[0].active = false
+				this.tabList[1].active = true
+				this.resetData();
+				this.initData();
 			},
 			searchData(e) {
 				let val = this.keywords;
 				this.pageIndex = 1;
+				this.checkShop = 2;
 				this.pageSize = 10;
-				this.pageType = null;
+				this.pageType = 1;
 				let historyList = uni.getStorageSync('historyList') || [];
 				if (historyList.length < 10) {
-					historyList.shift(val);
+					historyList.push(val);
 				} else {
-					historyList.splice(9, 1);
-					historyList.shift(val);
+					historyList.splice(0, 1);
+					historyList.push(val);
 				}
 				uni.setStorageSync('historyList', historyList);
+				this.historyList = historyList
 				this.initData();
 			},
 			tapSearch(val) {
 				this.resetData();
-				this.pageType = null;
+				this.pageType = 1;
 				this.keywords = val;
+				this.checkShop = 2
 				this.initData();
 			},
 			//清空历史
 			clearHistory() {
 				uni.setStorageSync('historyList', []);
+				this.historyList = []
 			},
 			ralease() {
 				this.showOper = !this.showOper;
@@ -372,6 +399,9 @@
 				this.pageIndex = 1;
 				this.pageSize = 10;
 				this.dataList = [];
+				this.serchList = []
+				this.checkShop = 1
+				this.checkShop = 1;
 				this.nodate = false;
 				this.nomore = false
 			},
@@ -415,6 +445,12 @@
 			},
 			setImg(src) {
 				return this.$acFrame.Util.setImgUrl(src);
+			},
+			showAll(ind) {
+				this.dataList[ind].articleInfo.showMore = true;
+			},
+			hideMore(ind) {
+				this.dataList[ind].articleInfo.showMore = false;
 			},
 		}
 	};
@@ -537,7 +573,8 @@
 
 				&.active {
 					color: #b40000;
-                    font-weight: 600;
+					font-weight: 600;
+
 					text {
 						border-color: #b40000;
 					}
@@ -556,7 +593,7 @@
 	}
 
 	.resBox {
-		height: calc(100% - 90rpx);
+		height: calc(100% - 110rpx);
 
 		.title {
 			padding: 0 20rpx;

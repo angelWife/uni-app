@@ -112,7 +112,49 @@ text {
   background: rgba(0, 0, 0, 0.2);
   top: 0;
   left: 0;
-  z-index: 10;
+  z-index: 20;
+  .centerModal{
+	  width:80%;
+	  margin:0 auto;
+	  background: #fff;
+	  border-radius:20rpx;
+	  overflow: hidden;
+	  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+	  .title{
+		  line-height: 80rpx;
+		  padding:0 30rpx;
+		  position:relative;
+		  border-bottom: 1px solid #e6e6e6;
+		  .close{
+			  position:absolute;
+			  top:0;
+			  right:0;
+			  height:80rpx;
+			  width: 80rpx;
+			  text-align:center;
+			  color:#999;
+		  }
+	  }
+	  .center{
+		  padding:20rpx 30rpx;
+		  text-align: center;
+	  }
+	  .foot{
+		  border-top:1px solid #e6e6e6;
+		  > view{
+			  height:80rpx;
+			  line-height: 80rpx;
+			  text-align: center;
+		  }
+		  .sure{
+			  color:#007AFF;
+		  }
+		  .cancel{
+			  color:#999;
+			  border-right:1px solid #e6e6e6;
+		  }
+	  }
+  }
 }
 .comModal {
   position: absolute;

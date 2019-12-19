@@ -79,12 +79,12 @@ const showBigPic = (showSrc, list) => {
 	})
 }
 // 上传图片
-const uploadPic = (a_url) => {
+const uploadPic = (a_url,len) => {
 	return new Promise((resolve, reject) => {
 		let token = uni.getStorageSync('access_token');
 		let channel='MP_WX';
 		uni.chooseImage({
-			count: 9,
+			count: len,
 			sizeType: ['compressed'], // 可以指定是原图还是压缩图，默认二者都有
 			sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
 			success: function(res) {

@@ -4,7 +4,7 @@
 			<image src="../../static/images/b1.png" mode="widthFix"></image>
 		</view>
 		<commentItem :nodata="nodata" :nomore="nomore" :pageType="pageType" :dataList="dataList" @dianzan="dianzan" :showNum="showNum"
-		 @followPost="followPost"></commentItem>
+		 @followPost="followPost"  @hideMore="hideMore" @showAll="showAll"></commentItem>
 	</view>
 </template>
 
@@ -122,7 +122,7 @@
 			
 									v.articleInfo.showMore = false;
 								}
-								if (v.articleInfo.content.length > 60) {
+								if (v.articleInfo.content.length > 80) {
 									v.articleInfo.isDetail = false;
 								} else {
 									v.articleInfo.isDetail = true;
@@ -182,6 +182,12 @@
 						self.dataList[ind] = listInfo
 					}
 				})
+			},
+			showAll(ind) {
+				this.dataList[ind].articleInfo.showMore = true;
+			},
+			hideMore(ind) {
+				this.dataList[ind].articleInfo.showMore = false;
 			},
 		}
 	}

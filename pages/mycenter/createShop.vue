@@ -109,7 +109,6 @@
 					return false;
 				}
 				this.$acFrame.HttpService.shopInfoApply({name:self.name,userName:self.userName}).then(res => {
-					console.log(res)
 					if(res.success){
 						self.$acFrame.Util.mytotal('提交成功，店铺审核中，请耐心等待');
 						setTimeout(()=>{

@@ -17,8 +17,8 @@
 				</view>
 				<view class="btnBox">
 					<button v-if="userInfo.shopIngType==3" class="radiuBtn" size="mini" type="red" @tap="linkTo('createShop')">申请开店</button>
-					<button v-else-if="userInfo.shopIngType==1" class="radiuBtn" size="mini" type="red" @tap="hasShop">店主</button>
-					<button v-else-if="userInfo.shopIngType==2" class="radiuBtn" size="mini" type="red" @tap="checkShop">审核中</button>
+					<button v-else-if="userInfo.shopIngType==1" class="radiuBtn" size="mini" type="red" @tap="showModal('showShopModal')">店主</button>
+					<button v-else-if="userInfo.shopIngType==2" class="radiuBtn" size="mini" type="red" @tap="showModal('showCheckModal')">审核中</button>
 				</view>
 				<view class="right" @tap="linkTo('baseInfo')">
 					<icon class="iconfont icon-right"></icon>
@@ -121,14 +121,42 @@
 				</view>
 			</view>
 		</view>
+		<MessageModal :title="checktitle" :showMessage="showCheckModal" @closeModal="closeModal" @sureModalBtn="sureModal('showCheckModal')">
+			<view class="message">
+				<view class="">
+					请耐心等待...如需帮助请联系
+				</view>
+				<view class="blue" @tap="callShop('010-12322222')">
+					010-12322222
+				</view>
+			</view>
+		</MessageModal>
+		<MessageModal :title="shoptitle" :showMessage="showShopModal" @closeModal="closeModal" @sureModalBtn="sureModal('showShopModal')">
+			<view class="message">
+				<view class="">
+					访问 <text class="blue">http://sj.xxl.com</text> 
+				</view>
+				<view>
+					快速上传商品
+				</view>
+			</view>
+		</MessageModal>
 	</view>
 </template>
 
 <script>
+	import MessageModal from '@/components/messageModal.vue';
 	export default {
+		components: {
+			MessageModal
+		},
 		data() {
 			return {
-				userInfo:{}
+				userInfo:{},
+				showCheckModal:false,
+				showShopModal:false,
+				checktitle:'资料审核种',
+				shoptitle:'你已具备开店资格'
 			}
 		},
 		onShow(){
@@ -147,6 +175,21 @@
 				uni.navigateTo({
 					url: url
 				});
+			},
+			callShop(phone){
+				uni.makePhoneCall({
+					phoneNumber:phone
+				})
+			},
+			showModal(name){
+				this[name]=true
+			},
+			sureModal(name){
+				this[name]=false
+			},
+			closeModal(){
+				this.showCheckModal=false
+				this.showShopModal=false
 			}
 		}
 	}
@@ -214,5 +257,7 @@ page{
 		}
 	}
 }
-
+.message{
+	margin:40rpx 0;
+}
 </style>
