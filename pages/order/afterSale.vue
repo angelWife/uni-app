@@ -38,17 +38,17 @@
 
 				<view class="payprice text-right red">
 					
-					实付：<text class="fs12">¥</text><text class="pr30">{{item.pricePayWait}}</text>
+					实付：<text class="fs12">¥</text><text class="pr30">{{item.moneyAsk}}</text>
 					<block v-if="item.status==1||item.status==3">
-						退款：<text class="fs12">¥</text><text>{{item.pricePay}}</text>
+						退款：<text class="fs12">¥</text><text>{{item.moneyFinish}}</text>
 					</block>
 				</view>
 				<view class="orderBtn text-right">
 					<block v-if="item.status==1">
-						<button type="null" @tap.stop="cancelOrder(item)">取消申请</button>
+						<button type="null" @tap.stop="cancelRefund(item.id)">取消申请</button>
 					</block>
 					<block v-if="item.status==2||item.status==4">
-						<button type="null">重新申请</button>
+						<button type="null" @tap="refundAgain(item)">重新申请</button>
 					</block>
 					<button type="rednull" @tap="goDetail(item.id)">售后详情</button>
 				</view>
@@ -118,8 +118,7 @@
 			this.getStatus()
 		},
 		onPullDownRefresh() {
-			this.pageIndex = 1;
-			this.dataList = [];
+			this.setParams()
 			this.getList();
 			wx.stopPullDownRefresh()
 		},
@@ -201,11 +200,39 @@
 						v.choose=false
 					}
 				})
+				this.setParams()
+				this.getList();
+			},
+			cancelRefund(id){
+				let self = this
+				this.$acFrame.HttpService.cancelRefund({id:id}).then(res => {
+					if (res.success) {
+				self.$acFrame.Util.mytotal('取消售后成功！')
+				setTimeout(()=>{
+
+					self.getList()
+				},1000)
+					}
+				})
+			},
+			refundAgain(item){
+        		let obj={
+					orderId:item.id,
+					orderDetailId:item.detailList[0].id,
+					price:item.pricePay,
+					askNum:item.detailList[0].buyNum,
+					phone:item.address?item.address.receiverMobilePhone:'' 
+        		}
+        		let type = item.type == 1 ? 'hasgoods':'nullgoods'
+				uni.navigateTo({
+					url:'/pages/order/returnForm?orderData=' + JSON.stringify(obj) + '&type='+type
+				})
+    		},
+			setParams(){
 				this.nomore=false
 				this.nodata=false
 				this.pageIndex = 1;
 				this.dataList = [];
-				this.getList();
 			},
 			setImg(src) {
 				return this.$acFrame.Util.setImgUrl(src);

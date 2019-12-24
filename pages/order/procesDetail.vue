@@ -11,7 +11,9 @@
       </view>
     </view>
     <view class="modal mod2 flex item-center">
-      <view class="pic"></view>
+      <view class="pic">
+        <image :src="details.shopInfo.imgPath" mode="widthFix" />
+      </view>
       <view class="name">{{details.shopInfo.name}}</view>
     </view>
     <view class="modal">
@@ -59,10 +61,10 @@
         </view>
         <view class="item">
 			<block v-if="details.status==1">
-				<button type="rednull">取消申请</button>
+				<button type="rednull" @tap="cancelRefund(details.id)">取消申请</button>
 			</block>
             <block v-if="details.status==2||details.status==4">
-            	<button type="rednull">重新申请</button>
+            	<button type="rednull" @tap="refundAgain">重新申请</button>
             </block>
         </view>
     </view>
@@ -143,7 +145,33 @@ export default {
 				self.init_time()
 		  	}
 		})
-	  },
+    },
+    cancelRefund(id){
+      let self = this
+		  this.$acFrame.HttpService.cancelRefund({id:id}).then(res => {
+		  	if (res.success) {
+          self.$acFrame.Util.mytotal('取消售后成功！')
+          setTimeout(()=>{
+             uni.navigateBack({
+                delta: 2
+             });
+          },1000)
+		  	}
+		  })
+    },
+    refundAgain(){
+        let obj={
+					orderId:this.details.id,
+					orderDetailId:this.details.detailList[0].id,
+					price:this.details.pricePay,
+					askNum:this.details.detailList[0].buyNum,
+					phone:this.details.address?this.details.address.receiverMobilePhone:'' 
+        }
+        let type = this.details.type == 1 ? 'hasgoods':'nullgoods'
+				uni.navigateTo({
+					url:'/pages/order/returnForm?orderData=' + JSON.stringify(obj) + '&type='+type
+				})
+    },
 	  setImg(src){
 	  	return this.$acFrame.Util.setImgUrl(src);
 	  },

@@ -85,6 +85,7 @@ class Service extends HttpService {
 			refundList:'order/info_refund/table_data',//售后列表
 			refundDetail:'order/info_refund/load_by_id',//售后详情
 			cancelSpellOrder:'order/spell/cancle',//取消拼购但
+			cancelRefund:'order/info_refund/cancle',//取消退款
 			//排行
 			articleRank: 'top/ranking/article', // 帖子排行
 			prodRank: 'top/ranking/goods', //商品排行
@@ -466,6 +467,11 @@ class Service extends HttpService {
 	}
 	cancelSpellOrder(params) {
 		return this.postRequest(this.$$path.cancelSpellOrder, {
+			data: params
+		})
+	}
+	cancelRefund(params) {
+		return this.postRequest(this.$$path.cancelRefund, {
 			data: params
 		})
 	}
