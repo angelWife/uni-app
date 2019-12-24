@@ -16,7 +16,7 @@
 		</view>
 		<view class="uploadCard">
 			<view class="title">第三方支付授权承诺函</view>
-			<view class="flex uploadBox">
+			<view class="flex uploadBox just-con-a">
 				<view class="flex-1">
 					<view class="pic" @tap="downFile">
 						<image src="/static/images/fileDown.png" mode="widthFix"></image>
@@ -165,6 +165,7 @@
 		padding:0 10rpx;
 		> view{
 			margin:0 10rpx;
+			width: 50%;
 		}
 		.text{
 			height:60rpx;

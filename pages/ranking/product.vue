@@ -1,6 +1,8 @@
 <template>
 	<view class="content ">
-		<view class="advent" style="background:url() center center no-repeat;background-size:100% auto;"></view>
+		<view class="advent" :style="'background:url('+banner+') center center no-repeat;background-size:100% auto;'">
+			<!-- <image :src="banner" mode="widthFix"></image> -->
+		</view>
 		<view class="productList">
 			<view v-for="(item, index) in productList" :key="index" class="item flex">
 				<view class="pic" :style="'background:url('+setImg(item.imgPath)+') center center no-repeat;background-size:100% auto;'" @tap="showPic(item.imgPath)">
@@ -18,6 +20,17 @@
 					</view>
 				</view>
 			</view>
+			<view v-if="nodata" class="noData flex f-row just-con-c item-center">
+				<view class="text-center">
+					<image src="/static/images/nodata.png" mode="widthFix"></image>
+					<view class="text-center c666 fs16">
+						这里还没有内容
+					</view>
+				</view>
+			</view>
+			<view class="noMore" v-if="nomore">
+				~已经到底了！~
+			</view>
 		</view>
 	</view>
 </template>
@@ -26,25 +39,63 @@
 	export default {
 		data() {
 			return {
+				pageIndex:1,
+				pageSize:10,
+				pageTotal:1,
+				nomore:false,
+				nodata:false,
 				productList:[],
-				showNum:true
+				showNum:true,
+				banner:getApp().globalData.config.businessPath+'static/ss/mp/images/top_goods.png'
 			};
 		},
 		onShow(){
 			this.initData()
 		},
+		onReachBottom(){
+			if (this.pageIndex < this.pageTotal) {
+				this.pageIndex++
+				this.initData()
+			} else {
+				this.nomore = true
+				return false;
+			}
+		},
+		onPullDownRefresh(){
+			this.resetData()
+			this.initData()
+			uni.stopPullDownRefresh();
+		},
 		methods:{
 			initData(){
 				let self = this
-				this.$acFrame.HttpService.prodRank().then(res=>{
+				let params = {
+					pageSize:this.pageSize,
+					pageIndex:this.pageIndex
+				}
+				this.$acFrame.HttpService.prodRank(params).then(res=>{
 					if(res.success){
-						self.productList = res.data
+						let list= res.data.rows
+						self.pageTotal = res.data.pageTotal
+						self.pageSize = res.data.pageSize
+						if(list.length>0){
+							self.productList = self.productList.concat(list)
+						}else{
+							self.nodata = true
+						}
 					}
 				})
 			},
 			setImg(src){
 				return  this.$acFrame.Util.setImgUrl(src);
 			},
+			resetData(){
+				this.pageSize = 10
+				this.pageIndex = 1
+				this.nodata = false
+				this.nomore = false
+				this.productList=[]
+			}
 		}
 	}
 </script>

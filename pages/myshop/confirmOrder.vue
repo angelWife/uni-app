@@ -1,6 +1,6 @@
 <template>
 	<view class="content">
-		<view class="modal address flex item-center" @tap="add_address" >
+		<view class="modal address flex item-center" @tap="add_address">
 			<view class="pic">
 				<icon class="iconfont icon-dizhi"></icon>
 			</view>
@@ -10,14 +10,14 @@
 						<text class="fs15">{{addrVO.name}}</text>
 						<text class="c999">{{addrVO.mobilePhone}}</text>
 					</view>
-					<view class="detail" >
+					<view class="detail">
 						{{addrVO.areaProvince}}{{addrVO.areaCity}}{{addrVO.areaCounty}}{{addrVO.address}}
 					</view>
 				</block>
 				<block v-else>
-                     <view class="c999 text-right">请选择收货地址</view>
+					<view class="c999 text-right">请选择收货地址</view>
 				</block>
-				
+
 			</view>
 			<view class="chooseAddress">
 				<icon class="iconfont icon-right"></icon>
@@ -26,12 +26,12 @@
 		<view class="modal order_detail">
 			<view class="shopName fs15">{{details.shopInfo.name}}</view>
 			<view class="product flex">
-				<view class="pic" style="overflow: hidden;" >
+				<view class="pic" style="overflow: hidden;">
 					<image :src="this.$acFrame.Util.setImgUrl(details.img)" mode="widthFix"></image>
 				</view>
 				<view class="center flex-1">
 					<view class="name clamp clamp-2">
-						{{details.name}} 
+						{{details.name}}
 					</view>
 					<view class="spec">
 						{{(details.chooseSpec && details.chooseSpec.propValue)?details.chooseSpec.propValue:''}}
@@ -51,39 +51,43 @@
 			<view class="orderMsg fs13">
 				<view class="item flex">
 					<view class="name">运费</view>
-					<view class="flex-1 text-right" v-if="details.freight==0" >
+					<view class="flex-1 text-right" v-if="priceVO.priceLogistic==0">
 						免运费
 					</view>
-					<view class="flex-1 text-right" v-else >
-						￥{{details.freight}}
+					<view class="flex-1 text-right" v-else>
+						￥{{priceVO.priceLogistic}}
 					</view>
-					
+
 				</view>
-				<view class="item flex" @tap="chooseCoupon">
+				<view class="item flex item-center" @tap="cickCoupon" v-if="operType=='order'">
 					<view class="name">优惠券</view>
 					<view class="flex-1 text-right">
-						无优惠券可用
+						<block v-if="couponList.length>0">
+							<text class="red">您有可使用的优惠券</text>
+							<icon class="iconfont icon-right"></icon>
+						</block>
+						<text v-else class="c999">无优惠券可用</text>
 					</view>
 				</view>
 				<view class="item flex">
 					<view class="name">精灵折扣</view>
 					<view class="flex-1 text-right">
-						已减免0
+						已减免{{priceVO.priceShopReduce}}
 					</view>
 				</view>
-				<view class="item flex"   >
+				<view class="item flex">
 					<view class="name">减免</view>
 					<view class="flex-1 text-right">
-						0
+						{{priceVO.priceShopSpirit}}
 					</view>
 				</view>
 			</view>
 		</view>
-		<view class="modal texarea flex">
+		<view class="modal texarea">
 			<view class="name">买家留言：</view>
-			<view class="flex-1">
+			<view class="textBox" v-if="!showCouponModal">
 				<textarea :value="messageBuyer" @input="changeText" placeholder="选填，请先和商家协商一致请先和商家协商一致" />
-			</view>
+				</view>
 		</view>
 		<view class="footBtn flex">
 			<view class="flex-1 text-right pr15">
@@ -102,14 +106,15 @@
 					<icon class="iconfont icon-remove" @tap="closeModal"></icon>
 				</view>
 				<view class="list">
-					<view v-for="(item,ind) in couponList" :key="ind" class="item flex red item-center">
+					<block v-for="(item,ind) in couponList" :key="ind">
+					<view class="item flex red item-center" :class="{'hasReceived':item.hasReceived}" @tap="chooseConpons(item,ind)">
 						<view class="left">
 							<block v-if="item.effectType == 1">
-							<text class="fs12">满减</text>
 							<text class="fs40 blod">{{item.effectVal}}</text>
+							<text class="fs12">元</text>
 							</block>
 							<block v-else>
-							<text class="fs40 blod">{item.effectVal}}</text>
+							<text class="fs40 blod">{{item.effectVal}}</text>
 							<text class="fs12">折</text>
 							</block>
 							
@@ -119,22 +124,23 @@
 							<view class="fs12">
 								{{item.type==1?"本店通用":"部分商品使用"}}
 							</view>
-							<view class="fs12">
-								{{item.timeStart}}-2{{item.timeEnd}}
+							<view class="fs10">
+								{{item.timeStart}} ~ {{item.timeEnd}}
 							</view>
 						</view>
 						<block v-if="item.hasReceived">
 							<view class="right fs15 blod">
-								已领取
+								已使用
 							</view>
 						</block>
 						<block v-else>
-							<view class="right fs15 blod" @tap="useCoupon(item.couponId)">
+							<view class="right fs15 blod">
 								立即使用
 							</view>
 						</block>
 						
 					</view>
+					</block>
 				</view>
 			    <view class="foot">
 			    	<label class="radio" @tap="choose">
@@ -152,29 +158,32 @@
 			return {
 				details:{},//带过来胡产品信息
 				couponList:[],//优惠券列表
+				useList:[],
 				addrVO:{},
 				checked:false,
 				showCouponModal:false,
 				messageBuyer:'',
+				priceVO:{
+					priceLogistic:0,
+					priceShopReduce:0,
+					priceShopSpirit:0
+				},
 				payTotal:0.00,
 				operType:'order'
 			}
 		},
 		onLoad(options){
-            this.details = JSON.parse(options.details);
+            this.details = JSON.parse(decodeURIComponent(options.details));
 			console.error(this.details)
-			debugger
 			this.operType=options.type
 			this.getAddress();
-			if(options.type == 'order'){
-				this.payTotal =  this.details.chooseSpec.priceSale *  this.details.goodsNum
-			} else {
-				this.payTotal =  this.details.chooseSpec.priceSpell *  this.details.goodsNum
-			}
+			
 			
 		},
 		onShow(){
-
+			if(this.operType=='order'){
+				this.getCoupon()
+			}
 		},
 		methods: {
 			getCoupon(){
@@ -192,17 +201,25 @@
 				 */
 				self.$acFrame.HttpService.post('product/coupon_receive/can_use',params).then(res => {
 					if(res.success){
-						self.couponList = res.data
+						let couponList= res.data
+						couponList.filter(v=>{
+							v.hasReceived =false
+							v.timeEnd= self.$acFrame.Util.formatTime(v.timeEnd,'dayhm')
+							v.timeStart= self.$acFrame.Util.formatTime(v.timeStart,'dayhm')
+						})
+						self.couponList = couponList
 					}
 				})
 				
 				
 			},
+			
 			getAddress(){
 				let self = this
 				self.$acFrame.HttpService.defaultAddr().then(res => {
 					if(res.success){
 						self.addrVO = res.data
+						self.getTotalPrice();
 					}
 				})
 			},
@@ -225,11 +242,74 @@
 			closeModal(){
 				this.showCouponModal = false
 			},
-			chooseCoupon(){
-				this.showCouponModal = true
+			chooseConpons(obj,ind){
+				if(this.couponList[ind].hasReceived){
+					
+				}else{	
+					this.couponList.filter((v,i)=>{
+						v.hasReceived= false
+						if(i==ind){
+							v.hasReceived= true
+						}
+					})
+					this.useList[0] = obj
+					console.log(this.useList[0])
+					this.getTotalPrice()
+				}
+			},
+			cickCoupon(){
+				if(this.couponList.length>0){
+					this.showCouponModal = true
+				}else{
+					
+				}
+				
 			},
 			choose(){
 				this.checked = !this.checked
+				this.getTotalPrice()
+			},
+			getTotalPrice(){
+				let self =this
+				let params={
+					addressId:this.addrVO.id,
+					buyNum:this.details.goodsNum,
+					couponIdReceiveList:this.useList.length>0?[this.useList[0].couponId]:[],
+					goodsId:this.details.goodsId,
+					goodsSkuId:this.details.chooseSpec.goodsSkuId,
+				}
+				if(this.checked){
+					params.couponIdReceiveList = []
+				}
+				self.$acFrame.HttpService.priceSum(params).then(res=>{
+					if(res.success){
+						this.payTotal = res.data.pricePay
+						this.priceVO = res.data
+					}
+				})
+				// if(this.useList.length>0){
+				// 	if(!this.checked){
+				// 		let obj = this.useList[0]
+				// 		if(obj.effectType==1){
+				// 			this.payTotal = this.$acFrame.Util.money(this.payTotal * 1 - obj.effectVal)
+				// 		}else{
+				// 			this.payTotal = this.$acFrame.Util.money(this.payTotal * obj.effectVal)
+				// 		}
+				// 	} else {
+				// 		if(this.operType == 'order'){
+				// 			this.payTotal =  this.details.chooseSpec.priceSale *  this.details.goodsNum
+				// 		} else {
+				// 			this.payTotal =  this.details.chooseSpec.priceSpell *  this.details.goodsNum
+				// 		}
+				// 	}
+				// }else{
+				// 	if(this.operType == 'order'){
+				// 		this.payTotal =  this.details.chooseSpec.priceSale *  this.details.goodsNum
+				// 	} else {
+				// 		this.payTotal =  this.details.chooseSpec.priceSpell *  this.details.goodsNum
+				// 	}
+				// }
+				
 			},
 			choosePayWay(){
 				if(this.operType=='order'){
@@ -251,6 +331,13 @@
 					goodsSkuId: this.details.chooseSpec.goodsSkuId?this.details.chooseSpec.goodsSkuId:'',
 					messageBuyer: this.messageBuyer
 				}
+				if(this.checked){
+					obj.couponIdReceiveList = []
+				}else{
+					if(this.useList.length>0){
+						obj.couponIdReceiveList[0]=this.useList[0].couponId
+					}
+				}
 				console.log(obj);
 				var self = this;
 				this.$acFrame.HttpService.post('order/info/buy',obj).then(res => {
@@ -260,6 +347,9 @@
 						uni.navigateTo({
 							url:'payWay?order='+JSON.stringify(info)
 						}) 
+						debugger
+						getApp().globalData.orderType = self.operType
+						getApp().globalData.prodVO=self.details
 					}
 				})
 			},
@@ -279,6 +369,8 @@
 						uni.navigateTo({
 							url:'payWay?order='+JSON.stringify(info)
 						}) 
+						getApp().globalData.orderType = self.operType
+						getApp().globalData.prodVO=self.details
 					}
 				})
 			},
@@ -299,6 +391,8 @@
 						uni.navigateTo({
 							url:'payWay?order='+JSON.stringify(info)
 						}) 
+						getApp().globalData.orderType = self.operType
+						getApp().globalData.prodVO=self.details
 					}
 				})
 			},
@@ -306,7 +400,6 @@
 				this.addrVO = addrVO
 			},
 			add_address(){
-				console.log(4444444);
 				uni.navigateTo({
 					url:'../mycenter/addressList'
 				})
@@ -321,7 +414,7 @@ page{
 	background: #efefef;
 }
 .fs40{
-	font-size:80rpx;
+	font-size:60rpx;
 }
 .content{
 	padding:0 24rpx 100rpx;
@@ -409,12 +502,27 @@ page{
 		.item{
 			line-height: 40rpx;
 			margin-top:10rpx;
+			.iconfont{
+				color:#999;
+				font-size:28rpx;
+				line-height: 40rpx;
+				float: right;
+				width: 30rpx;
+				height:40rpx;
+				position:relative;
+&::before{
+	position:absolute;
+	top:2rpx;
+	right:0;
+}
+			}
 		}
 	}
 	.texarea{
 		padding:24rpx;
-		.flex-1{
-			width: 60%;
+		line-height: 40rpx;
+		margin-top:10rpx;
+		.textBox{
 			textarea{
 				height:160rpx;
 				width:100%;
@@ -476,19 +584,27 @@ page{
 					overflow: hidden;
 					margin-bottom:20rpx;
 					padding:10rpx 0;
+					
 					.left{
-						width: 150rpx;
-						margin-right:30rpx;
+						width: 220rpx;
+						padding-top:6rpx;
 						text-align: center;
 					}
 					.center{
-						
+						margin-right:20rpx;
 					}
 					.right{
-						width: 200rpx;
+						width: 160rpx;
 						text-align: center;
 						line-height: 144rpx;
 						border-left:1px dashed #b40000;
+					}
+					&.hasReceived{
+						background: #f1f1f1;
+						color:#999 !important;
+						.right{
+							border-color:#999;
+						}
 					}
 				}
 			}

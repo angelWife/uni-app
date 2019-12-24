@@ -2,8 +2,12 @@
 	<view class="content">
 		<view class="modal reasons">
 			<view class="title">请选择您想要举报的类型（必选）</view>
-			<view class="resonlist flex f-wrap just-con-l">
-				<view class="item" v-for="(item,index) in reasons" :key="index" :class="{'choose':item.choose}" @tap="chooseReason(index)">{{item.val}}</view>
+			<view class="resonlist">
+				<view class="item" v-for="(item,index) in reasons" :key="index" :class="{'choose':item.choose}" @tap="chooseReason(index)">
+					<view class="item_box">
+						{{item.val}}
+					</view>
+				</view>
 			</view>
 		</view>
 		<view class="modal picList">
@@ -144,7 +148,8 @@ export default {
 		      }
 		    });
 		  } else {
-		    uni.navigateBack({});
+			  return false;
+		    // uni.navigateBack({});
 		  }
 		},
 		removePic(ind) {
@@ -173,18 +178,25 @@ page {
 		}
 		.resonlist{
 			padding:0 10rpx 10rpx;
+			overflow: hidden;
 			.item{
-				width: 30.5%;
-				heigth:60rpx;
-				line-height: 60rpx;
-				text-align: center;
-				background:#e6e6e6;
-				color:#999;
-				border-radius:0.2em;
-				margin:10rpx;
+				width: 33.3333%;
+				float:left;
+				padding:10rpx;
+				.item_box{
+					heigth:60rpx;
+					line-height: 60rpx;
+					text-align: center;
+					background:#e6e6e6;
+					color:#999;
+					border-radius:0.2em;
+				}
 				&.choose{
-					color:#fff;
-					background-color: #b40000;
+					.item_box{
+						color:#fff;
+						background-color: #b40000;
+					}
+					
 				}
 			}
 		}
@@ -213,8 +225,9 @@ page {
 		}
 		textarea{
 			padding:10rpx 20rpx 20rpx;
-			height:120rpx;
+			height:200rpx;
 			width: 100%;
+			word-break: break-all;
 			box-sizing: border-box;
 		}
 	}

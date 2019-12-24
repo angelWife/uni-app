@@ -6,9 +6,14 @@ export default {
     config: MyConfig,
     comFunc: AcFrame,
 	userCode:'',
-	isShowPic:false
+	isShowPic:false,
+	orderType:'', //下单的时候用
+	prodVO:{}//下单的时候用
   },
-  onLaunch: function() {},
+  onLaunch: function(options) {
+	  console.error(options)
+	  // let userCode = 
+  },
   onShow: function() {},
   onHide: function() {
     console.log("App Hide");
@@ -212,9 +217,9 @@ text {
   }
   .grade {
     position: absolute;
-    width: calc(100% + 20rpx) !important;
+    width: calc(100% + 30rpx) !important;
     top: -10rpx;
-    left: -10rpx;
+    left: -15rpx;
   }
 }
 .comNews {
@@ -238,6 +243,8 @@ text {
   }
   .newBox {
     position: absolute;
+	height: 140rpx;
+	width: 100%;
     top: 0;
     left: 0;
     z-index: 2;
@@ -251,8 +258,9 @@ text {
       margin: 0 40rpx;
     }
     .main {
+	height: 140rpx;
       border-bottom: 1px solid #ccc;
-      padding: 20rpx 0;
+      padding: 24rpx 0;
       .text {
         margin-top: 10rpx;
       }
@@ -320,7 +328,11 @@ icon.remove {
   }
 }
 .noData {
-  height: 100%;
+	position:absolute;
+	height:100%;
+	top:0;
+	left:0;
+	width: 100%;
   image {
     width: 400rpx;
     margin: 60rpx 20rpx;
@@ -382,7 +394,7 @@ icon.remove {
 }
 /*字体颜色*/
 .red {
-  color: #b40000;
+  color: #b40000 !important;
 }
 .blue {
   color: #4c8ff7;

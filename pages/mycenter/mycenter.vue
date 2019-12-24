@@ -1,38 +1,38 @@
 <template>
 	<view class="content">
-		<view class="headBox flex item-center">
+		<view class="headBox flex item-center" :style="headpg">
 			<view class="pic comHeadPic">
-				<image class="grade" src="../../static/images/baihu.png" mode="widthFix"></image>
+				<image class="grade" v-if="userInfo.nobilityType>1" :src="'/static/images/juewei/'+(userInfo.nobilityType-1)+'.png'"  mode="widthFix"></image>
 				<image class="headpic" :src="this.$acFrame.Util.setImgUrl(userInfo.imgHeadPath )"></image>
 			</view>
 			<view class="msg flex-1">
 				<view class="text textEllipsis">
 					<icon class="iconfont icon-location"></icon>
-					黑龙江哈尔滨市双城区
+					{{userInfo.address?userInfo.address:'暂无信息'}}
 				</view>
 				<view class="text textEllipsis">
 					<icon class="iconfont icon-yezi"></icon>
-					{{userInfo.introduce}}
+					{{userInfo.introduce?userInfo.introduce:'这个家伙很懒，什么也没留下'}}
 				</view>
 				<view class="btn">
 					<block v-if="!userInfo.isOwner">
 						<text>私信</text>
-						<text>已关注</text>
+						<text @tap="followUser(userInfo.userCode)">{{userInfo.hasFollow?'已关注':'未关注'}}</text>
 					</block>
 				</view>
 			</view>
-			<view class="offical"><image class="grade" src="../../static/images/zhunwei.png" mode="widthFix"></image></view>
+			<view class="offical"><image class="grade" :src="'/static/images/junxian/'+userInfo.militaryRankType+'.png'" mode="widthFix"></image></view>
 		</view>
 		<view class="mydatas flex">
 			<view class="item flex-1 flex f-col just-con-c">
 				<view class="num">{{userInfo.numTotalArticle}}</view>
 				<view class="text">帖子</view>
 			</view>
-			<view class="item flex-1 flex f-col just-con-c">
+			<view class="item flex-1 flex f-col just-con-c" @tap="followList(1)">
 				<view class="num">{{userInfo.numTotalFollow}}</view>
 				<view class="text">关注</view>
 			</view>
-			<view class="item flex-1 flex f-col just-con-c">
+			<view class="item flex-1 flex f-col just-con-c" @tap="followList(2)" >
 				<view class="num">{{userInfo.numTotalFans}}</view>
 				<view class="text">粉丝</view>
 			</view>
@@ -44,7 +44,7 @@
 		<view class="infoTab">
 			<view class="item" v-for="(item, index) in infoTab" :key="index" :class="{ active: item.choose }" @tap="tapClick(index)">{{ item.name }}</view>
 		</view>
-		<scroll-view class="myscroll" scroll-y="true">
+		<scroll-view class="myscroll" scroll-y="true" @scrolltolower="loadMoreData">
 			<view class="post" v-if="modalName=='post'">
 				<commentItem :nodata="nodata" :nomore="nomore" :dataList="dataList" @dianzan="dianzan"
 				 @followPost="followPost" @hideMore="hideMore" @showAll="showAll" :showOper="showOper"></commentItem>
@@ -52,7 +52,7 @@
 			<view class="shop" v-if="modalName=='shop'">
 				<productList :nodata="nodata" :dataList="dataList"></productList>
 			</view>
-			<view class="honor" v-if="modalName=='honor'">
+			<view class="reward" v-if="modalName=='reward'">
 				<view class="topMsg flex">
 					<view>打赏记录</view>
 					<view class="flex-1 text-right c999">我收到过100次打赏</view>
@@ -72,7 +72,7 @@
 					</view>
 				</view>
 			</view>
-			<view class="reward clearfix" v-if="modalName=='reward'">
+			<view class="honor clearfix" v-if="modalName=='honor'">
 				<view class="item">
 					<view class="itemBox">
 						<view class="mydate">
@@ -135,19 +135,85 @@ export default {
 			pageTotal:1,
 			pageSize:10,
 			pageIndex:1,
-			showOper:true
+			showOper:true,
+			headpg:'background:url("'+getApp().globalData.config.businessPath+'static/ss/mp/images/mine_main.png") center center no-repeat;background-size: auto 100%;'
 		};
 	},
 	onLoad(options){
+		wx.setNavigationBarColor({
+		  frontColor: '#ffffff',
+		  backgroundColor: '#7a0719',
+		  animation: {
+		    duration: 200,
+		    timingFunc: 'easeIn'
+		  }
+		})
 		let userCode=options.userCode;
 		this.userCode=userCode?userCode:uni.getStorageSync('userCode')
 	},
 	onShow(){
-		this.getUserInfo();
-		this.setParams();
-		this.initData();
+		if(getApp().globalData.isShowPic){
+			getApp().globalData.isShowPic=false
+		}else{
+			this.getUserInfo();
+			this.setParams();
+			this.initData();
+		}
+		
+	},
+	onShareAppMessage(res) {
+		getApp().globalData.isShowPic = true
+		let settings = {}
+		if (res.from === 'button') {
+			let index = res.target.dataset.index
+			let item = this.dataList[index];
+			let title = item.articleInfo.content.replace(new RegExp("{-----}", "gm"), "").substr(0, 24);
+			this.shareStat(index);
+			settings.imageUrl = ''
+			if (item.articleInfo.type == 1) {
+				settings.title = item.articleInfo.title
+				settings.pagePath = `/pages/home/commentDetail?data=${encodeURIComponent(JSON.stringify(item))}&pageType=${this.pageType}&userCode=${uni.getStorageSync('userCode')}`
+			} else {
+				settings.title = title
+				settings.pagePath = `/pages/home/commentDetail?data=${encodeURIComponent(JSON.stringify(item))}&pageType=${this.pageType}&userCode=${uni.getStorageSync('userCode')}`
+			}
+		} else {
+			settings.imageUrl = '/static/images/sharePic.png'
+			settings.title = ''
+			settings.pagePath=''
+		}
+		return settings
 	},
 	methods: {
+		shareStat(ind) {
+			let self = this
+			let listInfo = self.dataList[ind]
+			let params = {
+				articleId: listInfo.articleInfo.id,
+			}
+		
+			self.$acFrame.HttpService.sharePost(params).then(res => {
+				if (res.success) {
+					listInfo.articleInfo.numTotalShare++
+					self.dataList[ind] = listInfo
+				}
+			})
+		},
+		setParams(){
+			this.pageIndex=0
+			this.dataList = []
+			this.nomore=false
+			this.nodata =false
+		},
+		loadMoreData(){
+			if(this.pageTotal>this.pageIndex){
+				this.pageIndex++
+				this.initData()
+			}else{
+				this.nomore=true
+			}
+			console.log(this.nomore)
+		},
 		initData() {
 			let self = this;
 			console.error(self.keywords)
@@ -214,7 +280,7 @@ export default {
 							}
 							if (v.type == 1) {
 								if (v.articleInfo.contentExtendList && v.articleInfo.contentExtendList.length > 0) {
-									v.articleInfo.showContent = self.setContent(v.articleInfo.contentExtendList);
+									v.articleInfo.showContent = self.setContent(v.articleInfo);
 								} else {
 									v.articleInfo.showContent = []
 								}
@@ -243,6 +309,51 @@ export default {
 					self.$acFrame.Util.mytotal(res.code);
 				}
 			});
+		},
+		setContent(mydata) {
+			let showContent = [];
+			let type = mydata.type; //1帖子  2文章
+			let content = mydata.content;
+			let star = 0;
+			let contentExtendList = mydata.contentExtendList;
+			var texts = [];
+			var i = 0;
+			var k = 100;
+			while((i=content.indexOf('{-----}')) >= 0 && k>0){
+					    k--;
+						if(i>0){
+							texts.push(content.slice(0,i));
+							content = content.slice(i);
+						}else{
+							content = content.replace("{-----}","");
+							texts.push("");
+						}
+			}
+			
+			texts.forEach(function(item){
+				var obj = {};
+				if(item!=''){
+					obj["type"]="text";
+					obj["content"]=item;
+					showContent.push(obj);
+				}else{
+					if(contentExtendList.length>0){
+						var ext = contentExtendList.shift();
+						//console.log(ext);
+						if(ext.type==1){
+							obj["type"]="post";
+							obj["id"]=ext.atUserCode;
+							obj["name"]=ext.atName;
+						}else if(ext.type==2){
+							obj["type"]="article";
+							obj["id"]=ext.topicId;
+							obj["name"]=ext.topicName;
+						}
+						showContent.push(obj);
+					}
+				}
+			});
+			return showContent;
 		},
 		getProdList(){ // shopList
 			let self = this
@@ -275,6 +386,12 @@ export default {
 			this.$acFrame.HttpService.userInfo(params).then(res=>{
 				if(res.success){
 					self.userInfo = res.data
+					if(!res.data.isOwner){
+						uni.setNavigationBarTitle({
+							title:res.data.nickName+'的主页'
+						})
+					}
+					
 				}
 			})
 		},
@@ -295,12 +412,71 @@ export default {
 				self.getProdList()
 			}
 		},
+		dianzan(id, ind) { //likeComment
+			let self = this
+			let params = {
+				articleId: id,
+			}
+			let listInfo = self.dataList[ind]
+			self.$acFrame.HttpService.likeComment(params).then(res => {
+				if (res.success) {
+					if (res.data) {
+						self.$acFrame.Util.mytotal('点赞成功！');
+						listInfo.articleInfo.numTotalUp++
+					} else {
+						listInfo.articleInfo.numTotalUp--
+						self.$acFrame.Util.mytotal('已取消！');
+					}
+					listInfo.articleInfo.hasUp = res.data
+					self.dataList[ind] = listInfo
+					this.getUserInfo();
+				}
+			})
+		},
+		followPost(code, ind) { //likeComment
+			let self = this
+			let params = {
+				userCode: code,
+			}
+			let listInfo = self.dataList[ind]
+			self.$acFrame.HttpService.followPost(params).then(res => {
+				if (res.success) {
+					if (res.data) {
+						self.$acFrame.Util.mytotal('关注成功！');
+					} else {
+						self.$acFrame.Util.mytotal('关注已取消！');
+					}
+					listInfo.publishUser.hasFollow = res.data
+					self.dataList[ind] = listInfo
+				}
+			})
+		},
+		followUser(code){
+			let self = this
+			let params = {
+				userCode: code,
+			}
+			self.$acFrame.HttpService.followPost(params).then(res => {
+				if (res.success) {
+					if (res.data) {
+						self.$acFrame.Util.mytotal('关注成功！');
+					} else {
+						self.$acFrame.Util.mytotal('关注已取消！');
+					}
+					self.userInfo.hasFollow = res.data
+				}
+			})
+		},
+		setImg(src) {
+			return this.$acFrame.Util.setImgUrl(src);
+		},
 		showAll(ind) {
 			this.dataList[ind].articleInfo.showMore = true;
 		},
 		hideMore(ind) {
 			this.dataList[ind].articleInfo.showMore = false;
 		},
+		
 		setParams(){
 			let self =this
 			self.pageTotal=1
@@ -308,7 +484,15 @@ export default {
 			self.pageIndex=1
 			self.nodata = false
 			self.dataList=[]
+		},
+		followList(type){
+			if(type){
+				uni.navigateTo({
+					url:'followList?type='+type
+				})
+			}
 		}
+		
 	}
 };
 </script>
@@ -325,8 +509,8 @@ page {
 	height: 100%;
 }
 .headBox {
-	background: #810d21;
 	padding: 20rpx 0;
+	height:230rpx;
 	color: #fff;
 	font-size: 26rpx;
 	.pic {
@@ -418,7 +602,7 @@ page {
 	}
 }
 .myscroll {
-	height: calc(100% - 360rpx);
+	height: calc(100% - 430rpx);
 	.topMsg{
 		padding:20rpx 30rpx;
 		border-bottom:1px solid #ccc;
@@ -428,7 +612,7 @@ page {
 			padding:10rpx 0;
 		}
 	}
-	.reward{
+	.honor{
 		padding:0 10rpx;
 	   .item{
 		   float:left;

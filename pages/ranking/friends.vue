@@ -4,7 +4,7 @@
 		<view class="head">
 			<image class="foot" src="../../static/images/pic-ladder@2x.png" mode="widthFix"></image>
 			<view class="item one" @tap="userInfo(item.userCode )">
-				<image class="guan" src="../../static/images/icon-royal%20crown@2x.png" mode="widthFix"></image>
+				<image class="guan" src="../../static/images/icon-crown.png" mode="widthFix"></image>
 				<view class="pic">
 					<image :src="setImg(dataList[0].imgHeadPath)" mode="widthFix"></image>
 				</view>
@@ -55,7 +55,12 @@
 	export default {
 		data() {
 			return {
-				dataList:[]
+				dataList:[],
+				pageIndex:1,
+				pageSize:10,
+				pageTotal:1,
+				nomore:false,
+				nodata:false
 			}
 		},
 		onLoad(){
@@ -71,18 +76,51 @@
 		onShow(){
 			this.initData()
 		},
+		onPullDownRefresh(){
+			this.resetData()
+			this.initData()
+			uni.stopPullDownRefresh();
+		},
+		onReachBottom(){
+			if (this.pageIndex < this.pageTotal) {
+				this.pageIndex++
+				this.initData()
+			} else {
+				this.nomore = true
+				return false;
+			}
+		},
 		methods: {
 			initData(){
 				let self = this
-				this.$acFrame.HttpService.inviteRank().then(res=>{
+				let params = {
+					pageSize:this.pageSize,
+					pageIndex:this.pageIndex
+				}
+				this.$acFrame.HttpService.inviteRank(params).then(res=>{
 					if(res.success){
-						self.dataList = res.data
+						self.pageTotal=res.data.pageTotal
+						let list = res.data.rows
+						self.pageSize = res.data.pageSize
+						if(list.length>0){
+							self.dataList =self.dataList.concat(res.data.rows);
+						}else{
+							self.nodata=true
+						}
+						
 					}
 				})
 			},
 			setImg(src){
 				return  this.$acFrame.Util.setImgUrl(src);
 			},
+			resetData(){
+				this.pageSize = 10
+				this.pageIndex = 1
+				this.nodata = false
+				this.nomore = false
+				this.dataList=[]
+			}
 		}
 	}
 </script>

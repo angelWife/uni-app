@@ -1,67 +1,69 @@
 <template>
   <view class="content pagebg">
-    <view class="modal mod1">
-      <view class="fs16 red">售后处理中</view>
+    <view class="modal mod1" v-if="details.status == 1">
+      <view class="fs16 red">{{details.statusRefund?details.statusRefund:''}}</view>
       <view>
         剩余处理时间：
-        <uni-count-down
-          :show-day="false"
-          :show-style="true"
-          :hour="12"
-          :minute="12"
-          :second="12"
-        ></uni-count-down>
+       <block v-if="show_time">
+       	<uni-count-down :show-day="false" :backgroundColor="backgroundColor" :color="color" :splitorColor="color"
+       	 :show-style="false" :fontSize="fontSize" :hour="hour" :minute="minute" :second="second" />
+       </block>
       </view>
     </view>
     <view class="modal mod2 flex item-center">
       <view class="pic"></view>
-      <view class="name">湖南弘道图书专营店</view>
+      <view class="name">{{details.shopInfo.name}}</view>
     </view>
     <view class="modal">
         <view class="item flex">
             <view class="name c999">
                 申请类型
             </view>
-            <view class="flex-1">退款</view>
+            <view class="flex-1">{{details.type==1?'退货退款':'退款'}}</view>
         </view>
         <view class="item flex">
             <view class="name c999">
                 申请原因
             </view>
-            <view class="flex-1">退款</view>
+            <view class="flex-1">{{details.reasonType?reasonList[details.reasonType]:'--'}}</view>
         </view>
         <view class="item flex">
             <view class="name c999">
                 退款金额
             </view>
-            <view class="flex-1">退款</view>
+            <view class="flex-1">{{details.moneyAsk?details.moneyAsk:0.00}}</view>
         </view>
         <view class="item flex">
             <view class="name c999">
                 申请说明
             </view>
-            <view class="flex-1">退款</view>
+            <view class="flex-1">{{details.explainBuyer?details.explainBuyer:'--'}}</view>
         </view>
         <view class="item flex">
             <view class="name c999">
                 商品名称
             </view>
-            <view class="flex-1">退款</view>
+            <view class="flex-1">{{details.detailList[0].goodsName?details.detailList[0].goodsName:'--'}}</view>
         </view>
         <view class="item flex">
             <view class="name c999">
                 订单编号
             </view>
-            <view class="flex-1">退款</view>
+            <view class="flex-1">{{details.ordrCode?details.ordrCode:'--'}}</view>
         </view>
         <view class="item flex">
             <view class="name c999">
                 申请时间
             </view>
-            <view class="flex-1">退款</view>
+            <view class="flex-1">{{details.createTime}}</view>
         </view>
         <view class="item">
-            <button type="rednull">取消申请</button>
+			<block v-if="details.status==1">
+				<button type="rednull">取消申请</button>
+			</block>
+            <block v-if="details.status==2||details.status==4">
+            	<button type="rednull">重新申请</button>
+            </block>
         </view>
     </view>
   </view>
@@ -74,7 +76,77 @@ export default {
     uniCountDown
   },
   data() {
-    return {};
+    return {
+		show_time:true,
+		color: '#666',
+		backgroundColor: 'none',
+		details: {},
+		hour: 0,
+		minute: 0,
+		second: 0,
+		orderStatus:[],
+		reasonList:[]
+	};
+  },
+  onLoad(options){
+	  this.id = options.id
+	  uni.setNavigationBarTitle({
+	  	title:options.title
+	  })
+  },
+  onShow(){
+	  this.getReasons()
+	  this.getStatus()
+	  this.getDetail()
+  },
+  methods:{
+	  init_time() {
+	  	var time = new Date(this.details.timeEnd);
+	  	this.hour = time.getHours();
+	  	this.minute = time.getMinutes();
+	  	this.second = time.getSeconds();
+	  	this.show_time=false;
+	  	setTimeout(()=>{
+	  		this.show_time=true
+	  	},300)
+	  },
+	  getReasons(){
+		  let self=this
+		  this.$acFrame.HttpService.returnReasons().then(res=>{
+			  if(res.success){
+				  res.data.filter(function(item) {
+				  	self.reasonList[item.key] = item.val;
+				  });
+			  }
+		  })
+	  },
+	  getStatus() {
+	  	let self = this;
+	  	this.$acFrame.HttpService.refundStatus().then(res => {
+	  		if (res.success) {
+	  			console.log(res.data);
+	  			var tabs = res.data;
+	  			var st = {};
+	  			tabs.filter(function(item) {
+	  				self.orderStatus[item.key] = item.val;
+	  			});
+	  		}
+	  	})
+	  },
+	  getDetail(){
+		  let self = this
+		  this.$acFrame.HttpService.refundDetail({id:this.id}).then(res => {
+		  	if (res.success) {
+				let _data = res.data;
+				_data.createTime = self.$acFrame.Util.formatTime(_data.createTime)
+		  		self.details= _data;
+				self.init_time()
+		  	}
+		})
+	  },
+	  setImg(src){
+	  	return this.$acFrame.Util.setImgUrl(src);
+	  },
   }
 };
 </script>
@@ -90,6 +162,10 @@ export default {
           width: 160rpx;
       }
   }
+}
+.mod1{
+	line-height: 60rpx;
+	padding:20rpx 24rpx;
 }
 .mod2 {
   .pic {

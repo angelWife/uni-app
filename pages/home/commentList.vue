@@ -1,13 +1,13 @@
 <template>
 	<view class="content">
 		<view class="item selfComment flex">
-			<view class="img comHeadPic">
-				<image class="grade" :src="'/static/images/juewei/'+details.nobilityType+'.png'" mode="widthFix"></image>
+			<view class="img comHeadPic" @tap="userInfo(details.userCode)">
+				<image v-if="details.nobilityType>1" class="grade" :src="'/static/images/juewei/'+(details.nobilityType-1)+'.png'" mode="widthFix"></image>
 				<image class="headPic" :src="setImg(details.headPic)"></image>
 			</view>
 			<view class="flex-1 head-msg">
 				<view class="clearfix">
-					<text class="name fs15 blod">{{details.userName}}</text>
+					<text class="name fs15 blod" @tap="userInfo(details.userCode)">{{details.userName}}</text>
 					<!-- <text class="rank">{{details.militaryRankType}}</text> -->
 					<view class="float-right dianzan c999 fs12" :class="{'red':details.hasUp}" @tap="dianzan(details.id)">
 						<icon class="iconfont icon-dianzan"></icon>
@@ -25,13 +25,14 @@
 			</view>
 		</view>
 		<view v-for="(item,index) in dataList" :key="index" class="item flex">
-			<view class="img comHeadPic">
-				<image class="grade" :src="'/static/images/juewei/'+item.nobilityType+'.png'" mode="widthFix"></image>
+			<view class="img comHeadPic" @tap="userInfo(item.userCode)">
+				<!-- <image class="grade" :src="'/static/images/juewei/'+item.nobilityType+'.png'" mode="widthFix"></image> -->
+				<image v-if="item.nobilityType>1" class="grade" :src="'/static/images/juewei/'+(item.nobilityType-1)+'.png'" mode="widthFix"></image>
 				<image class="headPic" :src="setImg(item.headPic)"></image>
 			</view>
 			<view class="flex-1 head-msg">
 				<view class="clearfix">
-					<text class="name fs15 blod">{{item.userName}}</text>
+					<text class="name fs15 blod" @tap="userInfo(item.userCode)">{{item.userName}}</text>
 					<!-- <text class="rank">{{item.militaryRankType}}</text> -->
 					<view class="float-right dianzan c999 fs12" :class="{'red':item.hasUp}" @tap="dianzanList(item.id,index)">
 						<icon class="iconfont icon-dianzan"></icon>
@@ -110,6 +111,11 @@
 						self.showModal = false
 						self.getCommentList()
 					}
+				})
+			},
+			userInfo(userCode) {
+				uni.navigateTo({
+					url: `/pages/mycenter/mycenter?userCode=${userCode}`
 				})
 			},
 			cancelRelase() {

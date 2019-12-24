@@ -3,18 +3,18 @@
 		<view class="detail listItem">
 			<block v-if="dataInfo.type == 1">
 				<view class="item-head flex item-center">
-					<view class="img item-center comHeadPic" @tap="userInfo(dataInfo.publishUser.userId)">
+					<view class="img item-center comHeadPic" @tap="userInfo(dataInfo.publishUser.userCode)">
 						<image class="headPic" :src="dataInfo.publishUser.imgPathHead"></image>
-						<image class="grade" :src="'/static/images/juewei/'+dataInfo.publishUser.nobilityType+'.png'" mode="widthFix"></image>
+						<image class="grade" v-if="dataInfo.publishUser.nobilityType>1" :src="'/static/images/juewei/'+(dataInfo.publishUser.nobilityType-1)+'.png'" mode="widthFix"></image>
 					</view>
 					<view class="flex-1 head-msg">
 						<view class="flex item-center clearfix">
-							<view class="name fs15" @tap="userInfo(dataInfo.publishUser.userId)">{{ dataInfo.publishUser.userName }}</view>
+							<view class="name fs15" @tap="userInfo(dataInfo.publishUser.userCode)">{{ dataInfo.publishUser.userName }}</view>
 							<!-- <block v-if="dataInfo.publishUser.militaryRankType">
 								<image :src="'/static/images/junxian/'+dataInfo.publishUser.militaryRankType+'.png'" mode="widthFix"></image>
 							</block> -->
 							<block v-if="dataInfo.publishUser.shopId">
-								<image src="/static/images/shop.png" mode="widthFix"></image>
+								<image src="/static/images/shop/dian.png" mode="widthFix" @tap="shopDetail(dataInfo.publishUser.shopId)"></image>
 							</block>
 						</view>
 						<view class="timer c999 fs12 clearfix">
@@ -33,13 +33,18 @@
 						<view class="msg lh42 fs30" @tap="linkDetail(item)">
 							<block v-if="dataInfo.articleInfo.showContent.length>0">
 								<block v-for="(conitem, comind) in dataInfo.articleInfo.showContent" :key="comind">
-									<block v-if="conitem.type == 1">
-										<text class="name blue" @tap.stop="linkUser(conitem.atId)">@{{ conitem.atName }}</text>
+									<block v-if="conitem.type == 'text' ">
 										<text class="text">{{ conitem.content }}</text>
 									</block>
+									<block v-else-if="conitem.type == 'post' ">
+										<!-- @tap.stop="linkUser(conitem.id)" -->
+										<text class="name blue">@{{ conitem.name }}</text>
+									</block>
+									<block v-else-if="conitem.type == 'article' ">
+										<text class="name blue" @tap.stop="linkTheme(conitem.id)">#{{ conitem.name }}#</text>
+									</block>
 									<block v-else>
-										<text class="from blue" @tap.stop="linkTheme(conitem.topicId)">#{{ conitem.topicName }}#</text>
-										<text class="text">{conitem.content}}</text>
+										<text class="text">{{conitem.content}}</text>
 									</block>
 								</block>
 							</block>
@@ -60,18 +65,18 @@
 					</view>
 				</block>
 				<block v-else>
-					<view class="articalBox news flex item-center" v-if="dataInfo.articleInfo.imgList.length > 0">
-						<view class="a_pic">
+					<!-- <view class="articalBox news flex item-center" v-if="dataInfo.articleInfo.imgList.length > 0">
+						 <view class="a_pic">
 							<image :src="dataInfo.articleInfo.imgList[0]" mode="widthFix"></image>
-						</view>
+						</view> 
 						<view class="a_main flex-1 lh42 fs30">
 							<view class="title blod clamp clamp-2">{{ dataInfo.articleInfo.title }}</view>
 							<view class="msg fs12">
 								<rich-text :nodes="dataInfo.articleInfo.content"></rich-text>
 							</view>
 						</view>
-					</view>
-					<view class="articalBox flex item-center" v-else>
+					</view> -->
+					<view class="articalBox flex item-center">
 						<view class="a_main flex-1 lh42 fs30">
 							<view class="title blod clamp clamp-2">{{ dataInfo.articleInfo.title }}</view>
 							<view class="msg fs12">
@@ -96,7 +101,7 @@
 					<view v-else class="adventBox ranking flex item-center" @tap="linkRanking(linkitem.rankType)">
 						<view class="p_pic icon">
 
-							<image src="/static/images/icon.png" :class="'pic'+(linkitem.rankType*1-1)" mode="widthFix"></image>
+							<image :src="'/static/images/ranking/'+linkitem.rankType+'.png'" mode="widthFix"></image>
 						</view>
 						<view class="p_main flex-1">{{linkitem.name}}</view>
 						<view class="p_buy"><button size="mini" type="red" class="radiuBtn">去看看</button></view>
@@ -123,7 +128,7 @@
 					<view class="flex-1"><icon class="iconfont icon-shang"></icon></view>
 				</view> -->
 				<view class="operBox clearfix">
-					<view class="item " @tap="reward(dataInfo.articleInfo.id)">
+					<view class="item " @tap="reward(dataInfo.publishUser.userCode)">
 						<view class="mybtn item_red">
 							<icon class="iconfont icon-shang"></icon>
 							<text>打赏</text>
@@ -181,16 +186,16 @@
 			<view class="commentList">
 				<block v-if="listData.length>0">
 					<view class="item flex" v-for="(item,ind) in listData" :key="ind">
-						<view class="pic comHeadPic">
-							<image class="grade" :src="'/static/images/juewei/'+item.nobilityType+'.png'" mode="widthFix"></image>
-							<image class="headPic" :src="setImg(item.headPic)"></image>
+						<view class="pic comHeadPic" @tap="userInfo(item.userCode)">
+							<image class="grade" v-if="item.nobilityType>1" :src="'/static/images/juewei/'+(item.nobilityType-1)+'.png'" mode="widthFix"></image>
+							<image class="headPic" :src="setImg(item.headPic,item.genderType)"></image>
 						</view>
 						<!-- <view class="img item-center comHeadPic" @tap="userInfo(item.publishUser.userId)">
 							<image class="headPic" :src="item.publishUser.imgPathHead"></image>
 							<image class="grade" :src="'/static/images/juewei/'+item.publishUser.nobilityType+'.png'" mode="widthFix"></image>
 						</view> -->
 						<view class="flex-1">
-							<view class="name">
+							<view class="name" @tap="userInfo(item.userCode)">
 								<text class="blod">{{item.userName}}</text>
 								<!-- <text class="follow">{{item.militaryRankType}}</text> -->
 							</view>
@@ -211,7 +216,7 @@
 					</view>
 				</block>
 				<block v-else>
-					<view class="noData flex f-row just-con-c item-center" style="margin-top:40px;">
+					<view class="noData flex f-row just-con-c item-center" style="padding:40px 0;">
 						<view class="text-center">
 							<image src="/static/images/nodata.png" mode="widthFix"></image>
 							<view class="text-center c666 fs16">
@@ -246,78 +251,86 @@
 		<!-- <view class="noData" v-if="showFoot">
 			~没有更多~
 		</view> -->
+		<RewardList :showReward="showReward" :userCode="dataInfo.publishUser.userCode" :rewardList="rewardList" @chooseReward="chooseReward" @hideModal="hideModal"></RewardList>
 	</view>
 </template>
 
 <script>
 	import commentModal from '@/components/comment.vue';
+	import RewardList from '@/components/reward-modal.vue';
 	export default {
 		components: {
-			commentModal
+			commentModal,
+			RewardList
 		},
 		data() {
 			return {
 				isDetail: true,
-				dataInfo: {
-					headImg: '/static/images/head1.png',
-					name: '哈利路亚妈妈咪呀sda',
-					rank: '少校',
-					hasShop: true,
-					follow: true,
-					timer: '5分钟前',
-					showMore: false,
-					isAdvent: true,
-					type: 1,
-					richNode: '<p class="pd10">这边是文章内容，主要显示文章的段落，通过后台编辑过来</p><p class="pd10"><img style="width:100%;" src="http://www.mypcera.com/star/mm/uploadfile/201005/4/A142330696.jpg"/></p>',
-					imgList: ['/static/images/head1.png', '/static/images/head2.png', '/static/images/head1.png',
-						'/static/images/head2.png'
-					]
-				},
+				dataInfo: {},
 				listData: [],
+				rewardList: [],
 				pageIndex: 1,
 				pageSize: 10,
 				pageTotal: 1,
 				showModal: false,
 				showFoot: false,
 				isComent: false, //是否滚动到底部
+				showReward: false
 			};
 		},
 		onLoad(options) {
 			let detail = JSON.parse(decodeURIComponent(options.data));
-			this.isComent = options.isComment
+			this.detailtype = options.type
 			this.pageType = options.pageType
+			detail.articleInfo.showContent = this.setContent(detail.articleInfo);
 			this.dataInfo = detail
+			setTimeout(() => {
+				if (this.detailtype == 'showReward') {
+					this.showReward = true
+					this.getRewardList();
+				}
+			}, 500)
 		},
 		onShow() {
+			let self = this
 			if (getApp().globalData.isShowPic) {
 				getApp().globalData.isShowPic = false
 			} else {
 				this.listData = []
 				this.getCommentList()
+				this.$acFrame.HttpService.readPost({
+					id: this.dataInfo.articleInfo.id
+				}).then(res => {
+					if (res.success) {
+						self.dataInfo.articleInfo.numTotalRead = res.data
+					}
+				})
 			}
 
 		},
 		onShareAppMessage(res) {
-			let settings = {}
 			let self = this
-			debugger
-			if (self.dataInfo.articleInfo.type == 1) {
-				// settings.type='article'
-				settings.title = self.dataInfo.articleInfo.title
-				settings.imageUrl = '/static/images/sharePic.png'
-				settings.pagePath =
-					`/pages/home/commentDetail?data=${encodeURIComponent(JSON.stringify(self.dataInfo))}&pageType=${this.pageType}`
-			} else {
-				// settings.type='article'
-				settings.title = self.dataInfo.articleInfo.content.substr(0, 24)
-				settings.imageUrl = '/static/images/sharePic.png'
-				settings.pagePath =
-					`/pages/home/commentDetail?data=${encodeURIComponent(JSON.stringify(self.dataInfo))}&pageType=${this.pageType}`
-			}
 			getApp().globalData.isShowPic = true
+			let settings = {}
+			if (res.from === 'button') {
+				let title = self.dataInfo.articleInfo.content.replace(new RegExp("{-----}", "gm"), "").substr(0, 24);
+				this.shareStat(self.dataInfo.articleInfo.id);
+				settings.imageUrl = ''
+				if (self.dataInfo.articleInfo.type == 1) {
+					settings.title = self.dataInfo.articleInfo.title
+					settings.pagePath =
+						`/pages/home/commentDetail?data=${encodeURIComponent(JSON.stringify(self.dataInfo))}&pageType=${this.pageType}&userCode=${uni.getStorageSync('userCode')}`
+				} else {
+					settings.title = title
+					settings.pagePath =
+						`/pages/home/commentDetail?data=${encodeURIComponent(JSON.stringify(self.dataInfo))}&pageType=${this.pageType}&userCode=${uni.getStorageSync('userCode')}`
+				}
+			} else {
+				settings.imageUrl = '/static/images/sharePic.png'
+				settings.title = ''
+				settings.pagePath = ''
+			}
 			return settings
-
-			//this.$acFrame.Util.shareUrl(res,settings);
 		},
 		onReachBottom() {
 			if (this.pageTotal > this.pageIndex) {
@@ -329,6 +342,18 @@
 			}
 		},
 		methods: {
+			shareStat(id) {
+				let self = this
+				let params = {
+					articleId: self.dataInfo,
+				}
+
+				self.$acFrame.HttpService.sharePost(params).then(res => {
+					if (res.success) {
+						self.dataInfo.articleInfo.numTotalShare++
+					}
+				})
+			},
 			getCommentList() {
 				let self = this
 				let params = {
@@ -344,7 +369,7 @@
 						// })
 						self.listData = self.listData.concat(_row);
 						self.pageTotal = res.data.pageTotal
-						if (self.isComent) {
+						if (self.detailtype == "isComment") {
 							self.isComent = false
 							setTimeout(() => {
 								self.commentClick()
@@ -362,14 +387,79 @@
 					})
 				}).exec();
 			},
-			reward(id) {
+			setContent(mydata) {
+				let showContent = [];
+				let type = mydata.type; //1帖子  2文章
+				let content = mydata.content;
+				let star = 0;
+				let contentExtendList = mydata.contentExtendList;
+				var texts = [];
+				var i = 0;
+				var k = 100;
+				while ((i = content.indexOf('{-----}')) >= 0 && k > 0) {
+					k--;
+					if (i > 0) {
+						texts.push(content.slice(0, i));
+						content = content.slice(i);
+					} else {
+						content = content.replace("{-----}", "");
+						texts.push("");
+					}
+				}
+
+				texts.forEach(function(item) {
+					var obj = {};
+					if (item != '') {
+						obj["type"] = "text";
+						obj["content"] = item;
+						showContent.push(obj);
+					} else {
+						if (contentExtendList.length > 0) {
+							var ext = contentExtendList.shift();
+							//console.log(ext);
+							if (ext.type == 1) {
+								obj["type"] = "post";
+								obj["id"] = ext.atUserCode;
+								obj["name"] = ext.atName;
+							} else if (ext.type == 2) {
+								obj["type"] = "article";
+								obj["id"] = ext.topicId;
+								obj["name"] = ext.topicName;
+							}
+							showContent.push(obj);
+						}
+					}
+				});
+				return showContent;
+			},
+			linkUser(id) {
 				uni.navigateTo({
-					url: '/pages/home/reward?id='+id
+					url: `/pages/mycenter/mycenter?userCode=${id}`
 				})
+			},
+			linkTheme(id) {
+				this.$acFrame.HttpService.readTopic({
+					id: id
+				}).then(res => {
+					if (res.success) {}
+				})
+				uni.navigateTo({
+					url: `/pages/home/topicIndex?id=${id}`
+				})
+			},
+			reward(code) {
+				// uni.navigateTo({
+				// 	url: '/pages/home/reward?id=' + id
+				// })
+				this.showReward = true
+				this.getRewardList();
+			},
+			hideModal() {
+				this.showReward = false
 			},
 			report(id) {
 				uni.navigateTo({
-					url: '/pages/home/report?id='+id
+					url: '/pages/home/report?id=' + id
 				})
 			},
 			guanzhu(code) {
@@ -427,6 +517,11 @@
 					}
 				})
 			},
+			userInfo(userCode) {
+				uni.navigateTo({
+					url: `/pages/mycenter/mycenter?userCode=${userCode}`
+				})
+			},
 			commentDianzan(id, ind) {
 				let self = this
 				let params = {
@@ -445,12 +540,17 @@
 					}
 				})
 			},
-			setImg(src) {
-				return this.$acFrame.Util.setImgUrl(src);
+			setImg(src, sex) {
+				return this.$acFrame.Util.setImgUrl(src, sex);
 			},
 			linkProd(id) {
 				uni.navigateTo({
 					url: `/pages/myshop/productDetail?goodsId=${id}`
+				})
+			},
+			shopDetail(id) {
+				uni.navigateTo({
+					url: "/pages/myshop/shopDetail?id=" + id
 				})
 			},
 			linkRanking(type) {
@@ -469,12 +569,55 @@
 					case 4:
 						url = `/pages/ranking/product?type=${type}`
 						break;
+					case 5:
+						url = '/pages/ranking/product'
+						break;
 					default:
 						break;
 				}
 				uni.navigateTo({
 					url: url
 				})
+			},
+			getRewardList() { // virtualList
+				let self = this
+				let params = {
+					pageIndex: 1,
+					pageSize: 100,
+					useType: '',
+					sceneType: 2
+				}
+				this.$acFrame.HttpService.virtualDashang(params).then(res => {
+					if (res.success) {
+						let list = res.data
+						list.filter(v => {
+							v.imgPath = self.$acFrame.Util.setImgUrl(v.imgPath);
+							v.choose=false
+						})
+						self.rewardList = list
+
+					}
+				})
+			},
+			rewardUser(id,type){
+				let self = this
+				let params = {
+					buyNum : 1,
+					userCode : 100,
+					virtualId : id,
+					sceneType: type
+				}
+				this.$acFrame.HttpService.virtualBuy(params).then(res => {
+					if (res.success) {
+					
+					}
+				})
+			},
+			chooseReward(ind){
+				let list = this.rewardList
+				list[ind].choose=!list[ind].choose
+				this.rewardList=list
+				console.log(this.rewardList[ind].choose)
 			}
 		}
 	};
@@ -491,7 +634,7 @@
 	}
 
 	.content {
-		padding-bottom: 160rpx;
+		padding-bottom: 120rpx;
 		position: relative;
 
 		.noData {
@@ -603,6 +746,8 @@
 			.msg {
 				text-align: justify;
 				word-break: break-all;
+				overflow: hidden;
+
 				text {
 					display: inline;
 				}
@@ -613,6 +758,15 @@
 
 				.from {
 					margin-left: 10rpx;
+				}
+
+				p {
+					margin: 5px 0;
+					overflow: hidden;
+
+					img {
+						width: 100% !important;
+					}
 				}
 			}
 
@@ -650,7 +804,7 @@
 				padding: 0 15rpx;
 				height: calc((100vw - 24rpx) / 3 - 20rpx);
 				overflow: hidden;
-				margin-bottom:20rpx;
+				margin-bottom: 20rpx;
 			}
 		}
 
@@ -772,7 +926,7 @@
 				overflow: hidden;
 
 				.mybtn {
-					padding: 0 30rpx 10rpx;
+					padding: 0 0 10rpx;
 					line-height: 50rpx;
 					border-radius: 50rpx;
 					color: #999;
@@ -829,8 +983,9 @@
 				width: 80rpx;
 				height: 80rpx;
 				margin-right: 20rpx;
-				.headPic{
-					height:100%;
+
+				.headPic {
+					height: 100%;
 					border-radius: 80rpx;
 				}
 			}
@@ -858,6 +1013,7 @@
 
 			.oper {
 				line-height: 30rpx;
+
 				.iconfont {
 					float: left;
 				}

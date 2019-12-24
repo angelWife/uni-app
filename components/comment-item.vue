@@ -3,18 +3,19 @@
 		<view v-for="(item, index) in dataList" :key="index" class="listItem">
 			<block v-if="item.type == 1">
 				<view class="item-head flex item-center">
-					<view class="img item-center comHeadPic" @tap="userInfo(item.publishUser.userId)">
-						<image class="headPic" :src="item.publishUser.imgPathHead"></image>
-						<image class="grade" :src="'/static/images/juewei/'+item.publishUser.nobilityType+'.png'" mode="widthFix"></image>
+					<view class="img item-center comHeadPic" @tap="userInfo(item.publishUser.userCode)">
+						<image class="headPic" mode="aspectFit"  :src="item.publishUser.imgPathHead"></image>
+						<!-- <image class="grade" :src="'/static/images/juewei/'+item.publishUser.nobilityType+'.png'" mode="widthFix"></image> -->
+						<image v-if="item.publishUser.nobilityType>1" class="grade" :src="'/static/images/juewei/'+(item.publishUser.nobilityType-1)+'.png'" mode="widthFix"></image>
 					</view>
 					<view class="flex-1 head-msg">
 						<view class="flex item-center">
-							<view class="name fs15" @tap="userInfo(item.publishUser.userId)">{{ item.publishUser.userName }}</view>
+							<view class="name fs15" @tap="userInfo(item.publishUser.userCode)">{{ item.publishUser.userName }}</view>
 							<!-- <block v-if="item.publishUser.militaryRankType">
 								<image :src="'/static/images/junxian/'+item.publishUser.militaryRankType+'.png'" mode="widthFix"></image>
 							</block> -->
 							<block v-if="item.publishUser.shopId">
-								<image src="/static/images/shop.png" mode="widthFix"></image>
+								<image src="/static/images/shop/dian.png" mode="widthFix" @tap="shopDetail(item.publishUser.shopId)"></image>
 							</block>
 							<text v-if="showNum" classs="numMark">{{index}}</text>
 						</view>
@@ -29,7 +30,7 @@
 						<text class="follow active" v-else>关注</text>
 					</view>
 					<view class="operPost" v-else>
-						<icon v-if="showOper" class="iconfont iconcaozuo"></icon>
+						<icon v-if="showOper" class="iconfont iconcaozuo" @tap="operPost(item)"></icon>
 					</view>
 				</view>
 				<block v-if="item.articleInfo.type == 2">
@@ -37,12 +38,17 @@
 						<view class="msg lh42 fs30" :class="{ 'clamp clamp-3': !item.articleInfo.showMore && !item.articleInfo.isDetail }" @tap="linkDetail(item)">
 							<block v-if="item.articleInfo.showContent.length>0">
 								<block v-for="(conitem, comind) in item.articleInfo.showContent" :key="comind">
-									<block v-if="conitem.type == 1">
-										<text class="name blue" @tap.stop="linkUser(conitem.atId)">@{{ conitem.atName }}</text>
+									<block v-if="conitem.type == 'text' ">
 										<text class="text">{{ conitem.content }}</text>
 									</block>
+									<block v-else-if="conitem.type == 'post' ">
+										<!-- @tap.stop="linkUser(conitem.id)" -->
+										<text class="name blue">@{{ conitem.name }}</text>
+									</block>
+									<block v-else-if="conitem.type == 'article' ">
+										<text class="name blue" @tap.stop="linkTheme(conitem.id)">#{{ conitem.name }}#</text>
+									</block>
 									<block v-else>
-										<text class="from blue" @tap.stop="linkTheme(conitem.topicId)">#{{ conitem.topicName }}#</text>
 										<text class="text">{{conitem.content}}</text>
 									</block>
 								</block>
@@ -61,13 +67,13 @@
 						</view>
 					</view>
 					<view class="imgList clearfix">
-						<view v-for="(imgItem, imgInd) in item.articleInfo.imgList" :key="imgInd" @tap="showBigImg(index, imgInd)" class="imgItem flex-1">
+						<view v-for="(imgItem, imgInd) in item.articleInfo.imgList" :key="imgInd" @tap="linkDetail(item)" class="imgItem flex-1">
 							<image :src="imgItem" mode="widthFix" @error="setErrorPic(index,imgInd)"></image>
 						</view>
 					</view>
 				</block>
 				<block v-else-if="item.articleInfo.type == 1">
-					<view class="articalBox news flex item-center" v-if="item.articleInfo.imgList.length > 0" @tap="linkDetail(item)">
+					<view class="articalBox news flex" v-if="item.articleInfo.imgList.length > 0" @tap="linkDetail(item)">
 						<view class="a_pic">
 							<image :src="item.articleInfo.imgList[0]" mode="widthFix" @tap.stop="showBigImg(index, 0)"></image>
 						</view>
@@ -83,8 +89,8 @@
 						</view>
 					</view>
 				</block>
-				<block v-for="(linkitem, linkInd) in item.itemLinkList" :key="linkInd">
-					<view v-if="linkitem.type == 1" class="adventBox shopProduct flex item-center" @tap="linkProd(linkitem.goods.goodsId)">
+				<block v-if="!isRanking" v-for="(linkitem, linkInd) in item.itemLinkList" :key="linkInd">
+					<view v-if="linkitem.type == 1" class="adventBox shopProduct flex item-center" @tap="prodDetail(linkitem.goods.goodsId)">
 						<view class="p_pic">
 							<image :src="linkitem.goods.imgPath"></image>
 						</view>
@@ -96,9 +102,9 @@
 						</view>
 						<view class="p_buy"><button size="mini" type="red" class="">购买</button></view>
 					</view>
-					<view v-else class="adventBox ranking flex item-center" @tap="linkRanking(linkitem.rankType)">
+					<view v-else class="adventBox ranking flex item-center" @tap="linkProd(linkitem.rankType)">
 						<view class="p_pic icon">
-							<image src="../static/images/icon.png" :class="'pic'+(linkitem.rankType*1-1)" mode="widthFix"></image>
+							<image :src="'/static/images/ranking/'+linkitem.rankType+'.png'" mode="widthFix"></image>
 							<!-- <image :src="linkitem.goods.imgPath"></image> -->
 						</view>
 						<view class="p_main flex-1">{{linkitem.name}}</view>
@@ -115,7 +121,7 @@
 						<icon class="iconfont icon-pinglun"></icon>
 						<text>{{item.articleInfo.numTotalComment}}</text>
 					</button>
-					<button class="flex-1" type="share" @tap="rewardList(item.articleInfo.id)">
+					<button class="flex-1" type="share" @tap="linkDetail(item,'showReward')">
 						<icon class="iconfont icon-shang"></icon>
 						<text>{{ item.articleInfo.numTotalPersonReward }}</text>
 					</button>
@@ -157,12 +163,12 @@
 				<view class="text-center c666 fs16">
 					这里还没有内容
 				</view>
-				<button class="radiuBtn" @tap="linktoshop" type="rednull">随便看看</button>
+				<button v-if="!hideFootBtn" class="radiuBtn" @tap="linktoshop" type="rednull">随便看看</button>
 				<!-- <navigator url="/pages/home/index" class="radiuBtn" hover-class="none">随便看看</navigator> -->
 			</view>
 		</view>
 		<view class="noMore" v-if="nomore">
-			到底了~
+			~已经到底了！~
 		</view>
 	</view>
 </template>
@@ -217,7 +223,19 @@
 			  default(){
 			    return false;
 			  }
-			}
+			},
+			isRanking:{
+			  type: Boolean,
+			  default(){
+			    return false;
+			  }
+			},
+			hideFootBtn:{ // 隐藏随便看看
+			  type: Boolean,
+			  default(){
+			    return false;
+			  }
+			},
 		},
 		data() {
 			return {};
@@ -240,20 +258,13 @@
 				getApp().globalData.isShowPic = true
 			},
 			loadMoreData() {},
-			linkDetail(obj, isComment) {
-				this.$acFrame.HttpService.readPost({id:obj.articleInfo.id}).then(res=>{
-					if(res.success){
-						
-					}
-				})
+			linkDetail(obj, type) {
 				uni.navigateTo({
-					url: `/pages/home/commentDetail?data=${encodeURIComponent(JSON.stringify(obj))}&pageType=${this.pageType}&isComment=${isComment?isComment:''}`
+					url: `/pages/home/commentDetail?data=${encodeURIComponent(JSON.stringify(obj))}&pageType=${this.pageType}&type=${type?type:''}`
 				});
 			},
 			rewardList(id){
-				uni.navigateTo({
-					url:`reward?articleId=${id}`
-				})
+				wx.navigateTo()
 			},
 			linktoshop() {
 				// debugger
@@ -269,17 +280,25 @@
 			},
 			linkUser(id) {
 				uni.navigateTo({
-					url: `../pages/home/topicIndex?id=${id}`
+					url: `/pages/mycenter/mycenter?id=${id}`
 				})
 			},
 			linkTheme(id) {
+				this.$acFrame.HttpService.readTopic({id:id}).then(res=>{
+					if(res.success){}
+				})
 				uni.navigateTo({
-					url: `../pages/home/topicIndex?id=${id}`
+					url: `/pages/home/topicIndex?id=${id}`
 				})
 			},
-			userInfo(userId) {
+			shopDetail(id){
 				uni.navigateTo({
-					url: `/pages/mycenter/mycenter?userId=${userId}`
+					url:"/pages/myshop/shopDetail?id="+id
+				})
+			},
+			userInfo(userCode) {
+				uni.navigateTo({
+					url: `/pages/mycenter/mycenter?userCode=${userCode}`
 				})
 			},
 			setErrorPic(ind_p, ind_c) {
@@ -289,10 +308,50 @@
 			dianzan(id, ind) {
 				this.$emit('dianzan', id, ind)
 			},
-			linkProd(id) {
+			prodDetail(id){
 				uni.navigateTo({
-					url: `/pages/myshop/productDetail?goodsId=${id}`
+					url:"/pages/myshop/productDetail?id="+id
 				})
+			},
+			linkProd(key) {
+				let url = ''
+				switch (key) {
+					case 1:
+						url = '/pages/ranking/friends'
+						uni.navigateTo({
+							url: url
+						})
+						break;
+					case 2:
+						url = '/pages/ranking/post'
+						uni.navigateTo({
+							url: url
+						})
+						break;
+					case 3:
+						url = '/pages/ranking/invitation'
+						uni.navigateTo({
+							url: url
+						})
+						break;
+					case 4:
+						url = '/pages/ranking/product'
+						uni.navigateTo({
+							url: url
+						})
+						break;
+					case 5:
+						url = '/pages/ranking/product'
+						uni.navigateTo({
+							url: url
+						})
+						break;
+					default:
+						break;
+				}
+				// uni.navigateTo({
+				// 	url: `/pages/myshop/productDetail?goodsId=${id}`
+				// })
 			},
 			linkRanking(type) {
 				let url = ''
@@ -314,6 +373,31 @@
 				}
 				uni.navigateTo({
 					url: url
+				})
+			},
+			operPost(obj){
+				let self = this
+				uni.showActionSheet({
+					itemList:['查看','删除'],
+					itemColor:'#007AFF',
+					success:(res)=>{
+						if(res.tapIndex==0){
+							uni.navigateTo({
+								url: `/pages/home/commentDetail?data=${encodeURIComponent(JSON.stringify(obj))}&pageType=${this.pageType}`
+							});
+						}else{
+							self.$acFrame.HttpService.deletePost({id:obj.articleInfo.id}).then(res=>{
+								if(res.success){
+									self.$acFrame.Util.mytotal("删除成功！")
+									setTimeout(function() {
+										self.$parent.setParams()
+										self.$parent.initData()
+									}, 1000);
+								}
+							})
+						}
+					}
+						
 				})
 			}
 		},

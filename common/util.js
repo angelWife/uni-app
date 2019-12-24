@@ -1,6 +1,6 @@
 // 获取时间
 import AcFrame from '@/common/acFrame'
-const formatTime = (type, date) => {
+const formatTime = (date,type) => {
 	const _date = date ? new Date(date) : new Date()
 	const year = _date.getFullYear()
 	const month = _date.getMonth() + 1
@@ -9,20 +9,33 @@ const formatTime = (type, date) => {
 	const minute = _date.getMinutes()
 	const second = _date.getSeconds()
 	if (type == 'day') {
-		return [year, month, day].map(formatNumber).join('/')
+		return [year, month, day].map(formatNumber).join('-')
 	} else if (type == 'dayhm') {
-		return [year, month, day].map(formatNumber).join('/') + ' ' + [hour, minute].map(formatNumber).join(':')
+		return [year, month, day].map(formatNumber).join('-') + ' ' + [hour, minute].map(formatNumber).join(':')
 	} else if (type == 'hm') {
 		return [hour, minute].map(formatNumber).join(':')
 	} else if (type == 'hms') {
 		return [hour, minute, second].map(formatNumber).join(':')
 	} else {
-		return [year, month, day].map(formatNumber).join('/') + ' ' + [hour, minute, second].map(formatNumber).join(':')
+		return [year, month, day].map(formatNumber).join('-') + ' ' + [hour, minute, second].map(formatNumber).join(':')
 	}
 }
 const formatNumber = n => {
 	n = n.toString()
 	return n[1] ? n : '0' + n
+}
+
+//处理价格字段
+const money=(val)=>{
+	if(val){
+		val = Math.round(parseFloat(val)*100)/100
+		if(val<0){
+			val = '0.00'
+		}
+	}else{
+		val = '0.00'
+	}
+	 return val;
 }
 //倒计时间
 const countTime=(time,type)=>{
@@ -56,7 +69,7 @@ const mytotal = (title, icon = 'none', mask = false, duration = 2000) => {
 }
 
 //处理图片的路径
-const setImgUrl = (imgPath) => {
+const setImgUrl = (imgPath,sex) => {
 	let picPath = ''
 	if(imgPath){
 		if (imgPath.indexOf('http') >= 0) {
@@ -65,7 +78,12 @@ const setImgUrl = (imgPath) => {
 			picPath = getApp().globalData.config.imgPath + imgPath
 		}
 	} else {
-		picPath='/static/images/head1.png'
+		if(sex){
+			picPath=`/static/images/head${sex}.png`
+		}else{
+			picPath='/static/images/head1.png'
+		}
+		
 	}
 	
 	return picPath
@@ -105,11 +123,43 @@ const uploadPic = (a_url,len) => {
 					name: 'file',
 					success: function(res) {
 						let _data = JSON.parse(res.data)
+						debugger
 						if(a_url){
 							resolve(tempFilePaths[0]); 
 						}else{
 							resolve(_data.data.fullPath);
 						}
+					},
+					fail: (error) => {
+						reject(error);
+					}
+				});
+			}
+		});
+	})
+
+}
+const uploadFullPic = (len) => {
+	return new Promise((resolve, reject) => {
+		let token = uni.getStorageSync('access_token');
+		let channel='MP_WX';
+		uni.chooseImage({
+			count: len,
+			sizeType: ['compressed'], // 可以指定是原图还是压缩图，默认二者都有
+			sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+			success: function(res) {
+				let tempFilePaths = res.tempFilePaths;
+				uni.uploadFile({
+					url: getApp().globalData.config.basePath + '/file/upload', // 仅为示例，非真实的接口地址
+					filePath: tempFilePaths[0],
+					header: {
+						token,
+						channel
+					},
+					name: 'file',
+					success: function(res) {
+						let _data = JSON.parse(res.data)
+						resolve(_data.data.fullPath);
 					},
 					fail: (error) => {
 						reject(error);
@@ -127,10 +177,9 @@ const getHotList = (type) => {
 	let params = {
 		type:type
 	}
-	AcFrame.HttpService.hotList(params).then(res => {
+	return AcFrame.HttpService.hotList(params).then(res => {
 		if (res.success) {
-			let _data = res.data;
-			return _data;
+			return res;
 		} else {
 			mytotal(res.code);
 			return []
@@ -203,15 +252,25 @@ const shareUrl = (res, settings) => {
     imageUrl: imageUrl
   }
 }
+//帖子分享计数
+const shareStat=(id,callback)=>{
+	self.$acFrame.HttpService.sharePost(params).then(res => {
+		if (res.success) {
+			callback();
+		}
+	})
+}
 
 module.exports = {
 	formatTime,
 	showBigPic,
 	uploadPic,
+	uploadFullPic,
 	mytotal,
 	shareUrl,
 	setImgUrl,
 	getHotList,
 	countTime,
-	setRankName
+	setRankName,
+	money
 }

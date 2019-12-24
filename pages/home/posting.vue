@@ -1,7 +1,7 @@
 <template>
 	<view class="content">
 		<view class="textarea">
-			<textarea value="editText" placeholder="请输入" maxlength="300" v-model="editText" @input="textChange" />
+			<textarea value="editText" placeholder="说说分享心得..." maxlength="300" v-model="editText" @input="textChange" />
 			<view class="text-right">
         <text class="c999">{{ textNum }}/300</text>
         <button type="red" size="mini" @tap="confirmPost">发布</button>
@@ -20,9 +20,12 @@
       <view class="upload" @tap="choosePic">+</view>
     </view>
     <view class="linkBox flex item-center" v-if="linkObj.type">
-      <view class="pic">
-        <image :src="setImg(linkObj.pic)" mode="widthFix"></image>
+      <view class="pic" v-if="linkObj.imgPath">
+        <image :src="setImg(linkObj.imgPath)" mode="widthFix"></image>
       </view>
+	  <view class="icon" v-else>
+		 <image :src="'/static/images/ranking/'+linkObj.key+'.png'" mode="widthFix"></image>
+	  </view>
       <view class="msg flex-1">
         <view class="name textEllipsis">{{ linkObj.goodsName||linkObj.val }}</view>
         <view class="price red" v-if="linkObj.priceSale" >
@@ -60,7 +63,8 @@ export default {
       editText: "",
       textNum: 0,
       extendList: [],
-      picInd: 0
+      picInd: 0,
+	  t_objs:{}
     };
   },
   methods: {
@@ -150,6 +154,7 @@ export default {
       });
     },
     setLink(obj) {
+		//debugger
 		console.log(obj);
 		this.linkObj = obj;
 	},
@@ -160,23 +165,34 @@ export default {
       let len = this.onlyText.length;
       let text = this.editText;
       let obj = {};
+	  var t_objs = this.t_objs;
       if (type == "friend") {
-        obj.atId = id;
+        obj.atUserCode = id;
         obj.atName = name;
         obj.index = len;
-        text += "@" + name;
+		obj.type=1;
+		obj.topicId = 0;
+		obj.topicName = "";
+		var t = "@" + name;
+        text += t ;
+		t_objs[t]=len;
       } else {
-        obj.atId = id;
+        obj.topicId = id;
         obj.topicName = name;
+        obj.atUserCode = "";
+        obj.atName = "";
         obj.index = len;
-        text += "#" + name + "#";
+        obj.type=2;
+		var t = "#" + name + "#";
+		text += t ;
+		t_objs[t]=len;
       }
       this.extendList.push(obj);
       this.editText = text;
     },
     getText() {
       let text = this.editText;
-	  debugger
+	  //debugger
       let self = this;
       if (this.extendList.length > 0) {
         let star = 0;
@@ -204,11 +220,21 @@ export default {
     confirmPost() {
       this.getText();
       let self = this;
+	 
+	  var t_objs = this.t_objs;
+	  var a_text = this.editText;
+	  if(a_text){
+		  for(var i in t_objs){
+			  a_text = a_text.replace(new RegExp(i,"gm"),"{-----}");  
+		  }
+	  }
+	 
       let params = {
-        content: this.onlyText,
+        content: a_text,
         extendList: this.extendList,
 		itemLinkList:[],
       };
+	  
 		let _obj = {
 			linkType:self.linkObj.type,
 		};
@@ -223,6 +249,10 @@ export default {
         this.$acFrame.Util.mytotal("请输入帖子内容！");
         return false;
       }
+	  
+	  console.log(params);
+	  
+	  //return ;
       this.$acFrame.HttpService.raleasePost(params).then(res => {
         if (res.success) {
           if (self.picList.length > 0) {
@@ -298,9 +328,12 @@ export default {
   }
   .linkBox {
     background: #eee;
-    padding: 5px;
+   padding: 16rpx 20rpx 16rpx 16rpx;
     margin: 20rpx 0;
+	min-height: 128rpx;
     position: relative;
+	background: #FEF6F6;
+	box-sizing: border-box;
     .pic {
       width: 100rpx;
       height: 100rpx;
@@ -310,6 +343,36 @@ export default {
       width: 50%;
       padding-right: 30rpx;
     }
+	.icon {
+		width: 40rpx;
+		margin: 0 20rpx;
+		height: 40rpx;
+		overflow: hidden;
+		position: relative;
+	
+		image {
+			position: absolute;
+			top: 0;
+			left: 0;
+	
+			&.pic1 {
+				top: -54rpx;
+			}
+	
+			&.pic2 {
+				top: -118rpx;
+			}
+	
+			&.pic3 {
+				top: -182rpx;
+			}
+	
+			&.pic4 {
+				top: -240rpx;
+			}
+		}
+	
+	}
   }
 }
 </style>

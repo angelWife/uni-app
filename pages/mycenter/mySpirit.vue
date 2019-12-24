@@ -59,8 +59,15 @@
 	export default {
 		data() {
 			return {
-				
+				id:0
 			};
+		},
+		onLoad(options){
+			this.id = options.id
+			console.log(this.id)
+		},
+		methods:{
+			
 		}
 	}
 </script>

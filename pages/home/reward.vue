@@ -43,42 +43,7 @@
 		<view class="rewardBtn" @tap="rewardPeople">
 			我要打赏
 		</view>
-		<view v-if="showmask" class="modalmask">
-			<view class="modalBody flex f-col">
-				<view class="nullModal flex-1" @tap="hideModal"></view>
-				<view class="rewardModal" :class="{'showModal':showmask}">
-					<view class="title">
-						<block v-for="(item,index) in modalBar" :key="index">
-							<text :class="{'active':item.active}">{{item.name}}</text>
-						</block>
-					</view>
-					<view class="giftList">
-						<view class="item">
-							<view class="box" @tap.stop="chooseItem(11)">
-								<view class="pic">
-									<image src="/static/images/photo.png" mode="widthFix"></image>
-								</view>
-								<view class="text flex just-con-b">
-									<view>西瓜</view>
-									<view>1星票</view>
-								</view>
-							</view>
-						</view>
-					</view>
-					<view class="modalfoot flex item-center">
-						<view class="text">
-							<label>
-								<checkbox :value="usename" checked="false" color="#fff" @chang="checkChange" /><text>优先使用星票，余额800 </text>
-							</label>
-						</view>
-						<view class="btn flex-1 text-right">
-							<button class="radiuBtn" type="red" size="mini" @tap.stop="rewardInit">打赏</button>
-						</view>
-					</view>
-				</view>
-			</view>
-
-		</view>
+		<rewardList :showReward="showReward"  @hideModal="hideModal"></rewardList>
 	</view>
 </template>
 <script>
@@ -87,11 +52,14 @@
 		timingFunction: "ease",
 		delay: 0
 	})
+	import rewardList from '@/components/reward-modal.vue';
 	export default {
-		name: 'reward',
+		components: {
+			rewardList
+		},
 		data() {
 			return {
-				showmask: false,
+				showReward: false,
 				modalBar: [{
 					name: '礼物',
 					active: true
@@ -125,10 +93,10 @@
 				})
 			},
 			rewardPeople() {
-				this.showmask = true
+				this.showReward = true
 			},
 			hideModal() {
-				this.showmask = false
+				this.showReward = false
 			},
 			chooseItem(ind) {
 				console.log(ind)
@@ -220,71 +188,7 @@
 		text-align: center;
 	}
 
-	.rewardModal {
-		background: #fff;
-		// bottom: -100%;
-		transform: bottom 0.3s easy;
-
-		&.showModal {
-			bottom: 0;
-		}
-
-		.title {
-			height: 80rpx;
-			line-height: 80rpx;
-
-			text {
-				display: inline-block;
-				padding: 0 20rpx;
-			}
-
-			.active {
-				font-size: 32rpx;
-				color: #b40000;
-			}
-		}
-
-		.giftList {
-			padding: 10rpx;
-			overflow: hidden;
-
-			.item {
-				padding: 10rpx;
-				width: 25%;
-				float: left;
-
-				.box {
-					height: calc((100vw - 20rpx) / 4 - 20rpx);
-					border-radius: 0.5em;
-					background: #eee;
-
-					.pic {
-						padding: 20rpx 20% 0;
-					}
-
-					.text {
-						font-size: 20rpx;
-						color: #999;
-						padding: 10rpx 0;
-
-						>view {
-							width: 50%;
-							text-align: center;
-						}
-					}
-				}
-			}
-		}
-
-		.modalfoot {
-			height: 80rpx;
-			padding: 0 20rpx;
-
-			.text {
-				margin-right: 30rpx;
-			}
-		}
-	}
+	
 
 	.modalBody {
 		height: 100%;

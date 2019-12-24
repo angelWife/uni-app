@@ -1,7 +1,7 @@
 <template>
 	<view class="content">
 		<view class="banner">
-			<image src="../../static/images/b1.png" mode="widthFix"></image>
+			<image :src="banner" mode="widthFix"></image>
 		</view>
 		<commentItem :nodata="nodata" :nomore="nomore" :pageType="pageType" :dataList="dataList" @dianzan="dianzan" :showNum="showNum"
 		 @followPost="followPost"  @hideMore="hideMore" @showAll="showAll"></commentItem>
@@ -16,11 +16,16 @@
 		},
 		data() {
 			return {
-				nodata:false,
-				dataList:'',
-				pageType:'',
+				pageIndex:1,
+				pageSize:10,
+				pageTotal:1,
 				nomore:false,
-				showNum:true
+				nodata:false,
+				dataList:[],
+				pageType:'',
+				showNum:true,
+				isRanking:true,
+				banner:getApp().globalData.config.businessPath+'static/ss/mp/images/top_article.png'
 			};
 		},
 		onShow(){
@@ -32,38 +37,76 @@
 					timingFunc: 'easeIn'
 				}
 			})
-			this.initData();
+			if(getApp().globalData.isShowPic){
+				getApp().globalData.isShowPic = false
+			}else{
+				this.initData();
+			}
+			
+		},
+		onReachBottom(){
+			if (this.pageIndex < this.pageTotal) {
+				this.pageIndex++
+				this.initData()
+			} else {
+				this.nomore = true
+				return false;
+			}
+		},
+		onPullDownRefresh(){
+			this.resetData()
+			this.initData()
+			uni.stopPullDownRefresh();
 		},
 		onShareAppMessage(res) {
-			let settings = {}
-			let index = res.target.dataset.index
-			let item = this.dataList[index];
-			if (item.articleInfo.type == 1) {
-				// settings.type='article'
-				settings.title = item.articleInfo.title
-				settings.imageUrl = item.articleInfo.imgList[0]
-				settings.pagePath =
-					`/pages/home/commentDetail?data=${encodeURIComponent(JSON.stringify(item))}&pageType=${this.pageType}`
-			} else {
-				// settings.type='article'
-				settings.title = item.articleInfo.content.substr(0, 24)
-				settings.imageUrl = '/static/images/icon-loading.png'
-				settings.pagePath =
-					`/pages/home/commentDetail?data=${encodeURIComponent(JSON.stringify(item))}&pageType=${this.pageType}`
-			}
 			getApp().globalData.isShowPic = true
+			let settings = {}
+			if (res.from === 'button') {
+				let index = res.target.dataset.index
+				let item = this.dataList[index];
+				let title = item.articleInfo.content.replace(new RegExp("{-----}", "gm"), "").substr(0, 24);
+				this.shareStat(index);
+				settings.imageUrl = ''
+				if (item.articleInfo.type == 1) {
+					settings.title = item.articleInfo.title
+					settings.pagePath = `/pages/home/commentDetail?data=${encodeURIComponent(JSON.stringify(item))}&pageType=${this.pageType}&userCode=${uni.getStorageSync('userCode')}`
+				} else {
+					settings.title = title
+					settings.pagePath = `/pages/home/commentDetail?data=${encodeURIComponent(JSON.stringify(item))}&pageType=${this.pageType}&userCode=${uni.getStorageSync('userCode')}`
+				}
+			} else {
+				settings.imageUrl = '/static/images/sharePic.png'
+				settings.title = ''
+				settings.pagePath=''
+			}
 			return settings
-		
-			//this.$acFrame.Util.shareUrl(res,settings);
 		},
 		methods:{
+			shareStat(ind) {
+				let self = this
+				let listInfo = self.dataList[ind]
+				let params = {
+					articleId: listInfo.articleInfo.id,
+				}
+			
+				self.$acFrame.HttpService.sharePost(params).then(res => {
+					if (res.success) {
+						listInfo.articleInfo.numTotalShare++
+						self.dataList[ind] = listInfo
+					}
+				})
+			},
 			initData() {
 				let self = this;
-				console.error(self.keywords)
-				self.$acFrame.HttpService.articleRank().then(res => {
+				let params = {
+					pageSize:this.pageSize,
+					pageIndex:this.pageIndex
+				}
+				self.$acFrame.HttpService.articleRank(params).then(res => {
 					if (res.success) {
-						let _data = res.data;
-						let dataList = _data;
+						let dataList = res.data.rows;
+						self.pageTotal = res.data.pageTotal
+						self.pageSize = res.data.pageSize
 						if (dataList.length > 0) {
 							dataList.filter((v, i) => {
 								if (v.adInfo) {
@@ -115,7 +158,7 @@
 								}
 								if (v.type == 1) {
 									if (v.articleInfo.contentExtendList && v.articleInfo.contentExtendList.length > 0) {
-										v.articleInfo.showContent = self.setContent(v.articleInfo.contentExtendList);
+										v.articleInfo.showContent = self.setContent(v.articleInfo);
 									} else {
 										v.articleInfo.showContent = []
 									}
@@ -128,22 +171,61 @@
 									v.articleInfo.isDetail = true;
 								}
 							});
-							self.dataList = dataList
+							self.dataList = self.dataList.concat(dataList);
 							self.nodata = false;
 						} else {
 			
 							self.nodata = true;
 						}
-						if (self.isSearch) {
-							self.nosearch = false
-						}
 					} else {
-						if (self.isSearch) {
-							self.nosearch = true
-						}
 						self.$acFrame.Util.mytotal(res.code);
 					}
 				});
+			},
+			setContent(mydata) {
+				let showContent = [];
+				let type = mydata.type; //1帖子  2文章
+				let content = mydata.content;
+				let star = 0;
+				let contentExtendList = mydata.contentExtendList;
+				var texts = [];
+				var i = 0;
+				var k = 100;
+				while((i=content.indexOf('{-----}')) >= 0 && k>0){
+						    k--;
+							if(i>0){
+								texts.push(content.slice(0,i));
+								content = content.slice(i);
+							}else{
+								content = content.replace("{-----}","");
+								texts.push("");
+							}
+				}
+				
+				texts.forEach(function(item){
+					var obj = {};
+					if(item!=''){
+						obj["type"]="text";
+						obj["content"]=item;
+						showContent.push(obj);
+					}else{
+						if(contentExtendList.length>0){
+							var ext = contentExtendList.shift();
+							//console.log(ext);
+							if(ext.type==1){
+								obj["type"]="post";
+								obj["id"]=ext.atUserCode;
+								obj["name"]=ext.atName;
+							}else if(ext.type==2){
+								obj["type"]="article";
+								obj["id"]=ext.topicId;
+								obj["name"]=ext.topicName;
+							}
+							showContent.push(obj);
+						}
+					}
+				});
+				return showContent;
 			},
 			dianzan(id, ind) { //likeComment
 				let self = this
@@ -189,6 +271,13 @@
 			hideMore(ind) {
 				this.dataList[ind].articleInfo.showMore = false;
 			},
+			resetData(){
+				this.pageSize = 10
+				this.pageIndex = 1
+				this.nodata = false
+				this.nomore = false
+				this.dataList=[]
+			}
 		}
 	}
 </script>

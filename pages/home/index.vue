@@ -3,7 +3,7 @@
 		<view class="searchBox flex">
 			<view class="flex-1 input">
 				<icon @tap="searchData" class="iconfont icon-search"></icon>
-				<input v-if="isSearch" type="text" @input="changeVal" confirm-type="search" v-model="keywords" @confirm="searchData" />
+				<input v-if="isSearch" type="text" @input="changeVal" confirm-type="search" :value="keywords" @confirm="searchData" />
 				<input v-else type="text" value="" @tap="searchClick" readyonly />
 				<icon v-if="isSearch&&keywords" class="iconfont icon-clear" @tap="clearSearchVal"></icon>
 			</view>
@@ -23,8 +23,15 @@
 				</view>
 			</view>
 		</view>
+		<view class="nav-tabs flex" v-if="!isSearch">
+			<block v-for="(item, index) in tabList" :key="index">
+				<view class="flex-1 tabitem c999" :class="{ active: item.active }" @tap="tabClick(index, item.type)">
+					<text>{{ item.name }}</text>
+				</view>
+			</block>
+		</view>
 		<view class="resBox" v-if="isSearch">
-			<view class="fastSearch" v-if="serchList.length==0">
+			<view class="fastSearch" v-if="!hasSearch">
 				<view class="histroy" v-if="historyList.length > 0">
 					<view class="title">
 						<text>历史记录</text>
@@ -32,7 +39,7 @@
 					</view>
 					<view class="h_list clearfix">
 						<block v-for="(item, index) in historyList" :key="index">
-							<view class="item" @tap="tapSearch(item)">{{ item }}</view>
+							<view class="item" @tap="tapSearch(item,'history')">{{ item }}</view>
 						</block>
 					</view>
 				</view>
@@ -45,26 +52,19 @@
 					</view>
 				</view>
 			</view>
-			<view class="searchList" v-else>
-				<scroll-view class="myscroll" scroll-y="true" @scrolltolower="loadMoreData">
+			<view class="searchList">
+				<view class="myscroll">
 					<commentItem :nodata="nodata" :nomore="searchnomore" :dataList="serchList" @dianzan="dianzan" @followPost="followPost"
 					 @hideMore="hideMore" @showAll="showAll()"></commentItem>
-				</scroll-view>
+				</view>
 			</view>
 		</view>
 		<view class="listBox" v-else>
-			<view class="nav-tabs flex">
-				<block v-for="(item, index) in tabList" :key="index">
-					<view class="flex-1 tabitem c999" :class="{ active: item.active }" @tap="tabClick(index, item.type)">
-						<text>{{ item.name }}</text>
-					</view>
-				</block>
-			</view>
 			<view class="list-content">
-				<scroll-view class="myscroll" scroll-y="true" @scrolltolower="loadMoreData">
+				<view class="myscroll">
 					<commentItem :nodata="nodata" :nomore="nomore" :pageType="pageType" :dataList="dataList" @dianzan="dianzan"
 					 @followPost="followPost" @hideMore="hideMore" @showAll="showAll()"></commentItem>
-				</scroll-view>
+				</view>
 			</view>
 		</view>
 	</view>
@@ -74,11 +74,12 @@
 	import commentItem from '@/components/comment-item.vue';
 	export default {
 		components: {
-			commentItem
+			commentItem,
 		},
 		data() {
 			return {
 				isSearch: false,
+				hasSearch:false,//是否搜索过
 				showOper: false, // 发布的操作
 				showPic: false, // 打开图片无需重新加载数据
 				nosearch: true,
@@ -103,10 +104,10 @@
 				pageSize: 10,
 				pageType: 1,
 				pageTotal: 1,
-				checkShop: 1
+				checkShop: 1,
 			};
 		},
-		onLoad() {
+		onLoad(options) {
 			// uni.setNavigationBarColor({
 			// 	backgroundColor: "#d20000",
 			// 	frontColor: '#ffffff',
@@ -118,6 +119,9 @@
 			// uni.setNavigationBarTitle({
 			// 	title: '我的首页'
 			// })
+			if (options.userCode) {
+				getApp().globalData.userCode = options.userCode
+			}
 			this.dataList = []
 			this.serchList = []
 			this.historyList = []
@@ -137,42 +141,50 @@
 		},
 
 		onHide() {
-			console.error('hide')
+			this.cancelSearch()
 		},
 		onUnload() {
-
+			this.cancelSearch()
 		},
 		onPullDownRefresh() {
-			this.resetData();
-			this.initData();
+			this.cancelSearch()
 			wx.stopPullDownRefresh()
 		},
-
+		onReachBottom: function() {
+			this.loadMoreData()
+		},
+        //loadMoreData
 		onShareAppMessage(res) {
-			let settings = {}
-			let index = res.target.dataset.index
-			let item = this.dataList[index];
-			this.shareStat(index);
-			if (item.articleInfo.type == 1) {
-				// settings.type='article'
-				settings.title = item.articleInfo.title
-				settings.imageUrl = '/static/images/sharePic.png'
-				settings.pagePath =
-					`/pages/home/commentDetail?data=${encodeURIComponent(JSON.stringify(item))}&pageType=${this.pageType}`
-			} else {
-				// settings.type='article'
-				settings.title = item.articleInfo.content.substr(0, 24)
-				settings.imageUrl = '/static/images/sharePic.png'
-				settings.pagePath =
-					`/pages/home/commentDetail?data=${encodeURIComponent(JSON.stringify(item))}&pageType=${this.pageType}`
-			}
 			getApp().globalData.isShowPic = true
+			let settings = {}
+			if (res.from === 'button') {
+				let index = res.target.dataset.index
+				let item = this.dataList[index];
+				let title = item.articleInfo.content.replace(new RegExp("{-----}", "gm"), "").substr(0, 24);
+				this.shareStat(index);
+				settings.imageUrl = ''
+				if (item.articleInfo.type == 1) {
+					settings.title = item.articleInfo.title
+					settings.pagePath = `/pages/home/commentDetail?data=${encodeURIComponent(JSON.stringify(item))}&pageType=${this.pageType}&userCode=${uni.getStorageSync('userCode')}`
+				} else {
+					settings.title = title
+					settings.pagePath = `/pages/home/commentDetail?data=${encodeURIComponent(JSON.stringify(item))}&pageType=${this.pageType}&userCode=${uni.getStorageSync('userCode')}`
+				}
+			} else {
+				settings.imageUrl = '/static/images/sharePic.png'
+				settings.title = ''
+				settings.pagePath=''
+			}
 			return settings
-
-			//this.$acFrame.Util.shareUrl(res,settings);
 		},
 		onHide() {
 			this.showOper = false;
+		},
+		onUnload() {
+			console.log('loag')
+		},
+		onHide() {
+			this.cancelSearch()
 		},
 		methods: {
 			initData() {
@@ -187,6 +199,7 @@
 					userCode: null
 				};
 				self.$acFrame.HttpService.postList(params).then(res => {
+					//console.log(res);
 					if (res.success) {
 						let _data = res.data;
 						let dataList = _data.rows;
@@ -235,21 +248,19 @@
 										}
 									}
 								});
-								if (v.publishUser.imgPathHead) {
-									v.publishUser.imgPathHead = self.$acFrame.Util.setImgUrl(v.publishUser.imgPathHead);
-								} else {
-									v.publishUser.imgPathHead = '/static/images/head1.png'
+								if (v.publishUser) {
+									v.publishUser.imgPathHead = self.$acFrame.Util.setImgUrl(v.publishUser.imgPathHead,v.publishUser.genderType);
 								}
 								if (v.type == 1) {
 									if (v.articleInfo.contentExtendList && v.articleInfo.contentExtendList.length > 0) {
-										v.articleInfo.showContent = self.setContent(v.articleInfo.contentExtendList);
+										v.articleInfo.showContent = self.setContent(v.articleInfo);
 									} else {
 										v.articleInfo.showContent = []
 									}
-
+									//console.log(v.articleInfo);
 									v.articleInfo.showMore = false;
 								}
-								if (v.articleInfo.content.length > 80) {
+								if (v.articleInfo.content.length > 75) {
 									v.articleInfo.isDetail = false;
 								} else {
 									v.articleInfo.isDetail = true;
@@ -258,10 +269,10 @@
 							if (self.isSearch) {
 								self.serchList = self.serchList.concat(dataList);
 							} else {
-								self.dataList = [...self.dataList, ...dataList];
-								console.log(dataList)
+								self.dataList = self.dataList.concat(dataList);
+								//console.log(dataList)
 							}
-							console.log(self.dataList)
+							//console.log(self.dataList)
 
 							self.nodata = false;
 						} else {
@@ -285,20 +296,57 @@
 				let content = mydata.content;
 				let star = 0;
 				let contentExtendList = mydata.contentExtendList;
-				contentExtendList.filter((v, i) => {
-					let end = v.index;
-					let _list = v;
-					_list.content = content.slice(star, end);
-					star = end;
-					showContent.push(_list);
+				let temp = [].concat(contentExtendList);
+				var texts = [];
+				var i = 0;
+				var k = 100;
+				while((i=content.indexOf('{-----}')) >= 0 && k>0){
+						    k--;
+							if(i>0){
+								texts.push(content.slice(0,i));
+								content = content.slice(i);
+							}else{
+								content = content.replace("{-----}","");
+								texts.push("");
+							}
+				}
+				
+				texts.forEach(function(item){
+					var obj = {};
+					if(item!=''){
+						obj["type"]="text";
+						obj["content"]=item;
+						showContent.push(obj);
+					}else{
+						if(temp.length>0){
+							var ext = temp.shift();
+							//console.log(ext);
+							if(ext.type==1){
+								obj["type"]="post";
+								obj["id"]=ext.atUserCode;
+								obj["name"]=ext.atName;
+							}else if(ext.type==2){
+								obj["type"]="article";
+								obj["id"]=ext.topicId;
+								obj["name"]=ext.topicName;
+							}
+							showContent.push(obj);
+						}
+					}
 				});
 				return showContent;
 			},
 			searchClick() {
+				let self = this
 				this.isSearch = true;
 				this.resetData()
 				this.historyList = uni.getStorageSync('historyList') || [];
-				this.hotSearch = this.$acFrame.Util.getHotList(1);
+				
+				this.$acFrame.Util.getHotList(1).then(res=>{
+					if(res.success){
+						self.hotSearch = res.data
+					}
+				})
 			},
 			clearSearchVal() {
 				this.keywords = '';
@@ -313,6 +361,7 @@
 					fail: () => {},
 					complete: () => {}
 				});
+				this.showOper=false
 			},
 			shareStat(ind) {
 				let self = this
@@ -320,10 +369,10 @@
 				let params = {
 					articleId: listInfo.articleInfo.id,
 				}
-				
+
 				self.$acFrame.HttpService.sharePost(params).then(res => {
 					if (res.success) {
-						listInfo.articleInfo.numTotalShare ++
+						listInfo.articleInfo.numTotalShare++
 						self.dataList[ind] = listInfo
 					}
 				})
@@ -335,30 +384,62 @@
 				this.isSearch = false;
 				this.searchVal = false;
 				this.keywords = '';
+				this.hasSearch=false;
 				this.tabList[0].active = false
 				this.tabList[1].active = true
+				this.pageType = 1;
 				this.resetData();
 				this.initData();
 			},
 			searchData(e) {
 				let val = this.keywords;
-				this.pageIndex = 1;
+				this.resetData();
 				this.checkShop = 2;
-				this.pageSize = 10;
 				this.pageType = 1;
 				let historyList = uni.getStorageSync('historyList') || [];
-				if (historyList.length < 10) {
-					historyList.push(val);
-				} else {
-					historyList.splice(0, 1);
-					historyList.push(val);
+				if (val) {
+					let goon = true
+					historyList.filter(v => {
+						if (v == val) {
+							goon = false
+						}
+					})
+					debugger
+					if (goon) {
+						if (historyList.length < 10) {
+							if (historyList.length > 0) {
+								historyList.unshift(val);
+							} else {
+								historyList.push(val);
+							}
+
+						} else {
+							historyList.splice(9, 1);
+							historyList.unshift(val);
+						}
+					}
+
 				}
+
 				uni.setStorageSync('historyList', historyList);
 				this.historyList = historyList
+				this.hasSearch=true
 				this.initData();
 			},
-			tapSearch(val) {
+			tapSearch(val,type) {
+				if(type&&type=='history'){
+					let historyList = uni.getStorageSync('historyList');
+					historyList.filter((v,i) => {
+						if (v == val) {
+							historyList.splice(i, 1);
+							historyList.unshift(val)
+						}
+					})
+					this.historyList = historyList
+					uni.setStorageSync('historyList', historyList);
+				}
 				this.resetData();
+				this.hasSearch=true
 				this.pageType = 1;
 				this.keywords = val;
 				this.checkShop = 2
@@ -401,7 +482,6 @@
 				this.dataList = [];
 				this.serchList = []
 				this.checkShop = 1
-				this.checkShop = 1;
 				this.nodate = false;
 				this.nomore = false
 			},
@@ -447,27 +527,42 @@
 				return this.$acFrame.Util.setImgUrl(src);
 			},
 			showAll(ind) {
-				this.dataList[ind].articleInfo.showMore = true;
+				if (this.isSearch) {
+					this.serchList[ind].articleInfo.showMore = true;
+				} else {
+					this.dataList[ind].articleInfo.showMore = true;
+				}
+
 			},
 			hideMore(ind) {
-				this.dataList[ind].articleInfo.showMore = false;
+				if (this.isSearch) {
+					this.serchList[ind].articleInfo.showMore = false;
+				} else {
+					this.dataList[ind].articleInfo.showMore = false;
+				}
 			},
 		}
 	};
 </script>
 
 <style lang="less">
-	page {
-		height: 100%;
-	}
+	// page {
+	// 	height: 100%;
+	// }
 
 	.content {
-		height: 100%;
+		// height: 100%;
+		position: relative;
 		overflow: hidden;
 	}
 
 	.searchBox {
-		padding: 20rpx 24rpx 10rpx;
+		position: fixed;
+		z-index: 11;
+		width: 100%;
+		top:0;
+		left:0;
+		padding: 20rpx 24rpx;
 		background: #fff;
 
 		.input {
@@ -509,7 +604,7 @@
 
 			.operBox {
 				position: absolute;
-				z-index: 5;
+				z-index: 10;
 				width: 180%;
 				top: 90rpx;
 				right: 0;
@@ -553,39 +648,43 @@
 		}
 	}
 
-	.listBox {
-		height: calc(100% - 110rpx);
+	.nav-tabs {
+		background: #fff;
+		text-align: center;
+		font-size: 34rpx;
+         position:fixed;
+		 z-index: 10;
+		 top:120rpx;
+		 left:0;
+		 width: 100%;
+		.tabitem {
+			padding: 10rpx 0 20rpx;
 
-		.nav-tabs {
-			background: #fff;
-			text-align: center;
-			font-size: 34rpx;
+			text {
+				display: inline-block;
+				line-height: 40rpx;
+				padding: 0 6rpx;
+				border-bottom: 2px solid #fff;
+			}
 
-			.tabitem {
-				padding: 10rpx 0 20rpx;
+			&.active {
+				color: #b40000;
+				font-weight: 600;
 
 				text {
-					display: inline-block;
-					line-height: 40rpx;
-					padding: 0 6rpx;
-					border-bottom: 2px solid #fff;
-				}
-
-				&.active {
-					color: #b40000;
-					font-weight: 600;
-
-					text {
-						border-color: #b40000;
-					}
+					border-color: #b40000;
 				}
 			}
 		}
+	}
 
+	.listBox {
+		padding-top:200rpx;
 		.list-content {
 			height: calc(100% - 50rpx);
 
 			.myscroll {
+				min-height: calc(100vh - 240rpx);
 				padding-bottom: 20rpx;
 				box-sizing: border-box;
 			}
@@ -593,8 +692,8 @@
 	}
 
 	.resBox {
-		height: calc(100% - 110rpx);
-
+		padding-top:120rpx;
+        min-height:100vh;
 		.title {
 			padding: 0 20rpx;
 			font-size: 30rpx;

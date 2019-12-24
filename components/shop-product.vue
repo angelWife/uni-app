@@ -14,7 +14,7 @@
 							<text v-if="item.accountType==2" class="c999">
 								(2000星票)
 							</text>
-							<text v-else class="mark fs10">拼</text>
+							<text v-if="item.flagSpell" class="mark fs10">拼</text>
 						</view>
 						<view v-if="listType != 'wallet'" class="fs12 c999">已售{{item.numTotalSale}}</view>
 					</view>
@@ -23,6 +23,9 @@
 					</view>
 				</view>
 			</view>
+		</view>
+		<view v-if="nomore" class="noMore">
+			~已经到底了！~
 		</view>
 		<view v-if="nodata" class="noData flex f-row just-con-c item-center">
 			<view class="text-center">
@@ -45,6 +48,12 @@
 				}
 			},
 			nodata:{
+				type: Boolean,
+				default() {
+					return '';
+				}
+			},
+			nomore:{
 				type: Boolean,
 				default() {
 					return '';
@@ -74,11 +83,11 @@
 
 <style lang="less">
 .productContent{
-	padding:0 10rpx;
+	padding:20rpx 10rpx 0;
 	.item{
 		float:left;
 		width: 50%;
-		padding:0 10rpx;
+		padding:0 20rpx;
 		margin-bottom:20rpx;
 		.item-box{
 			border-radius:0.3em;

@@ -144,13 +144,13 @@
 				let params=self.details
 				self.$acFrame.HttpService.directBuy().then(res => {
 					if(res.success){
-						self.orderVO = res.data
+						self.orderVO = res
 					}
 				})
 			},
 			switchChange(e,ind){
 				let val = e.target.value
-				let _data = this.orderVO.payMethodList[ind]
+				let _data = this.orderVO.data.payMethodList[ind]
 				this.payOther = val
 				this.payVO.amount = _data.amount
 				this.payVO.total  = _data.total
@@ -160,6 +160,7 @@
 			},
 			payResult(){
 				let amount =this.payVO.amount
+				let orderVO = this.orderVO
 				//还需判断是否设置密码，如果没有设置支付密码，跳转设置支付密码
 				if(amount>0&&amount<1000){
 					this.showPassModal = true
@@ -173,7 +174,7 @@
 					//请求支付接口
 					//支付结果:如果直接支付，直接跳转；如果拼单，增需请求拼单接口，带数据跳转
 					uni.navigateTo({
-						url:'payResult?res=&type=spell'
+						url:`payResult?res=${JSON.stringify(orderVO)}`
 					})
 				}
 				
@@ -188,7 +189,7 @@
 				}
 				self.$acFrame.HttpService.joinSpell().then(res => {
 					if(res.success){
-						self.addrVO = res.data
+						self.addrVO = res
 					}
 				})
 			},
@@ -200,7 +201,7 @@
 				}
 				self.$acFrame.HttpService.couponList().then(res => {
 					if(res.success){
-						self.addrVO = res.data
+						self.addrVO = res
 					}
 				})
 			},

@@ -21,7 +21,7 @@
 		onLoad(options){
 			uni.setNavigationBarColor({
 				backgroundColor: "#ffffff",
-				frontColor: '#333333',
+				frontColor: '#000000',
 				animation: {
 					duration: 100,
 					timingFunc: 'easeIn'

@@ -51,7 +51,9 @@
 		,{
 		    "path" : "pages/home/topicIndex",
 		    "style": {
-		    	"navigationBarTitleText": "话题主页"
+		    	"navigationBarTitleText": "话题主页",
+				"enablePullDownRefresh": true
+				
 		    }
 		}
 		,{
@@ -73,12 +75,14 @@
 		,{
 			"path": "pages/myshop/index",
 			"style": {
-				"navigationBarTitleText": "小店集市"
+				"navigationBarTitleText": "小店集市",
+				"enablePullDownRefresh": true
 			}
 		},
 		{
 			"path": "pages/myshop/shopDetail",
-			"style": {}
+			"style": {},
+			"enablePullDownRefresh": true
 		},
 		{
 			"path": "pages/myshop/productDetail",
@@ -113,7 +117,7 @@
 		{
 			"path": "pages/mycenter/mycenter",
 			"style": {
-				"navigationBarTitleText": "我的"
+				"navigationBarTitleText": "我的主页"
 			}
 		}, {
 			"path": "pages/mycenter/baseInfo",
@@ -229,25 +233,29 @@
         ,{
             "path" : "pages/ranking/invitation",
             "style": {
-            	"navigationBarTitleText": "话题排行"
+            	"navigationBarTitleText": "话题排行",
+				"enablePullDownRefresh": true
             }
         }
         ,{
             "path" : "pages/ranking/post",
             "style": {
-            	"navigationBarTitleText": "帖子排行"
+            	"navigationBarTitleText": "帖子排行",
+				"enablePullDownRefresh": true
             }
         }
 		,{
 		    "path" : "pages/ranking/friends",
 		    "style": {
-		    	"navigationBarTitleText": "邀请排行"
+		    	"navigationBarTitleText": "邀请排行",
+				"enablePullDownRefresh": true
 		    }
 		}
 		,{
             "path" : "pages/order/index",
             "style": {
-            	"navigationBarTitleText": "订单"
+            	"navigationBarTitleText": "订单",
+				"enablePullDownRefresh": true
             }
 		}
 		,{
@@ -265,7 +273,8 @@
 		,{
             "path" : "pages/order/afterSale",
             "style": {
-            	"navigationBarTitleText": "售后"
+            	"navigationBarTitleText": "售后",
+				"enablePullDownRefresh": true
             }
 		}
 		,{
@@ -281,12 +290,46 @@
             }
         }
         
+        ,{
+            "path" : "pages/mycenter/treasury",
+            "style": {
+            	"navigationBarTitleText": "宝库"
+            }
+        }
+        ,{
+            "path" : "pages/mycenter/goodsList",
+            "style": {
+            	"navigationBarTitleText": "商品",
+				"enablePullDownRefresh": true
+            }
+        }
+        ,{
+            "path" : "pages/order/orderDetail",
+            "style": {
+            	"navigationBarTitleText": "订单详情"
+            }
+        }
+        ,{
+            "path" : "pages/order/orderDetailSpeci",
+            "style": {
+            	"navigationBarTitleText": "拼单详情"
+            }
+        }
+        ,{
+            "path" : "pages/mycenter/payPassword",
+            "style" : {}
+        }
+        ,{
+            "path" : "pages/order/refundDetail",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
 		"navigationBarTitleText": "uni-app",
 		"navigationBarBackgroundColor": "#b40000",
-		"backgroundColor": "#666"
+		"backgroundColor": "#eee",
+		"backgroundTextStyle":"dark"
 	},
 	"tabBar": {
 		"color": "#7A7E83",

@@ -20,24 +20,33 @@
 			<button open-type="share" class="iconfont icon-share">分享</button>
 		</view>
 		<view class="modal prod2">
-			<view class="flex item-center">
+			<!-- <view class="flex item-center">
 				<view class="flex-1">该商品入选了某某排行</view>
 				<view class="c999">查看排行</view>
-			</view>
+			</view> -->
 			<view class="flex item-center">
-				<view class="flex-1 c999">精灵</view>
-				<view class="c999">持有喵喵精灵可享5折</view>
+				<view class="c999">精灵</view>
+				<view class="pic">
+					<image src="/static/images/animal/jl1.png" mode="widthFix"></image>
+				</view>
+				<view class="flex-1 text-right red" v-if="prodDetail.spiritDiscount.hasDiscount">
+				{{prodDetail.spiritDiscount.spiritList[0].name}}
+				{{prodDetail.spiritDiscount.spiritList[0].priceDiscount}}折
+				</view>
+				<view class="flex-1 text-right c999" v-else>本商品不支持精灵折扣</view>
 			</view>
 		</view>
 		<view class="modal prod3">
 			<view class="coupon flex">
 				<view class="name c999">领取</view>
 				<view class="listBox flex-1" v-if="prodDetail.couponList.length>0">
-						<block v-for="(item,ind) in prodDetail.couponList" :key="ind" >
-							<view v-if="!item.hasReceived" @tap="chooseCoupon(ind,item.couponId)" class="item">
-								满{{item.priceFull}}{{item.type==1?'减'+item.effectVal:item.effectVal+'折'}}
-							</view>
-						</block>
+						<scroll-view scroll-x="true" >
+							<block v-for="(item,ind) in prodDetail.couponList" :key="ind" >
+								<view @tap="chooseCoupon(ind,item.couponId)" class="item" :class="{'hasReceived':item.hasReceived}">
+									{{item.name}}
+								</view>
+							</block>
+						</scroll-view>
 				</view>
 				<view v-else class="text flex-1">
 					暂无可领取的优惠券
@@ -46,9 +55,11 @@
 			<view class="service flex">
 				<view class="name c999">服务</view>
 				<view class="listBox flex-1">
-					<view class="item">假一赔三</view>
-					<view class="item">无理由退款</view>
-					<view class="item">消费者保障</view>
+					<scroll-view scroll-x="true" >
+						<view class="item">假一赔三</view>
+						<view class="item">无理由退款</view>
+						<view class="item">消费者保障</view>
+					</scroll-view>
 				</view>
 			</view>
 		</view>
@@ -155,49 +166,51 @@
 				</view>
 			</view>
 			<view class="goodsMsg">
-				<rich-text :nodes="prodDetail.briefInfo"></rich-text>
+				<rich-text :nodes="prodDetail.describe"></rich-text>
 			</view>
 		</view>
-		<view class="prodFoot flex item-center">
-			<view class="item">
-				<icon class="iconfont icon-shop"></icon>
-				<view class="fs12 c999">店铺</view>
-			</view>
-			<view class="item">
-				<icon class="iconfont icon-kefu"></icon>
-				<view class="fs12 c999">客服</view>
-			</view>
-			<view class="item">
-				<icon class="iconfont iconshare2"></icon>
-				<view class="fs12 c999">分享</view>
-				<button open-type="share"></button>
-			</view>
-			<view class="flex-1 flex">
-				<block v-if="prodDetail.flagSpell==1">
-					<view class="btn btn2 flex-1 flex f-col just-con-c" @tap="setSpecInfo('order')" >
-						<view class="price">
-							¥ {{sum_price}}
-						</view>
-						<view class="text">
-							单独购买
-						</view>
-					</view>
-					<view class="btn btn1 flex-1 flex f-col just-con-c" @tap="setSpecInfo('spell')">
-						<view class="price">
-							¥ {{sum_price}}
-						</view>
-						<view class="text">
-							发起拼单
-						</view>
-					</view>
-				</block>
-				<block v-else>
-					<view class="btn btn1 flex-1 flex f-col just-con-c">
-					<view class="buy" @tap="setSpecInfo('order')">
-						立即购买
-					</view>
+		<view class="prodFoot">
+			<view class="flex item-center">
+				<view class="item" @tap="shopDetail(prodDetail.shopInfo.id)">
+					<icon class="iconfont icon-shop"></icon>
+					<view class="fs12 c999">店铺</view>
 				</view>
-				</block>
+				<view class="item">
+					<icon class="iconfont icon-kefu"></icon>
+					<view class="fs12 c999">客服</view>
+				</view>
+				<view class="item">
+					<icon class="iconfont iconshare2"></icon>
+					<view class="fs12 c999">分享</view>
+					<button open-type="share"></button>
+				</view>
+				<view class="flex-1 flex">
+					<block v-if="prodDetail.flagSpell==1">
+						<view class="btn btn2 flex-1 flex f-col just-con-c" @tap="setSpecInfo('order')" >
+							<view class="price">
+								¥ {{chooseSpec.priceSale}}
+							</view>
+							<view class="text">
+								单独购买
+							</view>
+						</view>
+						<view class="btn btn1 flex-1 flex f-col just-con-c" @tap="setSpecInfo('spell')">
+							<view class="price">
+								¥ {{chooseSpec.priceSpell}}
+							</view>
+							<view class="text">
+								发起拼单
+							</view>
+						</view>
+					</block>
+					<block v-else>
+						<view class="btn btn1 flex-1 flex f-col just-con-c">
+						<view class="buy" @tap="setSpecInfo('order')">
+							立即购买
+						</view>
+					</view>
+					</block>
+				</view>
 			</view>
 		</view>
 		<view class="comDialog assembleModal flex item-center just-con-c" v-if="showAssembleModal">
@@ -389,7 +402,7 @@ export default {
 			settings.title = `发现好物【${this.prodDetail.name}】`
 			settings.imageUrl = this.prodDetail.imgList[0]
 			settings.pagePath =
-				`/pages/myshop/productDetail?id=${this.id}`
+				`/pages/myshop/productDetail?id=${this.id}&userCode=${uni.getStorageSync('userCode')}`
 		
 		getApp().globalData.isShowPic = true
 		return settings
@@ -508,18 +521,43 @@ export default {
 				goodsId:detail.goodsId,
 				goodsSkuId:this.chooseSpec.goodsSkuId?this.chooseSpec.goodsSkuId:''
 			}
+			obj= encodeURIComponent(JSON.stringify(obj))
 			if(this.chooseSpec.goodsSkuId){
 				uni.navigateTo({
-					url:'confirmOrder?details='+JSON.stringify(obj)+'&type='+self.operType
+					url:'confirmOrder?details='+obj+'&type='+self.operType
 				})
 			}
 			
 		},
+		shopDetail(id){
+			uni.navigateTo({
+				url:"shopDetail?id="+id
+			})
+		},
 		// 选择拼单对象
 		chooseCoupon(ind,id){
-			let list = prodDetail.couponList
-			this.couponList.push(id);
-			prodDetail.couponList[ind].hasReceived = true
+			let self=this
+			let _obj = self.prodDetail.couponList[ind]
+			if(_obj.hasReceived){
+				this.$acFrame.Util.mytotal('亲，该优惠券已经领取过了！')
+				return false;
+			}
+			this.$acFrame.HttpService.getCoupons({id:id}).then(res=>{
+				if(res.success){
+					this.$acFrame.Util.mytotal('领取成功！')
+					self.prodDetail.couponList[ind].hasReceived = true
+					let list_c = [] // 未使用的
+					let list_u = [] // 已使用的
+					self.prodDetail.couponList.filter(v=>{
+						if(v.hasReceived){
+							list_u.push(v)
+						}else{
+							list_c.push(v)
+						}
+					})
+					self.prodDetail.couponList = [...list_c,...list_u];
+				}
+			})
 		},
 		// 选择属性
 		chooseSku(ind){
@@ -555,7 +593,9 @@ page {
 	background: #efefef;
 	padding-bottom:100rpx;
 }
-
+.content{
+	border:0;
+}
 .productPic {
 	swiper {
 		height: 100vw;
@@ -632,27 +672,38 @@ page {
 .prod2 {
 	padding: 10rpx 24rpx;
 	line-height: 60rpx;
+	.pic{
+		width: 100rpx;
+		margin-left:20rpx;
+	}
 }
 .prod3 {
-	padding: 20rpx 0 0;
+	padding: 20rpx 0 20rpx;
 	line-height: 60rpx;
 	.name {
 		padding: 0 24rpx;
 	}
 	.listBox {
 		overflow: hidden;
-		padding-top:10rpx;
+		width: 80%;
+		scroll-view{
+			width: 100%;
+			white-space: nowrap;
+		}
 		.item {
-			float: left;
+			display: inline-block;
 			text-align: center;
 			min-width: 180rpx;
 			border-radius: 50rpx;
+			font-size:20rpx;
+			padding:0 20rpx;
 			line-height: 50rpx;
 			margin-right: 20rpx;
-			margin-bottom: 20rpx;
+			
 		}
 	}
 	.coupon {
+		margin-bottom:10rpx;
 		.text{
 			padding-right:30rpx;
 			color:#999999;
@@ -661,11 +712,18 @@ page {
 			border: 1px solid #b40000;
 			color: #b40000;
 		}
+		.hasReceived{
+			border-color: #999;
+			color: #999;
+		}
 	}
-	.service .item {
-		background: #efefef;
-		color: #666;
+	.service{
+		.item {
+			background: #efefef;
+			color: #666;
+		}
 	}
+	 
 }
 .assemble {
 	padding: 0;
@@ -793,11 +851,14 @@ page {
 	position:fixed;
 	z-index: 5;
 	width: 100%;
-	height:100rpx;
 	left:0;
 	bottom:0;
+	
 	background: #fff;
 	box-shadow: 0 -1px 5px rgba(0,0,0,0.1);
+	> view{
+		padding-bottom:constant(safe-area-inset-bottom);
+	}
 	.iconfont{
 		font-size:40rpx;
 	}
