@@ -83,14 +83,15 @@ this.reasontext=e.detail.value
 			},
 			orderRefound() {
 				let self = this
-				let params = {
-					askNum: this.orderData.askNum,
-					explainBuyer: this.reasontext,
-					orderDetailId: this.orderData.orderDetailId,
-					orderId: this.orderData.orderId,
-					reasonType: this.reasonKey
-				}
+				
 				if (this.ordertype == "hasgoods") {
+					let params = {
+						askNum: this.orderData.askNum,
+						explainBuyer: this.reasontext,
+						orderDetailId: this.orderData.orderDetailId,
+						orderId: this.orderData.orderId,
+						reasonType: this.reasonKey
+					}
 					this.$acFrame.HttpService.orderRefound(params).then(res => {
 						if (res.success) {
 							self.$acFrame.Util.mytotal('申请成功！');
@@ -102,7 +103,14 @@ this.reasontext=e.detail.value
 						}
 					})
 				}else{
-					params.moneyAsk = this.orderData.price
+					let params = {
+						explainBuyer: this.reasontext,
+						// orderDetailId:this.orderData.orderDetailId,
+						// askNum: this.orderData.askNum,
+						moneyAsk:this.orderData.price,
+						orderId: this.orderData.orderId,
+						reasonType: this.reasonKey
+					}
 					this.$acFrame.HttpService.orderRefoundMoney(params).then(res => {
 						if (res.success) {
 							self.$acFrame.Util.mytotal('申请成功！');

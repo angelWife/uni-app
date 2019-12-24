@@ -127,7 +127,7 @@
 			</view>
 		</view>
 		<view class="footBtn">
-			<button type="rednull" class="radiuBtn" v-if="details.status==1" size="mini">确认付款</button>
+			<button type="rednull" class="radiuBtn" v-if="details.status==1" size="mini" @tap="topay(details.spellIdUser)">确认付款</button>
 			<button type="null" class="radiuBtn" size="mini" @tap="cancelOrder">取消订单</button>
 		</view>
 	</view>
@@ -191,6 +191,15 @@
 			},
 			formatTime(t) {
 				return this.$acFrame.Util.formatTime(t, "dayhm");
+			},
+			topay(id){
+				this.$acFrame.HttpService.spellPay({id:id}).then(res=>{
+					if(res.success){
+						uni.navigateTo({
+							url:'/pages/myshop/payWay?order='+JSON.stringify(res.data)
+						}) 
+					}
+				})
 			},
 			textPaste() {
 				var self = this;

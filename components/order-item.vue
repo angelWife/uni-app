@@ -64,22 +64,23 @@
 					<button type="red" :data-index="index" open-type="share">邀请好友拼单</button>
 				</block>
 				<block v-if="item.status==1">
-					<button type="rednull">付款</button>
+					<button type="rednull" @tap.stop="topay(item)">付款</button>
 					<button type="null" @tap.stop="cancelOrder(item)">取消订单</button>
 				</block>
 				<block v-if="item.status==2">
-					<button type="null" @tap="refoundMoney(item)">申请退款</button>
+					<button type="null" @tap.stop="refoundMoney(item)">申请退款</button>
+					<button type="null" @tap.stop="cancelOrder(item)">取消订单</button>
 				</block>
 				<block v-if="item.status==3">
-					<button type="rednull">确认收货</button>
+					<button type="rednull" @tap.stop="shouhuo(item)">确认收货</button>
 					<button type="null" @tap.stop="applyService(item)">申请售后</button>
 				</block>
 				<block v-if="item.status==4">
-					<button type="rednull">评价</button>
+					<button type="rednull"  @tap.stop="pingjia(item)" >评价</button>
 				</block>
-				<block v-if="item.status==5">
-					<button type="rednull">再来一单</button>
-					<button type="null">删除订单</button>
+				<block v-if="item.status==6">
+					<button type="rednull"  @tap.stop="createOrder(item)"  >再来一单</button>
+					<button type="null" @tap.stop="delOrder(item)" >删除订单</button>
 				</block>
 
 			</view>
@@ -181,6 +182,15 @@
 					url: '/pages/order/returnForm?orderData=' + JSON.stringify(obj) + '&type=nullgoods'
 				})
 			},
+			// shouhuo(id){
+			// 	var self = this;
+			// 	self.$acFrame.HttpService.post("order/info/confirm",{orderId:this.id}).then(res => {
+			// 		console.log(res);
+			// 		if (res.success) {
+			// 			self.getDetail()
+			// 		}
+			// 	})
+			// },
 			cancelOrder(item) {
 				let self = this
 				let id = ''
@@ -189,7 +199,13 @@
 					params.spellIdUser = item.spellIdUser
 					params.spellId = item.spellId
 				} else {
-
+				self.$acFrame.HttpService.post("order/info/cancle",{id:item.id}).then(res => {
+					console.log(res);
+					if (res.success) {
+						self.$parent.getList();
+					}
+				})
+				return true;
 				}
 
 				self.$acFrame.HttpService.cancelSpellOrder(params).then(res => {
@@ -206,7 +222,49 @@
 
 					}
 				})
-			}
+			},
+			topay(item){
+				debugger
+				if(this.orderType == 100){
+					this.$acFrame.HttpService.spellPay({id:item.spellIdUser}).then(res=>{
+						if(res.success){
+							uni.navigateTo({
+								url:'/pages/myshop/payWay?order='+JSON.stringify(res.data)
+							}) 
+						}
+					})
+				}else{
+					this.$acFrame.HttpService.orderPay({id:item.id}).then(res=>{
+						if(res.success){
+							uni.navigateTo({
+								url:'/pages/myshop/payWay?order='+JSON.stringify(res.data)
+							}) 
+						}
+					})
+				}
+				
+			},
+			shouhuo(item){
+				var self = this;
+				self.$acFrame.HttpService.post("order/info/confirm",{id:item.id}).then(res => {
+					if (res.success) {
+						self.$parent.getList();
+					}
+				})
+			}, 
+			pingjia(item){
+				uni.navigateTo({
+					url:'/pages/mycenter/evaluate?id='+item.id+"&speci="+ JSON.stringify(item)
+				}) 
+			},
+			delOrder(item){
+				var self = this;
+				self.$acFrame.HttpService.post("order/info/remove",{id:item.id}).then(res => {
+					if (res.success) {
+						self.$parent.getList();
+					}
+				})
+			},
 		}
 	};
 </script>

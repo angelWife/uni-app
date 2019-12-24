@@ -58,7 +58,7 @@
 			}
 		},
 		onLoad(options) {
-
+			this.getStatus()
 		},
 		onShow() {
 			if (getApp().globalData.isShowPic) {
@@ -68,7 +68,7 @@
 				if (this.orderType == 100) {
 					this.getPGList();
 				} else {
-					this.getList();
+					this.getStatus();
 				}
 			}
 
@@ -113,6 +113,7 @@
 								item1.type = st[item1.name];
 							}
 						});
+						console.log(self.orderStatus)
 						self.getList();
 
 					}
@@ -149,7 +150,8 @@
 						self.pageTotal = res.data.pageTotal
 						if (list.length > 0) {
 							list.forEach(function(item) {
-								item["statusName"] = self.orderStatus[item["status"]];
+								
+								item.statusName = self.orderStatus[item["status"]];
 								item.detailList.filter(v => {
 									v.goodsImgPath = self.$acFrame.Util.setImgUrl(v.goodsImgPath);
 								})

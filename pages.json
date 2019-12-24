@@ -323,6 +323,12 @@
             "path" : "pages/order/refundDetail",
             "style" : {}
         }
+        ,{
+            "path" : "pages/myshop/commentList",
+            "style": {
+            	"enablePullDownRefresh": true
+            }
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",

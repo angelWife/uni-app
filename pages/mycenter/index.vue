@@ -65,7 +65,7 @@
 			</view> -->
 			<view class="item flex"  @tap="linkTo('/pages/order/index')">
 				<view class="icon">
-					<image src="/static/images/icon-wallet.png" mode="widthFix"></image>
+					<image src="/static/images/icon-order.png" mode="widthFix"></image>
 				</view>
 				<view class="right flex-1">
 					订单

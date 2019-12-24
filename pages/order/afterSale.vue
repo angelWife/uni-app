@@ -39,7 +39,7 @@
 				<view class="payprice text-right red">
 					
 					实付：<text class="fs12">¥</text><text class="pr30">{{item.moneyAsk}}</text>
-					<block v-if="item.status==1||item.status==3">
+					<block v-if="item.status==3">
 						退款：<text class="fs12">¥</text><text>{{item.moneyFinish}}</text>
 					</block>
 				</view>
@@ -48,7 +48,7 @@
 						<button type="null" @tap.stop="cancelRefund(item.id)">取消申请</button>
 					</block>
 					<block v-if="item.status==2||item.status==4">
-						<button type="null" @tap="refundAgain(item)">重新申请</button>
+						<button type="null" @tap.stop="refundAgain(item)">重新申请</button>
 					</block>
 					<button type="rednull" @tap="goDetail(item.id)">售后详情</button>
 				</view>
@@ -217,13 +217,13 @@
 			},
 			refundAgain(item){
         		let obj={
-					orderId:item.id,
-					orderDetailId:item.detailList[0].id,
-					price:item.pricePay,
-					askNum:item.detailList[0].buyNum,
-					phone:item.address?item.address.receiverMobilePhone:'' 
+					orderId: item.orderId,
+					orderDetailId: item.detailList[0]?item.detailList[0].id:'',
+					price: item.moneyAsk,
+					askNum: item.detailList[0]?item.detailList[0].buyNum:'',
+					phone: item.address ? item.address.receiverMobilePhone : ''
         		}
-        		let type = item.type == 1 ? 'hasgoods':'nullgoods'
+        		let type = item.type == 2 ? 'hasgoods':'nullgoods'
 				uni.navigateTo({
 					url:'/pages/order/returnForm?orderData=' + JSON.stringify(obj) + '&type='+type
 				})
@@ -254,7 +254,7 @@
 		left: 0;
 		z-index: 10;
 		padding: 0 20rpx;
-
+		background: #eee;
 		.item {
 			padding: 0 10rpx;
 			line-height: 40rpx;

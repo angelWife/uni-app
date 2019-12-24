@@ -127,30 +127,37 @@
 			<view class="">
 				下单时间：{{ formatTime(details.createTime) }}
 			</view>
-			<view class="" v-if="details.status >= 1">
+			<view class="" v-if="details.status >= 1 && details.status < 6 ">
 				付款时间：{{ formatTime(details.timePay ) }}
 			</view>
 
-			<view class="" v-if="details.status >= 3">
+			<view class="" v-if="details.status >= 3  && details.status < 6 ">
 				发货时间：{{ formatTime(details.timeSend ) }}
 			</view>
 		</view>
 		<view class="footBtn">
 			<block v-if="details.status==1">
-				<button type="rednull" class="radiuBtn">付款</button>
-				<button type="null" class="radiuBtn" >取消订单</button>
+				<button type="rednull" @tap="topay(details.id)" class="radiuBtn">付款</button>
+				<button type="rednull" @tap="createOrder()" class="radiuBtn">再来一单</button>
+				<button type="null" @tap="tocancel()" class="radiuBtn" >取消订单</button>
 			</block>
-			<block v-if="details.status==2"><button type="null" class="radiuBtn" @tap="refoundMoney(details)">申请退款</button></block>
+			<block v-if="details.status==2">
+				<button type="null" class="radiuBtn" @tap="refoundMoney(details)">申请退款</button>
+				<button type="null" @tap="tocancel()" class="radiuBtn" >取消订单</button>
+				</block>
 			<block v-if="details.status==3">
-				<button type="rednull" class="radiuBtn">确认收货</button>
+				<button type="rednull" @tap="shouhuo()" class="radiuBtn">确认收货</button>
 				<button type="null" class="radiuBtn" @tap="applyService(details)">申请售后</button>
 			</block>
 			<block v-if="details.status==4">
-				<button type="rednull" class="radiuBtn">评价</button>
+				<button type="rednull" @tap="pingjia()" class="radiuBtn">评价</button>
 			</block>
 			<block v-if="details.status==5">
-				<button type="rednull" class="radiuBtn">再来一单</button>
-				<button type="null" class="radiuBtn">删除订单</button>
+				<button type="null" @tap="delOrder()" class="radiuBtn">删除订单</button>
+			</block>
+			<block v-if="details.status==6">
+				<button type="rednull" @tap="createOrder()" class="radiuBtn">再来一单</button>
+				<button type="null" @tap="delOrder()" class="radiuBtn">删除订单</button>
 			</block>
 		</view>
 	</view>
@@ -172,13 +179,19 @@
 				hour: 0,
 				minute: 0,
 				second: 0,
-				show_time: false
+				show_time: false,
+				goods_id:0
 			}
 		},
 		onLoad(options) {
+			
 			this.id = options.id
 			this.obj = JSON.parse(options.obj)
-			console.log(this.obj)
+			console.log(this.obj),
+			this.goods_id=this.obj.detailList[0].goodsId;
+			uni.setNavigationBarTitle({
+				title: this.obj.statusName
+			});
 		},
 		onShow() {
 			this.getDetail()
@@ -232,15 +245,80 @@
 				},300)
 			},
 			setImg(url) {
-				return this.$acFrame.Util.setImgUrl(url);
+				if(!url){
+					return false
+				}else{
+					return this.$acFrame.Util.setImgUrl(url);
+				}
+				
 			},
-			shoukuan() {
-				/* uni.navigateTo({
-					url:''
-				}) */
+			topay(id){
+				this.$acFrame.HttpService.orderPay({id:id}).then(res=>{
+					if(res.success){
+						uni.navigateTo({
+							url:'/pages/myshop/payWay?order='+JSON.stringify(res.data)
+						}) 
+					}
+				})
 			},
-			shouhou() {
-
+			tocancel(){
+				var self = this;
+				self.$acFrame.HttpService.post("order/info/cancle",{id:this.id}).then(res => {
+					console.log(res);
+					if (res.success) {
+						self.getDetail()
+					}
+				})
+				
+			},
+			shouhuo(){
+				var self = this;
+				self.$acFrame.HttpService.post("order/info/confirm",{id:this.id}).then(res => {
+					console.log(res);
+					if (res.success) {
+						self.getDetail()
+					}
+				})
+			}, 
+			pingjia(){
+				uni.navigateTo({
+					url:'/pages/mycenter/evaluate?id='+this.id+"&speci="+ JSON.stringify(this.details)
+				}) 
+			},
+			createOrder(){
+				let details = this.details;
+				let speci = details.detailList[0];
+				let priceVo = details.priceVo;
+				let args={
+					couponList:[],
+					chooseSpec:{"priceSale":speci.priceBuy,"propValue":speci.goodsSkuPropValue,"goodsSkuId":speci.goodsSkuId,},
+					prod:speci,
+					goodsNum:speci.buyNum,
+					spellId:'',
+					freight:priceVo.priceLogistic,
+					name:speci.goodsName,
+					priceSale:speci.priceBuy,
+					sum_price:priceVo.pricePay,
+					img:speci.goodsImgPath,
+					goodsId:speci.goodsId,
+					goodsSkuId:speci.goodsSkuId
+				};
+					args= encodeURIComponent(JSON.stringify(args))
+					uni.navigateTo({
+						url:'/pages/myshop/confirmOrder?details='+args+'&type=order'
+					})
+				
+			},
+			delOrder(){
+				var self = this;
+				self.$acFrame.HttpService.post("order/info/remove",{id:this.id}).then(res => {
+					console.log(res);
+					if (res.success) {
+						uni.navigateTo({
+							url:'/pages/order/index'
+						})
+					}
+				})
 			},
 			formatTime(t) {
 				return this.$acFrame.Util.formatTime(t, "dayhm");

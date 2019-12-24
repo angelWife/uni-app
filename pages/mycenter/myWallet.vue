@@ -1,17 +1,17 @@
 <template>
 	<view class="content">
 		<view class="modal listBox">
-			<view class="item flex" @tap="linkTo('cashOut')">
+			<view class="item flex" @tap="linkTo('activityLevel',2)">
 				<view class="name">
 					<image src="../../static/images/starticke.png" mode="widthFix"></image>
 					<text>星票</text>
 				</view>
 				<view class="nums text-right flex-1">
-					10000
+					{{totals.total?totals.total:0}}
 				</view>
 				<view class="iconfont icon-right"></view>
 			</view>
-			<view class="item flex">
+			<!-- <view class="item flex">
 				<view class="name">
 					<image src="../../static/images/icon-energy.png" mode="widthFix"></image>
 					<text>星能</text>
@@ -20,14 +20,14 @@
 					10000
 				</view>
 				<view class="iconfont icon-right"></view>
-			</view>
+			</view> -->
 			<view class="item flex" @tap="linkTo('bankCards')">
 				<view class="name">
 					<image src="../../static/images/icon-bankcard.png" mode="widthFix"></image>
 					<text>银行卡</text>
 				</view>
 				<view class="nums text-right flex-1">
-					10000
+					0
 				</view>
 				<view class="iconfont icon-right"></view>
 			</view>
@@ -92,7 +92,9 @@
 				nomore:false,
 				pageIndex: 1,
 				pageSize: 20,
-				pageTotal: 1
+				pageTotal: 1,
+				totals:{},
+				xpTypes:[]
 			};
 		},
 		onShow() {
@@ -102,6 +104,7 @@
 				this.setParams();
 				this.getTabList();
 				this.getData();
+				this.accountInfo()
 			}
 		},
 		methods: {
@@ -180,14 +183,31 @@
 				this.nodata=false
 				this.nomore=false
 			},
-			linkTo(name) {
+			linkTo(name,type) {
+				let url = ''
+				debugger
+				if(name=='activityLevel'){
+					url+=name+'?type='+type
+				}
 				uni.navigateTo({
-					url: name,
+					url: url,
 					success: res => {},
 					fail: () => {},
 					complete: () => {}
 				});
-			}
+			},
+			accountInfo(){  //1.人名币2.星票3.活跃度
+				let self =this
+				let params = {
+					type:2
+				}
+				this.$acFrame.HttpService.accountNums(params).then(res=>{
+					if(res.success){
+						self.totals = res.data
+					}
+				})
+			},
+			
 		}
 	}
 </script>

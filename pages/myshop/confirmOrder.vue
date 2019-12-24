@@ -344,10 +344,10 @@
 					if(res.success){
 						console.log(res);
 						var info = res.data;
+						//console.log(info);return;
 						uni.navigateTo({
 							url:'payWay?order='+JSON.stringify(info)
 						}) 
-						debugger
 						getApp().globalData.orderType = self.operType
 						getApp().globalData.prodVO=self.details
 					}

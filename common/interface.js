@@ -32,6 +32,9 @@ class Service extends HttpService {
 			setPayPwd:'app/user_account/change_pd_pay',//验证支付密码
 			switchFlag:'app/user_info/load_config',//开关信息
 			editSwitchFlag:'app/user_info/modify_config',
+			accountNums:'app/user_account/load_by_type',//根据账户类型获得账户明细
+			getXPTypes:'dict/app/userAccountDetailBizTypeTicketList',//获取星票明细
+			accountInfo:'app/user_account_detail/table_data',//账户流水
 			//文章帖子
 			raleaseArtical: 'article/info/publish', // 发文章
 			commentList: 'article/info_comment/table_data', // 评论列表
@@ -72,6 +75,7 @@ class Service extends HttpService {
 			couponsList:'product/coupon_receive/table_data',//个人优惠券列表
 			priceSum:'order/info/cal_price',//计算价格
 			virtualProd:'product/virtual/table_data',//虚拟物品
+			prodComments:'product/goods_comment/table_data',//商品评论
 
 			//订单
 			orderList: 'order/info/table_data', //订单列表
@@ -86,6 +90,10 @@ class Service extends HttpService {
 			refundDetail:'order/info_refund/load_by_id',//售后详情
 			cancelSpellOrder:'order/spell/cancle',//取消拼购但
 			cancelRefund:'order/info_refund/cancle',//取消退款
+			evaluateUpload:'order/info_detail_comment/publish_img',//上传品论图片
+			subEvaluate:'order/info_detail_comment/publish',//确认评论
+			orderPay:'order/info/wait_pay',//支付订单
+			spellPay:'order/spell/wait_pay',//拼单支付
 			//排行
 			articleRank: 'top/ranking/article', // 帖子排行
 			prodRank: 'top/ranking/goods', //商品排行
@@ -472,6 +480,39 @@ class Service extends HttpService {
 	}
 	cancelRefund(params) {
 		return this.postRequest(this.$$path.cancelRefund, {
+			data: params
+		})
+	}
+	accountNums(params) {
+		return this.postRequest(this.$$path.accountNums, {
+			data: params
+		})
+	}
+	getXPTypes(params) {
+		return this.getRequest(this.$$path.getXPTypes)
+	}
+	accountInfo(params) {
+		return this.postRequest(this.$$path.accountInfo, {
+			data: params
+		})
+	}
+	subEvaluate(params) {
+		return this.postRequest(this.$$path.subEvaluate, {
+			data: params
+		})
+	}
+	orderPay(params) {
+		return this.postRequest(this.$$path.orderPay, {
+			data: params
+		})
+	}
+	spellPay(params) {
+		return this.postRequest(this.$$path.spellPay, {
+			data: params
+		})
+	}
+	prodComments(params) {
+		return this.postRequest(this.$$path.prodComments, {
 			data: params
 		})
 	}

@@ -114,30 +114,37 @@
 		</view>
 		<view class="modal prod5">
 			<view class="title">
-				商品评价（{{prodDetail.numTotalComment?prodDetail.numTotalComment:0}}条）
-				<text class="red float-right" @tap="showAllComment(prodDetail.goodsId)">查看全部</text>
+				商品评价（{{commontList.length}}条）
+				<text class="red float-right" v-if="commontList.length>2" @tap="showAllComment()">查看全部</text>
 			</view>
 			<view class="list">
-				<view v-for="(item,ind) in prodDetail.commentList" :key="ind" class="item">
+				<view v-for="(item,ind) in commontList" :key="ind" class="item">
 					<view class="item-top flex item-center">
 						<view class="pic imgCirc">
-							<image :src="setImg(item.userImgHead)" mode="widthFix"></image>
+							<image :src="setImg('',item.genderType)" mode="widthFix"></image>
 						</view>
 						<view class="name flex-1 textEllipsis">
-							{{item.name}}
+							{{item.userInfo.nickName}}
 						</view>
 						<view class="star">
-							<block  v-for="(item,ind) in [1,2,3,4,5]" :key="ind">
-								<image v-if="item<4" src="../../static/images/yellow_star.png" mode="widthFix"></image>
-								<image v-else src="../../static/images/gray_star.png" mode="widthFix"></image>
+							<block  v-for="(numitem,numind) in [1,2,3,4,5]" :key="numind">
+								<image v-if="numitem<=item.gradeZh" src="/static/images/yellow_star.png" mode="widthFix"></image>
+								<image v-else src="/static/images/gray_star.png" mode="widthFix"></image>
 							</block>
 						</view>
 					</view>
 					<view class="text clamp clamp-2">
 						{{item.content}}
 					</view>
+					<view class="imgList clearfix">
+						<view class="imgItem" v-for="(imgItem,imgInd) in item.imgPathList" :key="imgInd">
+							<view class="imgBox" @tap="showBig(ind,imgInd)">
+								<image :src="setImg(imgItem)" mode="widthFix"></image>
+							</view>
+						</view>
+					</view>
 					<view class="time fs12 c999">
-						<text>{{item.propValue}}</text>
+						<text>{{item.skuPropValue }}</text>
 						<text>{{item.commentTime}}</text>
 					</view>
 				</view>
@@ -379,7 +386,8 @@ export default {
 			operType:'',
 			spellId:'',
 			spellVO:{},
-			richNode:'<p class="text">这边是商品文案描述这边是商品文案描述这边是商品文案描述这边是商品文案描述这边是商品文案描述这边是商品文案描述这边是商品文案描述</p><p class="img"><img src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2786988750,209248222&fm=15&gp=0.jpg"/></p>'
+			richNode:'',
+			commontList:[],
 		};
 	},
 	onLoad(options){
@@ -392,6 +400,7 @@ export default {
 			getApp().globalData.isShowPic=false
 		}else{
 			this.initData();
+			
 		}
 		 
 	},
@@ -452,7 +461,40 @@ export default {
 							v.showTimer=true
 						})
 					},500)
+					self.getCommentList()
 				}
+			})
+		},
+		getCommentList(){
+			let self = this
+			let params = {
+				pageIndex:1,
+				pageSize:2,
+				id:this.prodDetail.goodsId
+			}
+			this.$acFrame.HttpService.prodComments(params).then(res=>{
+				if(res.success){
+					let list = res.data.rows
+					list.filter(v=>{
+						v.commentTime  = self.$acFrame.Util.formatTime(v.commentTime,'day')
+					})
+					self.commontList=list
+				}
+			})
+		},
+		showBig(pind,cind){
+			let info = this.commontList[pind];
+			let imgList = info.imgPathList;
+			imgList.filter((v,i)=>{
+				imgList[i]=this.$acFrame.Util.setImgUrl(v)
+			})
+			console.log(imgList)
+			this.$acFrame.Util.showBigPic(imgList[cind], imgList);
+			getApp().globalData.isShowPic = true
+		},
+		showAllComment(){
+			uni.navigateTo({
+				url:'commentList?goodsId='+this.prodDetail.goodsId
 			})
 		},
 		get_freight(speci_id,num=1){
@@ -570,8 +612,8 @@ export default {
 				}
 			})
 		},
-		setImg(src){
-			return  this.$acFrame.Util.setImgUrl(src);
+		setImg(src,genderType){
+			return  this.$acFrame.Util.setImgUrl(src,genderType);
 		},
 		plus(){
 			this.goodsNum += 1;
@@ -800,6 +842,21 @@ page {
 					width: 40rpx;
 					display: inline-block;
 					margin-left:10rpx;
+				}
+			}
+		}
+		.imgList{
+			margin-top:20rpx;
+			padding:0 10rpx;
+			.imgItem{
+				width: 25%;
+				height:calc((100vw - 20rpx) / 4 - 20rpx);
+				float:left;
+				padding:0 10rpx;
+				margin-bottom:20rpx;
+				.imgBox{
+					overflow: hidden;
+					height:100%;
 				}
 			}
 		}
