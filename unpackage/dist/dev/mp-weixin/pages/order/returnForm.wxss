@@ -1,0 +1,39 @@
+.content.data-v-44358cd8 {
+  padding: 20rpx 24rpx 0;
+}
+.modal.data-v-44358cd8 {
+  background: #fff;
+  border-radius: 0.3m;
+  margin-bottom: 20rpx;
+}
+.modal .name.data-v-44358cd8 {
+  width: 150rpx;
+}
+.modal input.data-v-44358cd8 {
+  height: 100rpx;
+  line-height: 100rpx;
+}
+.input.data-v-44358cd8 {
+  line-height: 100rpx;
+  height: 100rpx;
+  padding: 0 20rpx;
+}
+.expalin.data-v-44358cd8 {
+  margin-bottom: 20rpx;
+}
+.expalin .title.data-v-44358cd8 {
+  line-height: 60rpx;
+}
+.expalin .mytext.data-v-44358cd8 {
+  width: 100%;
+  height: 240rpx;
+  background: #fff;
+  border-radius: 0.3m;
+  padding: 20rpx;
+  box-sizing: border-box;
+}
+.footBtn.data-v-44358cd8 {
+  padding: 24rpx;
+  margin-top: 40rpx;
+}
+

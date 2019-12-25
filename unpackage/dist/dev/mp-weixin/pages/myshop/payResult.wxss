@@ -1,0 +1,25 @@
+.btnBox {
+  padding: 0 24rpx;
+}
+.btnBox .btn1 {
+  width: 100%;
+  border-radius: 80rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  text-align: center;
+  color: #fff;
+  margin-top: 30rpx;
+  background: -webkit-linear-gradient(top, #db0b00 0%, #fd5959 100%);
+  background: linear-gradient(180deg, #db0b00 0%, #fd5959 100%);
+}
+.btnBox button {
+  margin-top: 30rpx;
+  line-height: 80rpx;
+  border-radius: 80rpx;
+  width: 100%;
+}
+.btnBox .linkBox {
+  text-align: center;
+  margin-top: 30rpx;
+}
+

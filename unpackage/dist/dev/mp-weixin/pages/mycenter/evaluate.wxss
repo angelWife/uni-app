@@ -1,0 +1,67 @@
+.prodBox {
+  padding: 24rpx 24rpx 0;
+}
+.prodBox .pic {
+  width: 160rpx;
+  height: 160rpx;
+  overflow: hidden;
+}
+.prodBox .name {
+  margin-left: 20rpx;
+  width: 50%;
+}
+.starBox {
+  padding: 20rpx 0;
+  border-bottom: 1px solid #ccc;
+}
+.starBox .item {
+  line-height: 60rpx;
+}
+.starBox .item .name {
+  margin: 0 24rpx;
+}
+.starBox .item .starList image {
+  display: inline-block;
+  margin-right: 24rpx;
+  width: 20px;
+}
+.evalText {
+  padding: 0 24rpx;
+}
+.evalText .title {
+  padding: 24rpx 0;
+}
+.evalText textarea {
+  width: 100%;
+  height: 200rpx;
+}
+.imgList {
+  margin-top: 20rpx;
+  padding: 0 10rpx;
+}
+.imgList .item {
+  float: left;
+  width: 140rpx;
+  height: 140rpx;
+  margin: 14rpx;
+  overflow: hidden;
+}
+.imgList .upLoad {
+  text-align: center;
+  border: 1px dashed #ccc;
+  border-radius: 0.2em;
+  padding-top: 30rpx;
+}
+.imgList .upLoad .iconfont {
+  font-size: 50rpx;
+  color: #999;
+}
+.imgList .upLoad text {
+  display: block;
+  color: #999;
+}
+.btnBox {
+  padding: 24rpx;
+  margin-top: 40rpx;
+}
+

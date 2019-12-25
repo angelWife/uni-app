@@ -1,0 +1,87 @@
+.content {
+  padding: 24rpx;
+}
+.content .fs40 {
+  font-size: 80rpx;
+}
+.content .price {
+  padding: 80rpx 0 40rpx;
+}
+.content .pay {
+  margin-top: 40rpx;
+}
+.content .pay .title {
+  padding: 20rpx 0;
+}
+.content .pay .item {
+  padding: 20rpx 0;
+  border-bottom: 1px solid #cccc;
+}
+.content .payBtn {
+  position: fixed;
+  width: 100%;
+  padding: 24rpx;
+  bottom: 0;
+  left: 0;
+  z-index: 5;
+  padding-bottom: constant(safe-area-inset-bottom);
+}
+.content .payBtn .btn {
+  width: 100%;
+  border-radius: 80rpx;
+  left: 0;
+  height: 80rpx;
+  line-height: 80rpx;
+  text-align: center;
+  color: #fff;
+  background: -webkit-linear-gradient(top, #db0b00 0%, #fd5959 100%);
+  background: linear-gradient(180deg, #db0b00 0%, #fd5959 100%);
+}
+.passwordModal .modalMain {
+  width: 80%;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 0.3em;
+}
+.passwordModal .title {
+  line-height: 100rpx;
+  padding-left: 24rpx;
+  position: relative;
+  border-bottom: 1px solid #ccc;
+}
+.passwordModal .title .iconfont {
+  position: absolute;
+  width: 100rpx;
+  right: 0;
+  top: 0;
+  color: #999;
+  text-align: center;
+}
+.passwordModal .center {
+  padding: 40rpx 24rpx 20rpx;
+}
+.passwordModal .textBox {
+  width: 432rpx;
+  margin: 30rpx auto 40rpx;
+  height: 72rpx;
+  border: 1px solid #ccc;
+  border-radius: 0.3em;
+  overflow: hidden;
+}
+.passwordModal .textBox input {
+  height: 70rpx;
+  float: left;
+  width: calc(100% / 6);
+  line-height: 70rpx;
+  border-right: 1px solid #ccc;
+  background: #fff;
+  text-align: center;
+}
+.passwordModal .textBox input:last-child {
+  border: 0;
+}
+.passwordModal .password-input {
+  width: 0;
+  height: 0;
+}
+

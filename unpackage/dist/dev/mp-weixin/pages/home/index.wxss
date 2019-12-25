@@ -1,0 +1,173 @@
+.content {
+  position: relative;
+  overflow: hidden;
+}
+.searchBox {
+  position: fixed;
+  z-index: 11;
+  width: 100%;
+  top: 0;
+  left: 0;
+  padding: 20rpx 24rpx;
+  background: #fff;
+}
+.searchBox .input {
+  position: relative;
+  height: 80rpx;
+  line-height: 80rpx;
+  margin-right: 24rpx;
+  background: #eee;
+  border-radius: 0.2em;
+}
+.searchBox .input input {
+  width: 100%;
+  padding: 0 60rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+}
+.searchBox .input .iconfont {
+  position: absolute;
+  top: 0;
+  width: 60rpx;
+  line-height: 80rpx;
+  text-align: center;
+  color: #999;
+}
+.searchBox .input .iconfont::before {
+  line-height: 80rpx;
+  vertical-align: top;
+}
+.searchBox .input .icon-clear {
+  right: 0;
+}
+.searchBox .search {
+  position: relative;
+}
+.searchBox .search .operBox {
+  position: absolute;
+  z-index: 10;
+  width: 180%;
+  top: 90rpx;
+  right: 0;
+  border-radius: 0.3em;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  background: #2c2c2c;
+}
+.searchBox .search .operBox .item {
+  height: 80rpx;
+  line-height: 80rpx;
+  padding: 0 20rpx;
+  box-sizing: border-box;
+  color: #fff;
+}
+.searchBox .search .operBox .item icon {
+  color: #fff;
+  margin-right: 10rpx;
+}
+.searchBox .search .operBox .item:hover {
+  background: #4c4c4c;
+}
+.searchBox .search .operBox .sanjiao {
+  position: absolute;
+  right: 20rpx;
+  top: -6rpx;
+  width: 0;
+  height: 0;
+  border-left: 10rpx solid transparent;
+  border-right: 10rpx solid transparent;
+  border-bottom: 10rpx solid #2c2c2c;
+}
+.searchBox button {
+  height: 80rpx;
+  line-height: 80rpx;
+}
+.nav-tabs {
+  background: #fff;
+  text-align: center;
+  font-size: 34rpx;
+  position: fixed;
+  z-index: 10;
+  top: 120rpx;
+  left: 0;
+  width: 100%;
+}
+.nav-tabs .tabitem {
+  padding: 10rpx 0 20rpx;
+}
+.nav-tabs .tabitem text {
+  display: inline-block;
+  line-height: 40rpx;
+  padding: 0 6rpx;
+  border-bottom: 2px solid #fff;
+}
+.nav-tabs .tabitem.active {
+  color: #b40000;
+  font-weight: 600;
+}
+.nav-tabs .tabitem.active text {
+  border-color: #b40000;
+}
+.listBox {
+  padding-top: 200rpx;
+}
+.listBox .list-content {
+  height: calc(100% - 50rpx);
+}
+.listBox .list-content .myscroll {
+  min-height: calc(100vh - 240rpx);
+  padding-bottom: 20rpx;
+  box-sizing: border-box;
+}
+.resBox {
+  padding-top: 120rpx;
+  min-height: 100vh;
+}
+.resBox .title {
+  padding: 0 20rpx;
+  font-size: 30rpx;
+  line-height: 60rpx;
+}
+.resBox .title icon {
+  float: right;
+  color: #999;
+}
+.resBox .histroy {
+  margin-top: 10rpx;
+}
+.resBox .histroy .h_list {
+  font-size: 26rpx;
+}
+.resBox .histroy .h_list .item {
+  float: left;
+  width: 50%;
+  padding: 10rpx 20rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.resBox .histroy .h_list .item:nth-child(2n) {
+  border-left: 1px solid #efefef;
+}
+.resBox .hotSearch {
+  margin-top: 10rpx;
+}
+.resBox .hotSearch .h_list {
+  font-size: 24rpx;
+  padding: 0 10rpx;
+}
+.resBox .hotSearch .h_list .item {
+  float: left;
+  background: #eeeeee;
+  color: #999;
+  line-height: 40rpx;
+  padding: 0 10rpx;
+  border-radius: 0.3em;
+  margin: 10rpx;
+}
+.resBox .searchList {
+  height: 100%;
+}
+.resBox .noData {
+  height: 100%;
+}
+

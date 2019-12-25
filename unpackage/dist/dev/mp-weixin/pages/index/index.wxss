@@ -1,0 +1,49 @@
+.content {
+  border: 0;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+.content .top {
+  position: absolute;
+  width: 480rpx;
+  top: 0;
+  right: -160rpx;
+  z-index: 1;
+}
+.content .center {
+  position: absolute;
+  width: 480rpx;
+  left: 50%;
+  top: 50%;
+  margin-left: -240rpx;
+  margin-top: -160rpx;
+  z-index: 3;
+}
+.content .foot-left {
+  position: absolute;
+  width: 540rpx;
+  bottom: -100rpx;
+  left: -180rpx;
+  z-index: 1;
+}
+.content .foot-center {
+  position: absolute;
+  text-align: center;
+  z-index: 3;
+  line-height: 100rpx;
+  width: 100%;
+  bottom: 40rpx;
+  left: 0;
+}
+.content .foot-center image {
+  display: inline-block;
+}
+.content .foot-center .logo {
+  width: 80rpx;
+  margin-right: 40rpx;
+}
+.content .foot-center .logo-name {
+  width: 120rpx;
+}
+

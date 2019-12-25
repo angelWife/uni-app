@@ -1,0 +1,122 @@
+.content {
+  border: 0;
+}
+.head {
+  height: 466rpx;
+  background: -webkit-linear-gradient(top, #60ACF8 0%, #0077D6 100%);
+  background: linear-gradient(180deg, #60ACF8 0%, #0077D6 100%);
+  padding: 0 30rpx;
+  position: relative;
+}
+.head .foot {
+  position: absolute;
+  width: 96%;
+  bottom: 0;
+  left: 2%;
+}
+.head .item {
+  position: absolute;
+  width: 140rpx;
+  height: 140rpx;
+  border-radius: 100%;
+  padding: 6rpx;
+}
+.head .item .pic {
+  width: 128rpx;
+  height: 128rpx;
+  border-radius: 100%;
+  overflow: hidden;
+}
+.head .item .guan {
+  position: absolute;
+  width: 60rpx;
+  top: -30rpx;
+  left: 50%;
+  margin-left: -30rpx;
+}
+.head .item .name {
+  position: absolute;
+  bottom: -70rpx;
+  width: 160rpx;
+  left: 50%;
+  margin-left: -80rpx;
+  font-size: 24rpx;
+  text-align: center;
+  color: #fff;
+}
+.head .item .num {
+  position: absolute;
+  width: 50rpx;
+  height: 50rpx;
+  line-height: 50rpx;
+  border-radius: 100%;
+  text-align: center;
+  font-size: 30rpx;
+  bottom: -25rpx;
+  left: 50%;
+  margin-left: -25rpx;
+}
+.head .item.one {
+  left: 50%;
+  margin-left: -70rpx;
+  top: 46px;
+  background: -webkit-linear-gradient(330deg, #FFFF8B 0%, #FFA348 100%);
+  background: linear-gradient(120deg, #FFFF8B 0%, #FFA348 100%);
+}
+.head .item.one .num {
+  background: -webkit-linear-gradient(top, #FFD555 0%, #FFA100 100%);
+  background: linear-gradient(180deg, #FFD555 0%, #FFA100 100%);
+}
+.head .item.two {
+  width: 108rpx;
+  height: 108rpx;
+  top: 168rpx;
+  left: 80rpx;
+  background: -webkit-linear-gradient(330deg, #FFFFFF 0%, #A2A2A2 100%);
+  background: linear-gradient(120deg, #FFFFFF 0%, #A2A2A2 100%);
+}
+.head .item.two .pic {
+  width: 96rpx;
+  height: 96rpx;
+}
+.head .item.two .num {
+  background: -webkit-linear-gradient(top, #ECFAFF 0%, #A6A7A8 100%);
+  background: linear-gradient(180deg, #ECFAFF 0%, #A6A7A8 100%);
+}
+.head .item.three {
+  width: 108rpx;
+  height: 108rpx;
+  top: 168rpx;
+  right: 80rpx;
+  background: -webkit-linear-gradient(330deg, #E2AB65 0%, #BB7C2C 100%);
+  background: linear-gradient(120deg, #E2AB65 0%, #BB7C2C 100%);
+}
+.head .item.three .pic {
+  width: 96rpx;
+  height: 96rpx;
+}
+.head .item.three .num {
+  background: -webkit-linear-gradient(top, #FBC884 0%, #D49E55 100%);
+  background: linear-gradient(180deg, #FBC884 0%, #D49E55 100%);
+}
+.list {
+  padding-left: 30rpx;
+}
+.list .item {
+  padding: 20rpx 20rpx 20rpx 0;
+  border-bottom: 1px solid #ccc;
+}
+.list .item .pic {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 100%;
+  overflow: hidden;
+  margin: 0 40rpx;
+}
+.list .item .pic image {
+  height: 96rpx;
+}
+.list .item .name {
+  width: 50%;
+}
+

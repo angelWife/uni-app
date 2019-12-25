@@ -1,0 +1,31 @@
+.formBox {
+  margin: 20rpx 0 ;
+  background: #fff;
+  padding: 0 24rpx;
+}
+.formBox .item {
+  height: 96rpx;
+  line-height: 96rpx;
+  border-bottom: 1px solid #ccc;
+}
+.formBox .item input {
+  display: block;
+  height: 96rpx;
+  line-height: 96rpx;
+}
+.formBox .item:last-child {
+  border: 0;
+}
+.btnBox {
+  padding: 60rpx 24rpx 0;
+}
+.followUs {
+  padding: 20rpx;
+  text-align: center;
+}
+.followUs checkbox {
+  -webkit-transform: scale(0.7);
+          transform: scale(0.7);
+  margin-top: -4rpx;
+}
+

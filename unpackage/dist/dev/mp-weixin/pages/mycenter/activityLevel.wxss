@@ -1,0 +1,19 @@
+.content {
+  height: 100vh;
+  overflow: hidden;
+}
+.head {
+  padding: 20rpx 24rpx;
+  background: #fff;
+}
+.listBox {
+  margin-top: 20rpx;
+  height: calc(100vh - 150rpx);
+  background: #fff;
+  padding: 0 24rpx;
+}
+.listBox .item {
+  padding: 20rpx 0;
+  border-bottom: 1px solid #ccc;
+}
+

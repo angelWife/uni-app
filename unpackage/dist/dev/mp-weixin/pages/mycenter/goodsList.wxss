@@ -1,0 +1,19 @@
+.topmsg {
+  margin: 20rpx 30rpx;
+  border-radius: 5px;
+  background: #FFF4F1;
+  padding: 20rpx 30rpx;
+}
+.topmsg .center {
+  line-height: 40rpx;
+}
+.topmsg .center image {
+  width: 150rpx;
+  display: inline-block;
+  margin-right: 10rpx;
+  margin-top: -4rpx;
+}
+.prodList {
+  padding-toop: 20rpx;
+}
+

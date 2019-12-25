@@ -1,0 +1,82 @@
+.content.data-v-9d081ca2 {
+  padding-top: 80rpx;
+}
+.tabBox.data-v-9d081ca2 {
+  position: fixed;
+  width: 100%;
+  height: 80rpx;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  padding: 0 20rpx;
+  background: #eee;
+}
+.tabBox .item.data-v-9d081ca2 {
+  padding: 0 10rpx;
+  line-height: 40rpx;
+  color: #999;
+  margin-right: 20rpx;
+  border-bottom: 2px solid transparent;
+}
+.tabBox .item.active.data-v-9d081ca2 {
+  color: #b40000;
+  border-color: #b40000;
+}
+.orderList .item.data-v-9d081ca2 {
+  background: #fff;
+  margin: 0 24rpx 20rpx;
+  border-radius: 0.4em;
+}
+.orderList .item .item_head.data-v-9d081ca2 {
+  padding: 10rpx 20rpx;
+}
+.orderList .item .item_head .pic.data-v-9d081ca2 {
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 60rpx;
+  overflow: hidden;
+  margin-right: 20rpx;
+}
+.orderList .item .item_head .name.data-v-9d081ca2 {
+  width: 50%;
+}
+.orderList .item .item_head .status text.data-v-9d081ca2 {
+  display: inline-block;
+}
+.orderList .item .item_body.data-v-9d081ca2 {
+  padding: 10rpx 20rpx 0;
+}
+.orderList .item .item_body .pic.data-v-9d081ca2 {
+  width: 160rpx;
+  height: 160rpx;
+  overflow: hidden;
+  margin-right: 20rpx;
+}
+.orderList .item .item_body .spec text.data-v-9d081ca2 {
+  display: inline-block;
+  font-size: 24rpx;
+  padding: 0 10rpx;
+  background: #f8f8f8;
+  color: #999;
+  margin: 10rpx 10rpx 0 0;
+}
+.orderList .item .payprice.data-v-9d081ca2 {
+  padding: 0 20rpx;
+  line-height: 60rpx;
+}
+.orderList .item .orderBtn.data-v-9d081ca2 {
+  padding: 20rpx;
+}
+.orderList .item .orderBtn button.data-v-9d081ca2 {
+  display: inline-block;
+  height: 60rpx;
+  line-height: 60rpx;
+  min-width: 160rpx;
+  padding: 0 20rpx;
+  border-radius: 60rpx;
+  margin-left: 20rpx;
+}
+.orderList .mr20.data-v-9d081ca2 {
+  margin-right: 20rpx;
+}
+

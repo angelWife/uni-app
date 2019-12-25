@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "售后",
+  "enablePullDownRefresh": true,
+  "usingComponents": {
+    "order-item": "/components/order-item"
+  }
+}

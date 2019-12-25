@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "订单",
+  "enablePullDownRefresh": true,
+  "usingComponents": {
+    "order-item": "/components/order-item"
+  }
+}
