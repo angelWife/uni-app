@@ -25,7 +25,7 @@
 						<view class="center flex-1">
 							<view class="text blod">满{{item.priceFull}}可使用</view>
 							<view class="fs12">
-								{{item.type==1?"本店通用":"部分商品使用"}}<text >{{item.shopInfo?"【"+item.shopInfo.name+"】":""}}</text>
+								{{item.type==1?"本店通用":"部分商品使用"}}<text>{{item.shopInfo?"【"+item.shopInfo.name+"】":""}}</text>
 							</view>
 							<view class="fs10">
 								{{item.timeStart}} ~ {{item.timeEnd}}
@@ -50,19 +50,30 @@
 				<view v-for="(item, ind) in goodsList" :key="ind" class="item" @touchstart="touchstart" @touchend="touchend($event, ind)">
 					<view class="newBox flex item-center" :style="item.style" @tap="readyNews(ind)">
 						<view class="pic">
-							<image src="/static/images/xunzhang.png" mode="widthFix" />
+							<image :src="setImg(item.virtualVo.imgPath)" mode="widthFix" />
 						</view>
 						<view class="main">
-							<view class="title fs16">名称</view>
+							<view class="title fs16">{{item.virtualVo.name}}</view>
 							<view class="text c999">
-								简介简介简介简介简介简介简介
+								{{item.virtualVo.briefInfo }}
 							</view>
 						</view>
 					</view>
 					<view class="btn delete float-right">使用</view>
-					<view class="btn look float-right">回收</view>
+					<view class="btn look float-right" @tap="backGoods(item)">回收</view>
 				</view>
 			</view>
+		</view>
+		<view v-if="nodata" class="noData flex f-row just-con-c item-center">
+			<view class="text-center">
+				<image src="/static/images/nodata.png" mode="widthFix"></image>
+				<view class="text-center c666 fs16">
+					这里还没有内容
+				</view>
+			</view>
+		</view>
+		<view class="noMore" v-if="nomore">
+			~已经到底了！~
 		</view>
 	</view>
 </template>
@@ -82,18 +93,47 @@
 				}],
 				showModal: 'coupon',
 				couponList: [],
-				goodsList: [{
-					style: "left:0;"
-				}],
+				goodsList: [],
 				pageTotal: 1,
+				pageIndex: 1,
+				pageSize: 10,
 				t_x: 0,
-				t_y: 0
+				t_y: 0,
+				nomore: false,
+				nodata: false
 			};
 		},
 		onShow() {
 			this.getCoupon()
 		},
+		onPullDownRefresh() {
+			if (this.showModal == 'coupon') {
+				this.getCoupon()
+			} else {
+				this.setparams()
+				this.getReceiveList()
+			}
+			uni.stopPullDownRefresh()
+		},
+		onReachBottom() {
+			if (this.showModal == 'goods') {
+				if (this.pageIndex < this.pageTotal) {
+					this.pageIndex++
+					this.getReceiveList()
+				} else {
+					this.nomore = true
+				}
+			}
+
+		},
 		methods: {
+			setparams() {
+				this.pageIndex = 1
+				this.pageSize = 20
+				this.nomore = false
+				this.nodata = false
+				this.goodsList = []
+			},
 			chooseTap(ind) {
 				let tabList = this.tabList
 				tabList.filter((v, i) => {
@@ -104,6 +144,12 @@
 						v.choose = false
 					}
 				})
+				this.setparams()
+				if (this.showModal == 'goods') {
+					this.getReceiveList()
+				} else {
+					this.getCoupon()
+				}
 				this.tabList = tabList
 			},
 			getCoupon() {
@@ -115,17 +161,50 @@
 				self.$acFrame.HttpService.couponsList(params).then(res => {
 					if (res.success) {
 						let couponList = res.data.rows
-						self.pageTotal = res.data.pageTotal
 						couponList.filter(v => {
 							v.hasReceived = false
-							v.timeEnd = self.$acFrame.Util.formatTime(v.timeEnd,'dayhm')
-							v.timeStart = self.$acFrame.Util.formatTime(v.timeStart,'dayhm')
+							v.timeEnd = self.$acFrame.Util.formatTime(v.timeEnd, 'dayhm')
+							v.timeStart = self.$acFrame.Util.formatTime(v.timeStart, 'dayhm')
 						})
 						self.couponList = couponList
 					}
 				})
-
-
+			},
+			getReceiveList() {
+				let self = this
+				let params = {
+					pageIndex: this.pageIndex,
+					pageSize: this.pageSize,
+				}
+				this.$acFrame.HttpService.myReceiveGoods(params).then(res => {
+					if (res.success) {
+						let list = res.data.rows
+						self.pageTotal = res.data.pageTotal
+						if (list.length > 0) {
+							list.filter(v => {
+								v.style = "left:0;"
+							})
+							self.goodsList = self.goodsList.concat(list)
+						} else {
+							this.nodata = true
+						}
+					}
+				})
+			},
+			backGoods(item) {
+				let self =this
+				let params = {
+					id:item.virtualVo.id
+				}
+				this.$acFrame.HttpService.myReceiveBack(params).then(res => {
+					if (success) {
+						self.$acFrame.Util.mytotal('回收成功！')
+						setTimeout(function() {
+							this.setparams()
+							this.getReceiveList()
+						}, 1000);
+					}
+				})
 			},
 			touchstart: function(e) {
 				this.t_x = e.touches[0].pageX;
@@ -159,15 +238,21 @@
 				this.t_y = 0;
 				this.t_x = 0;
 			},
-			chooseConpons(obj,ind){
-				if(obj.statusReceive==1){
+			chooseConpons(obj, ind) {
+				if (obj.statusReceive == 1) {
 					uni.navigateTo({
-						url:"goodsList?obj="+JSON.stringify(obj)
+						url: "goodsList?obj=" + JSON.stringify(obj)
 					})
-				}else if(obj.statusReceive==4){
-					
+				} else if (obj.statusReceive == 4) {
+
 				}
-				
+
+			},
+			setImg(src) {
+				if (!src) {
+					src = ''
+				}
+				return this.$acFrame.Util.setImgUrl(src);
 			}
 		}
 
@@ -179,8 +264,18 @@
 		font-size: 60rpx;
 	}
 
+	.content {
+		padding-top: 80rpx;
+		min-height: 100vh;
+	}
+
 	.tabBox {
 		height: 80rpx;
+		position: fixed;
+		width: 100%;
+		z-index: 10;
+		top: 0;
+		left: 0;
 
 		.item {
 			line-height: 80rpx;

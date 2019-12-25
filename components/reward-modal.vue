@@ -99,7 +99,7 @@
 				// debugger
 				// this.dataList[index].choose=!this.dataList[index].choose
 				// if(this.dataList[index].choose){
-				// 	this.listVO = this.dataList[index]
+				this.listVO = this.rewardList[index]
 				// }
 				this.$parent.chooseReward(index)
 				//this.$emit('chooseReward',index)
@@ -110,11 +110,14 @@
                 		buyNum : 1,
                 		userCode : this.userCode,
                 		virtualId : this.listVO.id,
-                		sceneType: this.listVO.useType 
+                		sceneType: 2 
                 	}
                 	this.$acFrame.HttpService.virtualBuy(params).then(res => {
                 		if (res.success) {
-                		
+							self.hideModal()
+							uni.navigateTo({
+								url:'/pages/myshop/payWay?order='+JSON.stringify(res.data)
+							})
                 		}
                 	})
 			},
@@ -134,7 +137,7 @@
 		background: #fff;
 		bottom: 0;
 		transform: bottom 0.3s easy;
-
+		padding-bottom:60rpx;
 		.title {
 			height: 80rpx;
 			line-height: 80rpx;
@@ -163,7 +166,7 @@
 					height: calc((100vw - 20rpx) / 4 - 20rpx);
 					border-radius: 0.5em;
 					background: #eee;
-
+					border:1px solid #eee;
 					.pic {
 						padding: 0 20%;
 					}
@@ -183,6 +186,7 @@
 					&.active {
 						background: #fff;
 						box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+						border-color:#B40000;
 						.text {
 							color: #B40000;
 						}

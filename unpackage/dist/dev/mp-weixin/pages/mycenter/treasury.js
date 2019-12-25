@@ -90,6 +90,22 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
+  var l0 = _vm.__map(_vm.goodsList, function(item, ind) {
+    var m0 = _vm.setImg(item.virtualVo.imgPath)
+    return {
+      $orig: _vm.__get_orig(item),
+      m0: m0
+    }
+  })
+
+  _vm.$mp.data = Object.assign(
+    {},
+    {
+      $root: {
+        l0: l0
+      }
+    }
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -191,6 +207,17 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var _default =
 {
   data: function data() {
@@ -206,18 +233,47 @@ var _default =
 
       showModal: 'coupon',
       couponList: [],
-      goodsList: [{
-        style: "left:0;" }],
-
+      goodsList: [],
       pageTotal: 1,
+      pageIndex: 1,
+      pageSize: 10,
       t_x: 0,
-      t_y: 0 };
+      t_y: 0,
+      nomore: false,
+      nodata: false };
 
   },
   onShow: function onShow() {
     this.getCoupon();
   },
+  onPullDownRefresh: function onPullDownRefresh() {
+    if (this.showModal == 'coupon') {
+      this.getCoupon();
+    } else {
+      this.setparams();
+      this.getReceiveList();
+    }
+    uni.stopPullDownRefresh();
+  },
+  onReachBottom: function onReachBottom() {
+    if (this.showModal == 'goods') {
+      if (this.pageIndex < this.pageTotal) {
+        this.pageIndex++;
+        this.getReceiveList();
+      } else {
+        this.nomore = true;
+      }
+    }
+
+  },
   methods: {
+    setparams: function setparams() {
+      this.pageIndex = 1;
+      this.pageSize = 20;
+      this.nomore = false;
+      this.nodata = false;
+      this.goodsList = [];
+    },
     chooseTap: function chooseTap(ind) {var _this = this;
       var tabList = this.tabList;
       tabList.filter(function (v, i) {
@@ -228,6 +284,12 @@ var _default =
           v.choose = false;
         }
       });
+      this.setparams();
+      if (this.showModal == 'goods') {
+        this.getReceiveList();
+      } else {
+        this.getCoupon();
+      }
       this.tabList = tabList;
     },
     getCoupon: function getCoupon() {
@@ -239,7 +301,6 @@ var _default =
       self.$acFrame.HttpService.couponsList(params).then(function (res) {
         if (res.success) {
           var couponList = res.data.rows;
-          self.pageTotal = res.data.pageTotal;
           couponList.filter(function (v) {
             v.hasReceived = false;
             v.timeEnd = self.$acFrame.Util.formatTime(v.timeEnd, 'dayhm');
@@ -248,8 +309,42 @@ var _default =
           self.couponList = couponList;
         }
       });
+    },
+    getReceiveList: function getReceiveList() {var _this2 = this;
+      var self = this;
+      var params = {
+        pageIndex: this.pageIndex,
+        pageSize: this.pageSize };
 
+      this.$acFrame.HttpService.myReceiveGoods(params).then(function (res) {
+        if (res.success) {
+          var list = res.data.rows;
+          self.pageTotal = res.data.pageTotal;
+          if (list.length > 0) {
+            list.filter(function (v) {
+              v.style = "left:0;";
+            });
+            self.goodsList = self.goodsList.concat(list);
+          } else {
+            _this2.nodata = true;
+          }
+        }
+      });
+    },
+    backGoods: function backGoods(item) {
+      var self = this;
+      var params = {
+        id: item.virtualVo.id };
 
+      this.$acFrame.HttpService.myReceiveBack(params).then(function (res) {
+        if (success) {
+          self.$acFrame.Util.mytotal('回收成功！');
+          setTimeout(function () {
+            this.setparams();
+            this.getReceiveList();
+          }, 1000);
+        }
+      });
     },
     touchstart: function touchstart(e) {
       this.t_x = e.touches[0].pageX;
@@ -292,6 +387,12 @@ var _default =
 
       }
 
+    },
+    setImg: function setImg(src) {
+      if (!src) {
+        src = '';
+      }
+      return this.$acFrame.Util.setImgUrl(src);
     } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 

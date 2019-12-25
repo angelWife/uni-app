@@ -35,6 +35,7 @@ class Service extends HttpService {
 			accountNums:'app/user_account/load_by_type',//根据账户类型获得账户明细
 			getXPTypes:'dict/app/userAccountDetailBizTypeTicketList',//获取星票明细
 			accountInfo:'app/user_account_detail/table_data',//账户流水
+			
 			//文章帖子
 			raleaseArtical: 'article/info/publish', // 发文章
 			commentList: 'article/info_comment/table_data', // 评论列表
@@ -48,6 +49,7 @@ class Service extends HttpService {
 			followPost: 'app/user_follow/exc', //关注
 			followList:'app/user_follow/list_data',//我的关注列表
 			followListOwner:'app/user_follow/table_data',//关注
+			rewardRecod:'app/user_reward/list_data',//打赏飘窗
 			
 			relasePublish: 'article/info_comment/publish', //发评论
 			relasePublishChild:'article/info_comment/publish_child',
@@ -104,6 +106,9 @@ class Service extends HttpService {
 			virtualList:'product/virtual/table_data',//虚拟商品列表
 			virtualDashang:'product/virtual/list_data',//打赏道具列表
 			virtualBuy:'order/virtual/buy',//购买打赏道具
+			myReceiveGoods:'product/virtual_receive/table_data',//我的虚拟商品
+			myReceiveBack:'product/virtual_receive/back',//我的虚拟物品回收
+			receiveDetail:'product/virtual/load_by_id',//虚拟详情
 			
 		}
 	}
@@ -513,6 +518,26 @@ class Service extends HttpService {
 	}
 	prodComments(params) {
 		return this.postRequest(this.$$path.prodComments, {
+			data: params
+		})
+	}
+	myReceiveGoods(params) {
+		return this.postRequest(this.$$path.myReceiveGoods, {
+			data: params
+		})
+	}
+	myReceiveBack(params) {
+		return this.postRequest(this.$$path.myReceiveBack, {
+			data: params
+		})
+	}
+	receiveDetail(params) {
+		return this.postRequest(this.$$path.receiveDetail, {
+			data: params
+		})
+	}
+	rewardRecod(params) {
+		return this.postRequest(this.$$path.rewardRecod, {
 			data: params
 		})
 	}

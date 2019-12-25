@@ -160,9 +160,9 @@ page {
 }
 .content .couponModal .modalMain .list {
   margin-top: 20rpx;
-  max-height: 492rpx;
+  max-height: 510rpx;
   overflow: hidden;
-  overflow-x: auto;
+  overflow-y: auto;
 }
 .content .couponModal .modalMain .list .item {
   background: #FFF4F1;

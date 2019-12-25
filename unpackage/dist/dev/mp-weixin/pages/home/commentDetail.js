@@ -138,7 +138,15 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var commentModal = function commentModal() {return __webpack_require__.e(/*! import() | components/comment */ "components/comment").then(__webpack_require__.bind(null, /*! @/components/comment.vue */ 481));};var RewardList = function RewardList() {return __webpack_require__.e(/*! import() | components/reward-modal */ "components/reward-modal").then(__webpack_require__.bind(null, /*! @/components/reward-modal.vue */ 488));};var _default =
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var commentModal = function commentModal() {return __webpack_require__.e(/*! import() | components/comment */ "components/comment").then(__webpack_require__.bind(null, /*! @/components/comment.vue */ 489));};var RewardList = function RewardList() {return __webpack_require__.e(/*! import() | components/reward-modal */ "components/reward-modal").then(__webpack_require__.bind(null, /*! @/components/reward-modal.vue */ 496));};var _default =
+
+
+
+
+
+
+
+
 
 
 
@@ -415,8 +423,9 @@ __webpack_require__.r(__webpack_exports__);
       showModal: false,
       showFoot: false,
       isComent: false, //是否滚动到底部
-      showReward: false };
-
+      showReward: false,
+      rewardRecodList: '' //打赏列表
+    };
   },
   onLoad: function onLoad(options) {var _this = this;
     var detail = JSON.parse(decodeURIComponent(options.data));
@@ -438,6 +447,7 @@ __webpack_require__.r(__webpack_exports__);
     } else {
       this.listData = [];
       this.getCommentList();
+      this.rewardRecod();
       this.$acFrame.HttpService.readPost({
         id: this.dataInfo.articleInfo.id }).
       then(function (res) {
@@ -758,6 +768,24 @@ __webpack_require__.r(__webpack_exports__);
       list[ind].choose = !list[ind].choose;
       this.rewardList = list;
       console.log(this.rewardList[ind].choose);
+    },
+    rewardRecod: function rewardRecod() {
+      var self = this;
+      var params = {
+        userCode: this.dataInfo.publishUser.userCode };
+
+      this.$acFrame.HttpService.rewardRecod(params).then(function (res) {
+        if (res.success) {
+          var list = res.data;
+          if (list.length > 0) {
+            self.rewardRecodList = list;
+            self.loadRewardAnimate(list);
+          }
+        }
+      });
+    },
+    loadRewardAnimate: function loadRewardAnimate(list) {
+
     } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 

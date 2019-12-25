@@ -135,7 +135,10 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var uniCountDown = function uniCountDown() {return __webpack_require__.e(/*! import() | components/countDown */ "components/countDown").then(__webpack_require__.bind(null, /*! @/components/countDown.vue */ 509));};var _default =
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var uniCountDown = function uniCountDown() {return __webpack_require__.e(/*! import() | components/countDown */ "components/countDown").then(__webpack_require__.bind(null, /*! @/components/countDown.vue */ 517));};var _default =
+
+
+
 
 
 
@@ -315,13 +318,16 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     init_time: function init_time(endTime) {var _this = this;
-      this.hour = this.$acFrame.Util.countTime(endTime, 'hour');
-      this.minute = this.$acFrame.Util.countTime(endTime, 'minute');
-      this.second = this.$acFrame.Util.countTime(endTime, 'second');
-      this.show_time = false;
-      setTimeout(function () {
-        _this.show_time = true;
-      }, 300);
+      if (endTime) {
+        this.hour = this.$acFrame.Util.countTime(endTime, 'hour');
+        this.minute = this.$acFrame.Util.countTime(endTime, 'minute');
+        this.second = this.$acFrame.Util.countTime(endTime, 'second');
+        this.show_time = false;
+        setTimeout(function () {
+          _this.show_time = true;
+        }, 300);
+      }
+
     },
     setImg: function setImg(url) {
       return this.$acFrame.Util.setImgUrl(url);

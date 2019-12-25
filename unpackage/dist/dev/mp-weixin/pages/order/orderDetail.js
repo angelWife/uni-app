@@ -147,7 +147,18 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var uniCountDown = function uniCountDown() {return __webpack_require__.e(/*! import() | components/countDown */ "components/countDown").then(__webpack_require__.bind(null, /*! @/components/countDown.vue */ 509));};var _default =
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var uniCountDown = function uniCountDown() {return __webpack_require__.e(/*! import() | components/countDown */ "components/countDown").then(__webpack_require__.bind(null, /*! @/components/countDown.vue */ 517));};var _default =
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -335,11 +346,6 @@ __webpack_require__.r(__webpack_exports__);
   onLoad: function onLoad(options) {
 
     this.id = options.id;
-    this.obj = JSON.parse(options.obj);
-    console.log(this.obj),
-    this.goods_id = this.obj.detailList[0].goodsId;
-    uni.setNavigationBarTitle({
-      title: this.obj.statusName });
 
   },
   onShow: function onShow() {
@@ -379,12 +385,26 @@ __webpack_require__.r(__webpack_exports__);
         console.log(res);
         if (res.success) {
           self.details = res.data;
-          self.init_time();
+          self.obj = res.data;
+          self.goods_id = self.obj.detailList[0].goodsId;
+          uni.setNavigationBarTitle({
+            title: self.obj.statusName });
+
+          if (self.details.status == 1 || self.details.status == 3) {
+            self.init_time();
+          }
+
         }
       });
     },
     init_time: function init_time() {var _this = this;
-      var time = new Date(this.details.endTime);
+      var time = '';
+      if (this.details.status == 1) {
+        time = new Date(this.details.timeEnd);
+      } else if (this.details.status == 3) {
+        time = new Date(this.details.timeConfirm);
+      }
+
       this.hour = time.getHours();
       this.minute = time.getMinutes();
       this.second = time.getSeconds();
@@ -395,10 +415,15 @@ __webpack_require__.r(__webpack_exports__);
     },
     setImg: function setImg(url) {
       if (!url) {
-        return false;
+        return "/static/images/shop.png";
       } else {
         return this.$acFrame.Util.setImgUrl(url);
       }
+
+    },
+    goodsDetail: function goodsDetail() {
+      uni.navigateTo({
+        url: '/pages/myshop/productDetail?id=' + this.goods_id });
 
     },
     topay: function topay(id) {
@@ -444,10 +469,10 @@ __webpack_require__.r(__webpack_exports__);
         prod: speci,
         goodsNum: speci.buyNum,
         spellId: '',
-        freight: priceVo.priceLogistic,
+        freight: priceVo ? priceVo.priceLogistic : 0,
         name: speci.goodsName,
         priceSale: speci.priceBuy,
-        sum_price: priceVo.pricePay,
+        sum_price: priceVo ? priceVo.pricePay : 0,
         img: speci.goodsImgPath,
         goodsId: speci.goodsId,
         goodsSkuId: speci.goodsSkuId };

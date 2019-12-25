@@ -188,7 +188,7 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var uniCountDown = function uniCountDown() {return __webpack_require__.e(/*! import() | components/countDown */ "components/countDown").then(__webpack_require__.bind(null, /*! @/components/countDown.vue */ 509));};var _default =
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var uniCountDown = function uniCountDown() {return __webpack_require__.e(/*! import() | components/countDown */ "components/countDown").then(__webpack_require__.bind(null, /*! @/components/countDown.vue */ 517));};var _default =
 
 
 
@@ -577,20 +577,18 @@ __webpack_require__.r(__webpack_exports__);
       spellId: '',
       spellVO: {},
       richNode: '',
-      commontList: [] };
+      commontList: [],
+      detailVO: {} };
 
   },
   onLoad: function onLoad(options) {
     this.id = options.id;
-
-
   },
   onShow: function onShow() {
     if (getApp().globalData.isShowPic) {
       getApp().globalData.isShowPic = false;
     } else {
       this.initData();
-
     }
 
   },
@@ -616,8 +614,6 @@ __webpack_require__.r(__webpack_exports__);
 
       self.$acFrame.HttpService.productDetail(params).then(function (res) {
         if (res.success) {
-
-
           var mydata = res.data;
           var orderSpellList = mydata.orderSpellList;
           if (orderSpellList && orderSpellList.length > 0) {
@@ -735,7 +731,7 @@ __webpack_require__.r(__webpack_exports__);
       this.showSpecModal = false;
       var self = this;
       var detail = this.prodDetail;
-      delete detail.commentList;
+
       delete detail.couponList;
       delete detail.skuList;
       delete detail.orderSpellList;

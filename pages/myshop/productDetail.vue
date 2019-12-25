@@ -388,19 +388,17 @@ export default {
 			spellVO:{},
 			richNode:'',
 			commontList:[],
+			detailVO:{}
 		};
 	},
 	onLoad(options){
 		this.id = options.id;
-		
-		
 	},
 	onShow(){
 		if(getApp().globalData.isShowPic){
 			getApp().globalData.isShowPic=false
 		}else{
 			this.initData();
-			
 		}
 		 
 	},
@@ -426,8 +424,6 @@ export default {
 			}
 			self.$acFrame.HttpService.productDetail(params).then(res => {
 				if(res.success){
-					
-					
 					let mydata = res.data
 					let orderSpellList = mydata.orderSpellList
 					if(orderSpellList&&orderSpellList.length>0){
@@ -545,7 +541,7 @@ export default {
 			this.showSpecModal = false;
 			let self=this
 			let detail = this.prodDetail
-			delete detail.commentList
+
 			delete detail.couponList
 			delete detail.skuList
 			delete detail.orderSpellList

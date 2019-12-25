@@ -21,13 +21,12 @@
 		</view>
 		<view class="expalin">
 			<view class="title">申请说明</view>
-			<textarea name="" val="reasontext" maxlength="100" class="mytext" placeholder="（必填）请详细描述申请原因"
-			 @input="areaChange"></textarea>
+			<textarea name="" val="reasontext" maxlength="100" class="mytext" placeholder="（必填）请详细描述申请原因" @input="areaChange"></textarea>
 		</view>
 		<view class="modal input flex">
 			<view class="name">联系电话</view>
 			<view class="textBox flex-1">
-				{{orderData.phone}}
+				<input type="number" maxlength="11" :value="orderData.phone" @input="changePhone" placeholder="请输入联您的联系电话"/>
 			</view>
 		</view>
 		<view class="footBtn">
@@ -46,7 +45,7 @@
 				reasonList: '',
 				reasonKey: '',
 				orderData: {},
-				ordertype: ''
+				ordertype: '',
 			};
 		},
 		onLoad(options) {
@@ -69,7 +68,10 @@
 		},
 		methods: {
 			areaChange(e) {
-this.reasontext=e.detail.value
+				this.reasontext = e.detail.value
+			},
+			changePhone(e){
+				this.orderData.phone=e.detail.value
 			},
 			getReasons() {
 				let self = this
@@ -83,7 +85,7 @@ this.reasontext=e.detail.value
 			},
 			orderRefound() {
 				let self = this
-				
+
 				if (this.ordertype == "hasgoods") {
 					let params = {
 						askNum: this.orderData.askNum,
@@ -102,12 +104,12 @@ this.reasontext=e.detail.value
 							}, 1500)
 						}
 					})
-				}else{
+				} else {
 					let params = {
 						explainBuyer: this.reasontext,
 						// orderDetailId:this.orderData.orderDetailId,
 						// askNum: this.orderData.askNum,
-						moneyAsk:this.orderData.price,
+						moneyAsk: this.orderData.price,
 						orderId: this.orderData.orderId,
 						reasonType: this.reasonKey
 					}
@@ -122,7 +124,7 @@ this.reasontext=e.detail.value
 						}
 					})
 				}
-				
+
 			},
 			showList() {
 				let self = this

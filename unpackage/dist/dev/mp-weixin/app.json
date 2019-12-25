@@ -54,7 +54,8 @@
         "pages/order/orderDetailSpeci",
         "pages/mycenter/payPassword",
         "pages/order/refundDetail",
-        "pages/myshop/commentList"
+        "pages/myshop/commentList",
+        "pages/mycenter/spiritDetail"
     ],
     "subPackages": [],
     "window": {
@@ -91,5 +92,5 @@
         ]
     },
     "usingComponents": {},
-    "sitemapLocation": "sitemap.json"
+    "sitemapLocation": "sitemap47.json"
 }

@@ -26,7 +26,7 @@
 			<view v-if="resdata.orderId||resdata.spellId" class="btn1" @tap="goshop">随便逛逛</view>
 			<view v-else class="btn1">重新支付</view>
 			<button v-if="type=='spell'" type="null" open-type="share">推荐给好友</button>
-			<view class="linkBox" @tap="linkTo">查看订单详情</view>
+			<view class="linkBox" @tap="linkTo(resdata)">查看订单详情</view>
 			<official-account></official-account>
 		</view>
 	</view>
@@ -49,7 +49,7 @@
 		},
 		onLoad(options){
 			let res  = {success:true,data:JSON.parse(options.res)}
-			
+			console.log(res)
 			this.type = getApp().globalData.orderType;
 			let resdata = res.data
 			if(res.success){
@@ -85,11 +85,18 @@
 		},
 		onShow(){},
 		methods:{
-			linkTo(){
+			linkTo(resdata){
 				let prodVO = getApp().globalData.prodVO
-				uni.navigateTo({
-					url:`productDetail?id=${prodVO.goodsId}`
-				})
+				if(this.type=='spell'){
+					uni.reLaunch({
+						url:`/pages/order/orderDetailSpeci?id=${resdata.spellId}`
+					})
+				}else{
+					uni.reLaunch({
+						url:`/pages/order/orderDetail?id=${resdata.orderId}`
+					})
+				}
+				
 			},
 			goshop(){
 				uni.switchTab({

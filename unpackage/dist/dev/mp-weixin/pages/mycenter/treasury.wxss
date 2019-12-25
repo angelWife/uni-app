@@ -1,8 +1,17 @@
 .fs40 {
   font-size: 60rpx;
 }
+.content {
+  padding-top: 80rpx;
+  min-height: 100vh;
+}
 .tabBox {
   height: 80rpx;
+  position: fixed;
+  width: 100%;
+  z-index: 10;
+  top: 0;
+  left: 0;
 }
 .tabBox .item {
   line-height: 80rpx;

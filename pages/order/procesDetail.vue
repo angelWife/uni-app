@@ -137,6 +137,7 @@
 			},
 			getDetail() {
 				let self = this
+				console.log(this.id);
 				this.$acFrame.HttpService.refundDetail({
 					id: this.id
 				}).then(res => {

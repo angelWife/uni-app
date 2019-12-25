@@ -15,3 +15,16 @@ viewType:   1 广场     2 关注
 在选择地址后  重新掉一次运费
 
 
+let params={
+					pageIndex:this.pageIndex,
+					pageSize:this.pageSize,
+				}
+				this.$acFrame.HttpService.myReceiveGoods(params).then(res=>{
+					if(res.success){
+						let list = res.data.rows
+						self.pageTotal = res.data.pageTotal
+						
+					}
+				})
+
+

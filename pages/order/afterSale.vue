@@ -6,7 +6,7 @@
 			</view>
 		</view>
 		<view class="orderList">
-			<view v-for="(item, index) in dataList" :key="index" class="item" @tap="goDetail(item)">
+			<view v-for="(item, index) in dataList" :key="index" class="item" @tap.stop="goDetail(item)">
 				<view class="item_head flex item-center">
 					<view class="pic">
 						<image :src="setImg(item.shopInfo.imgPath?item.shopInfo.imgPath:'')" mode="widthFix" />
@@ -38,9 +38,9 @@
 
 				<view class="payprice text-right red">
 					
-					实付：<text class="fs12">¥</text><text class="pr30">{{item.moneyAsk}}</text>
-					<block v-if="item.status==3">
-						退款：<text class="fs12">¥</text><text>{{item.moneyFinish}}</text>
+					实付：<text class="fs12">¥</text><text class="pr30">{{item.orderInfo.pricePay}}</text>
+					<block v-if="item.status==3||item.status==1">
+						退款：<text class="fs12">¥</text><text>{{item.moneyAsk}}</text>
 					</block>
 				</view>
 				<view class="orderBtn text-right">
@@ -50,7 +50,7 @@
 					<block v-if="item.status==2||item.status==4">
 						<button type="null" @tap.stop="refundAgain(item)">重新申请</button>
 					</block>
-					<button type="rednull" @tap="goDetail(item.id)">售后详情</button>
+					<button type="rednull" @tap.stop="goDetail(item)">售后详情</button>
 				</view>
 			</view>
 			<view v-if="nodata" class="noData flex f-row just-con-c item-center">
@@ -184,10 +184,10 @@
 					}
 				})
 			},
-			goDetail(id){
+			goDetail(item){
 				let title = ''
 				uni.navigateTo({
-					url:"procesDetail?detail="+id+'&title='+title
+					url:"procesDetail?id="+item.id+'&title='+title
 				})
 			},
 			tabClick(ind) {

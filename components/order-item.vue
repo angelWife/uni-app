@@ -7,7 +7,8 @@
 				</view>
 				<view class="name flex-1 textEllipsis">{{item.shopInfo.name}}</view>
 				<view class="status orange">
-					<text class="">{{item.statusName}}</text>
+					<text  v-if="orderType==100">{{item.status==1?'待支付':(item.status==1)?'待加入成团':""}}</text>
+					<text class="" v-else>{{item.statusName}}</text>
 				</view>
 				<view class="" v-if="orderType==100&&item.showTimer">
 					<uni-count-down :color="timeStyle.color" :splitorColor="timeStyle.color" :show-day="false" :show-style="false"
@@ -57,28 +58,32 @@
 				待付：<text class="fs12">¥</text><text>{{item.pricePayWait}}</text>
 			</view>
 			<view class="payprice text-right red" v-else>
-				实付：<text class="fs12">¥</text><text>{{item.detail.priceBuy||item.pricePay}}</text>
+				实付：<text class="fs12">¥</text><text>{{item.pricePay}}</text>
 			</view>
 			<view class="orderBtn text-right">
 				<block v-if="orderType==100">
-					<button type="red" :data-index="index" open-type="share">邀请好友拼单</button>
+					<button type="red" :data-index="index" open-type="share" @tap.stop="" >邀请好友拼单</button>
 				</block>
 				<block v-if="item.status==1">
 					<button type="rednull" @tap.stop="topay(item)">付款</button>
 					<button type="null" @tap.stop="cancelOrder(item)">取消订单</button>
 				</block>
 				<block v-if="item.status==2">
-					<button type="null" @tap.stop="refoundMoney(item)">申请退款</button>
-					<button type="null" @tap.stop="cancelOrder(item)">取消订单</button>
+					<!-- <button type="null" v-if="item.flagStatusRefund !=1" @tap.stop="refoundMoney(item)">申请退款</button> -->
+				<!-- 	<button type="null" @tap.stop="cancelOrder(item)">取消订单</button> -->
 				</block>
 				<block v-if="item.status==3">
 					<button type="rednull" @tap.stop="shouhuo(item)">确认收货</button>
-					<button type="null" @tap.stop="applyService(item)">申请售后</button>
+					<button type="null" v-if="item.flagStatusRefund !=1" @tap.stop="applyService(item)">申请售后</button>
 				</block>
 				<block v-if="item.status==4">
 					<button type="rednull"  @tap.stop="pingjia(item)" >评价</button>
 				</block>
-				<block v-if="item.status==6">
+				<block v-if="item.status==5">
+					<button type="rednull"  @tap.stop="createOrder(item)"  >再来一单</button>
+					<button type="null" @tap.stop="delOrder(item)" >删除订单</button>
+				</block>
+				<block v-if="item.status==6||item.status==7">
 					<button type="rednull"  @tap.stop="createOrder(item)"  >再来一单</button>
 					<button type="null" @tap.stop="delOrder(item)" >删除订单</button>
 				</block>
@@ -158,6 +163,29 @@
 				}
 
 			},
+			// createOrder(item){
+			// 	console.log(item);
+			// 	let speci = item.detailList[0];
+			// 	//let priceVo = details.priceVo;
+			// 	let args={
+			// 		couponList:[],
+			// 		chooseSpec:{"priceSale":speci.priceBuy,"propValue":speci.goodsSkuPropValue,"goodsSkuId":speci.goodsSkuId,},
+			// 		prod:speci,
+			// 		goodsNum:speci.buyNum,
+			// 		spellId:'',
+			// 		freight:0,
+			// 		name:speci.goodsName,
+			// 		priceSale:speci.priceBuy,
+			// 		sum_price:item.pricePay,
+			// 		img:speci.goodsImgPath,
+			// 		goodsId:speci.goodsId,
+			// 		goodsSkuId:speci.goodsSkuId
+			// 	};
+			// 		args= encodeURIComponent(JSON.stringify(args))
+			// 		uni.navigateTo({
+			// 			url:'/pages/myshop/confirmOrder?details='+args+'&type=order'
+			// 		})
+			// },
 			applyService(orderVO) {
 				let obj = {
 					orderId: orderVO.id,
@@ -182,15 +210,30 @@
 					url: '/pages/order/returnForm?orderData=' + JSON.stringify(obj) + '&type=nullgoods'
 				})
 			},
-			// shouhuo(id){
-			// 	var self = this;
-			// 	self.$acFrame.HttpService.post("order/info/confirm",{orderId:this.id}).then(res => {
-			// 		console.log(res);
-			// 		if (res.success) {
-			// 			self.getDetail()
-			// 		}
-			// 	})
-			// },
+			createOrder(item){
+				let speci = item.detailList[0];
+				let priceVo = item.priceVo;
+				let args={
+					couponList:[],
+					chooseSpec:{"priceSale":speci.priceBuy,"propValue":speci.goodsSkuPropValue,"goodsSkuId":speci.goodsSkuId,},
+					prod:speci,
+					goodsNum:speci.buyNum,
+					spellId:'',
+					freight:priceVo?priceVo.priceLogistic:0,
+					shopInfo:item.shopInfo,
+					name:speci.goodsName,
+					priceSale:speci.priceBuy,
+					sum_price:priceVo?priceVo.pricePay:0,
+					img:speci.goodsImgPath,
+					goodsId:speci.goodsId,
+					goodsSkuId:speci.goodsSkuId
+				};
+					args= encodeURIComponent(JSON.stringify(args))
+					uni.navigateTo({
+						url:'/pages/myshop/confirmOrder?details='+args+'&type=order'
+					})
+				
+			},
 			cancelOrder(item) {
 				let self = this
 				let id = ''
@@ -202,7 +245,15 @@
 				self.$acFrame.HttpService.post("order/info/cancle",{id:item.id}).then(res => {
 					console.log(res);
 					if (res.success) {
-						self.$parent.getList();
+						self.$acFrame.Util.mytotal('取消成功')
+						setTimeout(() => {
+							self.$parent.setParams()
+							if (self.orderType == 100) {
+								self.$parent.getPGList();
+							} else {
+								self.$parent.getList();
+							}
+						}, 1000)
 					}
 				})
 				return true;
@@ -224,7 +275,7 @@
 				})
 			},
 			topay(item){
-				debugger
+				//debugger
 				if(this.orderType == 100){
 					this.$acFrame.HttpService.spellPay({id:item.spellIdUser}).then(res=>{
 						if(res.success){

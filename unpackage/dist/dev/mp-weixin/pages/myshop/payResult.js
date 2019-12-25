@@ -122,7 +122,7 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var uniCountDown = function uniCountDown() {return __webpack_require__.e(/*! import() | components/countDown */ "components/countDown").then(__webpack_require__.bind(null, /*! @/components/countDown.vue */ 509));};var _default =
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var uniCountDown = function uniCountDown() {return __webpack_require__.e(/*! import() | components/countDown */ "components/countDown").then(__webpack_require__.bind(null, /*! @/components/countDown.vue */ 517));};var _default =
 
 
 
@@ -173,7 +173,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   onLoad: function onLoad(options) {
     var res = { success: true, data: JSON.parse(options.res) };
-
+    console.log(res);
     this.type = getApp().globalData.orderType;
     var resdata = res.data;
     if (res.success) {
@@ -209,10 +209,17 @@ __webpack_require__.r(__webpack_exports__);
   },
   onShow: function onShow() {},
   methods: {
-    linkTo: function linkTo() {
+    linkTo: function linkTo(resdata) {
       var prodVO = getApp().globalData.prodVO;
-      uni.navigateTo({
-        url: "productDetail?id=".concat(prodVO.goodsId) });
+      if (this.type == 'spell') {
+        uni.reLaunch({
+          url: "/pages/order/orderDetailSpeci?id=".concat(resdata.spellId) });
+
+      } else {
+        uni.reLaunch({
+          url: "/pages/order/orderDetail?id=".concat(resdata.orderId) });
+
+      }
 
     },
     goshop: function goshop() {

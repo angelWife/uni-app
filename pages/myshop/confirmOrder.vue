@@ -11,7 +11,10 @@
 						<text class="c999">{{addrVO.mobilePhone}}</text>
 					</view>
 					<view class="detail">
-						{{addrVO.areaProvince}}{{addrVO.areaCity}}{{addrVO.areaCounty}}{{addrVO.address}}
+						{{addrVO.areaProvince}}
+						{{addrVO.areaCity}}
+						{{addrVO.areaCounty}}
+						{{addrVO.address}}
 					</view>
 				</block>
 				<block v-else>
@@ -578,9 +581,9 @@ page{
 			}
 			.list{
 				margin-top:20rpx;
-				max-height:492rpx;
+				max-height:510rpx;
 				overflow: hidden;
-				overflow-x: auto;
+				overflow-y: auto;
 				.item{
 					background: #FFF4F1;
 					border-radius: 0.3em;

@@ -27,7 +27,7 @@
 					<text>银行卡</text>
 				</view>
 				<view class="nums text-right flex-1">
-					0
+					
 				</view>
 				<view class="iconfont icon-right"></view>
 			</view>
@@ -41,40 +41,42 @@
 
 			<view class="productContent clearfix">
 				<scroll-view class="myscroll" scroll-y="true" @scrolltolower="loadMore">
-					<view v-for="(item, index) in dataList" :key="index" class="item flex item-center">
-						<view class="item-box" @tap="gotoDetail(item)">
-							<view class="pic">
-								<image :src="item.imgPath" mode="widthFix"></image>
-							</view>
-							<view class="prd_msg">
-								<view class="name clamp clamp-1">{{ item.name }}</view>
-								<view class="price flex just-con-b">
-									<view class="red">
-										<text class="fs10">¥</text>
-										<text class="fs16">{{ item.priceSale }}</text>
-										<text class="c999">
-											(2000星票)
-										</text>
+					<view class="clearfix">
+						<view v-for="(item, index) in dataList" :key="index" class="item flex item-center">
+							<view class="item-box" @tap="gotoDetail(item)">
+								<view class="pic">
+									<image :src="item.imgPath" mode="widthFix"></image>
+								</view>
+								<view class="prd_msg">
+									<view class="name clamp clamp-1">{{ item.name }}</view>
+									<view class="price flex just-con-b">
+										<view class="red">
+											<text class="fs10">¥</text>
+											<text class="fs16">{{ item.priceSale }}</text>
+											<text class="c999">
+												({{item.priceSale*10}}星票)
+											</text>
+										</view>
+									</view>
+									<view class="fs10 c999">
+										已兑{{item.totalNums}}
 									</view>
 								</view>
-								<view class="fs10 c999">
-									已兑{{item.totalNums?item.totalNums:0}}万件
-								</view>
 							</view>
 						</view>
 					</view>
-				</scroll-view>
-				<view v-if="nodata" class="noData flex f-row just-con-c item-center">
-					<view class="text-center">
-						<image src="/static/images/nodata.png" mode="widthFix"></image>
-						<view class="text-center c666 fs16">
-							这里还没有内容
+					<view v-if="nodata" class="noData flex f-row just-con-c item-center">
+						<view class="text-center">
+							<image src="/static/images/nodata.png" mode="widthFix"></image>
+							<view class="text-center c666 fs16">
+								这里还没有内容
+							</view>
 						</view>
 					</view>
-				</view>
-				<view v-if="nomore" class="noMore">
-					~已经到底了！~
-				</view>
+					<view v-if="nomore" class="noMore">
+						~已经到底了！~
+					</view>
+				</scroll-view>
 			</view>
 
 		</view>
@@ -143,6 +145,15 @@
 							list.filter(v => {
 								v.imgPath = self.$acFrame.Util.setImgUrl(v.imgPath);
 								v.choose=false
+								if(v.totalNums){
+									if(v.totalNums>9999){
+										v.totalNums = Math.round(v.totalNums/100)/100+'万件'
+									}else{
+										v.totalNums=v.totalNums+'件'
+									}
+								}else{
+									v.totalNums='0件'
+								}
 							})
 							self.dataList = self.dataList.concat(list)
 						}else{
@@ -154,7 +165,7 @@
 			},
 			gotoDetail(item){
 				uni.navigateTo({
-					url:'mySpirit?id='+item.id
+					url:`spiritDetail?id=${item.id }&useType=${item.useType}`
 				})
 			},
 			loadMore(){
@@ -274,7 +285,7 @@
 
 	.productContent{
 		padding:20rpx 10rpx 0;
-		height: calc(100vh - 400rpx);
+		height: calc(100vh - 300rpx);
 		.item{
 			float:left;
 			width: 50%;
@@ -288,7 +299,7 @@
 			}
 			.pic{
 				width: 100%;
-				height:calc((100vw - 20rpx) / 2 - 20px);
+				height:auto;
 				overflow: hidden;
 			}
 			.prd_msg{

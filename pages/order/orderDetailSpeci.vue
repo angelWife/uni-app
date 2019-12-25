@@ -1,6 +1,6 @@
 <template>
 	<view class="content pagebg">
-		<view class="timer">
+		<view class="timer" v-if="details.status == 1">
 			剩余
 			<block v-if="show_time">
 				<uni-count-down :show-day="false" :color="color" :backgroundColor="backgroundColor" :splitorColor="color"
@@ -33,7 +33,10 @@
 					<text class="c999">{{details.address.receiverMobilePhone}}</text>
 				</view>
 				<view class="detail">
-					{{details.address.areaProvinceName?details.address.areaProvinceName:''}}{{details.address.areaCityName?details.address.areaCityName:''}}{{details.address.areaCountyName?details.address.areaCountyName:''}}{{details.address.address?details.address.address:''}}
+					{{details.address.areaProvinceName?details.address.areaProvinceName:''}}
+					{{details.address.areaCityName?details.address.areaCityName:''}}
+					{{details.address.areaCountyName?details.address.areaCountyName:''}}
+					{{details.address.address?details.address.address:''}}
 				</view>
 			</view>
 		</view>
@@ -178,13 +181,16 @@
 				})
 			},
 			init_time(endTime) {
-				this.hour = this.$acFrame.Util.countTime(endTime, 'hour')
-				this.minute = this.$acFrame.Util.countTime(endTime, 'minute')
-				this.second = this.$acFrame.Util.countTime(endTime, 'second')
-				this.show_time = false;
-				setTimeout(() => {
-					this.show_time = true
-				}, 300)
+				if(endTime){
+					this.hour = this.$acFrame.Util.countTime(endTime, 'hour')
+					this.minute = this.$acFrame.Util.countTime(endTime, 'minute')
+					this.second = this.$acFrame.Util.countTime(endTime, 'second')
+					this.show_time = false;
+					setTimeout(() => {
+						this.show_time = true
+					}, 300)
+				}
+				
 			},
 			setImg(url) {
 				return this.$acFrame.Util.setImgUrl(url);

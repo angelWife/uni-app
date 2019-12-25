@@ -205,6 +205,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 var _default =
 {
   data: function data() {
@@ -267,6 +269,15 @@ var _default =
             list.filter(function (v) {
               v.imgPath = self.$acFrame.Util.setImgUrl(v.imgPath);
               v.choose = false;
+              if (v.totalNums) {
+                if (v.totalNums > 9999) {
+                  v.totalNums = Math.round(v.totalNums / 100) / 100 + '万件';
+                } else {
+                  v.totalNums = v.totalNums + '件';
+                }
+              } else {
+                v.totalNums = '0件';
+              }
             });
             self.dataList = self.dataList.concat(list);
           } else {
@@ -278,7 +289,7 @@ var _default =
     },
     gotoDetail: function gotoDetail(item) {
       uni.navigateTo({
-        url: 'mySpirit?id=' + item.id });
+        url: "spiritDetail?id=".concat(item.id, "&useType=").concat(item.useType) });
 
     },
     loadMore: function loadMore() {

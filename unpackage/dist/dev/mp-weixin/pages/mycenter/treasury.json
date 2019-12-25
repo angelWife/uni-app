@@ -1,4 +1,5 @@
 {
   "navigationBarTitleText": "宝库",
+  "enablePullDownRefresh": true,
   "usingComponents": {}
 }

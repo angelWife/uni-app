@@ -90,6 +90,34 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
+  var m0 = _vm.setImg(_vm.goodsVO.imgPath)
+
+  var l0 = _vm.__map(_vm.goodsVO.imgList, function(item, ind) {
+    var m1 = _vm.setImg(item)
+    return {
+      $orig: _vm.__get_orig(item),
+      m1: m1
+    }
+  })
+
+  var l1 = _vm.__map(_vm.goodsList, function(item, ind) {
+    var m2 = _vm.setImg(item.virtualVo.imgPath)
+    return {
+      $orig: _vm.__get_orig(item),
+      m2: m2
+    }
+  })
+
+  _vm.$mp.data = Object.assign(
+    {},
+    {
+      $root: {
+        m0: m0,
+        l0: l0,
+        l1: l1
+      }
+    }
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -122,7 +150,15 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0; //
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0; //
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -183,14 +219,64 @@ var _default =
 {
   data: function data() {
     return {
-      id: 0 };
+      goodsVO: {},
+      goodsList: [] };
 
   },
   onLoad: function onLoad(options) {
-    this.id = options.id;
-    console.log(this.id);
+
   },
-  methods: {} };exports.default = _default;
+  onShow: function onShow() {
+    this.getReceiveList();
+  },
+  methods: {
+    getReceiveList: function getReceiveList() {
+      var self = this;
+      var params = {
+        pageIndex: 1,
+        pageSize: 100,
+        fetchImgList: true,
+        useType: '' };
+
+      this.$acFrame.HttpService.myReceiveGoods(params).then(function (res) {
+        if (res.success) {
+          var list = res.data.rows;
+          if (list.length > 0) {
+            list.filter(function (v, i) {
+              if (i == 0) {
+                v.choose = true;
+              } else {
+                v.choose = false;
+              }
+            });
+            self.goodsList = list;
+            self.goodsVO = list[0].virtualVo;
+          }
+        }
+      });
+    },
+    chooseItem: function chooseItem(index) {
+      var self = this;
+      this.goodsList.filter(function (v, i) {
+        if (i == index) {
+          v.choose = true;
+          self.goodsVO = v.virtualVo;
+        } else {
+          v.choose = false;
+        }
+      });
+      console.log(self.goodsVO);
+
+    },
+    buy: function buy() {
+      uni.navigateTo({
+        url: 'myWallet' });
+
+    },
+    setImg: function setImg(src) {
+      return this.$acFrame.Util.setImgUrl(src);
+    } } };exports.default = _default;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 
 /***/ }),
 

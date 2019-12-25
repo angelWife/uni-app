@@ -174,7 +174,7 @@ __webpack_require__.r(__webpack_exports__);
 var giftModal = uni.createAnimation({
   duration: 300,
   timingFunction: "ease",
-  delay: 0 });var rewardList = function rewardList() {return __webpack_require__.e(/*! import() | components/reward-modal */ "components/reward-modal").then(__webpack_require__.bind(null, /*! @/components/reward-modal.vue */ 488));};var _default =
+  delay: 0 });var rewardList = function rewardList() {return __webpack_require__.e(/*! import() | components/reward-modal */ "components/reward-modal").then(__webpack_require__.bind(null, /*! @/components/reward-modal.vue */ 496));};var _default =
 
 
 {

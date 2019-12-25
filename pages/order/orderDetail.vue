@@ -8,6 +8,14 @@
 			</block>
 			自动取消订单
 		</view>
+		<view class="timer" v-if="details.status == 3">
+			剩余
+			<block v-if="show_time">
+				<uni-count-down :show-day="false" :color="color" :backgroundColor="backgroundColor" :splitorColor="color"
+				 :show-style="false" :fontSize="fontSize" :hour="hour" :minute="minute" :second="second" />
+			</block>
+			自动收货
+		</view>
 		<view class="modal logist flex item-center" v-if="details.logistics.carrierName">
 			<view class="pic">
 				<image src="/static/images/icon-logist.png" mode="widthFix"></image>
@@ -33,7 +41,10 @@
 					<text class="c999">{{details.address.receiverMobilePhone}}</text>
 				</view>
 				<view class="detail">
-					{{details.address.areaProvinceName?details.address.areaProvinceName:''}}{{details.address.areaCityName?details.address.areaCityName:''}}{{details.address.areaCountyName?details.address.areaCountyName:''}}{{details.address.address?details.address.address:''}}
+					{{details.address.areaProvinceName?details.address.areaProvinceName:''}}
+					{{details.address.areaCityName?details.address.areaCityName:''}}
+					{{details.address.areaCountyName?details.address.areaCountyName:''}}
+					{{details.address.address?details.address.address:''}}
 				</view>
 			</view>
 		</view>
@@ -48,9 +59,9 @@
 					</view>
 				</view>
 				
-				<view class="product flex" v-for="(item,index) in details.detailList" :key="index">
+				<view class="product flex" v-for="(item,index) in details.detailList" :key="index" @tap="goodsDetail()"   >
 					<view class="pic" style="overflow: hidden;">
-						<image :src="setImg(item.goodsImgPath)" mode="widthFix"></image>
+						<image :src="setImg(item.goodsImgPath)"  mode="widthFix"></image>
 					</view>
 					<view class="center flex-1">
 						<view class="name clamp clamp-2">
@@ -132,32 +143,32 @@
 			</view>
 
 			<view class="" v-if="details.status >= 3  && details.status < 6 ">
-				发货时间：{{ formatTime(details.timeSend ) }}
+				发货时间：{{ formatTime(details.timeSend) }}
 			</view>
 		</view>
 		<view class="footBtn">
 			<block v-if="details.status==1">
 				<button type="rednull" @tap="topay(details.id)" class="radiuBtn">付款</button>
-				<button type="rednull" @tap="createOrder()" class="radiuBtn">再来一单</button>
 				<button type="null" @tap="tocancel()" class="radiuBtn" >取消订单</button>
 			</block>
 			<block v-if="details.status==2">
-				<button type="null" class="radiuBtn" @tap="refoundMoney(details)">申请退款</button>
-				<button type="null" @tap="tocancel()" class="radiuBtn" >取消订单</button>
+				<!-- <button type="null" v-if="detail.flagStatusRefund !=1" class="radiuBtn" @tap="refoundMoney(details)">申请退款</button> -->
+				<!-- <button type="null" @tap="tocancel()" class="radiuBtn" >取消订单</button> -->
 				</block>
 			<block v-if="details.status==3">
 				<button type="rednull" @tap="shouhuo()" class="radiuBtn">确认收货</button>
-				<button type="null" class="radiuBtn" @tap="applyService(details)">申请售后</button>
+				<button type="null" v-if="detail.flagStatusRefund !=1" class="radiuBtn" @tap="applyService(details)">申请售后</button>
 			</block>
 			<block v-if="details.status==4">
 				<button type="rednull" @tap="pingjia()" class="radiuBtn">评价</button>
 			</block>
 			<block v-if="details.status==5">
 				<button type="null" @tap="delOrder()" class="radiuBtn">删除订单</button>
-			</block>
-			<block v-if="details.status==6">
 				<button type="rednull" @tap="createOrder()" class="radiuBtn">再来一单</button>
+			</block>
+			<block v-if="details.status==6||details.status==7">
 				<button type="null" @tap="delOrder()" class="radiuBtn">删除订单</button>
+				<button type="rednull" @tap="createOrder()" class="radiuBtn">再来一单</button>
 			</block>
 		</view>
 	</view>
@@ -186,12 +197,7 @@
 		onLoad(options) {
 			
 			this.id = options.id
-			this.obj = JSON.parse(options.obj)
-			console.log(this.obj),
-			this.goods_id=this.obj.detailList[0].goodsId;
-			uni.setNavigationBarTitle({
-				title: this.obj.statusName
-			});
+			
 		},
 		onShow() {
 			this.getDetail()
@@ -230,12 +236,26 @@
 					console.log(res);
 					if (res.success) {
 						self.details = res.data
-						self.init_time();
+						self.obj = res.data
+						self.goods_id=self.obj.detailList[0].goodsId;
+						uni.setNavigationBarTitle({
+							title: self.obj.statusName
+						});
+						if(self.details.status==1 || self.details.status==3){
+							self.init_time();
+						}
+						
 					}
 				})
 			},
 			init_time() {
-				var time = new Date(this.details.endTime);
+				var time = ''
+				if(this.details.status==1){
+					time = new Date(this.details.timeEnd);
+				}else if(this.details.status==3){
+					time = new Date(this.details.timeConfirm);
+				}
+				
 				this.hour = time.getHours();
 				this.minute = time.getMinutes();
 				this.second = time.getSeconds();
@@ -246,11 +266,16 @@
 			},
 			setImg(url) {
 				if(!url){
-					return false
+					return "/static/images/shop.png";
 				}else{
 					return this.$acFrame.Util.setImgUrl(url);
 				}
 				
+			},
+			goodsDetail(){
+				uni.navigateTo({
+					url:'/pages/myshop/productDetail?id='+this.goods_id
+				}) 
 			},
 			topay(id){
 				this.$acFrame.HttpService.orderPay({id:id}).then(res=>{
@@ -295,10 +320,10 @@
 					prod:speci,
 					goodsNum:speci.buyNum,
 					spellId:'',
-					freight:priceVo.priceLogistic,
+					freight:priceVo?priceVo.priceLogistic:0,
 					name:speci.goodsName,
 					priceSale:speci.priceBuy,
-					sum_price:priceVo.pricePay,
+					sum_price:priceVo?priceVo.pricePay:0,
 					img:speci.goodsImgPath,
 					goodsId:speci.goodsId,
 					goodsSkuId:speci.goodsSkuId

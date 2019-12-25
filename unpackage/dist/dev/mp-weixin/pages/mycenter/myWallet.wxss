@@ -46,7 +46,7 @@ page {
 }
 .productContent {
   padding: 20rpx 10rpx 0;
-  height: calc(100vh - 400rpx);
+  height: calc(100vh - 300rpx);
 }
 .productContent .item {
   float: left;
@@ -62,7 +62,7 @@ page {
 }
 .productContent .item .pic {
   width: 100%;
-  height: calc((100vw - 20rpx) / 2 - 20px);
+  height: auto;
   overflow: hidden;
 }
 .productContent .item .prd_msg {

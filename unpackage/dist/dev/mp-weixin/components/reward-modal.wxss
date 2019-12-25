@@ -6,6 +6,7 @@
   bottom: 0;
   -webkit-transform: bottom 0.3s easy;
           transform: bottom 0.3s easy;
+  padding-bottom: 60rpx;
 }
 .rewardModal .title {
   height: 80rpx;
@@ -32,6 +33,7 @@
   height: calc((100vw - 20rpx) / 4 - 20rpx);
   border-radius: 0.5em;
   background: #eee;
+  border: 1px solid #eee;
 }
 .rewardModal .giftList .item .box .pic {
   padding: 0 20%;
@@ -49,6 +51,7 @@
 .rewardModal .giftList .item .box.active {
   background: #fff;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  border-color: #B40000;
 }
 .rewardModal .giftList .item .box.active .text {
   color: #B40000;

@@ -159,7 +159,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 var _default =
 {
   data: function data() {
@@ -194,6 +193,9 @@ var _default =
   methods: {
     areaChange: function areaChange(e) {
       this.reasontext = e.detail.value;
+    },
+    changePhone: function changePhone(e) {
+      this.orderData.phone = e.detail.value;
     },
     getReasons: function getReasons() {
       var self = this;

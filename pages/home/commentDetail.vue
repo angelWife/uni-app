@@ -5,7 +5,8 @@
 				<view class="item-head flex item-center">
 					<view class="img item-center comHeadPic" @tap="userInfo(dataInfo.publishUser.userCode)">
 						<image class="headPic" :src="dataInfo.publishUser.imgPathHead"></image>
-						<image class="grade" v-if="dataInfo.publishUser.nobilityType>1" :src="'/static/images/juewei/'+(dataInfo.publishUser.nobilityType-1)+'.png'" mode="widthFix"></image>
+						<image class="grade" v-if="dataInfo.publishUser.nobilityType>1" :src="'/static/images/juewei/'+(dataInfo.publishUser.nobilityType-1)+'.png'"
+						 mode="widthFix"></image>
 					</view>
 					<view class="flex-1 head-msg">
 						<view class="flex item-center clearfix">
@@ -187,7 +188,8 @@
 				<block v-if="listData.length>0">
 					<view class="item flex" v-for="(item,ind) in listData" :key="ind">
 						<view class="pic comHeadPic" @tap="userInfo(item.userCode)">
-							<image class="grade" v-if="item.nobilityType>1" :src="'/static/images/juewei/'+(item.nobilityType-1)+'.png'" mode="widthFix"></image>
+							<image class="grade" v-if="item.nobilityType>1" :src="'/static/images/juewei/'+(item.nobilityType-1)+'.png'"
+							 mode="widthFix"></image>
 							<image class="headPic" :src="setImg(item.headPic,item.genderType)"></image>
 						</view>
 						<!-- <view class="img item-center comHeadPic" @tap="userInfo(item.publishUser.userId)">
@@ -251,7 +253,13 @@
 		<!-- <view class="noData" v-if="showFoot">
 			~没有更多~
 		</view> -->
-		<RewardList :showReward="showReward" :userCode="dataInfo.publishUser.userCode" :rewardList="rewardList" @chooseReward="chooseReward" @hideModal="hideModal"></RewardList>
+		<RewardList :showReward="showReward" :userCode="dataInfo.publishUser.userCode" :rewardList="rewardList" @chooseReward="chooseReward"
+		 @hideModal="hideModal"></RewardList>
+		 <view class="rewardListBox">
+			 <view class="item" v-for="">
+				 
+			 </view>
+		 </view>
 	</view>
 </template>
 
@@ -275,7 +283,8 @@
 				showModal: false,
 				showFoot: false,
 				isComent: false, //是否滚动到底部
-				showReward: false
+				showReward: false,
+				rewardRecodList:''//打赏列表
 			};
 		},
 		onLoad(options) {
@@ -298,6 +307,7 @@
 			} else {
 				this.listData = []
 				this.getCommentList()
+				this.rewardRecod()
 				this.$acFrame.HttpService.readPost({
 					id: this.dataInfo.articleInfo.id
 				}).then(res => {
@@ -592,34 +602,53 @@
 						let list = res.data
 						list.filter(v => {
 							v.imgPath = self.$acFrame.Util.setImgUrl(v.imgPath);
-							v.choose=false
+							v.choose = false
 						})
 						self.rewardList = list
 
 					}
 				})
 			},
-			rewardUser(id,type){
+			rewardUser(id, type) {
 				let self = this
 				let params = {
-					buyNum : 1,
-					userCode : 100,
-					virtualId : id,
+					buyNum: 1,
+					userCode: 100,
+					virtualId: id,
 					sceneType: type
 				}
 				this.$acFrame.HttpService.virtualBuy(params).then(res => {
 					if (res.success) {
-					
+
 					}
 				})
 			},
-			chooseReward(ind){
+			chooseReward(ind) {
 				let list = this.rewardList
-				list[ind].choose=!list[ind].choose
-				this.rewardList=list
+				list[ind].choose = !list[ind].choose
+				this.rewardList = list
 				console.log(this.rewardList[ind].choose)
+			},
+			rewardRecod() {
+				let self = this
+				let params = {
+					userCode:this.dataInfo.publishUser.userCode
+				}
+				this.$acFrame.HttpService.rewardRecod(params).then(res=>{
+					if(res.success){
+						let list = res.data
+						if(list.length>0){
+							self.rewardRecodList=list
+							self.loadRewardAnimate(list)
+						}
+					}
+				})
+			},
+			loadRewardAnimate(list){
+				
 			}
 		}
+
 	};
 </script>
 

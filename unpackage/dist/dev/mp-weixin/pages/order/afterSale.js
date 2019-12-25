@@ -138,7 +138,7 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var OrderItem = function OrderItem() {return __webpack_require__.e(/*! import() | components/order-item */ "components/order-item").then(__webpack_require__.bind(null, /*! @/components/order-item.vue */ 521));};var _default =
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var OrderItem = function OrderItem() {return __webpack_require__.e(/*! import() | components/order-item */ "components/order-item").then(__webpack_require__.bind(null, /*! @/components/order-item.vue */ 529));};var _default =
 
 
 
@@ -324,10 +324,10 @@ __webpack_require__.r(__webpack_exports__);
         }
       });
     },
-    goDetail: function goDetail(id) {
+    goDetail: function goDetail(item) {
       var title = '';
       uni.navigateTo({
-        url: "procesDetail?detail=" + id + '&title=' + title });
+        url: "procesDetail?id=" + item.id + '&title=' + title });
 
     },
     tabClick: function tabClick(ind) {var _this = this;
