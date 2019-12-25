@@ -317,7 +317,9 @@
         }
         ,{
             "path" : "pages/mycenter/payPassword",
-            "style" : {}
+            "style": {
+            	"navigationBarTitleText": "设置支付密码"
+            }
         }
         ,{
             "path" : "pages/order/refundDetail",

@@ -2,10 +2,10 @@
 	<view class="content pagebg">
 		<view class="formBox">
 			<view class="item">
-				<input type="number" :value="pwd1" @input="changeInput($event,'pwd1')" maxlength="6" placeholder="请输入新的支付密码" />
+				<input type="number" password="true" :value="pwd1" @input="changeInput($event,'pwd1')" maxlength="6" placeholder="请输入新的支付密码" />
 			</view>
 			<view class="item flex">
-				<input type="number" :value="pwd2" @input="changeInput($event,'pwd2')" maxlength="6" placeholder="验证新支付密码" />
+				<input type="number" password="true" :value="pwd2" @input="changeInput($event,'pwd2')" maxlength="6" placeholder="验证新支付密码" />
 			</view>
 		</view>
 		<view class="btnBox">

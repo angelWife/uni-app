@@ -11,7 +11,7 @@
 	"compileType": "miniprogram",
 	"libVersion": "2.9.2",
 	"appid": "wx95cb10111aeafcee",
-	"projectname": "myshop",
+	"projectname": "mp-weixin",
 	"simulatorType": "wechat",
 	"simulatorPluginLibVersion": {},
 	"condition": {
