@@ -562,7 +562,7 @@ page{
 			left:0;
 			bottom:0;
 			background: #fff;
-			padding:0 24rpx;
+			padding:0 24rpx 20rpx;
 			.title {
 				line-height: 100rpx;
 				text-align: center;
@@ -577,7 +577,10 @@ page{
 				}
 			}
 			.list{
-				padding-top:20rpx;
+				margin-top:20rpx;
+				max-height:492rpx;
+				overflow: hidden;
+				overflow-x: auto;
 				.item{
 					background: #FFF4F1;
 					border-radius: 0.3em;

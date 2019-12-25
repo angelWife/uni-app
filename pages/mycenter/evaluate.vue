@@ -28,7 +28,7 @@
 	    	<view class="title">评价内容(选填)</view>
 			<textarea :value="areaText" @input="areaChange" maxlength="300" placeholder="说说你用完宝贝后的感想吧" />
 	    </view>
-		<view class="imgList">
+		<view class="imgList clearfix">
 			<view class="item" v-for="(iten,ind) in picList" :key="ind">
 				<image  :src="iten" mode="widthFix"></image>
 			</view>
@@ -239,7 +239,7 @@ export default {
 	margin-top:20rpx;
 	padding:0 10rpx;
 	.item{
-		display: inline-block;
+		float:left;
 		width: 140rpx;
 		height:140rpx;
 		margin:14rpx;

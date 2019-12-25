@@ -64,7 +64,7 @@
 			if (getApp().globalData.isShowPic) {
 				getApp().globalData.isShowPic = false
 			} else {
-				
+				this.setParams()
 				if (this.orderType == 100) {
 					this.getPGList();
 				} else {
@@ -217,8 +217,7 @@
 			}
 		},
 		onPullDownRefresh() {
-			this.pageIndex = 1;
-			this.dataList = [];
+			this.setParams()
 			this.is_over = false;
 			if (this.orderType == 100) {
 				this.getPGList();

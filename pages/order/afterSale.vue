@@ -55,7 +55,7 @@
 			</view>
 			<view v-if="nodata" class="noData flex f-row just-con-c item-center">
 				<view class="text-center">
-					<image src="/static/images/nodata.png" mode="widthFix"></image>
+					<image src="/static/images/nodata.png" mode="widthFix"/>
 					<view class="text-center c666 fs16">
 						这里还没有内容
 					</view>

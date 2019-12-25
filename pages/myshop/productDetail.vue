@@ -26,7 +26,7 @@
 			</view> -->
 			<view class="flex item-center">
 				<view class="c999">精灵</view>
-				<view class="pic">
+				<view class="pic" v-if="prodDetail.spiritDiscount.hasDiscount">
 					<image src="/static/images/animal/jl1.png" mode="widthFix"></image>
 				</view>
 				<view class="flex-1 text-right red" v-if="prodDetail.spiritDiscount.hasDiscount">

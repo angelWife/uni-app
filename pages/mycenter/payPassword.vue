@@ -46,7 +46,6 @@
 					this.$acFrame.Util.mytotal('请输入六位数字密码')
 					return false
 				}
-				debugger
 				let res = this.pwd1+timestamp+secret;
 				res = res.toUpperCase()
 				res = res.split('').sort().join('');
@@ -59,6 +58,9 @@
 				this.$acFrame.HttpService.setPayPwd(params).then(res=>{
 					if(res.success){
 						self.$acFrame.Util.mytotal("设置支付密码成功！")
+						setTimeout(() => {
+							self.changeData()
+						}, 1000);
 					}else{
 						if(res.code=='PD_SIGN_ERROR'){
 							self.$acFrame.Util.mytotal("签名错误！")
@@ -72,7 +74,7 @@
 				if(pages.length>1){
 					let prePage = pages[pages.length - 2]
 					if (prePage.$vm.changeStatus) {
-					  prePage.$vm.setVal(changeStatus)
+					  prePage.$vm.changeStatus()
 					  wx.navigateBack({})
 					}
 				}

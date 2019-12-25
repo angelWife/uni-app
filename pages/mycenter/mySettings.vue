@@ -58,7 +58,7 @@
 				switchColor:'#4C8FF7',
 				barrage:false,
 				system:true,
-				payPwd:true
+				payPwd:false
 			};
 		},
 		onLoad(options){
