@@ -330,6 +330,12 @@ __webpack_require__.r(__webpack_exports__);
         url: "procesDetail?id=" + item.id + '&title=' + title });
 
     },
+    goOrderDetail: function goOrderDetail(item) {
+      var title = '';
+      uni.navigateTo({
+        url: "orderDetail?id=" + item.orderId + '&title=' + title });
+
+    },
     tabClick: function tabClick(ind) {var _this = this;
       this.tabList.filter(function (v, i) {
         if (i == ind) {

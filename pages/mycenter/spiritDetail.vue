@@ -36,7 +36,7 @@
 				</view>
 			</view>
 			<view class="pic">
-				<image :src="setImg(details.imgPath)" mode="widthFix"></image>
+				<image :src="setImg(details.spirit.imgHeadPath?details.spirit.imgHeadPath:details.imgPath)" mode="widthFix"></image>
 			</view>
 		</view>
 		<view class="swiperBox">
@@ -102,6 +102,7 @@
 			    	}
 			    	this.$acFrame.HttpService.virtualBuy(params).then(res => {
 			    		if (res.success) {
+							getApp().globalData.orderType = 'xuni'
 							uni.navigateTo({
 								url:'/pages/myshop/payWay?order='+JSON.stringify(res.data)
 							})

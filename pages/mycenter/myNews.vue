@@ -1,6 +1,26 @@
 <template>
 	<view class="content pagebg">
 		<view class="newsType comNews">
+			<view v-for="(item, ind) in newsTypes" :key="ind" class="listBox">
+				<view class="newBox flex item-center" @tap="newsList(ind)">
+					<view class="pic">
+						<image :src="'/static/images/n'+ind+'.png'" mode="widthFix" />
+					</view>
+					<view class="main flex-1">
+						<view class="title fs16">
+							<text v-if="ind==1">系统消息</text>
+							<text v-if="ind==2">文章消息</text>
+							<text v-if="ind==3">订单消息</text>
+						</view>
+						<view class="text c999">
+							<block v-if="item>0">{{item}}条未阅读</block>
+							<block v-else>暂无消息</block>
+						</view>
+					</view>
+				</view>
+			</view>
+		</view>
+		<!-- <view class="newsType comNews">
 			<view v-for="(item, ind) in dataList" :key="ind" class="listBox" @touchstart="touchstart" @touchend="touchend($event, ind)">
 				<view class="newBox flex item-center" :style="item.style">
 					<view class="pic">
@@ -17,7 +37,7 @@
 				<view class="btn delete float-right" @tap="delNews(ind)">删除</view>
 				<view class="btn look float-right" @tap="readyNews(ind)">查看</view>
 			</view>
-		</view>
+		</view> -->
 	</view>
 </template>
 
@@ -28,11 +48,27 @@
 				itemstyle: "left:0;",
 				dataList: [{style: "left:0;"}],
 				t_x: 0,
-				t_y: 0
+				t_y: 0,
+				newsTypes:[]
 			};
 		},
+		onShow(){
+			this.getNewsType()
+		},
 		methods: {
-			readyNews(ind) {},
+			getNewsType(){
+				let self =this
+				this.$acFrame.HttpService.newsType().then(res=>{
+					if(res.success){
+						self.newsTypes = res.data
+					}
+				})
+			},
+			newsList(type) {
+				uni.navigateTo({
+					url:'newsList?type='+type
+				})
+			},
 			touchstart: function(e) {
 				this.t_x = e.touches[0].pageX;
 				this.t_y = e.touches[0].pageY; // 获取触摸时的原点

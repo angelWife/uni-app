@@ -156,6 +156,12 @@ var _default2 =
         return [];
       } },
 
+    accountVO: {
+      type: Object,
+      default: function _default() {
+        return {};
+      } },
+
     userCode: {
       type: String,
       default: function _default() {
@@ -173,10 +179,12 @@ var _default2 =
     return {
       modalBar: [{
         name: '礼物',
-        active: true },
+        active: true,
+        type: 2 },
       {
         name: '我的道具',
-        active: false }],
+        active: false,
+        type: 4 }],
 
       checked: true,
       usename: 'use',
@@ -186,12 +194,16 @@ var _default2 =
   methods: {
     hideModal: function hideModal() {
       this.$emit('hideModal');
+      this.modalBar[0].active = true;
+      this.modalBar[1].active = false;
     },
     clickTap: function clickTap(ind) {
       var modalBar = this.modalBar;
+      var self = this;
       modalBar.filter(function (v, i) {
         if (i == ind) {
           v.active = true;
+          self.$emit('getRewardList', v.type);
         } else {
           v.active = false;
         }
@@ -222,8 +234,10 @@ var _default2 =
       this.$acFrame.HttpService.virtualBuy(params).then(function (res) {
         if (res.success) {
           self.hideModal();
+          var orderVO = res.data;
+          getApp().globalData.orderType = 'reward';
           uni.navigateTo({
-            url: '/pages/myshop/payWay?order=' + JSON.stringify(res.data) });
+            url: '/pages/myshop/payWay?order=' + JSON.stringify(orderVO) });
 
         }
       });

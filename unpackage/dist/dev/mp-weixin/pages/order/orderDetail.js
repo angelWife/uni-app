@@ -447,12 +447,22 @@ __webpack_require__.r(__webpack_exports__);
     },
     shouhuo: function shouhuo() {
       var self = this;
-      self.$acFrame.HttpService.post("order/info/confirm", { id: this.id }).then(function (res) {
-        console.log(res);
-        if (res.success) {
-          self.getDetail();
-        }
-      });
+      wx.showModal({
+        content: '确定收获吗？',
+        success: function success(res) {
+          if (res.confirm) {
+            self.$acFrame.HttpService.post("order/info/confirm", { id: self.id }).then(function (res) {
+              console.log(res);
+              if (res.success) {
+                self.getDetail();
+              }
+            });
+          } else if (res.cancel) {
+            console.log('用户点击取消');
+          }
+        } });
+
+
     },
     pingjia: function pingjia() {
       uni.navigateTo({

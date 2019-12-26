@@ -174,7 +174,7 @@
 			getPGList() {
 				let self = this
 				let params = {
-					filterWait: false,
+					filterWait: true,
 					pageSize: self.pageSize,
 					pageIndex: self.pageIndex,
 				}

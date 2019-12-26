@@ -6,7 +6,7 @@
 			</view>
 		</view>
 		<view class="orderList">
-			<view v-for="(item, index) in dataList" :key="index" class="item" @tap.stop="goDetail(item)">
+			<view v-for="(item, index) in dataList" :key="index" class="item" @tap.stop="goOrderDetail(item)">
 				<view class="item_head flex item-center">
 					<view class="pic">
 						<image :src="setImg(item.shopInfo.imgPath?item.shopInfo.imgPath:'')" mode="widthFix" />
@@ -188,6 +188,12 @@
 				let title = ''
 				uni.navigateTo({
 					url:"procesDetail?id="+item.id+'&title='+title
+				})
+			},
+			goOrderDetail(item){
+				let title = ''
+				uni.navigateTo({
+					url:"orderDetail?id="+item.orderId+'&title='+title
 				})
 			},
 			tabClick(ind) {

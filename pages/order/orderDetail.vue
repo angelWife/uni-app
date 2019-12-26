@@ -152,8 +152,8 @@
 				<button type="null" @tap="tocancel()" class="radiuBtn" >取消订单</button>
 			</block>
 			<block v-if="details.status==2">
-				<!-- <button type="null" v-if="detail.flagStatusRefund !=1" class="radiuBtn" @tap="refoundMoney(details)">申请退款</button> -->
-				<!-- <button type="null" @tap="tocancel()" class="radiuBtn" >取消订单</button> -->
+				<button type="null" v-if="detail.flagStatusRefund !=1" class="radiuBtn" @tap="refoundMoney(details)">申请退款</button>
+				<button type="null" @tap="tocancel()" class="radiuBtn" >取消订单</button>
 				</block>
 			<block v-if="details.status==3">
 				<button type="rednull" @tap="shouhuo()" class="radiuBtn">确认收货</button>
@@ -298,12 +298,22 @@
 			},
 			shouhuo(){
 				var self = this;
-				self.$acFrame.HttpService.post("order/info/confirm",{id:this.id}).then(res => {
-					console.log(res);
-					if (res.success) {
-						self.getDetail()
-					}
+				wx.showModal({
+				  content: '确定收获吗？',
+				  success (res) {
+				    if (res.confirm) {
+				      self.$acFrame.HttpService.post("order/info/confirm",{id:self.id}).then(res => {
+				      	console.log(res);
+				      	if (res.success) {
+				      		self.getDetail()
+				      	}
+				      })
+				    } else if (res.cancel) {
+				      console.log('用户点击取消')
+				    }
+				  }
 				})
+
 			}, 
 			pingjia(){
 				uni.navigateTo({

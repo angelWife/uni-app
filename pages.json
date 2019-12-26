@@ -293,8 +293,8 @@
         ,{
             "path" : "pages/mycenter/treasury",
             "style": {
-            	"navigationBarTitleText": "宝库",
-				"enablePullDownRefresh": true
+            	"navigationBarTitleText": "宝库"
+				
             }
         }
         ,{
@@ -335,6 +335,12 @@
         ,{
             "path" : "pages/mycenter/spiritDetail",
             "style" : {}
+        }
+        ,{
+            "path" : "pages/mycenter/newsList",
+            "style" : {
+				"enablePullDownRefresh": true
+			}
         }
     ],
 	"globalStyle": {

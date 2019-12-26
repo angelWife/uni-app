@@ -35,6 +35,9 @@ class Service extends HttpService {
 			accountNums:'app/user_account/load_by_type',//根据账户类型获得账户明细
 			getXPTypes:'dict/app/userAccountDetailBizTypeTicketList',//获取星票明细
 			accountInfo:'app/user_account_detail/table_data',//账户流水
+			newsType:'app/user_message/wait_read_total',//消息分类
+			newsList:'app/user_message/table_data',//消息列表
+			readNews:'app/user_message/modify_read',//阅读消息
 			
 			//文章帖子
 			raleaseArtical: 'article/info/publish', // 发文章
@@ -538,6 +541,21 @@ class Service extends HttpService {
 	}
 	rewardRecod(params) {
 		return this.postRequest(this.$$path.rewardRecod, {
+			data: params
+		})
+	}
+	newsType(params) {
+		return this.postRequest(this.$$path.newsType, {
+			data: params
+		})
+	}
+	newsList(params) {
+		return this.postRequest(this.$$path.newsList, {
+			data: params
+		})
+	}
+	readNews(params) {
+		return this.postRequest(this.$$path.readNews, {
 			data: params
 		})
 	}

@@ -158,6 +158,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+
 {
   components: {
     uniCountDown: uniCountDown },
@@ -225,6 +227,11 @@ __webpack_require__.r(__webpack_exports__);
     goshop: function goshop() {
       uni.switchTab({
         url: '/pages/myshop/index' });
+
+    },
+    baoku: function baoku() {//
+      uni.reLaunch({
+        url: "/pages/mycenter/treasury" });
 
     } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))

@@ -25,7 +25,7 @@
 					<view class="text">
 						<checkbox-group>
 							<label>
-								<checkbox :value="usename" :checked="checked" color="#fff" @tap="checkChange" /><text>优先使用星票，余额800 </text>
+								<checkbox :value="usename" :checked="checked" color="#b40000" @tap="checkChange" /><text>优先使用星票，余额{{accountVO.balance}} </text>
 							</label>
 						</checkbox-group>
 
@@ -49,6 +49,12 @@
 					return [];
 				}
 			},
+			accountVO:{
+				type: Object,
+				default () {
+					return {};
+				}
+			},
 			userCode: {
 				type: String,
 				default () {
@@ -66,25 +72,31 @@
 			return {
 				modalBar: [{
 					name: '礼物',
-					active: true
+					active: true,
+					type:2
 				}, {
 					name: '我的道具',
-					active: false
+					active: false,
+					type:4
 				}],
 				checked: true,
 				usename: 'use',
-				listVO:{}
+				listVO:{},
 			};
 		},
 		methods: {
 			hideModal() {
 				this.$emit('hideModal')
+				this.modalBar[0].active=true
+				this.modalBar[1].active=false
 			},
 			clickTap(ind) {
 				let modalBar = this.modalBar
+				let self = this
 				modalBar.filter((v, i) => {
 					if (i == ind) {
 						v.active = true
+						self.$emit('getRewardList',v.type);
 					} else {
 						v.active = false
 					}
@@ -115,15 +127,17 @@
                 	this.$acFrame.HttpService.virtualBuy(params).then(res => {
                 		if (res.success) {
 							self.hideModal()
+							let orderVO=res.data
+							getApp().globalData.orderType = 'reward'
 							uni.navigateTo({
-								url:'/pages/myshop/payWay?order='+JSON.stringify(res.data)
+								url:'/pages/myshop/payWay?order='+JSON.stringify(orderVO)
 							})
                 		}
                 	})
 			},
 			rewardUser(id, useType) {
 				this.$emit('rewardUser', id, useType)
-			}
+			},
 		}
 	}
 </script>
@@ -199,7 +213,7 @@
 		.modalfoot {
 			height: 80rpx;
 			padding: 0 20rpx 20rpx;
-
+			margin-top:20rpx;
 			.text {
 				margin-right: 30rpx;
 			}

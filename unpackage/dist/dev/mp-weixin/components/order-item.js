@@ -420,11 +420,21 @@ __webpack_require__.r(__webpack_exports__);
     },
     shouhuo: function shouhuo(item) {
       var self = this;
-      self.$acFrame.HttpService.post("order/info/confirm", { id: item.id }).then(function (res) {
-        if (res.success) {
-          self.$parent.getList();
-        }
-      });
+      wx.showModal({
+        content: '确定收获吗？',
+        success: function success(res) {
+          if (res.confirm) {
+            self.$acFrame.HttpService.post("order/info/confirm", { id: item.id }).then(function (res) {
+              if (res.success) {
+                self.$parent.getList();
+              }
+            });
+          } else if (res.cancel) {
+            console.log('用户点击取消');
+          }
+        } });
+
+
     },
     pingjia: function pingjia(item) {
       uni.navigateTo({

@@ -298,7 +298,7 @@ __webpack_require__.r(__webpack_exports__);
     getPGList: function getPGList() {
       var self = this;
       var params = {
-        filterWait: false,
+        filterWait: true,
         pageSize: self.pageSize,
         pageIndex: self.pageIndex };
 

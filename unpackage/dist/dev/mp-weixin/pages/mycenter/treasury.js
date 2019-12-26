@@ -337,8 +337,8 @@ var _default =
         id: item.virtualVo.id };
 
       this.$acFrame.HttpService.myReceiveBack(params).then(function (res) {
-        if (success) {
-          self.$acFrame.Util.mytotal('回收成功！');
+        if (res.success) {
+          self.$acFrame.Util.mytotal('回收数量为' + res.data.numTotal + '件，总回收星票' + res.data.priceBackTotal);
           setTimeout(function () {
             this.setparams();
             this.getReceiveList();

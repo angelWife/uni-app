@@ -55,7 +55,7 @@
 						<view class="main">
 							<view class="title fs16">{{item.virtualVo.name}}</view>
 							<view class="text c999">
-								{{item.virtualVo.briefInfo }}
+								{{item.virtualVo.briefInfo?item.virtualVo.briefInfo:''}}
 							</view>
 						</view>
 					</view>
@@ -197,8 +197,8 @@
 					id:item.virtualVo.id
 				}
 				this.$acFrame.HttpService.myReceiveBack(params).then(res => {
-					if (success) {
-						self.$acFrame.Util.mytotal('回收成功！')
+					if (res.success) {
+						self.$acFrame.Util.mytotal('回收数量为'+res.data.numTotal +'件，总回收星票'+res.data.priceBackTotal)
 						setTimeout(function() {
 							this.setparams()
 							this.getReceiveList()
@@ -381,6 +381,7 @@
 			.pic {
 				width: 100rpx;
 				height: 100rpx;
+				line-height: 100rpx;
 				overflow: hidden;
 				border-radius: 100rpx;
 				margin: 0 40rpx;

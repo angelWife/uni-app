@@ -59,7 +59,7 @@
 										</view>
 									</view>
 									<view class="fs10 c999">
-										已兑{{item.totalNums}}
+										已兑{{item.numTotalSale}}件
 									</view>
 								</view>
 							</view>

@@ -51,7 +51,7 @@
 				<view class="name c999">
 					订单编号
 				</view>
-				<view class="flex-1">{{details.ordrCode?details.ordrCode:'--'}}</view>
+				<view class="flex-1">{{details.orderInfo.code?details.orderInfo.code:'--'}}</view>
 			</view>
 			<view class="item flex">
 				<view class="name c999">

@@ -59,6 +59,7 @@
 .rewardModal .modalfoot {
   height: 80rpx;
   padding: 0 20rpx 20rpx;
+  margin-top: 20rpx;
 }
 .rewardModal .modalfoot .text {
   margin-right: 30rpx;

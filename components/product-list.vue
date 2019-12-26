@@ -9,7 +9,8 @@
 			</view>
 			<view class="msg flex-1" @tap="choosePord(item)">
 				<view class="name clamp clamp-2">{{ item.goodsName }}</view>
-				<view class="nums c999">已售{{ item.numTotalSale }}件</view>
+				<view class="nums c999" v-if="item.isSellOut">已售罄</view>
+				<view class="nums c999" v-else>已售{{ item.numTotalSale }}件</view>
 				<view class="price red">
 					<text>¥</text>
 					<text class="fs18">{{ item.priceSale }}</text>

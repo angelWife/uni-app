@@ -213,7 +213,7 @@ var _default =
       var self = this;
       self.articleMsg = self.articleMsg.replace("<p><br></p><p><br></p><p><br></p>", "");
       console.log(self.articleMsg);
-      self.articleMsg = self.articleMsg + "<p><img style=\"max-width:100%;height:auto;\" src='".concat(url, "' /></p><p><br></p><p><br></p><p><br></p>");
+      self.articleMsg = self.articleMsg + "<p><img mode=\"widthFix\"  style=\"max-width:100%;height:auto;\" src='".concat(url, "' /></p><p><br></p><p><br></p><p><br></p>");
       this.ctx.setContents({
         html: self.articleMsg,
         success: function success(ret) {

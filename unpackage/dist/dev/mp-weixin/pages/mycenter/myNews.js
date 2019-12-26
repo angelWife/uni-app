@@ -122,7 +122,27 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0; //
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0; //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -152,11 +172,27 @@ var _default =
       itemstyle: "left:0;",
       dataList: [{ style: "left:0;" }],
       t_x: 0,
-      t_y: 0 };
+      t_y: 0,
+      newsTypes: [] };
 
   },
+  onShow: function onShow() {
+    this.getNewsType();
+  },
   methods: {
-    readyNews: function readyNews(ind) {},
+    getNewsType: function getNewsType() {
+      var self = this;
+      this.$acFrame.HttpService.newsType().then(function (res) {
+        if (res.success) {
+          self.newsTypes = res.data;
+        }
+      });
+    },
+    newsList: function newsList(type) {
+      uni.navigateTo({
+        url: 'newsList?type=' + type });
+
+    },
     touchstart: function touchstart(e) {
       this.t_x = e.touches[0].pageX;
       this.t_y = e.touches[0].pageY; // 获取触摸时的原点
@@ -189,6 +225,7 @@ var _default =
       this.t_y = 0;
       this.t_x = 0;
     } } };exports.default = _default;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 
 /***/ }),
 

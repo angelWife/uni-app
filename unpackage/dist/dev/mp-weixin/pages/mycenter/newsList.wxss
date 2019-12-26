@@ -1,0 +1,19 @@
+.content {
+  min-height: 100vh;
+}
+.item {
+  margin: 0 30rpx;
+  border-bottom: 1px solid #ccc;
+  padding: 20rpx 0;
+}
+.item .pic {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 100rpx;
+  overflow: hidden;
+  margin-right: 20rpx;
+}
+.item .msg {
+  padding: 10rpx 0;
+}
+

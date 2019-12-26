@@ -424,6 +424,7 @@ __webpack_require__.r(__webpack_exports__);
       showFoot: false,
       isComent: false, //是否滚动到底部
       showReward: false,
+      accountVO: {},
       rewardRecodList: '' //打赏列表
     };
   },
@@ -448,6 +449,7 @@ __webpack_require__.r(__webpack_exports__);
       this.listData = [];
       this.getCommentList();
       this.rewardRecod();
+      this.getAccount();
       this.$acFrame.HttpService.readPost({
         id: this.dataInfo.articleInfo.id }).
       then(function (res) {
@@ -606,6 +608,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     hideModal: function hideModal() {
       this.showReward = false;
+      this.rewardList = [];
     },
     report: function report(id) {
       uni.navigateTo({
@@ -729,13 +732,13 @@ __webpack_require__.r(__webpack_exports__);
         url: url });
 
     },
-    getRewardList: function getRewardList() {// virtualList
+    getRewardList: function getRewardList() {var sceneType = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 2; // virtualList
       var self = this;
       var params = {
         pageIndex: 1,
         pageSize: 100,
         useType: '',
-        sceneType: 2 };
+        sceneType: sceneType };
 
       this.$acFrame.HttpService.virtualDashang(params).then(function (res) {
         if (res.success) {
@@ -786,6 +789,17 @@ __webpack_require__.r(__webpack_exports__);
     },
     loadRewardAnimate: function loadRewardAnimate(list) {
 
+    },
+    getAccount: function getAccount() {
+      var self = this;
+      var params = {
+        type: 2 };
+
+      this.$acFrame.HttpService.accountNums(params).then(function (res) {
+        if (res.success) {
+          self.accountVO = res.data;
+        }
+      });
     } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 

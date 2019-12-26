@@ -15,7 +15,8 @@
 				<text class="fs12">¥</text>
 				<text class="fs18">{{prodDetail.priceSale}}</text>
 				<text class="yunfei"  v-if="freight>0" >运费：{{freight}}元</text>
-				<text class="float-right c999 fs12">销量{{prodDetail.numTotalSale}}件</text>
+				<text class="float-right c999 fs12" v-if="prodDetail.isSellOut">已售罄</text>
+				<text class="float-right c999 fs12" v-else>销量{{prodDetail.numTotalSale}}件</text>
 			</view>
 			<button open-type="share" class="iconfont icon-share">分享</button>
 		</view>
@@ -115,7 +116,7 @@
 		<view class="modal prod5">
 			<view class="title">
 				商品评价（{{commontList.length}}条）
-				<text class="red float-right" v-if="commontList.length>2" @tap="showAllComment()">查看全部</text>
+				<text class="red float-right" @tap="showAllComment()">查看全部</text>
 			</view>
 			<view class="list">
 				<view v-for="(item,ind) in commontList" :key="ind" class="item">
@@ -134,7 +135,7 @@
 						</view>
 					</view>
 					<view class="text clamp clamp-2">
-						{{item.content}}
+						{{item.content?item.content:''}}
 					</view>
 					<view class="imgList clearfix">
 						<view class="imgItem" v-for="(imgItem,imgInd) in item.imgPathList" :key="imgInd">

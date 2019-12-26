@@ -90,7 +90,11 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  var m0 = _vm.setImg(_vm.details.imgPath)
+  var m0 = _vm.setImg(
+    _vm.details.spirit.imgHeadPath
+      ? _vm.details.spirit.imgHeadPath
+      : _vm.details.imgPath
+  )
 
   var l0 = _vm.__map(_vm.details.imgList, function(item, ind) {
     var m1 = _vm.setImg(item)
@@ -245,6 +249,7 @@ var _default =
 
       this.$acFrame.HttpService.virtualBuy(params).then(function (res) {
         if (res.success) {
+          getApp().globalData.orderType = 'xuni';
           uni.navigateTo({
             url: '/pages/myshop/payWay?order=' + JSON.stringify(res.data) });
 

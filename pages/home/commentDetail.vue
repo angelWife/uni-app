@@ -253,13 +253,13 @@
 		<!-- <view class="noData" v-if="showFoot">
 			~没有更多~
 		</view> -->
-		<RewardList :showReward="showReward" :userCode="dataInfo.publishUser.userCode" :rewardList="rewardList" @chooseReward="chooseReward"
-		 @hideModal="hideModal"></RewardList>
-		 <view class="rewardListBox">
+		<RewardList :showReward="showReward" :accountVO="accountVO" :userCode="dataInfo.publishUser.userCode" :rewardList="rewardList" @chooseReward="chooseReward"
+		 @hideModal="hideModal" @getRewardList="getRewardList"></RewardList>
+		<!-- <view class="rewardListBox">
 			 <view class="item" v-for="">
 				 
 			 </view>
-		 </view>
+		 </view> -->
 	</view>
 </template>
 
@@ -284,6 +284,7 @@
 				showFoot: false,
 				isComent: false, //是否滚动到底部
 				showReward: false,
+				accountVO:{},
 				rewardRecodList:''//打赏列表
 			};
 		},
@@ -308,6 +309,7 @@
 				this.listData = []
 				this.getCommentList()
 				this.rewardRecod()
+				this.getAccount()
 				this.$acFrame.HttpService.readPost({
 					id: this.dataInfo.articleInfo.id
 				}).then(res => {
@@ -466,6 +468,7 @@
 			},
 			hideModal() {
 				this.showReward = false
+				this.rewardList = []
 			},
 			report(id) {
 				uni.navigateTo({
@@ -589,13 +592,13 @@
 					url: url
 				})
 			},
-			getRewardList() { // virtualList
+			getRewardList(sceneType=2) { // virtualList
 				let self = this
 				let params = {
 					pageIndex: 1,
 					pageSize: 100,
 					useType: '',
-					sceneType: 2
+					sceneType: sceneType
 				}
 				this.$acFrame.HttpService.virtualDashang(params).then(res => {
 					if (res.success) {
@@ -646,6 +649,17 @@
 			},
 			loadRewardAnimate(list){
 				
+			},
+			getAccount(){
+				let self =this
+				let params = {
+					type:2
+				}
+				this.$acFrame.HttpService.accountNums(params).then(res=>{
+					if(res.success){
+						self.accountVO = res.data
+					}
+				})
 			}
 		}
 

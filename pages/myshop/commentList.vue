@@ -15,8 +15,8 @@
 					</block>
 				</view>
 			</view>
-			<view class="text clamp clamp-2">
-				{{item.content}}
+			<view class="text">
+				{{item.content?item.content:''}}
 			</view>
 			<view class="imgList clearfix">
 				<view class="imgItem" v-for="(imgItem,imgInd) in item.imgPathList" :key="imgInd">
