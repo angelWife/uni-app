@@ -1,16 +1,18 @@
 <template>
 	<view class="content">
 		<view class="item flex" v-for="(item,ind) in newsList" :key="ind">
-			<view class="pic" @tap="mycenter(item.userInfo)">
-				<image :src="setImg(item.userInfo?item.userInfo.imgPath:'')" mode="widthFix"></image>
+			<view class="pic" @tap="mycenter(item)">
+				<image :src="setImg(item.userInfo.imgHeadPath)" mode="widthFix"></image>
 			</view>
 			<view class="flex-1">
 				<view class="title">
-					<text class="name fs16" @tap="mycenter(item.userInfo)">{{item.userInfo?item.userInfo.name:'--'}}</text>
-					<text v-if="type==2" class="c999"></text>
+					<text class="name fs16 m-r-20" @tap="mycenter(item)">{{item.userInfo?item.userInfo.nickName:'--'}}</text>
+					<text v-if="item.fromType==2" class="c999">
+						{{item.newsMsg}}
+					</text>
 				</view>
 				<view class="msg" @tap="articlDetail(item)">
-					{{item.content}}
+					<text>{{item.content?item.content:''}}</text>
 				</view>
 				<view class="time fs12 c999">
 					{{item.createTime}}
@@ -59,6 +61,7 @@
 			})
 		},
 		onShow() {
+			this.setParams()
 			this.getNewsList()
 		},
 		onPullDownRefresh() {
@@ -95,7 +98,43 @@
 						if (list.length > 0) {
 							list.filter(v => {
 								v.createTime = self.$acFrame.Util.formatTime(v.createTime, 'day')
+								if (v.fromType == 2) {
+									switch (v.type) {
+										case 1:
+											v.newsMsg = '关注'
+											break;
+										case 2:
+											v.newsMsg = '取消关注'
+											break;
+										case 3:
+											v.newsMsg = '点赞'
+											break;
+										case 4:
+											v.newsMsg = '取消点赞'
+											break;
+										case 5:
+											v.newsMsg = '点赞评论'
+											break;
+										case 6:
+											v.newsMsg = '取消点赞评论'
+											break;
+										case 7:
+											v.newsMsg = '转发分享'
+											break;
+										case 8:
+											v.newsMsg = '评论'
+											break;
+										case 9:
+											v.newsMsg = '回复评论'
+											break;
+										default:
+											v.newsMsg = ''
+											break;
+									}
+								}
+
 							})
+							console.log(list)
 							self.newsList = self.newsList.concat(list)
 						} else {
 							self.nodata = true
@@ -109,12 +148,24 @@
 				}
 				return this.$acFrame.Util.setImgUrl(src);
 			},
-			mycenter(info) {
-				uni.navigateTo({
-					url: 'mycenter?userCode=' + info.userCode
+			readyNews(item) {
+				let params = {
+					fromType: item.fromType,
+					id: item.id
+				}
+				this.$acFrame.HttpService.readNews(params).then(res => {
+					if (res.success) {}
 				})
 			},
-			articlDetail(id) {
+			mycenter(item) {
+				this.readyNews(item)
+				uni.navigateTo({
+					url: 'mycenter?userCode=' + item.userInfo.userCode
+				})
+			},
+			articlDetail(item) {
+				return false;
+				this.readyNews(item)
 				uni.navigateTo({
 					url: "/pages/home/commentDetail?articalId=" + id
 				})
@@ -138,10 +189,11 @@
 			height: 100rpx;
 			border-radius: 100rpx;
 			overflow: hidden;
-			margin-right:20rpx;
+			margin-right: 20rpx;
 		}
-		.msg{
-			padding:10rpx 0;
+
+		.msg {
+			padding: 10rpx 0;
 		}
 	}
 </style>
