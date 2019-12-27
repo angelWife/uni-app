@@ -289,10 +289,10 @@ __webpack_require__.r(__webpack_exports__);
       settings.imageUrl = '';
       if (item.articleInfo.type == 1) {
         settings.title = item.articleInfo.title;
-        settings.pagePath = "/pages/home/commentDetail?data=".concat(encodeURIComponent(JSON.stringify(item)), "&pageType=").concat(this.pageType, "&userCode=").concat(uni.getStorageSync('userCode'));
+        settings.pagePath = "/pages/home/commentDetail?id=".concat(item.articleInfo.id, "&userCode=").concat(uni.getStorageSync('userCode'));
       } else {
         settings.title = title;
-        settings.pagePath = "/pages/home/commentDetail?data=".concat(encodeURIComponent(JSON.stringify(item)), "&pageType=").concat(this.pageType, "&userCode=").concat(uni.getStorageSync('userCode'));
+        settings.pagePath = "/pages/home/commentDetail?data=".concat(item.articleInfo.id, "&userCode=").concat(uni.getStorageSync('userCode'));
       }
     } else {
       settings.imageUrl = '/static/images/sharePic.png';
@@ -313,7 +313,6 @@ __webpack_require__.r(__webpack_exports__);
 {
   initData: function initData() {
     var self = this;
-    console.error(self.keywords);
     var params = {
       checkShop: self.checkShop,
       pageType: self.pageType,

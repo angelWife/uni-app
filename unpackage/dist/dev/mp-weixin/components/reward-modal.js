@@ -215,11 +215,7 @@ var _default2 =
       this.checked = !this.checked;
     },
     chooseItem: function chooseItem(index) {
-      // debugger
-      // this.dataList[index].choose=!this.dataList[index].choose
-      // if(this.dataList[index].choose){
       this.listVO = this.rewardList[index];
-      // }
       this.$parent.chooseReward(index);
       //this.$emit('chooseReward',index)
     },

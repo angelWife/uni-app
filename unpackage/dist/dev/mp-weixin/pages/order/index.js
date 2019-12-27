@@ -322,7 +322,6 @@ __webpack_require__.r(__webpack_exports__);
               self.nodata = true;
             }
           }
-          console.error(self.dataList);
           setTimeout(function () {
             self.dataList.filter(function (v) {
               v.showTimer = true;

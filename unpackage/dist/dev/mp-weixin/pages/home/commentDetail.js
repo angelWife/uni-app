@@ -425,15 +425,13 @@ __webpack_require__.r(__webpack_exports__);
       isComent: false, //是否滚动到底部
       showReward: false,
       accountVO: {},
-      rewardRecodList: '' //打赏列表
-    };
+      rewardRecodList: '',
+      id: '' };
+
   },
   onLoad: function onLoad(options) {var _this = this;
-    var detail = JSON.parse(decodeURIComponent(options.data));
+    this.id = options.id;
     this.detailtype = options.type;
-    this.pageType = options.pageType;
-    detail.articleInfo.showContent = this.setContent(detail.articleInfo);
-    this.dataInfo = detail;
     setTimeout(function () {
       if (_this.detailtype == 'showReward') {
         _this.showReward = true;
@@ -447,6 +445,7 @@ __webpack_require__.r(__webpack_exports__);
       getApp().globalData.isShowPic = false;
     } else {
       this.listData = [];
+      this.postDetail();
       this.getCommentList();
       this.rewardRecod();
       this.getAccount();
@@ -458,6 +457,12 @@ __webpack_require__.r(__webpack_exports__);
         }
       });
     }
+    var animation = uni.createAnimation({
+      duration: 2000,
+      timingFunction: 'ease' });
+
+
+    this.animation = animation;
 
   },
   onShareAppMessage: function onShareAppMessage(res) {
@@ -471,11 +476,11 @@ __webpack_require__.r(__webpack_exports__);
       if (self.dataInfo.articleInfo.type == 1) {
         settings.title = self.dataInfo.articleInfo.title;
         settings.pagePath = "/pages/home/commentDetail?data=".concat(
-        encodeURIComponent(JSON.stringify(self.dataInfo)), "&pageType=").concat(this.pageType, "&userCode=").concat(uni.getStorageSync('userCode'));
+        self.dataInfo.articleInfo.id, "&userCode=").concat(uni.getStorageSync('userCode'));
       } else {
         settings.title = title;
         settings.pagePath = "/pages/home/commentDetail?data=".concat(
-        encodeURIComponent(JSON.stringify(self.dataInfo)), "&pageType=").concat(this.pageType, "&userCode=").concat(uni.getStorageSync('userCode'));
+        self.dataInfo.articleInfo.id, "&userCode=").concat(uni.getStorageSync('userCode'));
       }
     } else {
       settings.imageUrl = '/static/images/sharePic.png';
@@ -497,12 +502,27 @@ __webpack_require__.r(__webpack_exports__);
     shareStat: function shareStat(id) {
       var self = this;
       var params = {
-        articleId: self.dataInfo };
+        articleId: id };
 
 
       self.$acFrame.HttpService.sharePost(params).then(function (res) {
         if (res.success) {
           self.dataInfo.articleInfo.numTotalShare++;
+        }
+      });
+    },
+    postDetail: function postDetail() {var _this2 = this;
+      var self = this;
+      var params = {
+        id: this.id };
+
+      self.$acFrame.HttpService.postDetail(params).then(function (res) {
+        if (res.success) {
+          var _obj = res.data;
+          if (_obj.type == 1) {
+            _obj.articleInfo.showContent = _this2.setContent(_obj.articleInfo);
+          }
+          self.dataInfo = _obj;
         }
       });
     },
@@ -767,10 +787,15 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     chooseReward: function chooseReward(ind) {
-      var list = this.rewardList;
-      list[ind].choose = !list[ind].choose;
-      this.rewardList = list;
-      console.log(this.rewardList[ind].choose);
+      // let list = this.rewardList
+      this.rewardList.filter(function (v, i) {
+        if (i == ind) {
+          v.choose = true;
+        } else {
+          v.choose = false;
+        }
+      });
+      // this.rewardList = list
     },
     rewardRecod: function rewardRecod() {
       var self = this;

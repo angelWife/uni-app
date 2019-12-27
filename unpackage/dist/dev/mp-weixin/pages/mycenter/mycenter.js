@@ -349,7 +349,6 @@ __webpack_require__.r(__webpack_exports__);
     },
     initData: function initData() {
       var self = this;
-      console.error(self.keywords);
       var params = {
         checkShop: 1,
         pageIndex: self.pageIndex,
