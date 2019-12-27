@@ -92,7 +92,7 @@
   margin-right: 20rpx;
 }
 .content .orderMsg {
-  padding: 20rpx 30rpx;
+  padding: 20rpx 0;
 }
 .content .orderMsg .item_c {
   line-height: 50rpx;

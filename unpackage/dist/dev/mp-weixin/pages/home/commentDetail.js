@@ -90,16 +90,11 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  var m0 = _vm.setImg(
-    _vm.dataInfo.publishUser.imgPathHead,
-    _vm.dataInfo.publishUser.genderType
-  )
-
   var l0 = _vm.__map(_vm.listData, function(item, ind) {
-    var m1 = _vm.setImg(item.headPic, item.genderType)
+    var m0 = _vm.setImg(item.headPic, item.genderType)
     return {
       $orig: _vm.__get_orig(item),
-      m1: m1
+      m0: m0
     }
   })
 
@@ -107,7 +102,6 @@ var render = function() {
     {},
     {
       $root: {
-        m0: m0,
         l0: l0
       }
     }
@@ -531,6 +525,11 @@ __webpack_require__.r(__webpack_exports__);
           if (_obj.type == 1) {
             _obj.articleInfo.showContent = _this2.setContent(_obj.articleInfo);
           }
+          _obj.articleInfo.imgList.filter(function (v, i) {
+            _obj.articleInfo.imgList[i] = self.setImg(v);
+          });
+          _obj.publishUser.imgPathHead = self.setImg(_obj.publishUser.imgPathHead, _obj.publishUser.genderType);
+
           self.dataInfo = _obj;
           self.getCommentList();
           self.rewardRecod();
@@ -590,7 +589,6 @@ __webpack_require__.r(__webpack_exports__);
           texts.push("");
         }
       }
-
       texts.forEach(function (item) {
         var obj = {};
         if (item != '') {
@@ -764,13 +762,13 @@ __webpack_require__.r(__webpack_exports__);
         url: url });
 
     },
-    getRewardList: function getRewardList() {var sceneType = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 2; // virtualList
+    getRewardList: function getRewardList() {var useType = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 5; // virtualList
       var self = this;
       var params = {
         pageIndex: 1,
         pageSize: 100,
-        useType: '',
-        sceneType: sceneType };
+        useType: useType,
+        sceneType: 2 };
 
       this.$acFrame.HttpService.virtualDashang(params).then(function (res) {
         if (res.success) {
@@ -837,6 +835,11 @@ __webpack_require__.r(__webpack_exports__);
           self.accountVO = res.data;
         }
       });
+    },
+    showBigImg: function showBigImg(imgInd) {
+      var imgList = this.dataInfo.articleInfo.imgList;
+      this.$acFrame.Util.showBigPic(imgList[imgInd], imgList);
+      getApp().globalData.isShowPic = true;
     } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 

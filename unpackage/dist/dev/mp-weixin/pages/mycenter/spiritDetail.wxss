@@ -12,6 +12,9 @@
   float: left;
   width: 50%;
 }
+.msgBox {
+  padding: 20rpx 30rpx;
+}
 .swiperBox {
   margin: 24rpx 30rpx;
   height: calc(100vw - 48rpx);

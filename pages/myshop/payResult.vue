@@ -26,7 +26,7 @@
 			<view v-if="resdata.orderId||resdata.spellId" class="btn1" @tap="goshop">随便逛逛</view>
 			<view v-else class="btn1">重新支付</view>
 			<button v-if="type=='spell'" type="null" open-type="share">推荐给好友</button>
-			<view class="linkBox" v-if="type=='reward'">谢大人打赏！</view>
+			<view class="linkBox fs16" v-if="type=='reward'">谢大人打赏！</view>
 			<view class="linkBox" @tap="baoku" v-else-if="type=='xuni'">去宝库看看!</view>
 			<view class="linkBox" v-else @tap="linkTo(resdata)" >查看订单详情</view>
 			<official-account></official-account>
@@ -107,7 +107,7 @@
 			},
 			baoku(){ //
 				uni.reLaunch({
-					url:`/pages/mycenter/treasury`
+					url:`/pages/mycenter/myWallet`
 				})
 			}
 		}

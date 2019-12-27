@@ -131,7 +131,7 @@
 		</view>
 		<view class="footBtn">
 			<button type="rednull" class="radiuBtn" v-if="details.status==1" size="mini" @tap="topay(details.spellIdUser)">确认付款</button>
-			<button type="null" class="radiuBtn" size="mini" @tap="cancelOrder">取消订单</button>
+			<button type="null" class="radiuBtn" size="mini" @tap="cancelSpell">取消售后</button>
 		</view>
 	</view>
 </template>
@@ -231,7 +231,7 @@
 					}
 				})
 			},
-			cancelOrder() {
+			cancelSpell() {
 				let self = this
 				let params = {
 					spellIdUser:self.details.spellIdUser,

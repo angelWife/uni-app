@@ -229,6 +229,11 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+
+
+
+
 {
   components: {
     uniCountDown: uniCountDown },
@@ -392,6 +397,23 @@ __webpack_require__.r(__webpack_exports__);
             } else {
               self.$parent.getList();
             }
+          }, 1000);
+
+        }
+      });
+    },
+    //取消售后
+    cancelSpell: function cancelSpell() {
+      var self = this;
+      var params = {
+        id: self.details.id };
+
+
+      self.$acFrame.HttpService.cancelOrderRefund(params).then(function (res) {
+        if (res.success) {
+          self.$acFrame.Util.mytotal('取消成功');
+          setTimeout(function () {
+            self.$parent.getList();
           }, 1000);
 
         }

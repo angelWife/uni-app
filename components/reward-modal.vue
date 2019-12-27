@@ -73,11 +73,11 @@
 				modalBar: [{
 					name: '礼物',
 					active: true,
-					type:2
+					type:5
 				}, {
 					name: '我的道具',
 					active: false,
-					type:4
+					type:6
 				}],
 				checked: true,
 				usename: 'use',
@@ -166,7 +166,7 @@
 		.giftList {
 			padding: 10rpx;
 			overflow: hidden;
-
+			min-height:180rpx;
 			.item {
 				padding: 10rpx;
 				width: 25%;

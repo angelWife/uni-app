@@ -191,6 +191,7 @@
 		}
 
 		.head-msg {
+			width: 60%;
 			padding: 20rpx;
 			border-bottom: 1px solid #ccc;
 
@@ -201,6 +202,7 @@
 
 			.text {
 				padding: 10rpx 0;
+				text-align: justify;
 			}
 
 			.name {

@@ -48,9 +48,9 @@
 			</view>
 			<view v-else class="goods">
 				<view v-for="(item, ind) in goodsList" :key="ind" class="item" @touchstart="touchstart" @touchend="touchend($event, ind)">
-					<view class="newBox flex item-center" :style="item.style" @tap="readyNews(ind)">
+					<view class="newBox flex item-center" :style="item.style" @tap="treasuryDetail(item)">
 						<view class="pic">
-							<image :src="setImg(item.virtualVo.imgPath)" mode="widthFix" />
+							<image :src="setImg(item.virtualVo.imgPath)" mode="aspectFit" />
 						</view>
 						<view class="main">
 							<view class="title fs16">{{item.virtualVo.name}}</view>
@@ -59,7 +59,7 @@
 							</view>
 						</view>
 					</view>
-					<view class="btn delete float-right">使用</view>
+					<!-- <view class="btn delete float-right">使用</view> -->
 					<view class="btn look float-right" @tap="backGoods(item)">回收</view>
 				</view>
 			</view>
@@ -170,6 +170,11 @@
 					}
 				})
 			},
+			treasuryDetail(item){
+				uni.navigateTo({ //
+					url:`spiritDetail?id=${item.virtualVo.id}&useType=${item.virtualVo.useType}`
+				})
+			},
 			getReceiveList() {
 				let self = this
 				let params = {
@@ -196,15 +201,25 @@
 				let params = {
 					id:item.virtualVo.id
 				}
-				this.$acFrame.HttpService.myReceiveBack(params).then(res => {
-					if (res.success) {
-						self.$acFrame.Util.mytotal('回收数量为'+res.data.numTotal +'件，总回收星票'+res.data.priceBackTotal)
-						setTimeout(function() {
-							this.setparams()
-							this.getReceiveList()
-						}, 1000);
+				uni.showModal({
+					title:'提示',
+					content:'回收此道具,可兑换'+item.virtualVo.priceBack+'星票',
+					cancelColor:"#999",
+					confirmColor:'#4c8ff7',
+					success:(res)=>{
+						if(res.confirm){
+							self.$acFrame.HttpService.myReceiveBack(params).then(res => {
+								if (res.success) {
+									self.$acFrame.Util.mytotal('回收成功！')
+									self.setparams()
+									self.getReceiveList()
+								}
+							})
+							
+						}
 					}
 				})
+				
 			},
 			touchstart: function(e) {
 				this.t_x = e.touches[0].pageX;
@@ -225,7 +240,7 @@
 					if (tmX < 0) {
 						goodsList.filter((v, i) => {
 							if (i == ind) {
-								v.style = "left:-280rpx";
+								v.style = "left:-140rpx";
 							} else {
 								v.style = "left:0";
 							}
@@ -383,8 +398,11 @@
 				height: 100rpx;
 				line-height: 100rpx;
 				overflow: hidden;
-				border-radius: 100rpx;
+				border-radius: 10rpx;
 				margin: 0 40rpx;
+				image{
+					height:100%;
+				}
 			}
 
 			.main {

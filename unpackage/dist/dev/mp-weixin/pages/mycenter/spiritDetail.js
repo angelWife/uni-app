@@ -90,29 +90,6 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  var m0 = _vm.setImg(
-    _vm.details.spirit.imgHeadPath
-      ? _vm.details.spirit.imgHeadPath
-      : _vm.details.imgPath
-  )
-
-  var l0 = _vm.__map(_vm.details.imgList, function(item, ind) {
-    var m1 = _vm.setImg(item)
-    return {
-      $orig: _vm.__get_orig(item),
-      m1: m1
-    }
-  })
-
-  _vm.$mp.data = Object.assign(
-    {},
-    {
-      $root: {
-        m0: m0,
-        l0: l0
-      }
-    }
-  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -202,6 +179,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 var _default =
 {
   data: function data() {
@@ -229,9 +214,24 @@ var _default =
 
       this.$acFrame.HttpService.receiveDetail(params).then(function (res) {
         if (res.success) {
-          self.details = res.data;
+          var obj = res.data;
+          obj.showPivPath = obj.spirit && obj.spirit.imgHeadPath ? obj.spirit.imgHeadPath : obj.imgPath;
+          obj.showPivPath = self.setImg(obj.showPivPath);
+          obj.imgList.filter(function (v, i) {
+            obj.imgList[i] = self.setImg(v);
+          });
+          if (obj.numTotalSale) {
+            if (obj.numTotalSale > 9999) {
+              obj.numTotalSale = Math.round(obj.numTotalSale / 100) / 100 + '万件';
+            } else {
+              obj.numTotalSale = obj.numTotalSale + '件';
+            }
+          } else {
+            obj.numTotalSale = '0件';
+          }
+          self.details = obj;
           uni.setNavigationBarTitle({
-            title: res.data.name });
+            title: obj.name });
 
         }
       });

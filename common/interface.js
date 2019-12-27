@@ -38,6 +38,7 @@ class Service extends HttpService {
 			newsType:'app/user_message/wait_read_total',//消息分类
 			newsList:'app/user_message/table_data',//消息列表
 			readNews:'app/user_message/modify_read',//阅读消息
+			setDefault:'app/user_info/modify_virtual_spirit',//设默认精灵
 			
 			//文章帖子
 			raleaseArtical: 'article/info/publish', // 发文章
@@ -100,6 +101,7 @@ class Service extends HttpService {
 			subEvaluate:'order/info_detail_comment/publish',//确认评论
 			orderPay:'order/info/wait_pay',//支付订单
 			spellPay:'order/spell/wait_pay',//拼单支付
+			cancelOrderRefund:'order/info_refund/cancle_by_orderid',//取消订单的售后
 			//排行
 			articleRank: 'top/ranking/article', // 帖子排行
 			prodRank: 'top/ranking/goods', //商品排行
@@ -562,6 +564,16 @@ class Service extends HttpService {
 	}
 	readNews(params) {
 		return this.postRequest(this.$$path.readNews, {
+			data: params
+		})
+	}
+	cancelOrderRefund(params) {
+		return this.postRequest(this.$$path.cancelOrderRefund, {
+			data: params
+		})
+	}
+	setDefault(params) {
+		return this.postRequest(this.$$path.setDefault, {
 			data: params
 		})
 	}

@@ -4,7 +4,7 @@
 			<block v-if="dataInfo.type == 1">
 				<view class="item-head flex item-center">
 					<view class="img item-center comHeadPic" @tap="userInfo(dataInfo.publishUser.userCode)">
-						<image class="headPic" :src="setImg(dataInfo.publishUser.imgPathHead,dataInfo.publishUser.genderType)" mode="aspectFit"></image>
+						<image class="headPic" :src="dataInfo.publishUser.imgPathHead" mode="aspectFit"></image>
 						<image class="grade" v-if="dataInfo.publishUser.nobilityType>1" :src="'/static/images/juewei/'+(dataInfo.publishUser.nobilityType-1)+'.png'"
 						 mode="widthFix"></image>
 					</view>
@@ -59,7 +59,7 @@
 						</view>
 					</view>
 					<view class="imgList clearfix">
-						<view v-for="(imgItem, imgInd) in dataInfo.articleInfo.imgList" :key="imgInd" @tap="showBigImg(index, imgInd)"
+						<view v-for="(imgItem, imgInd) in dataInfo.articleInfo.imgList" :key="imgInd" @tap="showBigImg(imgInd)"
 						 class="imgItem flex-1">
 							<image :src="imgItem" mode="widthFix"></image>
 						</view>
@@ -196,12 +196,12 @@
 							<image class="headPic" :src="item.publishUser.imgPathHead"></image>
 							<image class="grade" :src="'/static/images/juewei/'+item.publishUser.nobilityType+'.png'" mode="widthFix"></image>
 						</view> -->
-						<view class="flex-1">
+						<view class="commentMain flex-1">
 							<view class="name" @tap="userInfo(item.userCode)">
 								<text class="blod">{{item.userName}}</text>
 								<!-- <text class="follow">{{item.militaryRankType}}</text> -->
 							</view>
-							<view class="msg">{{item.content}}</view>
+							<view class="msg clamp clamp-2">{{item.content}}</view>
 							<view class="oper flex item-center">
 								<view class="timer c999 fs12 flex-1">{{item.timeInfo}}</view>
 								<view class="operIocn clearfix c999" @tap="commentDetail(item)">
@@ -255,11 +255,11 @@
 		</view> -->
 		<RewardList :showReward="showReward" :accountVO="accountVO" :userCode="dataInfo.publishUser.userCode" :rewardList="rewardList" @chooseReward="chooseReward"
 		 @hideModal="hideModal" @getRewardList="getRewardList"></RewardList>
-		<view class="rewardListBox">
+	<!-- 	<view class="rewardListBox">
 			 <view class="item" v-for="(item,ind) in rewardRecodList" :key="ind">
 				 {{item}}
 			 </view>
-		 </view>
+		 </view> -->
 	</view>
 </template>
 
@@ -385,6 +385,11 @@
 						if(_obj.type==1){
 							_obj.articleInfo.showContent = this.setContent(_obj.articleInfo);
 						}
+						_obj.articleInfo.imgList.filter((v,i)=>{
+							_obj.articleInfo.imgList[i]=self.setImg(v)
+						})
+						_obj.publishUser.imgPathHead = self.setImg(_obj.publishUser.imgPathHead,_obj.publishUser.genderType)
+						
 						self.dataInfo = _obj
 						self.getCommentList()
 						self.rewardRecod()
@@ -444,7 +449,6 @@
 						texts.push("");
 					}
 				}
-
 				texts.forEach(function(item) {
 					var obj = {};
 					if (item != '') {
@@ -618,13 +622,13 @@
 					url: url
 				})
 			},
-			getRewardList(sceneType=2) { // virtualList
+			getRewardList(useType=5) { // virtualList
 				let self = this
 				let params = {
 					pageIndex: 1,
 					pageSize: 100,
-					useType: '',
-					sceneType: sceneType
+					useType: useType,
+					sceneType: 2
 				}
 				this.$acFrame.HttpService.virtualDashang(params).then(res => {
 					if (res.success) {
@@ -691,7 +695,12 @@
 						self.accountVO = res.data
 					}
 				})
-			}
+			},
+			showBigImg(imgInd) {
+				let imgList = this.dataInfo.articleInfo.imgList;
+				this.$acFrame.Util.showBigPic(imgList[imgInd], imgList);
+				getApp().globalData.isShowPic = true
+			},
 		}
 
 	};
@@ -1046,7 +1055,9 @@
 			.noData {
 				position: relative !important;
 			}
-
+			.commentMain{
+				width: 60%;
+			}
 		}
 
 		.item {
@@ -1056,7 +1067,7 @@
 			.pic {
 				width: 80rpx;
 				height: 80rpx;
-				margin-right: 20rpx;
+				margin:0 30rpx 0 20rpx;
 
 				.headPic {
 					height: 100%;
@@ -1083,6 +1094,7 @@
 
 			.msg {
 				min-height: 60rpx;
+				text-align: justify;
 			}
 
 			.oper {
@@ -1184,4 +1196,10 @@
 			}
 		}
 	}
+.rewardListBox{
+	position:fixed;
+	top:0;
+	right:0;
+	z-index: 20;
+}
 </style>

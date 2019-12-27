@@ -90,21 +90,11 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  var l1 = _vm.__map(_vm.commontList, function(item, ind) {
+  var l0 = _vm.__map(_vm.commontList, function(item, ind) {
     var m0 = _vm.setImg("", item.genderType)
-
-    var l0 = _vm.__map(item.imgPathList, function(imgItem, imgInd) {
-      var m1 = _vm.setImg(imgItem)
-      return {
-        $orig: _vm.__get_orig(imgItem),
-        m1: m1
-      }
-    })
-
     return {
       $orig: _vm.__get_orig(item),
-      m0: m0,
-      l0: l0
+      m0: m0
     }
   })
 
@@ -112,7 +102,7 @@ var render = function() {
     {},
     {
       $root: {
-        l1: l1
+        l0: l0
       }
     }
   )
@@ -246,11 +236,17 @@ var _default =
           if (list.length > 0) {
             list.filter(function (v) {
               v.commentTime = self.$acFrame.Util.formatTime(v.commentTime, 'day');
+              v.imgPathList.filter(function (img, i) {
+                v.imgPathList[i] = self.setImg(img);
+              });
             });
             self.commontList = self.commontList.concat(list);
           } else {
             self.nodata = true;
           }
+          uni.setNavigationBarTitle({
+            title: '评论（' + list.length + '）' });
+
         }
       });
     },

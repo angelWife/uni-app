@@ -310,6 +310,11 @@ var _default =
         }
       });
     },
+    treasuryDetail: function treasuryDetail(item) {
+      uni.navigateTo({ //
+        url: "spiritDetail?id=".concat(item.virtualVo.id, "&useType=").concat(item.virtualVo.useType) });
+
+    },
     getReceiveList: function getReceiveList() {var _this2 = this;
       var self = this;
       var params = {
@@ -336,15 +341,25 @@ var _default =
       var params = {
         id: item.virtualVo.id };
 
-      this.$acFrame.HttpService.myReceiveBack(params).then(function (res) {
-        if (res.success) {
-          self.$acFrame.Util.mytotal('回收数量为' + res.data.numTotal + '件，总回收星票' + res.data.priceBackTotal);
-          setTimeout(function () {
-            this.setparams();
-            this.getReceiveList();
-          }, 1000);
-        }
-      });
+      uni.showModal({
+        title: '提示',
+        content: '回收此道具,可兑换' + item.virtualVo.priceBack + '星票',
+        cancelColor: "#999",
+        confirmColor: '#4c8ff7',
+        success: function success(res) {
+          if (res.confirm) {
+            self.$acFrame.HttpService.myReceiveBack(params).then(function (res) {
+              if (res.success) {
+                self.$acFrame.Util.mytotal('回收成功！');
+                self.setparams();
+                self.getReceiveList();
+              }
+            });
+
+          }
+        } });
+
+
     },
     touchstart: function touchstart(e) {
       this.t_x = e.touches[0].pageX;
@@ -365,7 +380,7 @@ var _default =
         if (tmX < 0) {
           goodsList.filter(function (v, i) {
             if (i == ind) {
-              v.style = "left:-280rpx";
+              v.style = "left:-140rpx";
             } else {
               v.style = "left:0";
             }

@@ -90,28 +90,16 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  var m0 = _vm.setImg(_vm.details.shopInfo.imgPath)
-
-  var l0 = _vm.__map(_vm.details.detailList, function(item, index) {
-    var m1 = _vm.setImg(item.goodsImgPath)
-    return {
-      $orig: _vm.__get_orig(item),
-      m1: m1
-    }
-  })
-
-  var m2 = _vm.formatTime(_vm.details.createTime)
-  var m3 = _vm.formatTime(_vm.details.timePay)
-  var m4 = _vm.formatTime(_vm.details.timeSend)
+  var m0 = _vm.formatTime(_vm.details.createTime)
+  var m1 = _vm.formatTime(_vm.details.timePay)
+  var m2 = _vm.formatTime(_vm.details.timeSend)
   _vm.$mp.data = Object.assign(
     {},
     {
       $root: {
         m0: m0,
-        l0: l0,
-        m2: m2,
-        m3: m3,
-        m4: m4
+        m1: m1,
+        m2: m2
       }
     }
   )
@@ -325,6 +313,11 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+
+
+
+
 {
   components: {
     uniCountDown: uniCountDown },
@@ -340,7 +333,8 @@ __webpack_require__.r(__webpack_exports__);
       minute: 0,
       second: 0,
       show_time: false,
-      goods_id: 0 };
+      goods_id: 0,
+      orderStatus: [] };
 
   },
   onLoad: function onLoad(options) {
@@ -349,7 +343,7 @@ __webpack_require__.r(__webpack_exports__);
 
   },
   onShow: function onShow() {
-    this.getDetail();
+    this.getStatus();
   },
   methods: {
     applyService: function applyService(orderVO) {
@@ -376,6 +370,23 @@ __webpack_require__.r(__webpack_exports__);
         url: '/pages/order/returnForm?orderData=' + JSON.stringify(obj) + '&type=nullgoods' });
 
     },
+    getStatus: function getStatus() {
+      var self = this;
+      this.$acFrame.HttpService.get("dict/order/orderStatusList").then(function (res) {
+        console.log(res);
+        if (res.success) {
+          console.log(res.data);
+          var tabs = res.data;
+          var st = {};
+          tabs.forEach(function (item) {
+            st[item.val] = item.key;
+            self.orderStatus[item.key] = item.val;
+          });
+          self.getDetail();
+
+        }
+      });
+    },
     getDetail: function getDetail() {
       var self = this;
       var params = {
@@ -384,11 +395,24 @@ __webpack_require__.r(__webpack_exports__);
       self.$acFrame.HttpService.orderDetail(params).then(function (res) {
         console.log(res);
         if (res.success) {
-          self.details = res.data;
-          self.obj = res.data;
-          self.goods_id = self.obj.detailList[0].goodsId;
+          var details = res.data;
+          details.shopInfo.imgPath = self.setImg(details.shopInfo.imgPath);
+          details.detailList.filter(function (v, i) {
+            details.detailList[i].goodsImgPath = self.setImg(v.goodsImgPath);
+          });
+          self.details = details;
+          self.goods_id = details.detailList[0].goodsId;
+          var title = self.orderStatus[details.status];
+          if (details.flagStatusRefund == 1) {
+            if (details.status == 2) {
+              title = '退款申请中';
+            } else if (details.status == 3) {
+              title = '退换货中';
+            }
+
+          }
           uni.setNavigationBarTitle({
-            title: self.obj.statusName });
+            title: title });
 
           if (self.details.status == 1 || self.details.status == 3) {
             self.init_time();
@@ -399,11 +423,11 @@ __webpack_require__.r(__webpack_exports__);
     },
     init_time: function init_time() {var _this = this;
       var time = '';
-      if (this.details.status == 1) {
-        time = new Date(this.details.timeEnd);
-      } else if (this.details.status == 3) {
-        time = new Date(this.details.timeConfirm);
-      }
+      // if (this.details.status == 1) {
+      time = new Date(this.details.timeEnd);
+      // } else if (this.details.status == 3) {
+      // 	time = new Date(this.details.timeConfirm);
+      // }
 
       this.hour = time.getHours();
       this.minute = time.getMinutes();
@@ -427,7 +451,9 @@ __webpack_require__.r(__webpack_exports__);
 
     },
     topay: function topay(id) {
-      this.$acFrame.HttpService.orderPay({ id: id }).then(function (res) {
+      this.$acFrame.HttpService.orderPay({
+        id: id }).
+      then(function (res) {
         if (res.success) {
           uni.navigateTo({
             url: '/pages/myshop/payWay?order=' + JSON.stringify(res.data) });
@@ -437,7 +463,9 @@ __webpack_require__.r(__webpack_exports__);
     },
     tocancel: function tocancel() {
       var self = this;
-      self.$acFrame.HttpService.post("order/info/cancle", { id: this.id }).then(function (res) {
+      self.$acFrame.HttpService.post("order/info/cancle", {
+        id: this.id }).
+      then(function (res) {
         console.log(res);
         if (res.success) {
           self.getDetail();
@@ -445,13 +473,30 @@ __webpack_require__.r(__webpack_exports__);
       });
 
     },
+    //取消售后
+    cancelRefund: function cancelRefund(id) {
+      var self = this;
+      this.show_time = false;
+      this.$acFrame.HttpService.cancelOrderRefund({
+        id: self.id }).
+      then(function (res) {
+        if (res.success) {
+          self.$acFrame.Util.mytotal('取消售后成功！');
+          setTimeout(function () {
+            self.getDetail();
+          }, 1000);
+        }
+      });
+    },
     shouhuo: function shouhuo() {
       var self = this;
       wx.showModal({
         content: '确定收获吗？',
         success: function success(res) {
           if (res.confirm) {
-            self.$acFrame.HttpService.post("order/info/confirm", { id: self.id }).then(function (res) {
+            self.$acFrame.HttpService.post("order/info/confirm", {
+              id: self.id }).
+            then(function (res) {
               console.log(res);
               if (res.success) {
                 self.getDetail();
@@ -475,7 +520,11 @@ __webpack_require__.r(__webpack_exports__);
       var priceVo = details.priceVo;
       var args = {
         couponList: [],
-        chooseSpec: { "priceSale": speci.priceBuy, "propValue": speci.goodsSkuPropValue, "goodsSkuId": speci.goodsSkuId },
+        chooseSpec: {
+          "priceSale": speci.priceBuy,
+          "propValue": speci.goodsSkuPropValue,
+          "goodsSkuId": speci.goodsSkuId },
+
         prod: speci,
         goodsNum: speci.buyNum,
         spellId: '',
@@ -495,7 +544,9 @@ __webpack_require__.r(__webpack_exports__);
     },
     delOrder: function delOrder() {
       var self = this;
-      self.$acFrame.HttpService.post("order/info/remove", { id: this.id }).then(function (res) {
+      self.$acFrame.HttpService.post("order/info/remove", {
+        id: this.id }).
+      then(function (res) {
         console.log(res);
         if (res.success) {
           uni.navigateTo({

@@ -1,4 +1,16 @@
 .newsType {
   margin-bottom: 20rpx;
 }
+.newBox {
+  position: relative;
+}
+.newBox .mark {
+  position: absolute;
+  width: 15rpx;
+  height: 15rpx;
+  border-radius: 100%;
+  background: #B40000;
+  left: 20rpx;
+  top: 20rpx;
+}
 

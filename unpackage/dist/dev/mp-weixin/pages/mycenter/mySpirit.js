@@ -90,34 +90,6 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  var m0 = _vm.setImg(_vm.goodsVO.imgPath)
-
-  var l0 = _vm.__map(_vm.goodsVO.imgList, function(item, ind) {
-    var m1 = _vm.setImg(item)
-    return {
-      $orig: _vm.__get_orig(item),
-      m1: m1
-    }
-  })
-
-  var l1 = _vm.__map(_vm.goodsList, function(item, ind) {
-    var m2 = _vm.setImg(item.virtualVo.imgPath)
-    return {
-      $orig: _vm.__get_orig(item),
-      m2: m2
-    }
-  })
-
-  _vm.$mp.data = Object.assign(
-    {},
-    {
-      $root: {
-        m0: m0,
-        l0: l0,
-        l1: l1
-      }
-    }
-  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -210,11 +182,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
 var _default =
 {
   data: function data() {
@@ -248,6 +215,13 @@ var _default =
               } else {
                 v.choose = false;
               }
+              var _obj = v.virtualVo;
+              var showPicPath = _obj.spirit && _obj.spirit.imgHeadPath ? _obj.spirit.imgHeadPath : _obj.imgPath;
+              _obj.showPicPath = self.setImg(showPicPath);
+              _obj.imgList.filter(function (img, j) {
+                _obj.imgList[j] = self.setImg(img);
+              });
+              list[i].virtualVo = _obj;
             });
             self.goodsList = list;
             self.goodsVO = list[0].virtualVo;
@@ -272,6 +246,17 @@ var _default =
       uni.navigateTo({
         url: 'myWallet' });
 
+    },
+    setDefault: function setDefault() {
+      var self = this;
+      var params = {
+        id: this.goodsVO.id };
+
+      this.$acFrame.HttpService.setDefault(params).then(function (res) {
+        if (res.success) {
+          self.$acFrame.Util.mytotal('设置成功！');
+        }
+      });
     },
     setImg: function setImg(src) {
       return this.$acFrame.Util.setImgUrl(src);

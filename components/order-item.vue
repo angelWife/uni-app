@@ -8,7 +8,9 @@
 				<view class="name flex-1 textEllipsis">{{item.shopInfo.name}}</view>
 				<view class="status orange">
 					<text  v-if="orderType==100">{{item.status==1?'待支付':(item.status==1)?'待加入成团':""}}</text>
-					<text class="" v-else>{{item.statusName}}</text>
+					<text class="" v-else>
+						{{item.flagStatusRefund ==1 ?'退换货中':item.statusName}}
+					</text>
 				</view>
 				<view class="" v-if="orderType==100&&item.showTimer">
 					<uni-count-down :color="timeStyle.color" :splitorColor="timeStyle.color" :show-day="false" :show-style="false"
@@ -70,10 +72,10 @@
 				</block>
 				<block v-if="item.status==2">
 					<button type="null" v-if="item.flagStatusRefund !=1" @tap.stop="refoundMoney(item)">申请退款</button>
-					<button type="null" @tap.stop="cancelOrder(item)">取消订单</button>
+					<button type="null" v-if="item.flagStatusRefund!=1" @tap.stop="cancelOrder(item)">取消订单</button>
 				</block>
 				<block v-if="item.status==3">
-					<button type="rednull" @tap.stop="shouhuo(item)">确认收货</button>
+					<button type="rednull" v-if="item.flagStatusRefund!=1" @tap.stop="shouhuo(item)">确认收货</button>
 					<button type="null" v-if="item.flagStatusRefund !=1" @tap.stop="applyService(item)">申请售后</button>
 				</block>
 				<block v-if="item.status==4">
@@ -86,6 +88,9 @@
 				<block v-if="item.status==6||item.status==7">
 					<button type="rednull"  @tap.stop="createOrder(item)"  >再来一单</button>
 					<button type="null" @tap.stop="delOrder(item)" >删除订单</button>
+				</block>
+				<block v-if="item.flagStatusRefund==1">
+					<button type="null" @tap="cancelRefund(item)" class="radiuBtn">取消售后</button>
 				</block>
 
 			</view>
@@ -271,6 +276,23 @@
 							}
 						}, 1000)
 
+					}
+				})
+			},
+			//取消售后
+			cancelSpell() {
+				let self = this
+				let params = {
+					id:self.details.id,
+				}
+				
+				self.$acFrame.HttpService.cancelOrderRefund(params).then(res => {
+					if (res.success) {
+						self.$acFrame.Util.mytotal('取消成功')
+						setTimeout(()=>{
+							self.$parent.getList();
+						},1000)
+						
 					}
 				})
 			},

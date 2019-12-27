@@ -277,6 +277,9 @@ page .pd10 {
 .comment .commentList .noData {
   position: relative !important;
 }
+.comment .commentList .commentMain {
+  width: 60%;
+}
 .comment .item {
   padding: 20rpx;
   border-top: 1px solid #e9e9e9;
@@ -284,7 +287,7 @@ page .pd10 {
 .comment .item .pic {
   width: 80rpx;
   height: 80rpx;
-  margin-right: 20rpx;
+  margin: 0 30rpx 0 20rpx;
 }
 .comment .item .pic .headPic {
   height: 100%;
@@ -306,6 +309,7 @@ page .pd10 {
 }
 .comment .item .msg {
   min-height: 60rpx;
+  text-align: justify;
 }
 .comment .item .oper {
   line-height: 30rpx;
@@ -383,5 +387,11 @@ page .pd10 {
   color: #fff;
   top: 10rpx;
   right: 0rpx;
+}
+.rewardListBox {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 20;
 }
 

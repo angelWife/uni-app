@@ -29,14 +29,14 @@
 			</view>
 			<view class="detail flex-1" v-else>
 				<view class="name blod">
-					精灵名称：流氓兔
+					物品名称：{{details.name}}
 				</view>
 				<view class="listBox clearfix">
-					虚拟商品简介
+					{{details.briefInfo}}
 				</view>
 			</view>
-			<view class="pic">
-				<image :src="setImg(details.spirit.imgHeadPath?details.spirit.imgHeadPath:details.imgPath)" mode="widthFix"></image>
+			<view class="pic" v-if="useType==2||useType==3">
+				<image :src="details.showPivPath" mode="widthFix"></image>
 			</view>
 		</view>
 		<view class="swiperBox">
@@ -44,10 +44,18 @@
 			 :interval="3000" :duration="400">
 				<swiper-item v-for="(item,ind) in details.imgList" :key="ind">
 					<view class="swiper-item">
-						<image :src="setImg(item)" mode="widthFix"></image>
+						<image :src="item" mode="widthFix"></image>
 					</view>
 				</swiper-item>
 			</swiper>
+		</view>
+		<view class="msgBox flex">
+			<view class="price">
+				星票：{{details.priceSale * 10}}
+			</view>
+			<view class="flex-1 text-right c999">
+				已兑{{details.numTotalSale}}
+			</view>
 		</view>
 		<view class="footBin">
 			<button type="red" @tap="sureRward">购买</button>
@@ -82,9 +90,24 @@
 				}
 				this.$acFrame.HttpService.receiveDetail(params).then(res => {
 					if (res.success) {
-						self.details = res.data
+						let obj = res.data
+						obj.showPivPath = (obj.spirit&&obj.spirit.imgHeadPath)?obj.spirit.imgHeadPath:obj.imgPath
+						obj.showPivPath = self.setImg(obj.showPivPath)
+						obj.imgList.filter((v,i)=>{
+							obj.imgList[i] = self.setImg(v)
+						})
+						if(obj.numTotalSale){
+							if(obj.numTotalSale>9999){
+								obj.numTotalSale = Math.round(obj.numTotalSale/100)/100+'万件'
+							}else{
+								obj.numTotalSale=obj.numTotalSale+'件'
+							}
+						}else{
+							obj.numTotalSale='0件'
+						}
+						self.details = obj
 						uni.setNavigationBarTitle({
-							title:res.data.name
+							title:obj.name
 						})
 					}
 				})
@@ -132,7 +155,8 @@
 		}
 
 	}
-
+	.msgBox{padding:20rpx 30rpx;}
+		
 	.swiperBox {
 		margin: 24rpx 30rpx;
 		height: calc(100vw - 48rpx);

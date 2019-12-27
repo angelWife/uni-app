@@ -180,11 +180,11 @@ var _default2 =
       modalBar: [{
         name: '礼物',
         active: true,
-        type: 2 },
+        type: 5 },
       {
         name: '我的道具',
         active: false,
-        type: 4 }],
+        type: 6 }],
 
       checked: true,
       usename: 'use',

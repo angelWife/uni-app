@@ -19,9 +19,9 @@
 			<view class="text-center">
 				<image src="/static/images/nodata.png" mode="widthFix"></image>
 				<view class="text-center c666 fs16">
-					这里还没有内容
+					暂无好友数据
 				</view>
-				<button class="radiuBtn" @tap="linktoshop" type="rednull">随便看看</button>
+				<!-- <button class="radiuBtn" @tap="linktoshop" type="rednull">随便看看</button> -->
 				<!-- <navigator url="/pages/home/index" class="radiuBtn" hover-class="none">随便看看</navigator> -->
 			</view>
 		</view>

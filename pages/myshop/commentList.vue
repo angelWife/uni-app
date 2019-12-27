@@ -6,7 +6,7 @@
 					<image :src="setImg('',item.genderType)" mode="widthFix"></image>
 				</view>
 				<view class="name flex-1 textEllipsis">
-					{{item.nickName}}
+					{{item.nickName?item.nickName:''}}
 				</view>
 				<view class="star">
 					<block  v-for="(numitem,numind) in [1,2,3,4,5]" :key="numind">
@@ -21,7 +21,7 @@
 			<view class="imgList clearfix">
 				<view class="imgItem" v-for="(imgItem,imgInd) in item.imgPathList" :key="imgInd">
 					<view class="imgBox" @tap="showBig(ind,imgInd)">
-						<image :src="setImg(imgItem)" mode="widthFix"></image>
+						<image :src="imgItem" mode="widthFix"></image>
 					</view>
 				</view>
 			</view>
@@ -96,11 +96,17 @@
 						if(list.length>0){
 							list.filter(v=>{
 								v.commentTime  = self.$acFrame.Util.formatTime(v.commentTime,'day')
+								v.imgPathList.filter((img,i)=>{
+									v.imgPathList[i] = self.setImg(img)
+								})
 							})
 							self.commontList= self.commontList.concat(list)
 						}else{
 							self.nodata=true
 						}
+						uni.setNavigationBarTitle({
+							title:'评论（'+list.length+'）'
+						})
 					}
 				})
 			},

@@ -102,8 +102,11 @@
   height: 100rpx;
   line-height: 100rpx;
   overflow: hidden;
-  border-radius: 100rpx;
+  border-radius: 10rpx;
   margin: 0 40rpx;
+}
+.goods .newBox .pic image {
+  height: 100%;
 }
 .goods .newBox .main {
   height: 140rpx;

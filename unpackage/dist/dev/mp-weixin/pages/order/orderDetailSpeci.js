@@ -368,7 +368,7 @@ __webpack_require__.r(__webpack_exports__);
         } });
 
     },
-    cancelOrder: function cancelOrder() {
+    cancelSpell: function cancelSpell() {
       var self = this;
       var params = {
         spellIdUser: self.details.spellIdUser,

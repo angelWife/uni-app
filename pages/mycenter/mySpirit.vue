@@ -27,24 +27,16 @@
 
 				</view>
 			</view>
-			<view class="detail flex-1" v-else>
-				<view class="name blod">
-					精灵名称：流氓兔
-				</view>
-				<view class="listBox clearfix">
-					虚拟商品简介
-				</view>
-			</view>
 			<view class="pic">
-				<image :src="setImg(goodsVO.imgPath)" mode="widthFix"></image>
+				<image :src="goodsVO.showPicPath" mode="widthFix"></image>
 			</view>
 		</view>
-		<view class="swiperBox">
+		<view class="swiperBox" v-if="goodsVO.imgList.length>0">
 			<swiper indicator-color="rgba(0,0,0,0.6)" indicator-active-color="#b40000" :indicator-dots="true" :autoplay="false"
 			 :interval="3000" :duration="400">
 				<swiper-item v-for="(item,ind) in goodsVO.imgList" :key="ind">
 					<view class="swiper-item">
-						<image :src="setImg(item)" mode="widthFix"></image>
+						<image :src="item" mode="widthFix"></image>
 					</view>
 				</swiper-item>
 			</swiper>
@@ -52,13 +44,16 @@
 		<view class="otherSpirit clearfix">
 			<view class="item" v-for="(item,ind) in goodsList" :key="ind" @tap="chooseItem(ind)" :class="{'active':item.choose}">
 				<view class="pic">
-					<image :src="setImg(item.virtualVo.imgPath)" mode="widthFix"></image>
+					<image :src="item.virtualVo.showPicPath" mode="widthFix"></image>
 				</view>
 				<view class="text">{{item.virtualVo.name}}</view>
 			</view>
 			<view class="item add" @tap="buy">
 				<icon class="iconfont icon-remove"></icon>
 			</view>
+		</view>
+		<view class="footbtn">
+			<button type="red" @tap="setDefault">设为默认</button>
 		</view>
 	</view>
 </template>
@@ -96,6 +91,13 @@
 								}else{
 									v.choose=false
 								}
+								let _obj = v.virtualVo
+								let showPicPath = (_obj.spirit&&_obj.spirit.imgHeadPath)?_obj.spirit.imgHeadPath:_obj.imgPath
+								_obj.showPicPath = self.setImg(showPicPath)
+								_obj.imgList.filter((img,j)=>{
+									_obj.imgList[j] = self.setImg(img)
+								})
+								list[i].virtualVo = _obj
 							})
 							self.goodsList = list
 							self.goodsVO = list[0].virtualVo
@@ -121,6 +123,17 @@
 					url:'myWallet'
 				})
 			},
+			setDefault(){
+				let self = this 
+				let params = {
+					id:this.goodsVO.id
+				}
+				this.$acFrame.HttpService.setDefault(params).then(res=>{
+					if(res.success){
+						self.$acFrame.Util.mytotal('设置成功！')
+					}
+				})
+			},
 			setImg(src) {
 				return this.$acFrame.Util.setImgUrl(src);
 			}
@@ -133,7 +146,7 @@
 		padding: 20rpx 30rpx;
 
 		.pic {
-			width: 200rpx;
+			width: 300rpx;
 			margin-left: 20rpx;
 		}
 
@@ -200,4 +213,5 @@
 			}
 		}
 	}
+	.footbtn{padding:20rpx 30rpx;}
 </style>

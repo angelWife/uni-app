@@ -123,7 +123,7 @@
 					</button>
 					<button class="flex-1" type="share" @tap="linkDetail(item,'showReward')">
 						<icon class="iconfont icon-shang"></icon>
-						<text>{{ item.articleInfo.numTotalPersonReward }}</text>
+						<text>{{ item.publishUser.numTotalReward}}</text>
 					</button>
 					<button class="flex-1" type="share" :class="{'red':item.articleInfo.hasUp}" @tap="dianzan(item.articleInfo.id,index)">
 						<icon class="iconfont icon-dianzan"></icon>

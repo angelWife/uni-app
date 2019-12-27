@@ -23,6 +23,7 @@
 .rewardModal .giftList {
   padding: 10rpx;
   overflow: hidden;
+  min-height: 180rpx;
 }
 .rewardModal .giftList .item {
   padding: 10rpx;

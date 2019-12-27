@@ -265,7 +265,8 @@ __webpack_require__.r(__webpack_exports__);
       var params = {
         status: self.orderType,
         pageSize: self.pageSize,
-        pageIndex: self.pageIndex };
+        pageIndex: self.pageIndex,
+        filterStatusCancle: true };
 
       self.$acFrame.HttpService.orderList(params).then(function (res) {
         console.log(res);

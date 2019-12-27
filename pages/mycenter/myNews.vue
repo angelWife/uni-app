@@ -3,6 +3,7 @@
 		<view class="newsType comNews">
 			<view v-for="(item, ind) in newsTypes" :key="ind" class="listBox">
 				<view class="newBox flex item-center" @tap="newsList(ind)">
+					<text class="mark" v-if="item>0"></text>
 					<view class="pic">
 						<image :src="'/static/images/n'+ind+'.png'" mode="widthFix" />
 					</view>
@@ -108,5 +109,17 @@
 <style lang="less">
 	.newsType {
 		margin-bottom: 20rpx;
+	}
+	.newBox{
+		position:relative;
+		.mark{
+			position:absolute;
+			width: 15rpx;
+			height:15rpx;
+			border-radius:100%;
+			background: #B40000;
+			left:20rpx;
+			top:20rpx;
+		}
 	}
 </style>

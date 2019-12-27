@@ -19,6 +19,9 @@
 				</view>
 			</view>
 		</view>
+		<view class="footbtn">
+			<button type="primary">清空消息</button>
+		</view>
 		<view v-if="nodata" class="noData flex f-row just-con-c item-center">
 			<view class="text-center">
 				<image src="/static/images/nodata.png" mode="widthFix"></image>
@@ -164,10 +167,9 @@
 				})
 			},
 			articlDetail(item) {
-				return false;
 				this.readyNews(item)
 				uni.navigateTo({
-					url: "/pages/home/commentDetail?articalId=" + id
+					url: "/pages/home/commentDetail?id=" + item.articleId
 				})
 			}
 		}
@@ -177,8 +179,18 @@
 <style lang="less">
 	.content {
 		min-height: 100vh;
+		padding-bottom:120rpx;
 	}
-
+.footbtn{
+	position: fixed;
+	bottom:0;
+	z-index: 10;
+	left:0;
+	width: 100%;
+	padding:20rpx 30rpx;
+	background: #fff;
+	box-shadow: 0 -1px 5px rgba(0,0,0,0.1);
+}
 	.item {
 		margin: 0 30rpx;
 		border-bottom: 1px solid #ccc;

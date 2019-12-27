@@ -112,33 +112,23 @@ var render = function() {
       : ""
   )
 
-  var l3 = _vm.__map(_vm.commontList, function(item, ind) {
+  var l2 = _vm.__map(_vm.commontList, function(item, ind) {
     var m3 = _vm.setImg("", item.genderType)
-
-    var l2 = _vm.__map(item.imgPathList, function(imgItem, imgInd) {
-      var m4 = _vm.setImg(imgItem)
-      return {
-        $orig: _vm.__get_orig(imgItem),
-        m4: m4
-      }
-    })
-
     return {
       $orig: _vm.__get_orig(item),
-      m3: m3,
-      l2: l2
+      m3: m3
     }
   })
 
-  var l4 = _vm.__map(_vm.prodDetail.orderSpellList, function(item, ind) {
-    var m5 = _vm.setImg(item.firstUserImgPath)
+  var l3 = _vm.__map(_vm.prodDetail.orderSpellList, function(item, ind) {
+    var m4 = _vm.setImg(item.firstUserImgPath)
     return {
       $orig: _vm.__get_orig(item),
-      m5: m5
+      m4: m4
     }
   })
 
-  var m6 = _vm.setImg(
+  var m5 = _vm.setImg(
     _vm.prodDetail.imgList && _vm.prodDetail.imgList.length > 0
       ? _vm.prodDetail.imgList[0]
       : ""
@@ -150,9 +140,9 @@ var render = function() {
         l0: l0,
         l1: l1,
         m2: m2,
+        l2: l2,
         l3: l3,
-        l4: l4,
-        m6: m6
+        m5: m5
       }
     }
   )
@@ -189,18 +179,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var uniCountDown = function uniCountDown() {return __webpack_require__.e(/*! import() | components/countDown */ "components/countDown").then(__webpack_require__.bind(null, /*! @/components/countDown.vue */ 525));};var _default =
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -598,7 +576,7 @@ __webpack_require__.r(__webpack_exports__);
 
     // settings.type='article'
     settings.title = "\u53D1\u73B0\u597D\u7269\u3010".concat(this.prodDetail.name, "\u3011");
-    settings.imageUrl = this.prodDetail.imgList[0];
+    settings.imageUrl = this.setImg(this.prodDetail.imgList[0]);
     settings.pagePath = "/pages/myshop/productDetail?id=".concat(
     this.id, "&userCode=").concat(uni.getStorageSync('userCode'));
 
@@ -690,7 +668,11 @@ __webpack_require__.r(__webpack_exports__);
         if (res.success) {
           console.log(self.res);
           var address = res.data;
-          self.$acFrame.HttpService.post("logistics/calculate/buy", { addressId: address.id, buyNum: num, goodsSkuId: speci_id }).then(function (res) {
+          self.$acFrame.HttpService.post("logistics/calculate/buy", {
+            addressId: address.id,
+            buyNum: num,
+            goodsSkuId: speci_id }).
+          then(function (res) {
             if (res.success) {
               self.freight = res.data;
             }
@@ -707,9 +689,13 @@ __webpack_require__.r(__webpack_exports__);
     moreassemble: function moreassemble() {
       this.showAssembleModal = true;
     },
+    spellDetail: function spellDetail(item) {
+      this.showAssembleDetailModal = true;
+      this.spellVO = item;
+    },
     joinGroup: function joinGroup(item) {
-      this.showSpecModal = true;
-      // this.showAssembleDetailModal = true
+      // this.showSpecModal = true
+      this.showAssembleDetailModal = true;
       this.spellId = item.orderSpellId;
       this.operType = 'joinSpell';
       this.spellVO = item;
@@ -771,7 +757,9 @@ __webpack_require__.r(__webpack_exports__);
         this.$acFrame.Util.mytotal('亲，该优惠券已经领取过了！');
         return false;
       }
-      this.$acFrame.HttpService.getCoupons({ id: id }).then(function (res) {
+      this.$acFrame.HttpService.getCoupons({
+        id: id }).
+      then(function (res) {
         if (res.success) {
           _this2.$acFrame.Util.mytotal('领取成功！');
           self.prodDetail.couponList[ind].hasReceived = true;

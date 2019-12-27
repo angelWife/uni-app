@@ -1,6 +1,6 @@
 <template>
 	<view class="content pagebg">
-		<view class="timer" v-if="details.status==1">
+		<view class="timer" v-if="details.status==1&&details.flagStatusRefund!=1">
 			剩余
 			<block v-if="show_time">
 				<uni-count-down :show-day="false" :backgroundColor="backgroundColor" :color="color" :splitorColor="color"
@@ -8,7 +8,7 @@
 			</block>
 			自动取消订单
 		</view>
-		<view class="timer" v-if="details.status == 3">
+		<view class="timer" v-if="details.status == 3&&details.flagStatusRefund!=1">
 			剩余
 			<block v-if="show_time">
 				<uni-count-down :show-day="false" :color="color" :backgroundColor="backgroundColor" :splitorColor="color"
@@ -27,7 +27,7 @@
 			<view>
 				{{details.logistics.logisticsNo}}
 			</view>
-			<view class="copy blue">
+			<view class="copy blue" @tap="textPaste()">
 				复制
 			</view>
 		</view>
@@ -52,16 +52,16 @@
 			<view class="item order_detail">
 				<view class="shopMsg flex item-center" @tap="shopDetail(item.shopInfoVo.id)">
 					<view class="pic">
-						<image :src="setImg(details.shopInfo.imgPath)" mode="widthFix"></image>
+						<image :src="details.shopInfo.imgPath" mode="widthFix"></image>
 					</view>
 					<view class="flex-1">
 						<view class="shopName fs15">{{details.shopInfo.name}}</view>
 					</view>
 				</view>
-				
-				<view class="product flex" v-for="(item,index) in details.detailList" :key="index" @tap="goodsDetail()"   >
+
+				<view class="product flex" v-for="(item,index) in details.detailList" :key="index" @tap="goodsDetail()">
 					<view class="pic" style="overflow: hidden;">
-						<image :src="setImg(item.goodsImgPath)"  mode="widthFix"></image>
+						<image :src="item.goodsImgPath" mode="widthFix"></image>
 					</view>
 					<view class="center flex-1">
 						<view class="name clamp clamp-2">
@@ -118,7 +118,7 @@
 			</view>
 			<view class="item phoneCall flex">
 				<view class="pic">
-					<image src="/static/images/icon-server.png" mode=""></image>
+					<image src="/static/images/icon-server.png" mode="widthFix"></image>
 				</view>
 				<view class="flex-1">
 					联系店主
@@ -128,36 +128,38 @@
 				</view>
 			</view>
 		</view>
-		<view class="modal orderMsg fs13">
-			<view class="">
-				订单编号：{{details.code}} <text class="blue float-right" @tap="textPaste()">复制</text>
-			</view>
-			<!-- <view class="">
-				支付方式：星票
-			</view> -->
-			<view class="">
-				下单时间：{{ formatTime(details.createTime) }}
-			</view>
-			<view class="" v-if="details.status >= 1 && details.status < 6 ">
-				付款时间：{{ formatTime(details.timePay ) }}
-			</view>
-
-			<view class="" v-if="details.status >= 3  && details.status < 6 ">
-				发货时间：{{ formatTime(details.timeSend) }}
+		<view class="modal fs13">
+			<view class="orderMsg">
+				<view class="item_c">
+					订单编号：{{details.code}} <text class="blue float-right" @tap="textPaste()">复制</text>
+				</view>
+				<!-- <view class="">
+					支付方式：星票
+				</view> -->
+				<view class="item_c">
+					下单时间：{{ formatTime(details.createTime) }}
+				</view>
+				<view class="item_c" v-if="details.status >= 1 && details.status < 6 ">
+					付款时间：{{ formatTime(details.timePay ) }}
+				</view>
+				
+				<view class="item_c" v-if="details.status >= 3  && details.status < 6 ">
+					发货时间：{{ formatTime(details.timeSend) }}
+				</view>
 			</view>
 		</view>
 		<view class="footBtn">
 			<block v-if="details.status==1">
 				<button type="rednull" @tap="topay(details.id)" class="radiuBtn">付款</button>
-				<button type="null" @tap="tocancel()" class="radiuBtn" >取消订单</button>
+				<button type="null" @tap="tocancel()" class="radiuBtn">取消订单</button>
 			</block>
 			<block v-if="details.status==2">
 				<button type="null" v-if="detail.flagStatusRefund !=1" class="radiuBtn" @tap="refoundMoney(details)">申请退款</button>
-				<button type="null" @tap="tocancel()" class="radiuBtn" >取消订单</button>
-				</block>
+				<button type="null" v-if="details.flagStatusRefund !=1" @tap="tocancel()" class="radiuBtn">取消订单</button>
+			</block>
 			<block v-if="details.status==3">
-				<button type="rednull" @tap="shouhuo()" class="radiuBtn">确认收货</button>
-				<button type="null" v-if="detail.flagStatusRefund !=1" class="radiuBtn" @tap="applyService(details)">申请售后</button>
+				<button type="rednull" v-if="details.flagStatusRefund !=1" @tap="shouhuo()" class="radiuBtn">确认收货</button>
+				<button type="null" v-if="details.flagStatusRefund !=1" class="radiuBtn" @tap="applyService(details)">申请售后</button>
 			</block>
 			<block v-if="details.status==4">
 				<button type="rednull" @tap="pingjia()" class="radiuBtn">评价</button>
@@ -169,6 +171,9 @@
 			<block v-if="details.status==6||details.status==7">
 				<button type="null" @tap="delOrder()" class="radiuBtn">删除订单</button>
 				<button type="rednull" @tap="createOrder()" class="radiuBtn">再来一单</button>
+			</block>
+			<block v-if="details.flagStatusRefund==1">
+				<button type="null" @tap="cancelRefund()" class="radiuBtn">取消售后</button>
 			</block>
 		</view>
 	</view>
@@ -191,31 +196,20 @@
 				minute: 0,
 				second: 0,
 				show_time: false,
-				goods_id:0
+				goods_id: 0,
+				orderStatus:[],
 			}
 		},
 		onLoad(options) {
-			
+
 			this.id = options.id
-			
+
 		},
 		onShow() {
-			this.getDetail()
+			this.getStatus()
 		},
 		methods: {
-			applyService(orderVO){
-				let obj={
-					orderId:orderVO.id,
-					orderDetailId:orderVO.detailList[0].id,
-					price:orderVO.pricePay,
-					askNum:orderVO.detailList[0].buyNum,
-					phone:orderVO.address?orderVO.address.receiverMobilePhone:'' 
-				}
-				uni.navigateTo({
-					url:'/pages/order/applyAfter?orderData='+JSON.stringify(obj)
-				})
-			},
-			refoundMoney(orderVO){
+			applyService(orderVO) {
 				let obj = {
 					orderId: orderVO.id,
 					orderDetailId: orderVO.detailList[0].id,
@@ -224,7 +218,36 @@
 					phone: orderVO.address ? orderVO.address.receiverMobilePhone : ''
 				}
 				uni.navigateTo({
-					url: '/pages/order/returnForm?orderData=' + JSON.stringify(obj)+'&type=nullgoods'
+					url: '/pages/order/applyAfter?orderData=' + JSON.stringify(obj)
+				})
+			},
+			refoundMoney(orderVO) {
+				let obj = {
+					orderId: orderVO.id,
+					orderDetailId: orderVO.detailList[0].id,
+					price: orderVO.pricePay,
+					askNum: orderVO.detailList[0].buyNum,
+					phone: orderVO.address ? orderVO.address.receiverMobilePhone : ''
+				}
+				uni.navigateTo({
+					url: '/pages/order/returnForm?orderData=' + JSON.stringify(obj) + '&type=nullgoods'
+				})
+			},
+			getStatus() {
+				let self = this;
+				this.$acFrame.HttpService.get("dict/order/orderStatusList").then(res => {
+					console.log(res);
+					if (res.success) {
+						console.log(res.data);
+						var tabs = res.data;
+						var st = {};
+						tabs.forEach(function(item) {
+							st[item.val] = item.key;
+							self.orderStatus[item.key] = item.val;
+						});
+						self.getDetail();
+			
+					}
 				})
 			},
 			getDetail() {
@@ -235,122 +258,162 @@
 				self.$acFrame.HttpService.orderDetail(params).then(res => {
 					console.log(res);
 					if (res.success) {
-						self.details = res.data
-						self.obj = res.data
-						self.goods_id=self.obj.detailList[0].goodsId;
+						let details = res.data
+						details.shopInfo.imgPath = self.setImg(details.shopInfo.imgPath)
+						details.detailList.filter((v,i)=>{
+							details.detailList[i].goodsImgPath = self.setImg(v.goodsImgPath)
+						})
+						self.details = details
+						self.goods_id = details.detailList[0].goodsId;
+						let title = self.orderStatus[details.status]  
+						if(details.flagStatusRefund ==1){
+							if(details.status==2){
+								title = '退款申请中'
+							}else if(details.status==3){
+								title = '退换货中'
+							}
+							
+						}
 						uni.setNavigationBarTitle({
-							title: self.obj.statusName
+							title: title
 						});
-						if(self.details.status==1 || self.details.status==3){
+						if (self.details.status == 1 || self.details.status == 3) {
 							self.init_time();
 						}
-						
+
 					}
 				})
 			},
 			init_time() {
 				var time = ''
-				if(this.details.status==1){
+				// if (this.details.status == 1) {
 					time = new Date(this.details.timeEnd);
-				}else if(this.details.status==3){
-					time = new Date(this.details.timeConfirm);
-				}
-				
+				// } else if (this.details.status == 3) {
+				// 	time = new Date(this.details.timeConfirm);
+				// }
+
 				this.hour = time.getHours();
 				this.minute = time.getMinutes();
 				this.second = time.getSeconds();
-				this.show_time=false;
-				setTimeout(()=>{
-					this.show_time=true
-				},300)
+				this.show_time = false;
+				setTimeout(() => {
+					this.show_time = true
+				}, 300)
 			},
 			setImg(url) {
-				if(!url){
+				if (!url) {
 					return "/static/images/shop.png";
-				}else{
+				} else {
 					return this.$acFrame.Util.setImgUrl(url);
 				}
-				
+
 			},
-			goodsDetail(){
+			goodsDetail() {
 				uni.navigateTo({
-					url:'/pages/myshop/productDetail?id='+this.goods_id
-				}) 
+					url: '/pages/myshop/productDetail?id=' + this.goods_id
+				})
 			},
-			topay(id){
-				this.$acFrame.HttpService.orderPay({id:id}).then(res=>{
-					if(res.success){
+			topay(id) {
+				this.$acFrame.HttpService.orderPay({
+					id: id
+				}).then(res => {
+					if (res.success) {
 						uni.navigateTo({
-							url:'/pages/myshop/payWay?order='+JSON.stringify(res.data)
-						}) 
+							url: '/pages/myshop/payWay?order=' + JSON.stringify(res.data)
+						})
 					}
 				})
 			},
-			tocancel(){
+			tocancel() {
 				var self = this;
-				self.$acFrame.HttpService.post("order/info/cancle",{id:this.id}).then(res => {
+				self.$acFrame.HttpService.post("order/info/cancle", {
+					id: this.id
+				}).then(res => {
 					console.log(res);
 					if (res.success) {
 						self.getDetail()
 					}
 				})
-				
+
 			},
-			shouhuo(){
+			//取消售后
+			cancelRefund(id) {
+				let self = this
+				this.show_time = false
+				this.$acFrame.HttpService.cancelOrderRefund({
+					id: self.id
+				}).then(res => {
+					if (res.success) {
+						self.$acFrame.Util.mytotal('取消售后成功！')
+						setTimeout(() => {
+							self.getDetail()
+						}, 1000)
+					}
+				})
+			},
+			shouhuo() {
 				var self = this;
 				wx.showModal({
-				  content: '确定收获吗？',
-				  success (res) {
-				    if (res.confirm) {
-				      self.$acFrame.HttpService.post("order/info/confirm",{id:self.id}).then(res => {
-				      	console.log(res);
-				      	if (res.success) {
-				      		self.getDetail()
-				      	}
-				      })
-				    } else if (res.cancel) {
-				      console.log('用户点击取消')
-				    }
-				  }
+					content: '确定收获吗？',
+					success(res) {
+						if (res.confirm) {
+							self.$acFrame.HttpService.post("order/info/confirm", {
+								id: self.id
+							}).then(res => {
+								console.log(res);
+								if (res.success) {
+									self.getDetail()
+								}
+							})
+						} else if (res.cancel) {
+							console.log('用户点击取消')
+						}
+					}
 				})
 
-			}, 
-			pingjia(){
-				uni.navigateTo({
-					url:'/pages/mycenter/evaluate?id='+this.id+"&speci="+ JSON.stringify(this.details)
-				}) 
 			},
-			createOrder(){
+			pingjia() {
+				uni.navigateTo({
+					url: '/pages/mycenter/evaluate?id=' + this.id + "&speci=" + JSON.stringify(this.details)
+				})
+			},
+			createOrder() {
 				let details = this.details;
 				let speci = details.detailList[0];
 				let priceVo = details.priceVo;
-				let args={
-					couponList:[],
-					chooseSpec:{"priceSale":speci.priceBuy,"propValue":speci.goodsSkuPropValue,"goodsSkuId":speci.goodsSkuId,},
-					prod:speci,
-					goodsNum:speci.buyNum,
-					spellId:'',
-					freight:priceVo?priceVo.priceLogistic:0,
-					name:speci.goodsName,
-					priceSale:speci.priceBuy,
-					sum_price:priceVo?priceVo.pricePay:0,
-					img:speci.goodsImgPath,
-					goodsId:speci.goodsId,
-					goodsSkuId:speci.goodsSkuId
+				let args = {
+					couponList: [],
+					chooseSpec: {
+						"priceSale": speci.priceBuy,
+						"propValue": speci.goodsSkuPropValue,
+						"goodsSkuId": speci.goodsSkuId,
+					},
+					prod: speci,
+					goodsNum: speci.buyNum,
+					spellId: '',
+					freight: priceVo ? priceVo.priceLogistic : 0,
+					name: speci.goodsName,
+					priceSale: speci.priceBuy,
+					sum_price: priceVo ? priceVo.pricePay : 0,
+					img: speci.goodsImgPath,
+					goodsId: speci.goodsId,
+					goodsSkuId: speci.goodsSkuId
 				};
-					args= encodeURIComponent(JSON.stringify(args))
-					uni.navigateTo({
-						url:'/pages/myshop/confirmOrder?details='+args+'&type=order'
-					})
-				
+				args = encodeURIComponent(JSON.stringify(args))
+				uni.navigateTo({
+					url: '/pages/myshop/confirmOrder?details=' + args + '&type=order'
+				})
+
 			},
-			delOrder(){
+			delOrder() {
 				var self = this;
-				self.$acFrame.HttpService.post("order/info/remove",{id:this.id}).then(res => {
+				self.$acFrame.HttpService.post("order/info/remove", {
+					id: this.id
+				}).then(res => {
 					console.log(res);
 					if (res.success) {
 						uni.navigateTo({
-							url:'/pages/order/index'
+							url: '/pages/order/index'
 						})
 					}
 				})
@@ -374,10 +437,10 @@
 					}
 				})
 			},
-			phoneCall(phone){
+			phoneCall(phone) {
 				uni.makePhoneCall({
-					phoneNumber:phone,
-					fail:(error)=>{
+					phoneNumber: phone,
+					fail: (error) => {
 						console.error(error)
 					}
 				})
@@ -409,6 +472,7 @@
 			border-bottom: 1px solid #ccc;
 
 		}
+
 		.shopMsg {
 			.pic {
 				width: 60rpx;
@@ -417,7 +481,7 @@
 				overflow: hidden;
 				margin-right: 20rpx;
 			}
-		
+
 			.shopname {
 				max-width: 50%;
 				font-weight: 600;
@@ -508,7 +572,7 @@
 		}
 
 		.orderMsg {
-			padding: 20rpx 30rpx;
+			padding: 20rpx 0;
 
 			.item_c {
 				line-height: 50rpx;

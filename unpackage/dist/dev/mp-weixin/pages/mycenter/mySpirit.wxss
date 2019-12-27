@@ -2,7 +2,7 @@
   padding: 20rpx 30rpx;
 }
 .desc .pic {
-  width: 200rpx;
+  width: 300rpx;
   margin-left: 20rpx;
 }
 .desc .detail {
@@ -54,5 +54,8 @@
   -webkit-transform: rotate(45deg);
           transform: rotate(45deg);
   font-size: 48rpx;
+}
+.footbtn {
+  padding: 20rpx 30rpx;
 }
 

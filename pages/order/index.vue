@@ -142,6 +142,7 @@
 					status: self.orderType,
 					pageSize: self.pageSize,
 					pageIndex: self.pageIndex,
+					filterStatusCancle:true,
 				}
 				self.$acFrame.HttpService.orderList(params).then(res => {
 					console.log(res);
