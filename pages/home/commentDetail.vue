@@ -4,7 +4,7 @@
 			<block v-if="dataInfo.type == 1">
 				<view class="item-head flex item-center">
 					<view class="img item-center comHeadPic" @tap="userInfo(dataInfo.publishUser.userCode)">
-						<image class="headPic" :src="dataInfo.publishUser.imgPathHead"></image>
+						<image class="headPic" :src="setImg(dataInfo.publishUser.imgPathHead,dataInfo.publishUser.genderType)" mode="aspectFit"></image>
 						<image class="grade" v-if="dataInfo.publishUser.nobilityType>1" :src="'/static/images/juewei/'+(dataInfo.publishUser.nobilityType-1)+'.png'"
 						 mode="widthFix"></image>
 					</view>
@@ -306,16 +306,9 @@
 			} else {
 				this.listData = []
 				this.postDetail()
-				this.getCommentList()
-				this.rewardRecod()
+				
+				
 				this.getAccount()
-				this.$acFrame.HttpService.readPost({
-					id: this.dataInfo.articleInfo.id
-				}).then(res => {
-					if (res.success) {
-						self.dataInfo.articleInfo.numTotalRead = res.data
-					}
-				})
 			}
 			var animation = uni.createAnimation({
 				duration: 2000,
@@ -336,11 +329,11 @@
 				if (self.dataInfo.articleInfo.type == 1) {
 					settings.title = self.dataInfo.articleInfo.title
 					settings.pagePath =
-						`/pages/home/commentDetail?data=${self.dataInfo.articleInfo.id}&userCode=${uni.getStorageSync('userCode')}`
+						`/pages/home/commentDetail?id=${self.dataInfo.articleInfo.id}&userCode=${uni.getStorageSync('userCode')}`
 				} else {
 					settings.title = title
 					settings.pagePath =
-						`/pages/home/commentDetail?data=${self.dataInfo.articleInfo.id}&userCode=${uni.getStorageSync('userCode')}`
+						`/pages/home/commentDetail?id=${self.dataInfo.articleInfo.id}&userCode=${uni.getStorageSync('userCode')}`
 				}
 			} else {
 				settings.imageUrl = '/static/images/sharePic.png'
@@ -371,6 +364,16 @@
 					}
 				})
 			},
+			getReadNum(){
+				let self = this
+				this.$acFrame.HttpService.readPost({
+					id: this.dataInfo.articleInfo.id
+				}).then(res => {
+					if (res.success) {
+						self.dataInfo.articleInfo.numTotalRead = res.data
+					}
+				})
+			},
 			postDetail(){
 				let self = this
 				let params = {
@@ -383,6 +386,9 @@
 							_obj.articleInfo.showContent = this.setContent(_obj.articleInfo);
 						}
 						self.dataInfo = _obj
+						self.getCommentList()
+						self.rewardRecod()
+						self.getReadNum()
 					}
 				})
 			},

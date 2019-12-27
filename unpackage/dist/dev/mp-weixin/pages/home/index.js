@@ -292,7 +292,7 @@ __webpack_require__.r(__webpack_exports__);
         settings.pagePath = "/pages/home/commentDetail?id=".concat(item.articleInfo.id, "&userCode=").concat(uni.getStorageSync('userCode'));
       } else {
         settings.title = title;
-        settings.pagePath = "/pages/home/commentDetail?data=".concat(item.articleInfo.id, "&userCode=").concat(uni.getStorageSync('userCode'));
+        settings.pagePath = "/pages/home/commentDetail?id=".concat(item.articleInfo.id, "&userCode=").concat(uni.getStorageSync('userCode'));
       }
     } else {
       settings.imageUrl = '/static/images/sharePic.png';

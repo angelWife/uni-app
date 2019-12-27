@@ -168,7 +168,7 @@
 					settings.pagePath = `/pages/home/commentDetail?id=${item.articleInfo.id}&userCode=${uni.getStorageSync('userCode')}`
 				} else {
 					settings.title = title
-					settings.pagePath = `/pages/home/commentDetail?data=${item.articleInfo.id}&userCode=${uni.getStorageSync('userCode')}`
+					settings.pagePath = `/pages/home/commentDetail?id=${item.articleInfo.id}&userCode=${uni.getStorageSync('userCode')}`
 				}
 			} else {
 				settings.imageUrl = '/static/images/sharePic.png'

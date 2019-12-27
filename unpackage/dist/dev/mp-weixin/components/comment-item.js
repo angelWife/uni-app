@@ -367,7 +367,7 @@ var _default2 =
     loadMoreData: function loadMoreData() {},
     linkDetail: function linkDetail(obj, type) {
       uni.navigateTo({
-        url: "/pages/home/commentDetail?data=".concat(obj.articleInfo.id, "&type=").concat(type ? type : '') });
+        url: "/pages/home/commentDetail?id=".concat(obj.articleInfo.id, "&type=").concat(type ? type : '') });
 
     },
     rewardList: function rewardList(id) {
@@ -490,7 +490,7 @@ var _default2 =
         success: function success(res) {
           if (res.tapIndex == 0) {
             uni.navigateTo({
-              url: "/pages/home/commentDetail?data=".concat(obj.articleInfo.id) });
+              url: "/pages/home/commentDetail?id=".concat(obj.articleInfo.id) });
 
           } else {
             self.$acFrame.HttpService.deletePost({ id: obj.articleInfo.id }).then(function (res) {

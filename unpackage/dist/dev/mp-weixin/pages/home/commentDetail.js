@@ -90,11 +90,16 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
+  var m0 = _vm.setImg(
+    _vm.dataInfo.publishUser.imgPathHead,
+    _vm.dataInfo.publishUser.genderType
+  )
+
   var l0 = _vm.__map(_vm.listData, function(item, ind) {
-    var m0 = _vm.setImg(item.headPic, item.genderType)
+    var m1 = _vm.setImg(item.headPic, item.genderType)
     return {
       $orig: _vm.__get_orig(item),
-      m0: m0
+      m1: m1
     }
   })
 
@@ -102,6 +107,7 @@ var render = function() {
     {},
     {
       $root: {
+        m0: m0,
         l0: l0
       }
     }
@@ -446,16 +452,9 @@ __webpack_require__.r(__webpack_exports__);
     } else {
       this.listData = [];
       this.postDetail();
-      this.getCommentList();
-      this.rewardRecod();
+
+
       this.getAccount();
-      this.$acFrame.HttpService.readPost({
-        id: this.dataInfo.articleInfo.id }).
-      then(function (res) {
-        if (res.success) {
-          self.dataInfo.articleInfo.numTotalRead = res.data;
-        }
-      });
     }
     var animation = uni.createAnimation({
       duration: 2000,
@@ -475,11 +474,11 @@ __webpack_require__.r(__webpack_exports__);
       settings.imageUrl = '';
       if (self.dataInfo.articleInfo.type == 1) {
         settings.title = self.dataInfo.articleInfo.title;
-        settings.pagePath = "/pages/home/commentDetail?data=".concat(
+        settings.pagePath = "/pages/home/commentDetail?id=".concat(
         self.dataInfo.articleInfo.id, "&userCode=").concat(uni.getStorageSync('userCode'));
       } else {
         settings.title = title;
-        settings.pagePath = "/pages/home/commentDetail?data=".concat(
+        settings.pagePath = "/pages/home/commentDetail?id=".concat(
         self.dataInfo.articleInfo.id, "&userCode=").concat(uni.getStorageSync('userCode'));
       }
     } else {
@@ -511,6 +510,16 @@ __webpack_require__.r(__webpack_exports__);
         }
       });
     },
+    getReadNum: function getReadNum() {
+      var self = this;
+      this.$acFrame.HttpService.readPost({
+        id: this.dataInfo.articleInfo.id }).
+      then(function (res) {
+        if (res.success) {
+          self.dataInfo.articleInfo.numTotalRead = res.data;
+        }
+      });
+    },
     postDetail: function postDetail() {var _this2 = this;
       var self = this;
       var params = {
@@ -523,6 +532,9 @@ __webpack_require__.r(__webpack_exports__);
             _obj.articleInfo.showContent = _this2.setContent(_obj.articleInfo);
           }
           self.dataInfo = _obj;
+          self.getCommentList();
+          self.rewardRecod();
+          self.getReadNum();
         }
       });
     },
