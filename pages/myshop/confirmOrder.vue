@@ -177,7 +177,6 @@
 		},
 		onLoad(options){
             this.details = JSON.parse(decodeURIComponent(options.details));
-			console.error(this.details)
 			this.operType=options.type
 			this.getAddress();
 			

@@ -48,6 +48,7 @@ class Service extends HttpService {
 			postList: 'article/info/table_data', //分页数据 1广场  2关注
 			getToicList:'article/topic/list_data',
 			loadTopic: 'article/topic/load_by_id', // 根据ID加载主题信息
+			postDetail:'article/info/load_by_id', //帖子详情
 			loadTopicList: 'article/topic/table_data', // 根据主题加载分页
 			followPost: 'app/user_follow/exc', //关注
 			followList:'app/user_follow/list_data',//我的关注列表
@@ -165,6 +166,11 @@ class Service extends HttpService {
 	}
 	loadTopic(params) {
 		return this.postRequest(this.$$path.loadTopic, {
+			data: params
+		})
+	}
+	postDetail(params) {
+		return this.postRequest(this.$$path.postDetail, {
 			data: params
 		})
 	}

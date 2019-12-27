@@ -198,7 +198,6 @@
 								self.nodata = true
 							}
 						}
-						console.error(self.dataList)
 						setTimeout(() => {
 							self.dataList.filter(v => {
 								v.showTimer = true

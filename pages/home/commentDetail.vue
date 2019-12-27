@@ -255,11 +255,11 @@
 		</view> -->
 		<RewardList :showReward="showReward" :accountVO="accountVO" :userCode="dataInfo.publishUser.userCode" :rewardList="rewardList" @chooseReward="chooseReward"
 		 @hideModal="hideModal" @getRewardList="getRewardList"></RewardList>
-		<!-- <view class="rewardListBox">
-			 <view class="item" v-for="">
-				 
+		<view class="rewardListBox">
+			 <view class="item" v-for="(item,ind) in rewardRecodList" :key="ind">
+				 {{item}}
 			 </view>
-		 </view> -->
+		 </view>
 	</view>
 </template>
 
@@ -285,15 +285,13 @@
 				isComent: false, //是否滚动到底部
 				showReward: false,
 				accountVO:{},
-				rewardRecodList:''//打赏列表
+				rewardRecodList:'',
+				id:''
 			};
 		},
 		onLoad(options) {
-			let detail = JSON.parse(decodeURIComponent(options.data));
+			this.id=options.id;
 			this.detailtype = options.type
-			this.pageType = options.pageType
-			detail.articleInfo.showContent = this.setContent(detail.articleInfo);
-			this.dataInfo = detail
 			setTimeout(() => {
 				if (this.detailtype == 'showReward') {
 					this.showReward = true
@@ -307,6 +305,7 @@
 				getApp().globalData.isShowPic = false
 			} else {
 				this.listData = []
+				this.postDetail()
 				this.getCommentList()
 				this.rewardRecod()
 				this.getAccount()
@@ -318,6 +317,12 @@
 					}
 				})
 			}
+			var animation = uni.createAnimation({
+				duration: 2000,
+				timingFunction: 'ease',
+			})
+
+			this.animation = animation
 
 		},
 		onShareAppMessage(res) {
@@ -331,11 +336,11 @@
 				if (self.dataInfo.articleInfo.type == 1) {
 					settings.title = self.dataInfo.articleInfo.title
 					settings.pagePath =
-						`/pages/home/commentDetail?data=${encodeURIComponent(JSON.stringify(self.dataInfo))}&pageType=${this.pageType}&userCode=${uni.getStorageSync('userCode')}`
+						`/pages/home/commentDetail?data=${self.dataInfo.articleInfo.id}&userCode=${uni.getStorageSync('userCode')}`
 				} else {
 					settings.title = title
 					settings.pagePath =
-						`/pages/home/commentDetail?data=${encodeURIComponent(JSON.stringify(self.dataInfo))}&pageType=${this.pageType}&userCode=${uni.getStorageSync('userCode')}`
+						`/pages/home/commentDetail?data=${self.dataInfo.articleInfo.id}&userCode=${uni.getStorageSync('userCode')}`
 				}
 			} else {
 				settings.imageUrl = '/static/images/sharePic.png'
@@ -357,12 +362,27 @@
 			shareStat(id) {
 				let self = this
 				let params = {
-					articleId: self.dataInfo,
+					articleId: id,
 				}
 
 				self.$acFrame.HttpService.sharePost(params).then(res => {
 					if (res.success) {
 						self.dataInfo.articleInfo.numTotalShare++
+					}
+				})
+			},
+			postDetail(){
+				let self = this
+				let params = {
+					id: this.id,
+				}
+				self.$acFrame.HttpService.postDetail(params).then(res => {
+					if (res.success) {
+						let _obj = res.data
+						if(_obj.type==1){
+							_obj.articleInfo.showContent = this.setContent(_obj.articleInfo);
+						}
+						self.dataInfo = _obj
 					}
 				})
 			},
@@ -627,10 +647,15 @@
 				})
 			},
 			chooseReward(ind) {
-				let list = this.rewardList
-				list[ind].choose = !list[ind].choose
-				this.rewardList = list
-				console.log(this.rewardList[ind].choose)
+				// let list = this.rewardList
+				this.rewardList.filter((v,i)=>{
+					if(i==ind){
+						v.choose=true
+					}else{
+						v.choose=false
+					}
+				})
+				// this.rewardList = list
 			},
 			rewardRecod() {
 				let self = this
