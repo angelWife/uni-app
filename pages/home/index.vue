@@ -165,10 +165,10 @@
 				settings.imageUrl = ''
 				if (item.articleInfo.type == 1) {
 					settings.title = item.articleInfo.title
-					settings.pagePath = `/pages/home/commentDetail?data=${encodeURIComponent(JSON.stringify(item))}&pageType=${this.pageType}&userCode=${uni.getStorageSync('userCode')}`
+					settings.pagePath = `/pages/home/commentDetail?id=${item.articleInfo.id}&userCode=${uni.getStorageSync('userCode')}`
 				} else {
 					settings.title = title
-					settings.pagePath = `/pages/home/commentDetail?data=${encodeURIComponent(JSON.stringify(item))}&pageType=${this.pageType}&userCode=${uni.getStorageSync('userCode')}`
+					settings.pagePath = `/pages/home/commentDetail?data=${item.articleInfo.id}&userCode=${uni.getStorageSync('userCode')}`
 				}
 			} else {
 				settings.imageUrl = '/static/images/sharePic.png'
@@ -189,7 +189,6 @@
 		methods: {
 			initData() {
 				let self = this;
-				console.error(self.keywords)
 				let params = {
 					checkShop: self.checkShop,
 					pageType: self.pageType,

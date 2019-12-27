@@ -260,7 +260,7 @@
 			loadMoreData() {},
 			linkDetail(obj, type) {
 				uni.navigateTo({
-					url: `/pages/home/commentDetail?data=${encodeURIComponent(JSON.stringify(obj))}&pageType=${this.pageType}&type=${type?type:''}`
+					url: `/pages/home/commentDetail?data=${obj.articleInfo.id}&type=${type?type:''}`
 				});
 			},
 			rewardList(id){
@@ -383,7 +383,7 @@
 					success:(res)=>{
 						if(res.tapIndex==0){
 							uni.navigateTo({
-								url: `/pages/home/commentDetail?data=${encodeURIComponent(JSON.stringify(obj))}&pageType=${this.pageType}`
+								url: `/pages/home/commentDetail?data=${obj.articleInfo.id}`
 							});
 						}else{
 							self.$acFrame.HttpService.deletePost({id:obj.articleInfo.id}).then(res=>{

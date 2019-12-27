@@ -216,7 +216,6 @@ export default {
 		},
 		initData() {
 			let self = this;
-			console.error(self.keywords)
 			let params = {
 				checkShop: 1,
 				pageIndex: self.pageIndex,
