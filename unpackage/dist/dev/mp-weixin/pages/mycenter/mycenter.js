@@ -90,7 +90,10 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  var g0 = this.$acFrame.Util.setImgUrl(_vm.userInfo.imgHeadPath)
+  var g0 = this.$acFrame.Util.setImgUrl(
+    _vm.userInfo.imgHeadPath,
+    _vm.userInfo.genderType
+  )
   _vm.$mp.data = Object.assign(
     {},
     {
@@ -131,17 +134,7 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _methods;function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}function _toConsumableArray(arr) {return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread();}function _nonIterableSpread() {throw new TypeError("Invalid attempt to spread non-iterable instance");}function _iterableToArray(iter) {if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter);}function _arrayWithoutHoles(arr) {if (Array.isArray(arr)) {for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) {arr2[i] = arr[i];}return arr2;}}var commentItem = function commentItem() {return __webpack_require__.e(/*! import() | components/comment-item */ "components/comment-item").then(__webpack_require__.bind(null, /*! @/components/comment-item.vue */ 490));};var productList = function productList() {return __webpack_require__.e(/*! import() | components/shop-product */ "components/shop-product").then(__webpack_require__.bind(null, /*! @/components/shop-product.vue */ 25));};var _default =
-
-
-
-
-
-
-
-
-
-
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;function _toConsumableArray(arr) {return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread();}function _nonIterableSpread() {throw new TypeError("Invalid attempt to spread non-iterable instance");}function _iterableToArray(iter) {if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter);}function _arrayWithoutHoles(arr) {if (Array.isArray(arr)) {for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) {arr2[i] = arr[i];}return arr2;}}var commentItem = function commentItem() {return __webpack_require__.e(/*! import() | components/comment-item */ "components/comment-item").then(__webpack_require__.bind(null, /*! @/components/comment-item.vue */ 490));};var productList = function productList() {return __webpack_require__.e(/*! import() | components/shop-product */ "components/shop-product").then(__webpack_require__.bind(null, /*! @/components/shop-product.vue */ 25));};var _default =
 
 
 
@@ -269,6 +262,7 @@ __webpack_require__.r(__webpack_exports__);
       pageSize: 10,
       pageIndex: 1,
       showOper: true,
+      rewardTotal: 0,
       headpg: 'background:url("' + getApp().globalData.config.businessPath + 'static/ss/mp/images/mine_main.png") center center no-repeat;background-size: auto 100%;' };
 
   },
@@ -288,9 +282,17 @@ __webpack_require__.r(__webpack_exports__);
     if (getApp().globalData.isShowPic) {
       getApp().globalData.isShowPic = false;
     } else {
-      this.getUserInfo();
       this.setParams();
-      this.initData();
+      if (this.modalName == 'post') {
+        this.initData();
+      } else if (this.modalName == 'shop') {
+        this.getProdList();
+      } else if (this.modalName == 'reward') {
+        this.getRewardList();
+      }
+
+      this.getUserInfo();
+
     }
 
   },
@@ -317,7 +319,7 @@ __webpack_require__.r(__webpack_exports__);
     }
     return settings;
   },
-  methods: (_methods = {
+  methods: {
     shareStat: function shareStat(ind) {
       var self = this;
       var listInfo = self.dataList[ind];
@@ -331,12 +333,6 @@ __webpack_require__.r(__webpack_exports__);
           self.dataList[ind] = listInfo;
         }
       });
-    },
-    setParams: function setParams() {
-      this.pageIndex = 0;
-      this.dataList = [];
-      this.nomore = false;
-      this.nodata = false;
     },
     loadMoreData: function loadMoreData() {
       if (this.pageTotal > this.pageIndex) {
@@ -405,10 +401,8 @@ __webpack_require__.r(__webpack_exports__);
                   }
                 }
               });
-              if (v.publishUser.imgPathHead) {
-                v.publishUser.imgPathHead = self.$acFrame.Util.setImgUrl(v.publishUser.imgPathHead);
-              } else {
-                v.publishUser.imgPathHead = '/static/images/head1.png';
+              if (v.publishUser) {
+                v.publishUser.imgPathHead = self.$acFrame.Util.setImgUrl(v.publishUser.imgPathHead, v.publishUser.genderType);
               }
               if (v.type == 1) {
                 if (v.articleInfo.contentExtendList && v.articleInfo.contentExtendList.length > 0) {
@@ -439,6 +433,31 @@ __webpack_require__.r(__webpack_exports__);
             self.nosearch = true;
           }
           self.$acFrame.Util.mytotal(res.code);
+        }
+      });
+    },
+    getRewardList: function getRewardList() {
+      var self = this;
+      var params = {
+        pageIndex: this.pageIndex,
+        pageSize: this.pageSize };
+
+      this.$acFrame.HttpService.rewardTable(params).then(function (res) {
+        if (res.success) {
+          var list = res.data.rows;
+          self.pageTotal = res.data.pageTotal;
+          self.rewardTotal = res.data.total;
+          if (list.length > 0) {
+            list.filter(function (v) {
+              v.imgHeadPath = self.setImg(v.imgHeadPath);
+              v.virtualImgPath = self.setImg(v.virtualImgPath);
+              v.createTime = self.$acFrame.Util.formatTime(v.createTime, 'dayhm');
+            });
+            self.dataList = self.dataList.concat(list);
+          } else {
+            self.nodata = true;
+          }
+
         }
       });
     },
@@ -542,6 +561,8 @@ __webpack_require__.r(__webpack_exports__);
         self.initData();
       } else if (self.modalName == 'shop') {
         self.getProdList();
+      } else if (self.modalName == 'reward') {
+        self.getRewardList();
       }
     },
     dianzan: function dianzan(id, ind) {var _this = this; //likeComment
@@ -607,23 +628,22 @@ __webpack_require__.r(__webpack_exports__);
     },
     hideMore: function hideMore(ind) {
       this.dataList[ind].articleInfo.showMore = false;
-    } }, _defineProperty(_methods, "setParams", function setParams()
+    },
+    setParams: function setParams() {
+      this.pageIndex = 1;
+      this.nodata = false;
+      this.nomore = false;
+      this.pageSize = 10;
+      this.pageTotal = 1;
+      this.dataList = [];
+    },
+    followList: function followList(type) {
+      if (type) {
+        uni.navigateTo({
+          url: 'followList?type=' + type });
 
-  {
-    var self = this;
-    self.pageTotal = 1;
-    self.pageSize = 10;
-    self.pageIndex = 1;
-    self.nodata = false;
-    self.dataList = [];
-  }), _defineProperty(_methods, "followList", function followList(
-  type) {
-    if (type) {
-      uni.navigateTo({
-        url: 'followList?type=' + type });
-
-    }
-  }), _methods) };exports.default = _default;
+      }
+    } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 
 /***/ }),

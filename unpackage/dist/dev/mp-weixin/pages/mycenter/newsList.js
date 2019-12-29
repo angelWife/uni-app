@@ -176,6 +176,31 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var _default =
 {
   data: function data() {
@@ -186,7 +211,9 @@ var _default =
       pageIndex: 1,
       pageTotal: 1,
       nodata: false,
-      nomore: false };
+      nomore: false,
+      t_x: 0,
+      t_y: 0 };
 
   },
   onLoad: function onLoad(options) {
@@ -195,7 +222,7 @@ var _default =
     if (this.type == 1) {
       title = '系统消息';
     } else if (this.type == 2) {
-      title = '文章消息';
+      title = '帖子消息';
     } else if (this.type == 3) {
       title = '订单消息';
     }
@@ -206,6 +233,7 @@ var _default =
   onShow: function onShow() {
     this.setParams();
     this.getNewsList();
+
   },
   onPullDownRefresh: function onPullDownRefresh() {
     this.setParams();
@@ -232,7 +260,8 @@ var _default =
       var params = {
         fromType: this.type,
         pageIndex: this.pageIndex,
-        pageSize: this.pageSize };
+        pageSize: this.pageSize,
+        flagRead: 2 };
 
       this.$acFrame.HttpService.newsList(params).then(function (res) {
         if (res.success) {
@@ -275,15 +304,77 @@ var _default =
                     break;}
 
               }
-
+              v.style = "left:0;";
             });
             console.log(list);
             self.newsList = self.newsList.concat(list);
+            self.readyNews();
           } else {
             self.nodata = true;
           }
         }
       });
+    },
+    clearAll: function clearAll() {
+      var idList = [],self = this;
+      this.newsList.filter(function (v) {
+        idList.push(v.id);
+      });
+      var params = {
+        fromType: this.type,
+        idList: idList };
+
+      uni.showModal({
+        title: '提示',
+        content: '确认清空消息？',
+        cancelColor: "#999",
+        confirmColor: '#4c8ff7',
+        success: function success(res) {
+          if (res.confirm) {
+            self.$acFrame.HttpService.delNews(params).then(function (res) {
+              if (res.success) {
+                self.$acFrame.Util.mytotal('您确认要清空消息吗！');
+                setTimeout(function () {
+                  self.setParams();
+                  self.getNewsList();
+                }, 1000);
+              }
+            });
+          }
+        } });
+
+    },
+    touchstart: function touchstart(e) {
+      this.t_x = e.touches[0].pageX;
+      this.t_y = e.touches[0].pageY; // 获取触摸时的原点
+      // timeInterval = setInterval(function() {
+      //   times++;
+      // }, 50);
+    },
+    touchend: function touchend(e, ind) {
+      var touchMoveX = e.changedTouches[0].pageX;
+      var touchMoveY = e.changedTouches[0].pageY;
+      var dataList = this.newsList;
+      var tmX = touchMoveX - this.t_x;
+      var tmY = touchMoveY - this.t_y;
+      var absX = Math.abs(tmX);
+      var absY = Math.abs(tmY);
+      if (absX > 2 * absY && absX > 5) {
+        if (tmX < 0) {
+          dataList.filter(function (v, i) {
+            if (i == ind) {
+              v.style = "left:-140rpx";
+            } else {
+              v.style = "left:0";
+            }
+          });
+        } else {
+          dataList[ind].style = "left:0";
+        }
+      }
+      this.newsList = dataList;
+      this.t_y = 0;
+      this.t_x = 0;
     },
     setImg: function setImg(src) {
       if (!src) {
@@ -291,25 +382,57 @@ var _default =
       }
       return this.$acFrame.Util.setImgUrl(src);
     },
-    readyNews: function readyNews(item) {
+    readyNews: function readyNews() {
+      var idList = [];
+      this.newsList.filter(function (v) {
+        idList.push(v.id);
+      });
       var params = {
-        fromType: item.fromType,
-        id: item.id };
+        fromType: this.type,
+        idList: idList };
 
       this.$acFrame.HttpService.readNews(params).then(function (res) {
         if (res.success) {}
       });
     },
     mycenter: function mycenter(item) {
-      this.readyNews(item);
+      // this.readyNews(item)
       uni.navigateTo({
         url: 'mycenter?userCode=' + item.userInfo.userCode });
 
     },
     articlDetail: function articlDetail(item) {
-      this.readyNews(item);
+      // this.readyNews(item)
       uni.navigateTo({
         url: "/pages/home/commentDetail?id=" + item.articleId });
+
+    },
+    delNews: function delNews(item) {
+      var self = this;
+      var params = {
+        fromType: this.type,
+        idList: [item.id] };
+
+      uni.showModal({
+        title: '提示',
+        content: '确认删除该消息？',
+        cancelColor: "#999",
+        confirmColor: '#4c8ff7',
+        success: function success(res) {
+          if (res.confirm) {
+            self.$acFrame.HttpService.delNews(params).then(function (res) {
+              if (res.success) {
+                self.$acFrame.Util.mytotal('删除成功！');
+                setTimeout(function () {
+                  self.setParams();
+                  self.getNewsList();
+                }, 1000);
+              }
+            });
+
+          }
+        } });
+
 
     } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))

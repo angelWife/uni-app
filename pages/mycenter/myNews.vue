@@ -10,7 +10,7 @@
 					<view class="main flex-1">
 						<view class="title fs16">
 							<text v-if="ind==1">系统消息</text>
-							<text v-if="ind==2">文章消息</text>
+							<text v-if="ind==2">帖子消息</text>
 							<text v-if="ind==3">订单消息</text>
 						</view>
 						<view class="text c999">

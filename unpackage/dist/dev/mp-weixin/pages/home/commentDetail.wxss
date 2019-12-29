@@ -244,23 +244,41 @@ page .pd10 {
   overflow: hidden;
 }
 .detail .operBox .item .mybtn {
-  padding: 0 0 10rpx;
-  line-height: 50rpx;
+  height: 70rpx;
+  line-height: 70rpx;
   border-radius: 50rpx;
   color: #999;
+  position: relative;
+  overflow: hidden;
   background: #fff;
   border: 1px solid #9f9f9f;
 }
+.detail .operBox .item .mybtn image {
+  width: 40rpx;
+  display: inline-block;
+  margin-right: 10rpx;
+}
 .detail .operBox .item .mybtn.item_red {
+  height: 70rpx;
   background: #b40000;
   border-color: #b40000;
+  padding: 0;
   color: #fff;
 }
+.detail .operBox .item .mybtn button {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  z-index: 1;
+}
 .detail .operBox .item .iconfont {
-  height: 40rpx;
+  height: 70rpx;
   width: 40rpx;
   text-align: center;
-  line-height: 40rpx;
+  line-height: 70rpx;
+  font-size: 40rpx;
+  margin-right: 10rpx;
 }
 .detail .operBox .item .iconfont::before {
   line-height: 100%;
@@ -311,14 +329,7 @@ page .pd10 {
   min-height: 60rpx;
   text-align: justify;
 }
-.comment .item .oper {
-  line-height: 30rpx;
-}
-.comment .item .oper .iconfont {
-  float: left;
-}
 .comment .item .oper text {
-  float: left;
   margin-left: 10rpx;
 }
 .comment .item .operIocn {
@@ -327,11 +338,7 @@ page .pd10 {
 }
 .comment .item .operIocn .iconfont {
   position: relative;
-  top: -6rpx;
-}
-.comment .item .operIocn text {
-  position: relative;
-  top: 8rpx;
+  top: -5rpx;
 }
 .comment .item .hasUp .iconfont {
   color: #B40000;

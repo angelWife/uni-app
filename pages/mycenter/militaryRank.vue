@@ -1,7 +1,8 @@
 <template>
 	<view class="content pagebg flex f-col">
 		<view class="picBox">
-			<image src="../../static/images/bg-military.png" mode="widthFix"></image>
+			<image src="../../static/images/bg-light.png" mode="widthFix"></image>
+			<image class="junxian" :src="details.junxianpic" mode="widthFix"></image>
 			<text>规则说明</text>
 		</view>
 		<view class="levelBox">
@@ -60,7 +61,7 @@
 					活跃度
 				</view>
 				<view class="dataBox flex-1">
-					<view class="markBox prev">
+					<view class="markBox prev" :style="">
 						<text class="text">111</text>
 						<text class="sanjiao"></text>
 						<text class="mark"></text>
@@ -81,74 +82,8 @@
 				</view>
 			</view>
 		</view>
-	    <view class="levelMsg flex-1 flex f-col">
-	    	<view class="item blod fs15">等级特权</view>
-			<scroll-view class="myscroll flex-1" scroll-y="true" >
-				<view class="item flex item-center">
-					<view class="flex-1 textEllipsis">
-						特权描述特权描述特权描述
-					</view>
-					<view class="btnBox">
-						<button type="orange" size="mini" class="radiuBtn">立即查看</button>
-					</view>
-				</view>
-				<view class="item flex item-center">
-					<view class="flex-1 textEllipsis">
-						特权描述特权描述特权描述
-					</view>
-					<view class="btnBox">
-						<button type="orange" size="mini" class="radiuBtn">立即查看</button>
-					</view>
-				</view>
-				<view class="item flex item-center">
-					<view class="flex-1 textEllipsis">
-						特权描述特权描述特权描述
-					</view>
-					<view class="btnBox">
-						<button type="orange" size="mini" class="radiuBtn">立即查看</button>
-					</view>
-				</view>
-				<view class="item flex item-center">
-					<view class="flex-1 textEllipsis">
-						特权描述特权描述特权描述
-					</view>
-					<view class="btnBox">
-						<button type="orange" size="mini" class="radiuBtn">立即查看</button>
-					</view>
-				</view>
-				<view class="item flex item-center">
-					<view class="flex-1 textEllipsis">
-						特权描述特权描述特权描述
-					</view>
-					<view class="btnBox">
-						<button type="orange" size="mini" class="radiuBtn">立即查看</button>
-					</view>
-				</view>
-				<view class="item flex item-center">
-					<view class="flex-1 textEllipsis">
-						特权描述特权描述特权描述
-					</view>
-					<view class="btnBox">
-						<button type="orange" size="mini" class="radiuBtn">立即查看</button>
-					</view>
-				</view>
-				<view class="item flex item-center">
-					<view class="flex-1 textEllipsis">
-						特权描述特权描述特权描述
-					</view>
-					<view class="btnBox">
-						<button type="orange" size="mini" class="radiuBtn">立即查看</button>
-					</view>
-				</view>
-				<view class="item flex item-center">
-					<view class="flex-1 textEllipsis">
-						特权描述特权描述特权描述
-					</view>
-					<view class="btnBox">
-						<button type="orange" size="mini" class="radiuBtn">立即查看</button>
-					</view>
-				</view>
-			</scroll-view>
+	    <view class="levelMsg">
+	    	
 	    </view>
 	</view>
 </template>
@@ -157,17 +92,11 @@
 	export default {
 		data() {
 			return {
-				numdata:{
-					fensi:{
-						prev:''
-					},
-					goumai:{},
-					level:{}
-				}
+				details:{
+					junxianpic:'/static/images/junxian/1.png'
+				},
+				
 			};
-		},
-		methods:{
-			
 		},
 		onLoad(){
 			uni.setNavigationBarColor({
@@ -178,7 +107,26 @@
 					timingFunc: 'easeIn'
 				}
 			})
+		},
+		onShow(){
+			this.getInfo()
+		},
+		methods:{
+			getInfo(){
+				let self = this
+				this.$acFrame.HttpService.myLeave().then(res=>{
+					if(res.success){
+						let details = res.data
+						details.junxianpic = '/static/images/junxian/'+details.type +'.png'
+						let prevStyle='',nextStyle='',nowStyle=''
+						self.details = details
+						
+					}
+					self.details.junxianpic = '/static/images/junxian/1.png'
+				})
+			},
 		}
+		
 	}
 </script>
 
@@ -193,6 +141,16 @@
 	text-align: center;
 	image{
 		width: 60%;
+	}
+	.junxian{
+		width:150px;
+		position: absolute;
+		z-index: 5;
+		left:50%;
+		top:50%;
+		margin-left:-75px;
+		
+		transform: translateY(-50%);
 	}
 	text{
 		position:absolute;

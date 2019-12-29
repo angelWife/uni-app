@@ -13,27 +13,30 @@
 }
 .pic .shownum {
   position: absolute;
-  background: #f6f6f6;
+  background: #efefef;
   text-align: center;
-  height: 40rpx;
-  width: 40rpx;
+  height: 50rpx;
+  width: 44rpx;
   font-size: 20rpx;
-  line-height: 40rpx;
-  border-radius: 0.4em;
+  line-height: 45rpx;
+  border-radius: 8px 0px 20px 20px;
   color: #999;
   left: 0;
   top: 0;
 }
 .pic .num0 {
-  background: #B40000;
+  background: -webkit-linear-gradient(top, #ffd555 0%, #ffa100 100%);
+  background: linear-gradient(180deg, #ffd555 0%, #ffa100 100%);
   color: #fff;
 }
 .pic .num1 {
-  background: #ff9d19;
+  background: -webkit-linear-gradient(top, #ecfaff 0%, #a6a7a8 100%);
+  background: linear-gradient(180deg, #ecfaff 0%, #a6a7a8 100%);
   color: #fff;
 }
 .pic .num2 {
-  background: #4c8ff7;
+  background: -webkit-linear-gradient(top, #fbc884 0%, #d49e55 100%);
+  background: linear-gradient(180deg, #fbc884 0%, #d49e55 100%);
   color: #fff;
 }
 .nums {

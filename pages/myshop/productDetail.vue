@@ -85,7 +85,7 @@
 							 :minute="item.minute" :second="item.second" />
 						</view>
 					</view>
-					<view class="">
+					<view class="spellBtn">
 						<!-- <block v-if="item.firstUserIsOwner">
 							<button type="blue" size="mini" open-type="share">邀请好友</button>
 						</block>
@@ -115,7 +115,7 @@
 				商品评价（{{commontList.length}}条）
 				<text class="red float-right" @tap="showAllComment()">查看全部</text>
 			</view>
-			<view class="list">
+			<view class="list" v-if="commontList.length>0">
 				<view v-for="(item,ind) in commontList" :key="ind" class="item">
 					<view class="item-top flex item-center">
 						<view class="pic imgCirc">
@@ -238,7 +238,7 @@
 								 :minute="item.minute" :second="item.second" />
 							</view>
 						</view>
-						<view class="">
+						<view class="spellBtn">
 							<!-- 	<block v-if="item.firstUserIsOwner">
 								<button type="blue" size="mini" open-type="share">邀请好友</button>
 							</block>
@@ -278,7 +278,7 @@
 						<view class="item" v-for="(item,ind) in spellVO.userList" :key="ind">
 							<view class="name">{{ind==0?'拼主':item.userName}}</view>
 							<view class="pic">
-								<image :src="item.imgHeadPath" mode="widthFix"></image>
+								<image :src="setImg(item.imgHeadPath)" mode="widthFix"></image>
 							</view>
 						</view>
 						<view class="item null" v-if="spellVO.numUserLeft>0">
@@ -852,60 +852,64 @@
 
 		.title {
 			padding: 20rpx 24rpx;
-			border-bottom: 1px solid #ccc;
+			
 		}
-
-		.item {
-			margin: 0 24rpx;
-			padding: 20rpx;
-			border-bottom: 1px solid #ccc;
-
-			.item-top {
-				.pic {
-					width: 60rpx;
-					height: 60rpx;
-					margin-right: 20rpx;
+		.list{
+			border-top: 1px solid #ccc;
+			.item {
+				margin: 0 24rpx;
+				padding: 20rpx;
+				border-bottom: 1px solid #ccc;
+				&:last-child{
+					border:0;
 				}
-
-				.name {
-					width: 30%;
-				}
-
-				.star {
-					image {
-						width: 40rpx;
-						display: inline-block;
-						margin-left: 10rpx;
+				.item-top {
+					.pic {
+						width: 60rpx;
+						height: 60rpx;
+						margin-right: 20rpx;
+					}
+			
+					.name {
+						width: 30%;
+					}
+			
+					.star {
+						image {
+							width: 40rpx;
+							display: inline-block;
+							margin-left: 10rpx;
+						}
 					}
 				}
-			}
-
-			.imgList {
-				margin-top: 20rpx;
-				padding: 0 10rpx;
-
-				.imgItem {
-					width: 25%;
-					height: calc((100vw - 20rpx) / 4 - 20rpx);
-					float: left;
+			
+				.imgList {
+					margin-top: 20rpx;
 					padding: 0 10rpx;
-					margin-bottom: 20rpx;
-
-					.imgBox {
-						overflow: hidden;
-						height: 100%;
+			
+					.imgItem {
+						width: 25%;
+						height: calc((100vw - 20rpx) / 4 - 20rpx);
+						float: left;
+						padding: 0 10rpx;
+						margin-bottom: 20rpx;
+			
+						.imgBox {
+							overflow: hidden;
+							height: 100%;
+						}
 					}
 				}
-			}
-
-			.text {
-				margin: 20rpx 0;
-			}
-
-			.time {
-				text {
-					display: inline-block;
-					margin-right: 20rpx;
+			
+				.text {
+					margin: 20rpx 0;
+				}
+			
+				.time {
+					text {
+						display: inline-block;
+						margin-right: 20rpx;
+					}
 				}
 			}
 		}
@@ -1061,6 +1065,9 @@
 	}
 
 	.assembleDetail {
+		.moadl-main{
+			width: 90% !important;
+		}
 		.detailMain {
 			padding: 14rpx 24rpx 24rpx;
 
@@ -1191,6 +1198,12 @@
 			button {
 				line-height: 80rpx;
 			}
+		}
+	}
+	.spellBtn {
+		button{
+			padding:0 !important;
+			width: 130rpx;
 		}
 	}
 </style>

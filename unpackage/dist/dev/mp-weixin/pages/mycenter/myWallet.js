@@ -239,7 +239,9 @@ var _default =
       this.$acFrame.HttpService.virtualTab().then(function (res) {
         if (res.success) {
           var list = res.data;
-          list.unshift({
+          var nav = [];
+          list.unshift(
+          {
             key: '',
             val: '热销' });
 
@@ -249,8 +251,11 @@ var _default =
             } else {
               v.choose = false;
             }
+            if (v.key != 4 && v.key != 5) {
+              nav.push(v);
+            }
           });
-          self.nav = list;
+          self.nav = nav;
         }
       });
     },

@@ -135,7 +135,20 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var uniCountDown = function uniCountDown() {return __webpack_require__.e(/*! import() | components/countDown */ "components/countDown").then(__webpack_require__.bind(null, /*! @/components/countDown.vue */ 525));};var _default =
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var uniCountDown = function uniCountDown() {return __webpack_require__.e(/*! import() | components/countDown */ "components/countDown").then(__webpack_require__.bind(null, /*! @/components/countDown.vue */ 532));};var _default =
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -558,13 +571,13 @@ __webpack_require__.r(__webpack_exports__);
     formatTime: function formatTime(t) {
       return this.$acFrame.Util.formatTime(t, "dayhm");
     },
-    textPaste: function textPaste() {
+    textPaste: function textPaste(code) {
       var self = this;
       wx.showToast({
         title: '复制成功' });
 
       wx.setClipboardData({
-        data: self.details.code,
+        data: code,
         success: function success(res) {
           wx.getClipboardData({
             success: function success(res) {

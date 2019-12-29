@@ -4,6 +4,24 @@
 .desc .pic {
   width: 300rpx;
   margin-left: 20rpx;
+  border-radius: 0.3em;
+  position: relative;
+  overflow: hidden;
+}
+.desc .pic text {
+  position: absolute;
+  top: -10px;
+  right: -40px;
+  z-index: 5;
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+  color: #fff;
+  background: #b40000;
+  width: 100px;
+  text-align: center;
+  line-height: 55px;
+  font-size: 20rpx;
+  height: 40px;
 }
 .desc .detail {
   line-height: 50rpx;
@@ -22,10 +40,17 @@
 .otherSpirit {
   padding: 0 14rpx;
 }
+.otherSpirit scroll-view {
+  height: 220rpx;
+}
+.otherSpirit .picbox {
+  white-space: nowrap;
+  height: 100%;
+}
 .otherSpirit .item {
   float: left;
   width: 160rpx;
-  margin: 0 10rpx 20rpx;
+  margin: 0 10rpx;
 }
 .otherSpirit .item .pic {
   width: 100%;
@@ -38,11 +63,13 @@
   border-color: #B40000;
 }
 .otherSpirit .item .text {
+  height: 60rpx;
   line-height: 60rpx;
   text-align: center;
 }
 .otherSpirit .add {
   height: 160rpx;
+  width: 160rpx;
   box-sizing: border-box;
   line-height: 160rpx;
   text-align: center;

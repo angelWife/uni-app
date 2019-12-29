@@ -138,7 +138,9 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var commentModal = function commentModal() {return __webpack_require__.e(/*! import() | components/comment */ "components/comment").then(__webpack_require__.bind(null, /*! @/components/comment.vue */ 497));};var RewardList = function RewardList() {return __webpack_require__.e(/*! import() | components/reward-modal */ "components/reward-modal").then(__webpack_require__.bind(null, /*! @/components/reward-modal.vue */ 504));};var _default =
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var commentModal = function commentModal() {return __webpack_require__.e(/*! import() | components/comment */ "components/comment").then(__webpack_require__.bind(null, /*! @/components/comment.vue */ 497));};var RewardList = function RewardList() {return __webpack_require__.e(/*! import() | components/reward-modal */ "components/reward-modal").then(__webpack_require__.bind(null, /*! @/components/reward-modal.vue */ 504));};var LBarrage = function LBarrage() {return __webpack_require__.e(/*! import() | components/l-barrage/l-barrage */ "components/l-barrage/l-barrage").then(__webpack_require__.bind(null, /*! @/components/l-barrage/l-barrage.vue */ 511));};var _default =
+
+
 
 
 
@@ -409,7 +411,8 @@ __webpack_require__.r(__webpack_exports__);
 {
   components: {
     commentModal: commentModal,
-    RewardList: RewardList },
+    RewardList: RewardList,
+    LBarrage: LBarrage },
 
   data: function data() {
     return {
@@ -456,6 +459,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
     this.animation = animation;
+
 
   },
   onShareAppMessage: function onShareAppMessage(res) {
@@ -767,7 +771,7 @@ __webpack_require__.r(__webpack_exports__);
       var params = {
         pageIndex: 1,
         pageSize: 100,
-        useType: useType,
+        // useType: useType,
         sceneType: 2 };
 
       this.$acFrame.HttpService.virtualDashang(params).then(function (res) {
@@ -810,20 +814,24 @@ __webpack_require__.r(__webpack_exports__);
     rewardRecod: function rewardRecod() {
       var self = this;
       var params = {
+        filterConfig: true,
         userCode: this.dataInfo.publishUser.userCode };
 
       this.$acFrame.HttpService.rewardRecod(params).then(function (res) {
         if (res.success) {
           var list = res.data;
           if (list.length > 0) {
+            // for(let i = 0;i<10;i++){
+            // 	list.push('')
+            // }
             self.rewardRecodList = list;
             self.loadRewardAnimate(list);
           }
         }
       });
     },
-    loadRewardAnimate: function loadRewardAnimate(list) {
-
+    loadRewardAnimate: function loadRewardAnimate() {
+      this.$refs.lBarrage.start(this.rewardRecodList);
     },
     getAccount: function getAccount() {
       var self = this;
@@ -840,7 +848,14 @@ __webpack_require__.r(__webpack_exports__);
       var imgList = this.dataInfo.articleInfo.imgList;
       this.$acFrame.Util.showBigPic(imgList[imgInd], imgList);
       getApp().globalData.isShowPic = true;
-    } } };exports.default = _default;
+    } },
+
+  onHide: function onHide() {
+    this.$refs.lBarrage.over();
+  },
+  onUnload: function onUnload() {
+    this.$refs.lBarrage.over();
+  } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 
 /***/ }),

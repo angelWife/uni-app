@@ -3,7 +3,7 @@
 		<view class="headBox flex item-center" :style="headpg">
 			<view class="pic comHeadPic">
 				<image class="grade" v-if="userInfo.nobilityType>1" :src="'/static/images/juewei/'+(userInfo.nobilityType-1)+'.png'"  mode="widthFix"></image>
-				<image class="headpic" :src="this.$acFrame.Util.setImgUrl(userInfo.imgHeadPath )"></image>
+				<image class="headpic" :src="this.$acFrame.Util.setImgUrl(userInfo.imgHeadPath,userInfo.genderType)"></image>
 			</view>
 			<view class="msg flex-1">
 				<view class="text textEllipsis">
@@ -50,30 +50,30 @@
 				 @followPost="followPost" @hideMore="hideMore" @showAll="showAll" :showOper="showOper"></commentItem>
 			</view>
 			<view class="shop" v-if="modalName=='shop'">
-				<productList :nodata="nodata" :dataList="dataList"></productList>
+				<productList :nodata="nodata" :nomore="nomore" :dataList="dataList"></productList>
 			</view>
 			<view class="reward" v-if="modalName=='reward'">
 				<view class="topMsg flex">
 					<view>打赏记录</view>
-					<view class="flex-1 text-right c999">我收到过100次打赏</view>
+					<view class="flex-1 text-right c999">我收到过{{rewardTotal}}次打赏</view>
 				</view>
-				<view class="comItem flex item-center">
+				<view class="comItem flex item-center"  v-for="(item,index) in dataList" :key="index">
 					<view class="pic">
-						<image src="../../static/images/head1.png" mode="widthFix" />
+						<image :src="item.imgHeadPath " mode="widthFix" />
 					</view>
 					<view class="main flex-1 flex item-center">
 						<view class="flex-1">
-							<view class="title fs16"></view>
-							<view class="text fs12 c999"></view>
+							<view class="title fs16">{{item.nickName}}</view>
+							<view class="text fs12 c999">{{item.createTime}}</view>
 						</view>
 						<view class="right-pic">
-							<image src="../../static/images/icon-aircraft.png" mode="widthFix" />
+							<image :src="item.virtualImgPath " mode="widthFix" />
 						</view>
 					</view>
 				</view>
 			</view>
 			<view class="honor clearfix" v-if="modalName=='honor'">
-				<view class="item">
+				<!-- <view class="item">
 					<view class="itemBox">
 						<view class="mydate">
 							<image class="mark" src="../../static/images/icon-label.png" mode="widthFix" />
@@ -81,32 +81,22 @@
 						</view>
 						<view class="item-modal flex item-center just-con-c">
 							<image src="../../static/images/first.png" mode="" />
+						</view>
+					</view>
+				</view> -->
+				<view class="noData flex f-row just-con-c item-center">
+					<view class="text-center">
+						<image src="/static/images/nodata.png" mode="widthFix"></image>
+						<view class="text-center c666 fs16">
+							这里还没有内容
 						</view>
 					</view>
 				</view>
-				<view class="item">
-					<view class="itemBox">
-						<view class="mydate">
-							<image class="mark" src="../../static/images/icon-label.png" mode="widthFix" />
-							<text>12月12日</text>
-						</view>
-						<view class="item-modal flex item-center just-con-c">
-							<image src="../../static/images/first.png" mode="" />
-						</view>
-					</view>
-				</view>
-				<view class="item">
-					<view class="itemBox">
-						<view class="mydate">
-							<image class="mark" src="../../static/images/icon-label.png" mode="widthFix" />
-							<text>12月12日</text>
-						</view>
-						<view class="item-modal flex item-center just-con-c">
-							<image src="../../static/images/first.png" mode="" />
-						</view>
-					</view>
+				<view class="noMore" v-if="nomore">
+					~已经到底了！~
 				</view>
 			</view>
+			
 		</scroll-view>
 	</view>
 </template>
@@ -136,6 +126,7 @@ export default {
 			pageSize:10,
 			pageIndex:1,
 			showOper:true,
+			rewardTotal:0,
 			headpg:'background:url("'+getApp().globalData.config.businessPath+'static/ss/mp/images/mine_main.png") center center no-repeat;background-size: auto 100%;'
 		};
 	},
@@ -155,9 +146,17 @@ export default {
 		if(getApp().globalData.isShowPic){
 			getApp().globalData.isShowPic=false
 		}else{
-			this.getUserInfo();
 			this.setParams();
-			this.initData();
+			if(this.modalName =='post'){
+				this.initData();
+			}else if(this.modalName =='shop'){
+				this.getProdList()
+			}else if(this.modalName == 'reward'){
+				this.getRewardList()
+			}
+			
+			this.getUserInfo();
+			
 		}
 		
 	},
@@ -198,12 +197,6 @@ export default {
 					self.dataList[ind] = listInfo
 				}
 			})
-		},
-		setParams(){
-			this.pageIndex=0
-			this.dataList = []
-			this.nomore=false
-			this.nodata =false
 		},
 		loadMoreData(){
 			if(this.pageTotal>this.pageIndex){
@@ -272,10 +265,8 @@ export default {
 									}
 								}
 							});
-							if (v.publishUser.imgPathHead) {
-								v.publishUser.imgPathHead = self.$acFrame.Util.setImgUrl(v.publishUser.imgPathHead);
-							} else {
-								v.publishUser.imgPathHead = '/static/images/head1.png'
+							if (v.publishUser) {
+								v.publishUser.imgPathHead = self.$acFrame.Util.setImgUrl(v.publishUser.imgPathHead,v.publishUser.genderType);
 							}
 							if (v.type == 1) {
 								if (v.articleInfo.contentExtendList && v.articleInfo.contentExtendList.length > 0) {
@@ -308,6 +299,31 @@ export default {
 					self.$acFrame.Util.mytotal(res.code);
 				}
 			});
+		},
+		getRewardList(){
+			let self = this
+			let params = {
+				pageIndex:this.pageIndex,
+				pageSize:this.pageSize
+			}
+			this.$acFrame.HttpService.rewardTable(params).then(res=>{
+				if(res.success){
+					let list = res.data.rows
+					self.pageTotal = res.data.pageTotal
+					self.rewardTotal = res.data.total
+					if(list.length>0){
+						list.filter(v=>{
+							v.imgHeadPath  = self.setImg(v.imgHeadPath)
+							v.virtualImgPath   = self.setImg(v.virtualImgPath)
+							v.createTime = self.$acFrame.Util.formatTime(v.createTime,'dayhm')
+						})
+						self.dataList = self.dataList.concat(list)
+					}else{
+						self.nodata=true
+					}
+					
+				}
+			})
 		},
 		setContent(mydata) {
 			let showContent = [];
@@ -409,6 +425,8 @@ export default {
 				self.initData()
 			} else if(self.modalName == 'shop'){
 				self.getProdList()
+			} else if(self.modalName == 'reward'){
+				self.getRewardList()
 			}
 		},
 		dianzan(id, ind) { //likeComment
@@ -475,14 +493,13 @@ export default {
 		hideMore(ind) {
 			this.dataList[ind].articleInfo.showMore = false;
 		},
-		
 		setParams(){
-			let self =this
-			self.pageTotal=1
-			self.pageSize=10
-			self.pageIndex=1
-			self.nodata = false
-			self.dataList=[]
+			this.pageIndex=1
+			this.nodata = false
+			this.nomore=false
+			this.pageSize=10
+			this.pageTotal=1
+			this.dataList=[]
 		},
 		followList(type){
 			if(type){
@@ -521,12 +538,6 @@ page {
 			border-radius: 100rpx;
 			width: 100rpx;
 			height:100rpx;
-		}
-		.grade {
-			position: absolute;
-			width: 120rpx;
-			top: -10rpx;
-			left: -10rpx;
 		}
 	}
 	.msg {
@@ -609,6 +620,13 @@ page {
 	.comItem{
 		.main{
 			padding:10rpx 0;
+		}
+		.pic{
+			width: 60rpx;
+		}
+		.right-pic{
+			width: 96rpx;
+			margin-right:30rpx;
 		}
 	}
 	.honor{

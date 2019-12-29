@@ -182,12 +182,21 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 var _default =
 {
   data: function data() {
     return {
       goodsVO: {},
-      goodsList: [] };
+      goodsList: [],
+      mystyle: '' };
 
   },
   onLoad: function onLoad(options) {
@@ -203,7 +212,8 @@ var _default =
         pageIndex: 1,
         pageSize: 100,
         fetchImgList: true,
-        useType: '' };
+        useTypeList: [2, 3],
+        showDefault: true };
 
       this.$acFrame.HttpService.myReceiveGoods(params).then(function (res) {
         if (res.success) {
@@ -223,6 +233,7 @@ var _default =
               });
               list[i].virtualVo = _obj;
             });
+            self.mystyle = "width:".concat((list.length + 1) * 180, "rpx");
             self.goodsList = list;
             self.goodsVO = list[0].virtualVo;
           }
@@ -255,6 +266,7 @@ var _default =
       this.$acFrame.HttpService.setDefault(params).then(function (res) {
         if (res.success) {
           self.$acFrame.Util.mytotal('设置成功！');
+          self.getReceiveList();
         }
       });
     },

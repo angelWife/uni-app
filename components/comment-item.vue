@@ -563,7 +563,7 @@
 		}
 
 		.imgList {
-			padding: 20rpx 20rpx 0;
+			padding: 0 20rpx 0;
 
 			.imgItem {
 				float: left;
@@ -571,7 +571,7 @@
 				padding: 0 10rpx;
 				height: calc((100vw - 24rpx) / 3 - 20rpx);
 				overflow: hidden;
-				margin-bottom:20rpx;
+				margin-top:20rpx;
 			}
 		}
 

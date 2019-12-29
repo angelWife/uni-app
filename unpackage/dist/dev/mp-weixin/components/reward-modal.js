@@ -147,6 +147,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 var _default2 =
 {
   props: {
@@ -188,6 +191,7 @@ var _default2 =
 
       checked: true,
       usename: 'use',
+      showType: 5,
       listVO: {} };
 
   },
@@ -203,11 +207,16 @@ var _default2 =
       modalBar.filter(function (v, i) {
         if (i == ind) {
           v.active = true;
-          self.$emit('getRewardList', v.type);
+          self.showType = v.type;
         } else {
           v.active = false;
         }
       });
+      if (ind == 0) {
+        self.$emit('getRewardList');
+      } else {
+        this.$.$parent.rewardList = [];
+      }
       this.modalBar = modalBar;
     },
     checkChange: function checkChange(e) {

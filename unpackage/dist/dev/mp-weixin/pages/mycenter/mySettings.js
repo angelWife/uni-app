@@ -194,7 +194,7 @@ var _default =
       this.barrage = e.detail.value;
       this.editFlag();
     },
-    changeSystem: function changeSystem(event) {
+    changeSystem: function changeSystem(e) {
       this.system = e.detail.value;
       this.editFlag();
     },

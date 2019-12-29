@@ -29,6 +29,7 @@
 			</view>
 			<view class="pic">
 				<image :src="goodsVO.showPicPath" mode="widthFix"></image>
+				<text v-if="goodsVO.spirit.isDefault">使用中</text>
 			</view>
 		</view>
 		<view class="swiperBox" v-if="goodsVO.imgList.length>0">
@@ -41,16 +42,23 @@
 				</swiper-item>
 			</swiper>
 		</view>
-		<view class="otherSpirit clearfix">
-			<view class="item" v-for="(item,ind) in goodsList" :key="ind" @tap="chooseItem(ind)" :class="{'active':item.choose}">
-				<view class="pic">
-					<image :src="item.virtualVo.showPicPath" mode="widthFix"></image>
+		<view class="otherSpirit">
+			<scroll-view scroll-x="true" >
+				<view class="picbox clearfix" :style="mystyle">
+					<view class="item" v-for="(item,ind) in goodsList" :key="ind" @tap="chooseItem(ind)" :class="{'active':item.choose}">
+						<view class="pic">
+							<image :src="item.virtualVo.showPicPath" mode="widthFix"></image>
+						</view>
+						<view class="text textEllipsis">{{item.virtualVo.name}}</view>
+					</view>
+					<view class="item">
+						<view class="add" @tap="buy">
+							<icon class="iconfont icon-remove"></icon>
+						</view>
+						<view class="text"></view>
+					</view>
 				</view>
-				<view class="text">{{item.virtualVo.name}}</view>
-			</view>
-			<view class="item add" @tap="buy">
-				<icon class="iconfont icon-remove"></icon>
-			</view>
+			</scroll-view>
 		</view>
 		<view class="footbtn">
 			<button type="red" @tap="setDefault">设为默认</button>
@@ -63,7 +71,8 @@
 		data() {
 			return {
 				goodsVO:{},
-				goodsList:[]
+				goodsList:[],
+				mystyle:''
 			};
 		},
 		onLoad(options) {
@@ -79,7 +88,8 @@
 					pageIndex: 1,
 					pageSize:100,
 					fetchImgList:true,
-					useType:''
+					useTypeList:[2,3],
+					showDefault:true,
 				}
 				this.$acFrame.HttpService.myReceiveGoods(params).then(res => {
 					if (res.success) {
@@ -99,6 +109,7 @@
 								})
 								list[i].virtualVo = _obj
 							})
+							self.mystyle = `width:${(list.length+1)*180}rpx`
 							self.goodsList = list
 							self.goodsVO = list[0].virtualVo
 						}
@@ -131,6 +142,7 @@
 				this.$acFrame.HttpService.setDefault(params).then(res=>{
 					if(res.success){
 						self.$acFrame.Util.mytotal('设置成功！')
+						self.getReceiveList()
 					}
 				})
 			},
@@ -148,6 +160,25 @@
 		.pic {
 			width: 300rpx;
 			margin-left: 20rpx;
+			border-radius:0.3em;
+			position:relative;
+			overflow: hidden;
+			text{
+				position: absolute;
+				top: -10px;
+				right: -40px;
+				z-index: 5;
+				-webkit-transform: rotate(45deg);
+				transform: rotate(45deg);
+				color: #fff;
+				background: #b40000;
+				width: 100px;
+				text-align: center;
+				line-height: 55px;
+				font-size: 20rpx;
+				height: 40px;
+
+			}
 		}
 
 		.detail {
@@ -172,13 +203,18 @@
 
 	.otherSpirit {
 		padding: 0 14rpx;
-
+		
+		scroll-view{
+			height:220rpx;
+		}
+		.picbox{
+			white-space: nowrap;
+			height:100%;
+		}
 		.item {
-			float: left;
+			float:left;
 			width: 160rpx;
-			margin: 0 10rpx 20rpx;
-			
-			
+			margin: 0 10rpx;
 			.pic {
 				width: 100%;
 				height: 160rpx;
@@ -193,6 +229,7 @@
 			}
 
 			.text {
+				height:60rpx;
 				line-height: 60rpx;
 				text-align: center;
 			}
@@ -200,6 +237,7 @@
 
 		.add {
 			height: 160rpx;
+			width: 160rpx;
 			box-sizing: border-box;
 			line-height: 160rpx;
 			text-align: center;

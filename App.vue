@@ -32,6 +32,9 @@ image {
   width: 100%;
   height: 0;
   display: inline-block;
+  &[mode='aspectFit']{
+	  height:100%;
+  }
 }
 button {
   vertical-align: middle;
@@ -314,7 +317,8 @@ icon.remove {
   right: 0rpx;
   height: 40rpx;
   width: 40rpx;
-  background: #d5d5d5;
+  border-radius:40rpx;
+  background: #b40000;
   color: #fff;
   line-height: 40rpx;
   text-align: center;
@@ -322,8 +326,8 @@ icon.remove {
   &::before {
     line-height: 40rpx;
     position: absolute;
-    top: 4rpx;
-    left: 8rpx;
+    top: 2rpx;
+    left: 10rpx;
     text-align: center;
   }
 }

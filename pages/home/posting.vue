@@ -17,7 +17,9 @@
       </view>
     </view>
     <view class="picBtn">
-      <view class="upload" @tap="choosePic">+</view>
+      <view class="upload flex item-center" @tap="choosePic">
+		  <icon class="iconfont icon-plus"></icon>
+	  </view>
     </view>
     <view class="linkBox flex item-center" v-if="linkObj.type">
       <view class="pic" v-if="linkObj.imgPath">
@@ -301,10 +303,16 @@ export default {
     width: calc(25% - 10rpx);
     height: calc((100vw - 20rpx) / 4 - 10rpx);
     border: 1px dashed #d6d6d6;
-    font-size: 50px;
-    text-align: center;
+    
+   
     line-height: calc((100vw - 20rpx) / 5);
-    color: #999;
+    
+	.iconfont{
+		width: 100%;
+		 text-align: center;
+		font-size: 60rpx;
+		color: #999;
+	}
   }
   .operBox {
     position: fixed;

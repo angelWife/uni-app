@@ -103,8 +103,16 @@
 				nodata: false
 			};
 		},
+		onLoad(options){
+			let pagetype = options.pagetype
+			if(pagetype&&pagetype=='baoku'){
+				this.chooseTap(1)
+			}else{
+				this.getCoupon()
+			}
+		},
 		onShow() {
-			this.getCoupon()
+		
 		},
 		onPullDownRefresh() {
 			if (this.showModal == 'coupon') {
@@ -161,12 +169,17 @@
 				self.$acFrame.HttpService.couponsList(params).then(res => {
 					if (res.success) {
 						let couponList = res.data.rows
-						couponList.filter(v => {
-							v.hasReceived = false
-							v.timeEnd = self.$acFrame.Util.formatTime(v.timeEnd, 'dayhm')
-							v.timeStart = self.$acFrame.Util.formatTime(v.timeStart, 'dayhm')
-						})
-						self.couponList = couponList
+						if(couponList.length>0){
+							couponList.filter(v => {
+								v.hasReceived = false
+								v.timeEnd = self.$acFrame.Util.formatTime(v.timeEnd, 'dayhm')
+								v.timeStart = self.$acFrame.Util.formatTime(v.timeStart, 'dayhm')
+							})
+							self.couponList = couponList
+						}else{
+							self.nodata = true
+						}
+						
 					}
 				})
 			},
@@ -180,6 +193,7 @@
 				let params = {
 					pageIndex: this.pageIndex,
 					pageSize: this.pageSize,
+					sceneType:3
 				}
 				this.$acFrame.HttpService.myReceiveGoods(params).then(res => {
 					if (res.success) {

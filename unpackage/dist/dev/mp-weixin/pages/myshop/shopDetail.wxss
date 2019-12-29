@@ -61,8 +61,14 @@ page,
 .shopHead .shopMsg .right .btn {
   margin-top: 20rpx;
 }
-.shopHead .shopMsg .right .btn button {
-  border: 1px solid #b40000;
+.shopHead .shopMsg .right .btn .follow {
+  border: 1px solid #ccc !important;
+  color: #fff;
+  background: #ccc;
+}
+.shopHead .shopMsg .right .btn .follow::after {
+  border: none;
+  box-shadow: none;
 }
 .shopHead .shopCoupon {
   margin-top: 20rpx;

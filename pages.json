@@ -178,7 +178,7 @@
         ,{
             "path" : "pages/mycenter/activityLevel",
             "style": {
-            	"navigationBarTitleText": "活跃度"
+            	"navigationBarTitleText": ""
             }
         }
         ,{

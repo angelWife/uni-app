@@ -25,12 +25,6 @@ page {
   width: 100rpx;
   height: 100rpx;
 }
-.headBox .pic .grade {
-  position: absolute;
-  width: 120rpx;
-  top: -10rpx;
-  left: -10rpx;
-}
 .headBox .msg {
   width: 50%;
 }
@@ -110,6 +104,13 @@ page {
 }
 .myscroll .comItem .main {
   padding: 10rpx 0;
+}
+.myscroll .comItem .pic {
+  width: 60rpx;
+}
+.myscroll .comItem .right-pic {
+  width: 96rpx;
+  margin-right: 30rpx;
 }
 .myscroll .honor {
   padding: 0 10rpx;

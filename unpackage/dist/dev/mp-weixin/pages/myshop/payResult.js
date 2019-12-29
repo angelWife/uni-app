@@ -122,7 +122,7 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var uniCountDown = function uniCountDown() {return __webpack_require__.e(/*! import() | components/countDown */ "components/countDown").then(__webpack_require__.bind(null, /*! @/components/countDown.vue */ 525));};var _default =
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var uniCountDown = function uniCountDown() {return __webpack_require__.e(/*! import() | components/countDown */ "components/countDown").then(__webpack_require__.bind(null, /*! @/components/countDown.vue */ 532));};var _default =
 
 
 
@@ -215,7 +215,7 @@ __webpack_require__.r(__webpack_exports__);
       var prodVO = getApp().globalData.prodVO;
       if (this.type == 'spell') {
         uni.reLaunch({
-          url: "/pages/order/orderDetailSpeci?id=".concat(resdata.spellId) });
+          url: "/pages/order/orderDetailSpeci?id=".concat(resdata.spellIdUser) });
 
       } else {
         uni.reLaunch({
@@ -231,7 +231,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     baoku: function baoku() {//
       uni.reLaunch({
-        url: "/pages/mycenter/myWallet" });
+        url: "/pages/mycenter/treasury?pagetype=baoku" });
 
     } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))

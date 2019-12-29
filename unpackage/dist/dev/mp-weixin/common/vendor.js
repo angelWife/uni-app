@@ -2420,7 +2420,6 @@ Service = /*#__PURE__*/function (_HttpService) {_inherits(Service, _HttpService)
     _this.$$path = {
       getToken: 'user/login_mp_register', // 通用根据code获取Token
       loginOut: 'user/login_out', //退出登录
-      hotList: 'sys/cfg/hot_search/list_data', //热搜关键字列表'
       //上传
 
       //用户
@@ -2449,11 +2448,16 @@ Service = /*#__PURE__*/function (_HttpService) {_inherits(Service, _HttpService)
       editSwitchFlag: 'app/user_info/modify_config',
       accountNums: 'app/user_account/load_by_type', //根据账户类型获得账户明细
       getXPTypes: 'dict/app/userAccountDetailBizTypeTicketList', //获取星票明细
+      getRMBTypes: 'dict/app/userAccountDetailBizTypeRmbList',
+      getActiveTypes: 'dict/app/userAccountDetailBizTypeActiveList',
       accountInfo: 'app/user_account_detail/table_data', //账户流水
       newsType: 'app/user_message/wait_read_total', //消息分类
       newsList: 'app/user_message/table_data', //消息列表
       readNews: 'app/user_message/modify_read', //阅读消息
+      delNews: 'app/user_message/modify_remove',
+      readAllNews: 'app/user_message/wait_read_total',
       setDefault: 'app/user_info/modify_virtual_spirit', //设默认精灵
+      myLeave: 'app/user_promotion/mr', //军衔详情
 
       //文章帖子
       raleaseArtical: 'article/info/publish', // 发文章
@@ -2470,6 +2474,7 @@ Service = /*#__PURE__*/function (_HttpService) {_inherits(Service, _HttpService)
       followList: 'app/user_follow/list_data', //我的关注列表
       followListOwner: 'app/user_follow/table_data', //关注
       rewardRecod: 'app/user_reward/list_data', //打赏飘窗
+      rewardTable: 'app/user_reward/table_data', //d打赏记录
 
       relasePublish: 'article/info_comment/publish', //发评论
       relasePublishChild: 'article/info_comment/publish_child',
@@ -2921,7 +2926,14 @@ Service = /*#__PURE__*/function (_HttpService) {_inherits(Service, _HttpService)
     } }, { key: "getXPTypes", value: function getXPTypes(
     params) {
       return this.getRequest(this.$$path.getXPTypes);
+    } }, { key: "getRMBTypes", value: function getRMBTypes(
+    params) {
+      return this.getRequest(this.$$path.getRMBTypes);
+    } }, { key: "getActiveTypes", value: function getActiveTypes(
+    params) {
+      return this.getRequest(this.$$path.getActiveTypes);
     } }, { key: "accountInfo", value: function accountInfo(
+
     params) {
       return this.postRequest(this.$$path.accountInfo, {
         data: params });
@@ -2981,6 +2993,14 @@ Service = /*#__PURE__*/function (_HttpService) {_inherits(Service, _HttpService)
       return this.postRequest(this.$$path.readNews, {
         data: params });
 
+    } }, { key: "delNews", value: function delNews(
+    params) {
+      return this.postRequest(this.$$path.delNews, {
+        data: params });
+
+    } }, { key: "readAllNews", value: function readAllNews()
+    {
+      return this.postRequest(this.$$path.readAllNews);
     } }, { key: "cancelOrderRefund", value: function cancelOrderRefund(
     params) {
       return this.postRequest(this.$$path.cancelOrderRefund, {
@@ -2989,6 +3009,14 @@ Service = /*#__PURE__*/function (_HttpService) {_inherits(Service, _HttpService)
     } }, { key: "setDefault", value: function setDefault(
     params) {
       return this.postRequest(this.$$path.setDefault, {
+        data: params });
+
+    } }, { key: "myLeave", value: function myLeave(
+    params) {
+      return this.postRequest(this.$$path.myLeave);
+    } }, { key: "rewardTable", value: function rewardTable(
+    params) {
+      return this.postRequest(this.$$path.rewardTable, {
         data: params });
 
     } }]);return Service;}(_HttpServer.default);var _default =
@@ -3053,11 +3081,14 @@ HttpService = /*#__PURE__*/function (_Core) {_inherits(HttpService, _Core);
         uni.hideLoading();
         console.info('HttpService class response :', _response);
         if (!_response.data.success) {
-          uni.showToast({
-            duration: 2000,
-            icon: 'none',
-            mask: true,
-            title: _response.data.message || '接口有误' });
+          if (_response.data.message) {
+            uni.showToast({
+              duration: 2000,
+              icon: 'none',
+              mask: true,
+              title: _response.data.message });
+
+          }
 
         }
         return _response.data;
@@ -11601,7 +11632,7 @@ module.exports = {"_from":"@dcloudio/uni-stat@^2.0.0-alpha-24420191128001","_id"
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "pages": { "pages/index/index": { "navigationBarTitleText": "星购", "usingComponents": {} }, "pages/home/index": { "navigationBarTitleText": "首页", "enablePullDownRefresh": true, "usingComponents": { "comment-item": "/components/comment-item" } }, "pages/home/commentDetail": { "navigationBarTitleText": "正文", "enablePullDownRefresh": true, "usingComponents": { "comment-modal": "/components/comment", "reward-list": "/components/reward-modal" } }, "pages/home/reward": { "navigationBarTitleText": "打赏", "usingComponents": { "reward-list": "/components/reward-modal" } }, "pages/home/posting": { "navigationBarTitleText": "发帖", "usingComponents": {} }, "pages/home/report": { "navigationBarTitleText": "举报", "usingComponents": {} }, "pages/home/ranking": { "navigationBarTitleText": "选择连接", "usingComponents": { "product-list": "/components/product-list", "rank-list": "/components/ranking-item" } }, "pages/home/editArticle": { "navigationBarTitleText": "写文章", "usingComponents": {} }, "pages/home/topicIndex": { "navigationBarTitleText": "话题主页", "enablePullDownRefresh": true, "usingComponents": { "comment-item": "/components/comment-item" } }, "pages/home/friends": { "navigationBarTitleText": "选择好友", "usingComponents": {} }, "pages/home/subject": { "navigationBarTitleText": "选择话题", "usingComponents": {} }, "pages/home/commentList": { "usingComponents": { "comment-modal": "/components/comment" } }, "pages/myshop/index": { "navigationBarTitleText": "小店集市", "enablePullDownRefresh": true, "usingComponents": {} }, "pages/myshop/shopDetail": { "usingComponents": { "product-list": "/components/shop-product" } }, "pages/myshop/productDetail": { "navigationBarTitleText": "商品详情", "usingComponents": { "uni-count-down": "/components/countDown" } }, "pages/myshop/confirmOrder": { "navigationBarTitleText": "确认订单", "usingComponents": {} }, "pages/myshop/payWay": { "navigationBarTitleText": "选择支付方式", "usingComponents": { "uni-count-down": "/components/countDown" } }, "pages/myshop/payResult": { "navigationBarTitleText": "支付结果", "usingComponents": { "uni-count-down": "/components/countDown" } }, "pages/mycenter/index": { "navigationBarTitleText": "我的", "usingComponents": { "message-modal": "/components/messageModal" } }, "pages/mycenter/mycenter": { "navigationBarTitleText": "我的主页", "usingComponents": { "comment-item": "/components/comment-item", "product-list": "/components/shop-product" } }, "pages/mycenter/baseInfo": { "navigationBarTitleText": "编辑资料", "usingComponents": {} }, "pages/mycenter/addressList": { "navigationBarTitleText": "收货地址", "usingComponents": {} }, "pages/mycenter/bindPhone": { "navigationBarTitleText": "绑定手机号码", "usingComponents": {} }, "pages/mycenter/evaluate": { "navigationBarTitleText": "评价", "usingComponents": {} }, "pages/mycenter/myWallet": { "navigationBarTitleText": "我的钱包", "usingComponents": {} }, "pages/mycenter/cashOut": { "navigationBarTitleText": "提现", "usingComponents": {} }, "pages/mycenter/bankCards": { "navigationBarTitleText": "银行卡", "usingComponents": {} }, "pages/mycenter/checkCard": { "navigationBarTitleText": "验证银行卡", "usingComponents": {} }, "pages/mycenter/cashOutSucces": { "navigationBarTitleText": "星票提现", "usingComponents": {} }, "pages/mycenter/createShop": { "navigationBarTitleText": "开店认证", "usingComponents": {} }, "pages/mycenter/activityLevel": { "navigationBarTitleText": "活跃度", "usingComponents": {} }, "pages/mycenter/militaryRank": { "navigationBarTitleText": "军衔", "usingComponents": {} }, "pages/mycenter/mySpirit": { "navigationBarTitleText": "我的精灵", "usingComponents": {} }, "pages/mycenter/myTask": { "navigationBarTitleText": "我的任务", "usingComponents": {} }, "pages/mycenter/mySettings": { "navigationBarTitleText": "设置", "usingComponents": {} }, "pages/mycenter/myNews": { "navigationBarTitleText": "消息", "usingComponents": {} }, "pages/mycenter/friends": { "navigationBarTitleText": "好友", "usingComponents": {} }, "pages/mycenter/followList": { "navigationBarTitleText": "", "usingComponents": {} }, "pages/ranking/product": { "navigationBarTitleText": "产品排行", "enablePullDownRefresh": true, "usingComponents": {} }, "pages/ranking/invitation": { "navigationBarTitleText": "话题排行", "enablePullDownRefresh": true, "usingComponents": {} }, "pages/ranking/post": { "navigationBarTitleText": "帖子排行", "enablePullDownRefresh": true, "usingComponents": { "comment-item": "/components/comment-item" } }, "pages/ranking/friends": { "navigationBarTitleText": "邀请排行", "enablePullDownRefresh": true, "usingComponents": {} }, "pages/order/index": { "navigationBarTitleText": "订单", "enablePullDownRefresh": true, "usingComponents": { "order-item": "/components/order-item" } }, "pages/order/receivedOrder": { "navigationBarTitleText": "待收货", "usingComponents": { "uni-count-down": "/components/countDown" } }, "pages/order/applyAfter": { "navigationBarTitleText": "申请售后", "usingComponents": {} }, "pages/order/afterSale": { "navigationBarTitleText": "售后", "enablePullDownRefresh": true, "usingComponents": { "order-item": "/components/order-item" } }, "pages/order/returnForm": { "navigationBarTitleText": "", "usingComponents": {} }, "pages/order/procesDetail": { "navigationBarTitleText": "处理中", "usingComponents": { "uni-count-down": "/components/countDown" } }, "pages/mycenter/treasury": { "navigationBarTitleText": "宝库", "usingComponents": {} }, "pages/mycenter/goodsList": { "navigationBarTitleText": "商品", "enablePullDownRefresh": true, "usingComponents": { "product-list": "/components/shop-product" } }, "pages/order/orderDetail": { "navigationBarTitleText": "订单详情", "usingComponents": { "uni-count-down": "/components/countDown" } }, "pages/order/orderDetailSpeci": { "navigationBarTitleText": "拼单详情", "usingComponents": { "uni-count-down": "/components/countDown" } }, "pages/mycenter/payPassword": { "navigationBarTitleText": "设置支付密码", "usingComponents": {} }, "pages/order/refundDetail": { "usingComponents": {} }, "pages/myshop/commentList": { "enablePullDownRefresh": true, "usingComponents": {} }, "pages/mycenter/spiritDetail": { "usingComponents": {} }, "pages/mycenter/newsList": { "enablePullDownRefresh": true, "usingComponents": {} } }, "globalStyle": { "navigationBarTextStyle": "white", "navigationBarTitleText": "uni-app", "navigationBarBackgroundColor": "#b40000", "backgroundColor": "#eee", "backgroundTextStyle": "dark" } };exports.default = _default;
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "pages": { "pages/index/index": { "navigationBarTitleText": "星购", "usingComponents": {} }, "pages/home/index": { "navigationBarTitleText": "首页", "enablePullDownRefresh": true, "usingComponents": { "comment-item": "/components/comment-item" } }, "pages/home/commentDetail": { "navigationBarTitleText": "正文", "enablePullDownRefresh": true, "usingComponents": { "comment-modal": "/components/comment", "reward-list": "/components/reward-modal", "l-barrage": "/components/l-barrage/l-barrage" } }, "pages/home/reward": { "navigationBarTitleText": "打赏", "usingComponents": { "reward-list": "/components/reward-modal" } }, "pages/home/posting": { "navigationBarTitleText": "发帖", "usingComponents": {} }, "pages/home/report": { "navigationBarTitleText": "举报", "usingComponents": {} }, "pages/home/ranking": { "navigationBarTitleText": "选择连接", "usingComponents": { "product-list": "/components/product-list", "rank-list": "/components/ranking-item" } }, "pages/home/editArticle": { "navigationBarTitleText": "写文章", "usingComponents": {} }, "pages/home/topicIndex": { "navigationBarTitleText": "话题主页", "enablePullDownRefresh": true, "usingComponents": { "comment-item": "/components/comment-item" } }, "pages/home/friends": { "navigationBarTitleText": "选择好友", "usingComponents": {} }, "pages/home/subject": { "navigationBarTitleText": "选择话题", "usingComponents": {} }, "pages/home/commentList": { "usingComponents": { "comment-modal": "/components/comment" } }, "pages/myshop/index": { "navigationBarTitleText": "小店集市", "enablePullDownRefresh": true, "usingComponents": {} }, "pages/myshop/shopDetail": { "usingComponents": { "product-list": "/components/shop-product" } }, "pages/myshop/productDetail": { "navigationBarTitleText": "商品详情", "usingComponents": { "uni-count-down": "/components/countDown" } }, "pages/myshop/confirmOrder": { "navigationBarTitleText": "确认订单", "usingComponents": {} }, "pages/myshop/payWay": { "navigationBarTitleText": "选择支付方式", "usingComponents": { "uni-count-down": "/components/countDown" } }, "pages/myshop/payResult": { "navigationBarTitleText": "支付结果", "usingComponents": { "uni-count-down": "/components/countDown" } }, "pages/mycenter/index": { "navigationBarTitleText": "我的", "usingComponents": { "message-modal": "/components/messageModal" } }, "pages/mycenter/mycenter": { "navigationBarTitleText": "我的主页", "usingComponents": { "comment-item": "/components/comment-item", "product-list": "/components/shop-product" } }, "pages/mycenter/baseInfo": { "navigationBarTitleText": "编辑资料", "usingComponents": {} }, "pages/mycenter/addressList": { "navigationBarTitleText": "收货地址", "usingComponents": {} }, "pages/mycenter/bindPhone": { "navigationBarTitleText": "绑定手机号码", "usingComponents": {} }, "pages/mycenter/evaluate": { "navigationBarTitleText": "评价", "usingComponents": {} }, "pages/mycenter/myWallet": { "navigationBarTitleText": "我的钱包", "usingComponents": {} }, "pages/mycenter/cashOut": { "navigationBarTitleText": "提现", "usingComponents": {} }, "pages/mycenter/bankCards": { "navigationBarTitleText": "银行卡", "usingComponents": {} }, "pages/mycenter/checkCard": { "navigationBarTitleText": "验证银行卡", "usingComponents": {} }, "pages/mycenter/cashOutSucces": { "navigationBarTitleText": "星票提现", "usingComponents": {} }, "pages/mycenter/createShop": { "navigationBarTitleText": "开店认证", "usingComponents": {} }, "pages/mycenter/activityLevel": { "navigationBarTitleText": "", "usingComponents": {} }, "pages/mycenter/militaryRank": { "navigationBarTitleText": "军衔", "usingComponents": {} }, "pages/mycenter/mySpirit": { "navigationBarTitleText": "我的精灵", "usingComponents": {} }, "pages/mycenter/myTask": { "navigationBarTitleText": "我的任务", "usingComponents": {} }, "pages/mycenter/mySettings": { "navigationBarTitleText": "设置", "usingComponents": {} }, "pages/mycenter/myNews": { "navigationBarTitleText": "消息", "usingComponents": {} }, "pages/mycenter/friends": { "navigationBarTitleText": "好友", "usingComponents": {} }, "pages/mycenter/followList": { "navigationBarTitleText": "", "usingComponents": {} }, "pages/ranking/product": { "navigationBarTitleText": "产品排行", "enablePullDownRefresh": true, "usingComponents": {} }, "pages/ranking/invitation": { "navigationBarTitleText": "话题排行", "enablePullDownRefresh": true, "usingComponents": {} }, "pages/ranking/post": { "navigationBarTitleText": "帖子排行", "enablePullDownRefresh": true, "usingComponents": { "comment-item": "/components/comment-item" } }, "pages/ranking/friends": { "navigationBarTitleText": "邀请排行", "enablePullDownRefresh": true, "usingComponents": {} }, "pages/order/index": { "navigationBarTitleText": "订单", "enablePullDownRefresh": true, "usingComponents": { "order-item": "/components/order-item" } }, "pages/order/receivedOrder": { "navigationBarTitleText": "待收货", "usingComponents": { "uni-count-down": "/components/countDown" } }, "pages/order/applyAfter": { "navigationBarTitleText": "申请售后", "usingComponents": {} }, "pages/order/afterSale": { "navigationBarTitleText": "售后", "enablePullDownRefresh": true, "usingComponents": { "order-item": "/components/order-item" } }, "pages/order/returnForm": { "navigationBarTitleText": "", "usingComponents": {} }, "pages/order/procesDetail": { "navigationBarTitleText": "处理中", "usingComponents": { "uni-count-down": "/components/countDown" } }, "pages/mycenter/treasury": { "navigationBarTitleText": "宝库", "usingComponents": {} }, "pages/mycenter/goodsList": { "navigationBarTitleText": "商品", "enablePullDownRefresh": true, "usingComponents": { "product-list": "/components/shop-product" } }, "pages/order/orderDetail": { "navigationBarTitleText": "订单详情", "usingComponents": { "uni-count-down": "/components/countDown" } }, "pages/order/orderDetailSpeci": { "navigationBarTitleText": "拼单详情", "usingComponents": { "uni-count-down": "/components/countDown" } }, "pages/mycenter/payPassword": { "navigationBarTitleText": "设置支付密码", "usingComponents": {} }, "pages/order/refundDetail": { "usingComponents": {} }, "pages/myshop/commentList": { "enablePullDownRefresh": true, "usingComponents": {} }, "pages/mycenter/spiritDetail": { "usingComponents": {} }, "pages/mycenter/newsList": { "enablePullDownRefresh": true, "usingComponents": {} } }, "globalStyle": { "navigationBarTextStyle": "white", "navigationBarTitleText": "uni-app", "navigationBarBackgroundColor": "#b40000", "backgroundColor": "#eee", "backgroundTextStyle": "dark" } };exports.default = _default;
 
 /***/ }),
 

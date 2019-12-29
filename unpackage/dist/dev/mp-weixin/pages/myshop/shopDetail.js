@@ -225,7 +225,10 @@ __webpack_require__.r(__webpack_exports__);
       pageIndex: 1,
       pageSize: 20,
       pageTotal: 1,
-      tabs: [{ name: '首页', choose: true, type: 2 }, { name: '销量', choose: false, type: 3 }, { name: '新品', choose: false, type: 4 }, { name: '价格', choose: false, type: 5 }],
+      tabs: [{ name: '首页', choose: true, type: 2 },
+      { name: '销量', choose: false, type: 3 },
+      { name: '新品', choose: false, type: 4 },
+      { name: '价格', choose: false, type: 5 }],
       shopDetail: {},
       dataList: [{ name: "这边的是产品的名称，最多显示两行，超出两行的省略号", price: '52.00', salesNum: 21623, pic: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1574140134898&di=9b8d75803e617d449499df2f5a8d300f&imgtype=0&src=http%3A%2F%2Fm.360buyimg.com%2Fpop%2Fjfs%2Ft24241%2F145%2F1818221682%2F18886%2F71aac218%2F5b696accN052717a7.jpg' },
       { name: "韩版新款复古水晶耳饰饰品欧美时尚高档小香耳钉耳环批发", price: '7.50', salesNum: 152000, pic: 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2786988750,209248222&fm=15&gp=0.jpg' },
@@ -291,12 +294,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     clickBar: function clickBar(ind) {var _this = this;
       var choose = this.tabs[ind].choose;
-      if (ind == 0) {
-        this.resetData();
-        this.initProduct();
-        return false;
-      }
-      if (choose) {
+      if (choose && ind != 0) {
         if (this.sortType) {
           this.sortType = false;
         } else {
@@ -305,7 +303,7 @@ __webpack_require__.r(__webpack_exports__);
       } else {
         this.sortType = false;
       }
-      this.resetData();
+
       this.tabs.filter(function (v, i) {
         if (i == ind) {
           v.choose = true;
@@ -314,6 +312,7 @@ __webpack_require__.r(__webpack_exports__);
           v.choose = false;
         }
       });
+      this.resetData();
       this.initProduct();
     },
     followShop: function followShop(id) {

@@ -212,87 +212,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 var _default =
 {
   data: function data() {
     return {
-      numdata: {
-        fensi: {
-          prev: '' },
+      details: {
+        junxianpic: '/static/images/junxian/1.png' } };
 
-        goumai: {},
-        level: {} } };
 
 
   },
-  methods: {},
-
-
   onLoad: function onLoad() {
     uni.setNavigationBarColor({
       backgroundColor: "#D2AE28",
@@ -302,7 +231,24 @@ var _default =
         timingFunc: 'easeIn' } });
 
 
-  } };exports.default = _default;
+  },
+  onShow: function onShow() {
+    this.getInfo();
+  },
+  methods: {
+    getInfo: function getInfo() {
+      var self = this;
+      this.$acFrame.HttpService.myLeave().then(function (res) {
+        if (res.success) {
+          var details = res.data;
+          details.junxianpic = '/static/images/junxian/' + details.type + '.png';
+          var prevStyle = '',nextStyle = '',nowStyle = '';
+          self.details = details;
+
+        }
+        self.details.junxianpic = '/static/images/junxian/1.png';
+      });
+    } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 
 /***/ }),

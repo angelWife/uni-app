@@ -12,7 +12,7 @@
 					<text v-if="showNum" class="shownum" :class="'num'+index">{{index+1}}</text>
 				</view>
 				<view class="msg flex-1" @tap="choosePord(item)">
-					<view class="name clamp clamp-2">{{ item.goodsName }}</view>
+					<view class="name blod fs15 clamp clamp-2">{{ item.goodsName }}</view>
 					<view class="nums c999">已售{{ item.numTotalSale }}件</view>
 					<view class="price red">
 						<text>¥</text>
@@ -115,27 +115,27 @@
 	position: relative;
 	.shownum{
 		position:absolute;
-		background: #f6f6f6;
+		background:rgba(239,239,239,1);
 		text-align: center;
-		height:40rpx;
-		width: 40rpx;
+		height:50rpx;
+		width: 44rpx;
 		font-size:20rpx;
-		line-height: 40rpx;
-		border-radius: 0.4em;
+		line-height: 45rpx;
+		border-radius:8px 0px 20px 20px;
 		color:#999;
 		left:0;
 		top:0;
 	}
 	.num0{
-		background: #B40000;
+		background: linear-gradient(180deg,rgba(255,213,85,1) 0%,rgba(255,161,0,1) 100%);
 		color:#fff;
 	}
 	.num1{
-		background: #ff9d19;
+		background:linear-gradient(180deg,rgba(236,250,255,1) 0%,rgba(166,167,168,1) 100%);
 		color:#fff;
 	}
 	.num2{
-		background: #4c8ff7;
+		background:linear-gradient(180deg,rgba(251,200,132,1) 0%,rgba(212,158,85,1) 100%);
 		color:#fff;
 	}
 	

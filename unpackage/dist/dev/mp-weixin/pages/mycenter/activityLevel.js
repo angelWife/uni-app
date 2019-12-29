@@ -184,13 +184,38 @@ var _default =
 
   },
   onLoad: function onLoad(options) {
-    this.type = options.type;
+    this.type = options.type * 1;
+    var name = '';
+    switch (this.type) {
+      case 1:
+        name = '人名币';
+        break;
+      case 2:
+        name = '星票';
+        break;
+      case 3:
+        name = '活跃度';
+        break;
+      default:
+        break;}
+
+    uni.setNavigationBarTitle({
+      title: name });
+
   },
   onShow: function onShow() {
+    this.setparams();
     this.accountInfo();
     this.getXPTypes();
   },
   methods: {
+    setparams: function setparams() {
+      this.pageIndex = 1;
+      this.nodata = false;
+      this.nomore = false;
+      this.list = [];
+      this.xpTypes = [];
+    },
     loadMore: function loadMore() {
       if (this.pageIndex < this.pageTotal) {
         this.pageIndex++;
@@ -222,16 +247,18 @@ var _default =
           var list = res.data.rows;
           self.pageTotal = res.data.pageTotal;
           if (list.length > 0) {
+            debugger;
             list.filter(function (fv) {
               if (fv.bizTime) {
                 fv.bizTime = self.$acFrame.Util.formatTime(fv.bizTime, 'dayhm');
               }
-              self.xpTypes.forEach(function (i, cv) {
+              self.xpTypes.forEach(function (cv, i) {
                 if (fv.bizType == cv.key) {
                   fv.typeName = cv.val;
                   fv.itemType = cv.extendData;
                 }
               });
+              fv.amount = Math.abs(fv.amount);
             });
             self.list = self.list.concat(list);
           } else {
@@ -243,19 +270,38 @@ var _default =
     },
     getXPTypes: function getXPTypes() {
       var self = this;
-      var xpTypes = uni.getStorageSync('xpTypes');
-      if (xpTypes) {
-        this.xpTypes = xpTypes;
-        this.getList();
-      } else {
+      // let xpTypes=uni.getStorageSync('xpTypes')
+      // if(xpTypes){
+      // 	this.xpTypes = xpTypes
+      // 	this.getList()
+      // }else{
+      if (this.type == 1) {
+        this.$acFrame.HttpService.getRMBTypes().then(function (res) {
+          if (res.success) {
+            self.xpTypes = res.data;
+            // uni.setStorageSync('xpTypes', res.data)
+            self.getList();
+          }
+        });
+      } else if (this.type == 2) {
         this.$acFrame.HttpService.getXPTypes().then(function (res) {
           if (res.success) {
             self.xpTypes = res.data;
-            uni.setStorageSync('xpTypes', res.data);
+            // uni.setStorageSync('xpTypes', res.data)
+            self.getList();
+          }
+        });
+      } else if (this.type == 3) {
+        this.$acFrame.HttpService.getActiveTypes().then(function (res) {
+          if (res.success) {
+            self.xpTypes = res.data;
+            // uni.setStorageSync('xpTypes', res.data)
             self.getList();
           }
         });
       }
+
+      // }
 
 
     } } };exports.default = _default;

@@ -70,7 +70,7 @@
 				this.barrage = e.detail.value
 				this.editFlag()
 			},
-			changeSystem(event){
+			changeSystem(e){
 				this.system = e.detail.value
 				this.editFlag()
 			},

@@ -59,8 +59,7 @@
 						</view>
 					</view>
 					<view class="imgList clearfix">
-						<view v-for="(imgItem, imgInd) in dataInfo.articleInfo.imgList" :key="imgInd" @tap="showBigImg(imgInd)"
-						 class="imgItem flex-1">
+						<view v-for="(imgItem, imgInd) in dataInfo.articleInfo.imgList" :key="imgInd" @tap="showBigImg(imgInd)" class="imgItem flex-1">
 							<image :src="imgItem" mode="widthFix"></image>
 						</view>
 					</view>
@@ -130,28 +129,30 @@
 				</view> -->
 				<view class="operBox clearfix">
 					<view class="item " @tap="reward(dataInfo.publishUser.userCode)">
-						<view class="mybtn item_red">
-							<icon class="iconfont icon-shang"></icon>
+						<view class="mybtn item_red flex item-center just-con-c">
+							<!-- <icon class="iconfont icon-shang"></icon> -->
+							<image src="/static/images/icon/icon-reward.png" mode="widthFix"></image>
 							<text>打赏</text>
 						</view>
 					</view>
 					<view class="item" @tap="report(dataInfo.articleInfo.id)">
-						<view class="mybtn">
+						<view class="mybtn flex item-center just-con-c">
 							<icon class="iconfont icon-jubao"></icon>
 							<text>举报</text>
 						</view>
 					</view>
 					<view class="item">
-						<view class="mybtn" :class="{'item_red':dataInfo.articleInfo.hasUp}" @tap="dianzan">
+						<view class="mybtn flex item-center just-con-c" :class="{'item_red':dataInfo.articleInfo.hasUp}" @tap="dianzan">
 							<icon class="iconfont icon-dianzan"></icon>
 							<text>{{dataInfo.articleInfo.numTotalUp}}</text>
 						</view>
 					</view>
 					<view class="item">
-						<button type="share" class="mybtn" open-type="share">
+						<view class="mybtn flex item-center just-con-c">
 							<icon class="iconfont iconshare2"></icon>
 							<text>分享</text>
-						</button>
+							<button type="share" class="mybtn" open-type="share"></button>
+						</view>
 					</view>
 				</view>
 			</block>
@@ -204,12 +205,11 @@
 							<view class="msg clamp clamp-2">{{item.content}}</view>
 							<view class="oper flex item-center">
 								<view class="timer c999 fs12 flex-1">{{item.timeInfo}}</view>
-								<view class="operIocn clearfix c999" @tap="commentDetail(item)">
-
+								<view class="operIocn flex item-center c999" @tap="commentDetail(item)">
 									<icon class="iconfont icon-comment"></icon>
 									<text>{{item.numTotalReply>0?item.numTotalReply:0}}</text>
 								</view>
-								<view class="operIocn clearfix" :class="{'red':item.hasUp}" @tap="commentDianzan(item.id,ind)">
+								<view class="operIocn flex item-center" :class="{'red':item.hasUp}" @tap="commentDianzan(item.id,ind)">
 									<icon class="iconfont icon-dianzan"></icon>
 									<text>{{item.numTotalUp }}</text>
 								</view>
@@ -253,23 +253,26 @@
 		<!-- <view class="noData" v-if="showFoot">
 			~没有更多~
 		</view> -->
-		<RewardList :showReward="showReward" :accountVO="accountVO" :userCode="dataInfo.publishUser.userCode" :rewardList="rewardList" @chooseReward="chooseReward"
-		 @hideModal="hideModal" @getRewardList="getRewardList"></RewardList>
-	<!-- 	<view class="rewardListBox">
+		<RewardList :showReward="showReward" :accountVO="accountVO" :userCode="dataInfo.publishUser.userCode" :rewardList="rewardList"
+		 @chooseReward="chooseReward" @hideModal="hideModal" @getRewardList="getRewardList"></RewardList>
+		<!-- 	<view class="rewardListBox">
 			 <view class="item" v-for="(item,ind) in rewardRecodList" :key="ind">
 				 {{item}}
 			 </view>
 		 </view> -->
+		<l-barrage ref="lBarrage" @end="loadRewardAnimate"></l-barrage>
 	</view>
 </template>
 
 <script>
 	import commentModal from '@/components/comment.vue';
 	import RewardList from '@/components/reward-modal.vue';
+	import LBarrage from '@/components/l-barrage/l-barrage.vue'
 	export default {
 		components: {
 			commentModal,
-			RewardList
+			RewardList,
+			LBarrage
 		},
 		data() {
 			return {
@@ -284,13 +287,13 @@
 				showFoot: false,
 				isComent: false, //是否滚动到底部
 				showReward: false,
-				accountVO:{},
-				rewardRecodList:'',
-				id:''
+				accountVO: {},
+				rewardRecodList: '',
+				id: ''
 			};
 		},
 		onLoad(options) {
-			this.id=options.id;
+			this.id = options.id;
 			this.detailtype = options.type
 			setTimeout(() => {
 				if (this.detailtype == 'showReward') {
@@ -306,8 +309,8 @@
 			} else {
 				this.listData = []
 				this.postDetail()
-				
-				
+
+
 				this.getAccount()
 			}
 			var animation = uni.createAnimation({
@@ -316,6 +319,7 @@
 			})
 
 			this.animation = animation
+
 
 		},
 		onShareAppMessage(res) {
@@ -364,7 +368,7 @@
 					}
 				})
 			},
-			getReadNum(){
+			getReadNum() {
 				let self = this
 				this.$acFrame.HttpService.readPost({
 					id: this.dataInfo.articleInfo.id
@@ -374,7 +378,7 @@
 					}
 				})
 			},
-			postDetail(){
+			postDetail() {
 				let self = this
 				let params = {
 					id: this.id,
@@ -382,14 +386,14 @@
 				self.$acFrame.HttpService.postDetail(params).then(res => {
 					if (res.success) {
 						let _obj = res.data
-						if(_obj.type==1){
+						if (_obj.type == 1) {
 							_obj.articleInfo.showContent = this.setContent(_obj.articleInfo);
 						}
-						_obj.articleInfo.imgList.filter((v,i)=>{
-							_obj.articleInfo.imgList[i]=self.setImg(v)
+						_obj.articleInfo.imgList.filter((v, i) => {
+							_obj.articleInfo.imgList[i] = self.setImg(v)
 						})
-						_obj.publishUser.imgPathHead = self.setImg(_obj.publishUser.imgPathHead,_obj.publishUser.genderType)
-						
+						_obj.publishUser.imgPathHead = self.setImg(_obj.publishUser.imgPathHead, _obj.publishUser.genderType)
+
 						self.dataInfo = _obj
 						self.getCommentList()
 						self.rewardRecod()
@@ -622,12 +626,12 @@
 					url: url
 				})
 			},
-			getRewardList(useType=5) { // virtualList
+			getRewardList(useType = 5) { // virtualList
 				let self = this
 				let params = {
 					pageIndex: 1,
 					pageSize: 100,
-					useType: useType,
+					// useType: useType,
 					sceneType: 2
 				}
 				this.$acFrame.HttpService.virtualDashang(params).then(res => {
@@ -658,11 +662,11 @@
 			},
 			chooseReward(ind) {
 				// let list = this.rewardList
-				this.rewardList.filter((v,i)=>{
-					if(i==ind){
-						v.choose=true
-					}else{
-						v.choose=false
+				this.rewardList.filter((v, i) => {
+					if (i == ind) {
+						v.choose = true
+					} else {
+						v.choose = false
 					}
 				})
 				// this.rewardList = list
@@ -670,28 +674,32 @@
 			rewardRecod() {
 				let self = this
 				let params = {
-					userCode:this.dataInfo.publishUser.userCode
+					filterConfig:true,
+					userCode: this.dataInfo.publishUser.userCode
 				}
-				this.$acFrame.HttpService.rewardRecod(params).then(res=>{
-					if(res.success){
+				this.$acFrame.HttpService.rewardRecod(params).then(res => {
+					if (res.success) {
 						let list = res.data
-						if(list.length>0){
-							self.rewardRecodList=list
+						if (list.length > 0) {
+							// for(let i = 0;i<10;i++){
+							// 	list.push('')
+							// }
+							self.rewardRecodList = list
 							self.loadRewardAnimate(list)
 						}
 					}
 				})
 			},
-			loadRewardAnimate(list){
-				
+			loadRewardAnimate() {
+				this.$refs.lBarrage.start(this.rewardRecodList);
 			},
-			getAccount(){
-				let self =this
+			getAccount() {
+				let self = this
 				let params = {
-					type:2
+					type: 2
 				}
-				this.$acFrame.HttpService.accountNums(params).then(res=>{
-					if(res.success){
+				this.$acFrame.HttpService.accountNums(params).then(res => {
+					if (res.success) {
 						self.accountVO = res.data
 					}
 				})
@@ -701,7 +709,14 @@
 				this.$acFrame.Util.showBigPic(imgList[imgInd], imgList);
 				getApp().globalData.isShowPic = true
 			},
+		},
+		onHide() {
+			this.$refs.lBarrage.over();
+		},
+		onUnload() {
+			this.$refs.lBarrage.over();
 		}
+
 
 	};
 </script>
@@ -1009,25 +1024,48 @@
 				overflow: hidden;
 
 				.mybtn {
-					padding: 0 0 10rpx;
-					line-height: 50rpx;
+					// padding: 0 0 10rpx;
+					height: 70rpx;
+					line-height: 70rpx;
 					border-radius: 50rpx;
 					color: #999;
+					position: relative;
+					overflow: hidden;
 					background: #fff;
 					border: 1px solid #9f9f9f;
 
+					image {
+						width: 40rpx;
+						display: inline-block;
+						margin-right: 10rpx;
+					}
+
 					&.item_red {
+						height: 70rpx;
 						background: #b40000;
 						border-color: #b40000;
+						padding: 0;
 						color: #fff;
+					}
+
+					button {
+						position: absolute;
+						width: 100%;
+						height: 100%;
+						opacity: 0;
+						z-index: 1;
 					}
 				}
 
+
+
 				.iconfont {
-					height: 40rpx;
+					height: 70rpx;
 					width: 40rpx;
 					text-align: center;
-					line-height: 40rpx;
+					line-height: 70rpx;
+					font-size: 40rpx;
+					margin-right: 10rpx;
 
 					&::before {
 						line-height: 100%;
@@ -1055,7 +1093,8 @@
 			.noData {
 				position: relative !important;
 			}
-			.commentMain{
+
+			.commentMain {
 				width: 60%;
 			}
 		}
@@ -1067,7 +1106,7 @@
 			.pic {
 				width: 80rpx;
 				height: 80rpx;
-				margin:0 30rpx 0 20rpx;
+				margin: 0 30rpx 0 20rpx;
 
 				.headPic {
 					height: 100%;
@@ -1098,14 +1137,7 @@
 			}
 
 			.oper {
-				line-height: 30rpx;
-
-				.iconfont {
-					float: left;
-				}
-
 				text {
-					float: left;
 					margin-left: 10rpx;
 				}
 
@@ -1115,15 +1147,9 @@
 			.operIocn {
 				margin-left: 20rpx;
 				color: #999;
-
 				.iconfont {
 					position: relative;
-					top: -6rpx;
-				}
-
-				text {
-					position: relative;
-					top: 8rpx;
+					top: -5rpx;
 				}
 			}
 
@@ -1196,10 +1222,11 @@
 			}
 		}
 	}
-.rewardListBox{
-	position:fixed;
-	top:0;
-	right:0;
-	z-index: 20;
-}
+
+	.rewardListBox {
+		position: fixed;
+		top: 0;
+		right: 0;
+		z-index: 20;
+	}
 </style>

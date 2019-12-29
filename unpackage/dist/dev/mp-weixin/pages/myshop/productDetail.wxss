@@ -181,45 +181,50 @@ page {
 }
 .prod5 .title {
   padding: 20rpx 24rpx;
-  border-bottom: 1px solid #ccc;
 }
-.prod5 .item {
+.prod5 .list {
+  border-top: 1px solid #ccc;
+}
+.prod5 .list .item {
   margin: 0 24rpx;
   padding: 20rpx;
   border-bottom: 1px solid #ccc;
 }
-.prod5 .item .item-top .pic {
+.prod5 .list .item:last-child {
+  border: 0;
+}
+.prod5 .list .item .item-top .pic {
   width: 60rpx;
   height: 60rpx;
   margin-right: 20rpx;
 }
-.prod5 .item .item-top .name {
+.prod5 .list .item .item-top .name {
   width: 30%;
 }
-.prod5 .item .item-top .star image {
+.prod5 .list .item .item-top .star image {
   width: 40rpx;
   display: inline-block;
   margin-left: 10rpx;
 }
-.prod5 .item .imgList {
+.prod5 .list .item .imgList {
   margin-top: 20rpx;
   padding: 0 10rpx;
 }
-.prod5 .item .imgList .imgItem {
+.prod5 .list .item .imgList .imgItem {
   width: 25%;
   height: calc((100vw - 20rpx) / 4 - 20rpx);
   float: left;
   padding: 0 10rpx;
   margin-bottom: 20rpx;
 }
-.prod5 .item .imgList .imgItem .imgBox {
+.prod5 .list .item .imgList .imgItem .imgBox {
   overflow: hidden;
   height: 100%;
 }
-.prod5 .item .text {
+.prod5 .list .item .text {
   margin: 20rpx 0;
 }
-.prod5 .item .time text {
+.prod5 .list .item .time text {
   display: inline-block;
   margin-right: 20rpx;
 }
@@ -344,6 +349,9 @@ page {
   overflow: hidden;
   overflow-y: auto;
 }
+.assembleDetail .moadl-main {
+  width: 90% !important;
+}
 .assembleDetail .detailMain {
   padding: 14rpx 24rpx 24rpx;
 }
@@ -448,5 +456,9 @@ page {
 }
 .specsModal .btnBox button {
   line-height: 80rpx;
+}
+.spellBtn button {
+  padding: 0 !important;
+  width: 130rpx;
 }
 

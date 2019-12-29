@@ -1,36 +1,20 @@
 <template>
 	<view class="content">
-		<scroll-view scroll-y="true">
 			<view class="editBox">
 				<view class="title"><input   type="text" placeholder="请输入标题" maxlength="30" v-model="title"  @input="changeTitle"/></view>
 				<view class="textarea">
-					<!-- <textarea id="editDist" placeholder="请输入正文" v-model="articleMsg"></textarea> -->
-					<editor   show-img-toolbar="true" show-img-resize="true"  style="height:100%;" id="editDist" placeholder="请输入正文" :value="articleMsg" @input="changeInput" @statuschange="changeClass"></editor>
+					<editor show-img-toolbar="true" show-img-resize="true"  style="height:100%;" id="editDist" placeholder="请输入正文" :value="articleMsg" @input="changeInput" @statuschange="changeClass"></editor>
 				</view>
-				<!-- <view class="pic">
-					<view class="item" v-for="(item, index) in imgList" :key="index">
-						<image :src="item" mode="widthFix" @tap="showImg(index)"></image>
-						<icon class="iconfont icon-clear" @tap="deleteImg(index)"></icon>
-					</view>
-					<view class="upload" @tap="getPic"><image src="../../static/images/defaultpro.png" mode="widthFix"></image></view>
-				</view> -->
 			</view>
-		</scroll-view>
-		<view class="operBox clearfix">
-			<view class="item" @tap="choosePic">
-				<icon class="iconfont icon-tupian"></icon>
+		<view class="operBox">
+			<view class="clearfix">
+				<view class="item" @tap="choosePic">
+					<icon class="iconfont icon-tupian"></icon>
+				</view>
 			</view>
-			<!-- <view class="item" @tap="linkTo('friends')">
-        @
-      </view>
-      <view class="item" @tap="linkTo('subject')">
-        #
-      </view>
-      <view class="item" @tap="linkTo('ranking')">
-        <icon class="iconfont icon-link"></icon>
-      </view> -->
+			<view class="comfootBtn" @tap="postActical">发布</view>
 		</view>
-		<view class="comfootBtn" @tap="postActical">发布</view>
+		
 	</view>
 </template>
 
@@ -89,7 +73,7 @@
 				var self = this;
 				self.articleMsg = self.articleMsg.replace("<p><br></p><p><br></p><p><br></p>","");
 				console.log(self.articleMsg);
-				self.articleMsg = self.articleMsg + `<p><img mode="widthFix"  style="max-width:100%;height:auto;" src='${url}' /></p><p><br></p><p><br></p><p><br></p>`;
+				self.articleMsg = self.articleMsg + `<p><img mode="widthFix"  style="width:auto;max-width:100% !important;height:auto;" src='${url}' /></p><p><br></p><p><br></p><p><br></p>`;
 				this.ctx.setContents({
 					html:self.articleMsg,
 					success:function(ret){
@@ -155,12 +139,12 @@
 </script>
 
 <style lang="less">
-	page,
 	.content {
-		height: 100%;
+		min-height:100vh;
+		padding-bottom:180rpx;
 		background: #fff;
 	}
-
+	
 	.editBox {
 		padding: 0 20rpx;
 		overflow: hidden;
@@ -180,13 +164,17 @@
 		}
 	}
 
-	scroll-view {
-		height: calc(100% - 180rpx);
-	}
+	// scroll-view {
+	// 	height: calc(100% - 180rpx);
+	// }
 
 	.textarea {
 		margin-top: 20rpx;
-		height:100%;
+		height:calc(100vh - 320rpx);
+		editor{
+			width: 100%;
+			height:100%;
+		}
 	}
 
 	.pic {
@@ -234,7 +222,10 @@
 	.operBox {
 		padding-bottom: constant(safe-area-inset-bottom);
 		background: #eee;
-
+		position:fixed;
+		width: 100%;
+		bottom:0rpx;
+		left:0;
 		.item {
 			width: 20%;
 			float: left;

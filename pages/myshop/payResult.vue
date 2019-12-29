@@ -91,7 +91,7 @@
 				let prodVO = getApp().globalData.prodVO
 				if(this.type=='spell'){
 					uni.reLaunch({
-						url:`/pages/order/orderDetailSpeci?id=${resdata.spellId}`
+						url:`/pages/order/orderDetailSpeci?id=${resdata.spellIdUser}`
 					})
 				}else{
 					uni.reLaunch({
@@ -107,7 +107,7 @@
 			},
 			baoku(){ //
 				uni.reLaunch({
-					url:`/pages/mycenter/myWallet`
+					url:`/pages/mycenter/treasury?pagetype=baoku`
 				})
 			}
 		}

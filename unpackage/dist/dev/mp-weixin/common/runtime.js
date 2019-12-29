@@ -104,11 +104,11 @@
 /******/
 /******/
 /******/ 		// mini-css-extract-plugin CSS loading
-/******/ 		var cssChunks = {"components/comment-item":1,"components/comment":1,"components/reward-modal":1,"components/product-list":1,"components/ranking-item":1,"components/shop-product":1,"components/countDown":1,"components/order-item":1};
+/******/ 		var cssChunks = {"components/comment-item":1,"components/comment":1,"components/l-barrage/l-barrage":1,"components/reward-modal":1,"components/product-list":1,"components/ranking-item":1,"components/shop-product":1,"components/countDown":1,"components/order-item":1};
 /******/ 		if(installedCssChunks[chunkId]) promises.push(installedCssChunks[chunkId]);
 /******/ 		else if(installedCssChunks[chunkId] !== 0 && cssChunks[chunkId]) {
 /******/ 			promises.push(installedCssChunks[chunkId] = new Promise(function(resolve, reject) {
-/******/ 				var href = "" + ({"components/comment-item":"components/comment-item","components/comment":"components/comment","components/reward-modal":"components/reward-modal","components/product-list":"components/product-list","components/ranking-item":"components/ranking-item","components/shop-product":"components/shop-product","components/countDown":"components/countDown","components/messageModal":"components/messageModal","components/order-item":"components/order-item"}[chunkId]||chunkId) + ".wxss";
+/******/ 				var href = "" + ({"components/comment-item":"components/comment-item","components/comment":"components/comment","components/l-barrage/l-barrage":"components/l-barrage/l-barrage","components/reward-modal":"components/reward-modal","components/product-list":"components/product-list","components/ranking-item":"components/ranking-item","components/shop-product":"components/shop-product","components/countDown":"components/countDown","components/messageModal":"components/messageModal","components/order-item":"components/order-item"}[chunkId]||chunkId) + ".wxss";
 /******/ 				var fullhref = __webpack_require__.p + href;
 /******/ 				var existingLinkTags = document.getElementsByTagName("link");
 /******/ 				for(var i = 0; i < existingLinkTags.length; i++) {

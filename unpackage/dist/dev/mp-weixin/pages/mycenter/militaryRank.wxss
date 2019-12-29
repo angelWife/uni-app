@@ -11,6 +11,16 @@
 .picBox image {
   width: 60%;
 }
+.picBox .junxian {
+  width: 150px;
+  position: absolute;
+  z-index: 5;
+  left: 50%;
+  top: 50%;
+  margin-left: -75px;
+  -webkit-transform: translateY(-50%);
+          transform: translateY(-50%);
+}
 .picBox text {
   position: absolute;
   right: 24rpx;

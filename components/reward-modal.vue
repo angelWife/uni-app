@@ -9,17 +9,20 @@
 					</block>
 				</view>
 				<view class="giftList">
-					<view class="item" v-for="(item,index) in rewardList" :key="index">
-						<view class="box flex f-col just-con-c" :class="{'active':item.choose}" @tap="chooseItem(index)">
-							<view class="text">{{item.name}}</view>
-							<view class="pic">
-								<image :src="item.imgPath" mode="widthFix"></image>
-							</view>
-							<view class="text">
-								{{item.priceSale}}元({{item.priceBack}}星票)
+					<block v-if="showType==5">
+						<view class="item" v-for="(item,index) in rewardList" :key="index">
+							<view class="box flex f-col just-con-c" :class="{'active':item.choose}" @tap="chooseItem(index)">
+								<view class="text">{{item.name}}</view>
+								<view class="pic">
+									<image :src="item.imgPath" mode="widthFix"></image>
+								</view>
+								<view class="text">
+									{{item.priceSale}}元({{item.priceSale*10}}星票)
+								</view>
 							</view>
 						</view>
-					</view>
+					</block>
+					
 				</view>
 				<view class="modalfoot flex item-center">
 					<view class="text">
@@ -81,6 +84,7 @@
 				}],
 				checked: true,
 				usename: 'use',
+				showType:5,
 				listVO:{},
 			};
 		},
@@ -96,11 +100,16 @@
 				modalBar.filter((v, i) => {
 					if (i == ind) {
 						v.active = true
-						self.$emit('getRewardList',v.type);
+						self.showType=v.type
 					} else {
 						v.active = false
 					}
 				})
+				if(ind==0){
+					self.$emit('getRewardList');
+				} else{
+					this.$.$parent.rewardList = []
+				}
 				this.modalBar = modalBar
 			},
 			checkChange(e) {

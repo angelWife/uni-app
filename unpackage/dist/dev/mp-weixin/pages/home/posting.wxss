@@ -32,9 +32,12 @@
   width: calc(25% - 10rpx);
   height: calc((100vw - 20rpx) / 4 - 10rpx);
   border: 1px dashed #d6d6d6;
-  font-size: 50px;
-  text-align: center;
   line-height: calc((100vw - 20rpx) / 5);
+}
+.content .upload .iconfont {
+  width: 100%;
+  text-align: center;
+  font-size: 60rpx;
   color: #999;
 }
 .content .operBox {

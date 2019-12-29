@@ -1,19 +1,21 @@
 <template>
 	<view class="content">
-		<view v-for="(item, index) in list" :key="index" class="item flex item-center">
-			<view class="pic" :style="'background:url('+setImg(item.imgPath)+') center center no-repeat;background-size:100% auto;'" @tap="showPic(item.imgPath)">
-				<!-- <image :src="" mode="widthFix" @tap="showPic(item.imgPath)">
-					
-				</image> -->
-				<text v-if="showNum" class="shownum" :class="'num'+index">item</text>
-			</view>
-			<view class="msg flex-1" @tap="choosePord(item)">
-				<view class="name clamp clamp-2">{{ item.goodsName }}</view>
-				<view class="nums c999" v-if="item.isSellOut">已售罄</view>
-				<view class="nums c999" v-else>已售{{ item.numTotalSale }}件</view>
-				<view class="price red">
-					<text>¥</text>
-					<text class="fs18">{{ item.priceSale }}</text>
+		<view class="clearfix">
+			<view v-for="(item, index) in list" :key="index" class="item flex item-center">
+				<view class="pic" :style="'background:url('+setImg(item.imgPath)+') center center no-repeat;background-size:100% auto;'" @tap="showPic(item.imgPath)">
+					<!-- <image :src="" mode="widthFix" @tap="showPic(item.imgPath)">
+						
+					</image> -->
+					<text v-if="showNum" class="shownum" :class="'num'+index">item</text>
+				</view>
+				<view class="msg flex-1" @tap="choosePord(item)">
+					<view class="name clamp clamp-2">{{ item.goodsName }}</view>
+					<view class="nums c999" v-if="item.isSellOut">已售罄</view>
+					<view class="nums c999" v-else>已售{{ item.numTotalSale }}件</view>
+					<view class="price red">
+						<text>¥</text>
+						<text class="fs18">{{ item.priceSale }}</text>
+					</view>
 				</view>
 			</view>
 		</view>
@@ -24,6 +26,9 @@
 					这里还没有内容
 				</view>
 			</view>
+		</view>
+		<view class="noMore" v-if="nomore">
+			~已经到底了！~
 		</view>
 	</view>
 </template>
@@ -47,6 +52,13 @@ export default {
 			}
 		},
 		nodata: {
+			// 是否是详情
+			type: Boolean,
+			default() {
+				return false;
+			}
+		},
+		nomore: {
 			// 是否是详情
 			type: Boolean,
 			default() {

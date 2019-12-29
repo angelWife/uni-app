@@ -128,7 +128,15 @@ var render = function() {
     }
   })
 
-  var m5 = _vm.setImg(
+  var l4 = _vm.__map(_vm.spellVO.userList, function(item, ind) {
+    var m5 = _vm.setImg(item.imgHeadPath)
+    return {
+      $orig: _vm.__get_orig(item),
+      m5: m5
+    }
+  })
+
+  var m6 = _vm.setImg(
     _vm.prodDetail.imgList && _vm.prodDetail.imgList.length > 0
       ? _vm.prodDetail.imgList[0]
       : ""
@@ -142,7 +150,8 @@ var render = function() {
         m2: m2,
         l2: l2,
         l3: l3,
-        m5: m5
+        l4: l4,
+        m6: m6
       }
     }
   )
@@ -178,7 +187,7 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var uniCountDown = function uniCountDown() {return __webpack_require__.e(/*! import() | components/countDown */ "components/countDown").then(__webpack_require__.bind(null, /*! @/components/countDown.vue */ 525));};var _default =
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var uniCountDown = function uniCountDown() {return __webpack_require__.e(/*! import() | components/countDown */ "components/countDown").then(__webpack_require__.bind(null, /*! @/components/countDown.vue */ 532));};var _default =
 
 
 

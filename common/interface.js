@@ -5,7 +5,6 @@ class Service extends HttpService {
 		this.$$path = {
 			getToken: 'user/login_mp_register', // 通用根据code获取Token
 			loginOut: 'user/login_out', //退出登录
-			hotList: 'sys/cfg/hot_search/list_data', //热搜关键字列表'
 			//上传
 
 			//用户
@@ -34,11 +33,16 @@ class Service extends HttpService {
 			editSwitchFlag:'app/user_info/modify_config',
 			accountNums:'app/user_account/load_by_type',//根据账户类型获得账户明细
 			getXPTypes:'dict/app/userAccountDetailBizTypeTicketList',//获取星票明细
+			getRMBTypes:'dict/app/userAccountDetailBizTypeRmbList',
+			getActiveTypes:'dict/app/userAccountDetailBizTypeActiveList',
 			accountInfo:'app/user_account_detail/table_data',//账户流水
 			newsType:'app/user_message/wait_read_total',//消息分类
 			newsList:'app/user_message/table_data',//消息列表
 			readNews:'app/user_message/modify_read',//阅读消息
+			delNews:'app/user_message/modify_remove',
+			readAllNews:'app/user_message/wait_read_total',
 			setDefault:'app/user_info/modify_virtual_spirit',//设默认精灵
+			myLeave:'app/user_promotion/mr',//军衔详情
 			
 			//文章帖子
 			raleaseArtical: 'article/info/publish', // 发文章
@@ -55,6 +59,7 @@ class Service extends HttpService {
 			followList:'app/user_follow/list_data',//我的关注列表
 			followListOwner:'app/user_follow/table_data',//关注
 			rewardRecod:'app/user_reward/list_data',//打赏飘窗
+			rewardTable:'app/user_reward/table_data',//d打赏记录
 			
 			relasePublish: 'article/info_comment/publish', //发评论
 			relasePublishChild:'article/info_comment/publish_child',
@@ -507,6 +512,13 @@ class Service extends HttpService {
 	getXPTypes(params) {
 		return this.getRequest(this.$$path.getXPTypes)
 	}
+	getRMBTypes(params) {
+		return this.getRequest(this.$$path.getRMBTypes)
+	}
+	getActiveTypes(params) {
+		return this.getRequest(this.$$path.getActiveTypes)
+	}
+	
 	accountInfo(params) {
 		return this.postRequest(this.$$path.accountInfo, {
 			data: params
@@ -567,6 +579,14 @@ class Service extends HttpService {
 			data: params
 		})
 	}
+	delNews(params) {
+		return this.postRequest(this.$$path.delNews, {
+			data: params
+		})
+	}
+	readAllNews() {
+		return this.postRequest(this.$$path.readAllNews)
+	}
 	cancelOrderRefund(params) {
 		return this.postRequest(this.$$path.cancelOrderRefund, {
 			data: params
@@ -574,6 +594,14 @@ class Service extends HttpService {
 	}
 	setDefault(params) {
 		return this.postRequest(this.$$path.setDefault, {
+			data: params
+		})
+	}
+	myLeave(params) {
+		return this.postRequest(this.$$path.myLeave)
+	}
+	rewardTable(params) {
+		return this.postRequest(this.$$path.rewardTable, {
 			data: params
 		})
 	}

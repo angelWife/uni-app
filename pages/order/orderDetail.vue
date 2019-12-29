@@ -1,153 +1,166 @@
 <template>
 	<view class="content pagebg">
-		<view class="timer" v-if="details.status==1&&details.flagStatusRefund!=1">
-			剩余
-			<block v-if="show_time">
-				<uni-count-down :show-day="false" :backgroundColor="backgroundColor" :color="color" :splitorColor="color"
-				 :show-style="false" :fontSize="fontSize" :hour="hour" :minute="minute" :second="second" />
-			</block>
-			自动取消订单
-		</view>
-		<view class="timer" v-if="details.status == 3&&details.flagStatusRefund!=1">
-			剩余
-			<block v-if="show_time">
-				<uni-count-down :show-day="false" :color="color" :backgroundColor="backgroundColor" :splitorColor="color"
-				 :show-style="false" :fontSize="fontSize" :hour="hour" :minute="minute" :second="second" />
-			</block>
-			自动收货
-		</view>
-		<view class="modal logist flex item-center" v-if="details.logistics.carrierName">
-			<view class="pic">
-				<image src="/static/images/icon-logist.png" mode="widthFix"></image>
+		<block v-if="details.status">
+			<view class="timer" v-if="details.status==1&&details.flagStatusRefund!=1">
+				剩余
+				<block v-if="show_time">
+					<uni-count-down :show-day="false" :backgroundColor="backgroundColor" :color="color" :splitorColor="color"
+					 :show-style="false" :fontSize="fontSize" :hour="hour" :minute="minute" :second="second" />
+				</block>
+				自动取消订单
 			</view>
-			<view class="msg flex-1">
-				<text class="c999">物流编号：</text>
-				<text class="">{{details.logistics.carrierName}}</text>
+			<view class="timer" v-if="details.status == 3&&details.flagStatusRefund!=1">
+				剩余
+				<block v-if="show_time">
+					<uni-count-down :show-day="false" :color="color" :backgroundColor="backgroundColor" :splitorColor="color"
+					 :show-style="false" :fontSize="fontSize" :hour="hour" :minute="minute" :second="second" />
+				</block>
+				自动收货
 			</view>
-			<view>
-				{{details.logistics.logisticsNo}}
-			</view>
-			<view class="copy blue" @tap="textPaste()">
-				复制
-			</view>
-		</view>
-		<view class="modal address flex item-center">
-			<view class="pic">
-				<image src="/static/images/icon-address.png" mode="widthFix"></image>
-			</view>
-			<view class="msg flex-1">
-				<view class="name">
-					<text class="fs15">{{details.address.receiverName}}</text>
-					<text class="c999">{{details.address.receiverMobilePhone}}</text>
+			<view class="modal logist flex item-center" v-if="details.logistics.carrierName">
+				<view class="pic">
+					<image src="/static/images/icon-logist.png" mode="widthFix"></image>
 				</view>
-				<view class="detail">
-					{{details.address.areaProvinceName?details.address.areaProvinceName:''}}
-					{{details.address.areaCityName?details.address.areaCityName:''}}
-					{{details.address.areaCountyName?details.address.areaCountyName:''}}
-					{{details.address.address?details.address.address:''}}
+				<view class="msg flex-1">
+					<text class="c999">物流编号：</text>
+					<text class="">{{details.logistics.carrierName}}</text>
+				</view>
+				<view>
+					{{details.logistics.logisticsNo}}
+				</view>
+				<view class="copy blue" v-if="details.logistics.logisticsNo" @tap="textPaste(details.logistics.logisticsNo)">
+					复制
 				</view>
 			</view>
-		</view>
-		<view class="modal">
-			<view class="item order_detail">
-				<view class="shopMsg flex item-center" @tap="shopDetail(item.shopInfoVo.id)">
+			<view class="modal address flex item-center">
+				<view class="pic">
+					<image src="/static/images/icon-address.png" mode="widthFix"></image>
+				</view>
+				<view class="msg flex-1">
+					<view class="name">
+						<text class="fs15">{{details.address.receiverName}}</text>
+						<text class="c999">{{details.address.receiverMobilePhone}}</text>
+					</view>
+					<view class="detail">
+						{{details.address.areaProvinceName?details.address.areaProvinceName:''}}
+						{{details.address.areaCityName?details.address.areaCityName:''}}
+						{{details.address.areaCountyName?details.address.areaCountyName:''}}
+						{{details.address.address?details.address.address:''}}
+					</view>
+				</view>
+			</view>
+			<view class="modal">
+				<view class="item order_detail">
+					<view class="shopMsg flex item-center" @tap="shopDetail(item.shopInfoVo.id)">
+						<view class="pic">
+							<image :src="details.shopInfo.imgPath" mode="widthFix"></image>
+						</view>
+						<view class="flex-1">
+							<view class="shopName fs15">{{details.shopInfo.name}}</view>
+						</view>
+					</view>
+			
+					<view class="product flex" v-for="(item,index) in details.detailList" :key="index" @tap="goodsDetail()">
+						<view class="pic" style="overflow: hidden;">
+							<image :src="item.goodsImgPath" mode="widthFix"></image>
+						</view>
+						<view class="center flex-1">
+							<view class="name clamp clamp-2">
+								{{item.goodsName}}
+							</view>
+							<view class="spec">
+								{{item.goodsSkuPropValue}}
+							</view>
+						</view>
+						<view class="price text-right">
+							<view class="">
+								<text class="fs12">¥</text>
+								<text v-if="operType=='order'">{{item.priceBuy}}</text>
+								<text v-else> {{item.priceBuy}}</text>
+							</view>
+							<view class="c999">
+								x{{item.buyNum}}
+							</view>
+						</view>
+					</view>
+				</view>
+				<view class="item orderMsg fs13">
+					<view class="item_c flex">
+						<view class="name">运费</view>
+						<!-- <view class="flex-1 text-right" v-if="details.priceVo.priceLogistic==0">
+							免运费
+						</view> -->
+						<view class="flex-1 text-right">
+							￥{{details.priceVo.priceLogistic?details.priceVo.priceLogistic:'0.00'}}
+						</view>
+					</view>
+					<!-- <view class="item_c flex item-center" @tap="cickCoupon" v-if="operType=='order'">
+						<view class="name">优惠券</view>
+						<view class="flex-1 text-right">
+							<block v-if="couponList.length>0">
+								<text class="red">您有可使用的优惠券</text>
+								<icon class="iconfont icon-right"></icon>
+							</block>
+							<text v-else class="c999">无优惠券可用</text>
+						</view>
+					</view> -->
+					<view class="item_c flex">
+						<view class="name">精灵折扣</view>
+						<view class="flex-1 text-right">
+							{{details.priceVo.priceShopReduce?details.priceVo.priceShopReduce:'0.00'}}
+						</view>
+					</view>
+					<view class="item_c flex">
+						<view class="name">减免</view>
+						<view class="flex-1 text-right">
+							{{details.priceVo.priceShopSpirit?details.priceVo.priceShopSpirit:'0.00'}}
+						</view>
+					</view>
+				</view>
+				<view class="item phoneCall flex">
 					<view class="pic">
-						<image :src="details.shopInfo.imgPath" mode="widthFix"></image>
+						<image src="/static/images/icon-server.png" mode="widthFix"></image>
 					</view>
 					<view class="flex-1">
-						<view class="shopName fs15">{{details.shopInfo.name}}</view>
+						联系店主
 					</view>
-				</view>
-
-				<view class="product flex" v-for="(item,index) in details.detailList" :key="index" @tap="goodsDetail()">
-					<view class="pic" style="overflow: hidden;">
-						<image :src="item.goodsImgPath" mode="widthFix"></image>
-					</view>
-					<view class="center flex-1">
-						<view class="name clamp clamp-2">
-							{{item.goodsName }}
-						</view>
-						<view class="spec">
-							{{item.goodsSkuPropValue}}
-						</view>
-					</view>
-					<view class="price text-right">
-						<view class="">
-							<text class="fs12">¥</text>
-							<text v-if="operType=='order'">{{item.priceBuy}}</text>
-							<text v-else> {{item.priceBuy}}</text>
-						</view>
-						<view class="c999">
-							x{{item.buyNum}}
-						</view>
+					<view class="blue" @tap="phoneCall(details.shopInfo.phone)">
+						{{details.shopInfo.phone?details.shopInfo.phone:''}}
 					</view>
 				</view>
 			</view>
-			<view class="item orderMsg fs13">
-				<view class="item_c flex">
-					<view class="name">运费</view>
-					<view class="flex-1 text-right" v-if="details.priceVo.priceLogistic==0">
-						免运费
+			<view class="modal fs13">
+				<view class="orderMsg">
+					<view class="item_c">
+						订单编号：{{details.code?details.code:'--'}} <text class="blue float-right" v-if="details.code" @tap="textPaste(details.code)">复制</text>
 					</view>
-					<view class="flex-1 text-right" v-else>
-						￥{{details.priceVo.priceLogistic}}
+					<!-- <view class="">
+						支付方式：星票
+					</view> -->
+					<view class="item_c">
+						下单时间：{{ formatTime(details.createTime) }}
 					</view>
-				</view>
-				<view class="item_c flex item-center" @tap="cickCoupon" v-if="operType=='order'">
-					<view class="name">优惠券</view>
-					<view class="flex-1 text-right">
-						<block v-if="couponList.length>0">
-							<text class="red">您有可使用的优惠券</text>
-							<icon class="iconfont icon-right"></icon>
-						</block>
-						<text v-else class="c999">无优惠券可用</text>
+					<view class="item_c" v-if="details.status >= 1 && details.status < 6 ">
+						付款时间：{{ formatTime(details.timePay ) }}
 					</view>
-				</view>
-				<view class="item_c flex">
-					<view class="name">精灵折扣</view>
-					<view class="flex-1 text-right">
-						已减免{{details.priceVo.priceShopReduce}}
-					</view>
-				</view>
-				<view class="item_c flex">
-					<view class="name">减免</view>
-					<view class="flex-1 text-right">
-						{{details.priceVo.priceShopSpirit}}
+					
+					<view class="item_c" v-if="details.status >= 3  && details.status < 6 ">
+						发货时间：{{ formatTime(details.timeSend) }}
 					</view>
 				</view>
 			</view>
-			<view class="item phoneCall flex">
-				<view class="pic">
-					<image src="/static/images/icon-server.png" mode="widthFix"></image>
-				</view>
-				<view class="flex-1">
-					联系店主
-				</view>
-				<view class="blue" @tap="phoneCall(details.shopInfo.phone)">
-					{{details.shopInfo.phone?details.shopInfo.phone:''}}
-				</view>
-			</view>
-		</view>
-		<view class="modal fs13">
-			<view class="orderMsg">
-				<view class="item_c">
-					订单编号：{{details.code}} <text class="blue float-right" @tap="textPaste()">复制</text>
-				</view>
-				<!-- <view class="">
-					支付方式：星票
-				</view> -->
-				<view class="item_c">
-					下单时间：{{ formatTime(details.createTime) }}
-				</view>
-				<view class="item_c" v-if="details.status >= 1 && details.status < 6 ">
-					付款时间：{{ formatTime(details.timePay ) }}
-				</view>
-				
-				<view class="item_c" v-if="details.status >= 3  && details.status < 6 ">
-					发货时间：{{ formatTime(details.timeSend) }}
+		</block>
+		<block v-else>
+			<view class="noData flex f-row just-con-c item-center">
+				<view class="text-center">
+					<image src="/static/images/nodata.png" mode="widthFix"></image>
+					<view class="text-center c666 fs16">
+						这里还没有内容
+					</view>
 				</view>
 			</view>
-		</view>
+		</block>
+		
 		<view class="footBtn">
 			<block v-if="details.status==1">
 				<button type="rednull" @tap="topay(details.id)" class="radiuBtn">付款</button>
@@ -421,13 +434,13 @@
 			formatTime(t) {
 				return this.$acFrame.Util.formatTime(t, "dayhm");
 			},
-			textPaste() {
+			textPaste(code) {
 				var self = this;
 				wx.showToast({
 					title: '复制成功',
 				})
 				wx.setClipboardData({
-					data: self.details.code,
+					data: code,
 					success: function(res) {
 						wx.getClipboardData({
 							success: function(res) {

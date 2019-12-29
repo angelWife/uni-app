@@ -14,12 +14,12 @@
 			<view class="title">上传证明图片（选填）</view>
 			<view class="picList">
 				<view v-for="(item,ind) in picList" :key="ind" class="item">
-					<image :src="item" mode="widthFix"></image>
+					<image :src="item" mode="aspectFit"></image>
 					<icon class="remove iconfont icon-remove" @tap="removePic(ind)"></icon>
 				</view>
 				<view class="item upload">
 					<view class="loadpic flex item-center just-con-c" @tap="choosePic">
-						<view>+</view>
+						<icon class="iconfont icon-plus"></icon>
 					</view>
 				</view>
 			</view>
@@ -207,19 +207,28 @@ page {
 				float: left;
 				width: 25%;
 				height:calc((100vw - 60rpx) / 4);
+				line-height: calc((100vw - 60rpx) / 4);
 				padding:10rpx;
 				position: relative;
+				overflow: hidden;
 				icon{
 					top:10rpx;
 					right:10rpx;
+				}
+				image{
+					height:100%;
+					vertical-align: top;
 				}
 				.loadpic{
 					width: 100%;
 					height:100%;
 					border:1px dashed #e6e6e6;
-					font-size:80rpx;
 					color:#999;
 					text-align: center;
+					.iconfont{
+						font-size:50rpx;
+						color:#999;
+					}
 				}
 			}
 		}

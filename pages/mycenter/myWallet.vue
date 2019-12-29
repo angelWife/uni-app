@@ -115,7 +115,9 @@
 				this.$acFrame.HttpService.virtualTab().then(res => {
 					if (res.success) {
 						let list = res.data
-						list.unshift({
+						let nav= []
+						list.unshift(
+						{
 							key: '',
 							val: '热销'
 						});
@@ -125,8 +127,11 @@
 							} else {
 								v.choose = false
 							}
+							if(v.key!=4&&v.key!=5){
+								nav.push(v)
+							}
 						})
-						self.nav = list
+						self.nav = nav
 					}
 				})
 			},

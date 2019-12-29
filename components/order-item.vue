@@ -17,7 +17,7 @@
 					 :hour="item.hour" :minute="item.minute" :second="item.second" />
 				</view>
 			</view>
-			<view v-if="orderType==100" class="item_body flex">
+			<view v-if="orderType==100" class="item_body flex"  @tap.stop="productDetail(item.detail.goodsId)">
 				<view class="pic">
 					<image :src="item.detail.goodsImgPath" mode="widthFix" />
 				</view>
@@ -348,6 +348,11 @@
 					}
 				})
 			},
+			productDetail(id){
+				uni.navigateTo({
+					url: '/pages/myshop/productDetail?id='+id
+				});
+			}
 		}
 	};
 </script>

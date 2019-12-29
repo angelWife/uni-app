@@ -10,10 +10,10 @@
 					<view class="name">
 						<text class="fs15 blod">{{userInfo.nickName}}</text>
 						<!-- <text class="mark" @tap="linkTo('militaryRank')">少校</text> -->
-						<!-- <image :src="'/static/images/junxian/'+userInfo.militaryRankType +'.png'" mode="widthFix"></image> -->
+						<image :src="'/static/images/junxian/'+userInfo.militaryRankType +'.png'" mode="widthFix" @tap="linkTo('militaryRank')"></image>
 					</view>
 					<view class="text c999 fs13" @tap="linkTo('activityLevel')">
-						活跃度：{{userInfo.totalActive}}
+						活跃度：{{userInfo.totalActive?userInfo.totalActive:0}}
 					</view>
 				</view>
 				<view class="btnBox">
@@ -188,6 +188,9 @@
 			linkTo(url){
 				if(url=="mysettings"){
 					url+='?passwdPaySet='+userInfo.passwdPaySet
+				}
+				if(url=="activityLevel"){
+					url+='?type=3'
 				}
 				uni.navigateTo({
 					url: url
