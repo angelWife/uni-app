@@ -532,8 +532,34 @@ __webpack_require__.r(__webpack_exports__);
           _obj.articleInfo.imgList.filter(function (v, i) {
             _obj.articleInfo.imgList[i] = self.setImg(v);
           });
-          _obj.publishUser.imgPathHead = self.setImg(_obj.publishUser.imgPathHead, _obj.publishUser.genderType);
+          _obj.itemLinkList && _obj.itemLinkList.filter(function (val, i) {
+            if (val.type == 2) {
+              switch (val.rankType) {
+                case 1:
+                  val.name = "\u9080\u8BF7\u597D\u53CB";
+                  break;
+                case 2:
+                  val.name = '热帖排行';
+                  break;
+                case 3:
+                  val.name = "\u8BDD\u9898\u6392\u884C";
+                  break;
+                case 4:
+                  val.name = "\u70ED\u5356\u6392\u884C";
+                  break;
+                default:
+                  break;}
 
+              return false;
+            } else {
+              if (val.goods.imgPath) {
+                _obj.itemLinkList[i].goods.imgPath = self.$acFrame.Util.setImgUrl(val.goods.imgPath);
+              }
+            }
+          });
+          if (_obj.publishUser) {
+            _obj.publishUser.imgPathHead = self.setImg(_obj.publishUser.imgPathHead, _obj.publishUser.genderType);
+          }
           self.dataInfo = _obj;
           self.getCommentList();
           self.rewardRecod();
@@ -732,7 +758,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     linkProd: function linkProd(id) {
       uni.navigateTo({
-        url: "/pages/myshop/productDetail?goodsId=".concat(id) });
+        url: "/pages/myshop/productDetail?id=".concat(id) });
 
     },
     shopDetail: function shopDetail(id) {

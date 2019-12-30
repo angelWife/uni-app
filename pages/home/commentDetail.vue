@@ -86,15 +86,15 @@
 					</view>
 				</block>
 				<block v-for="(linkitem, linkInd) in dataInfo.itemLinkList" :key="linkInd">
-					<view v-if="linkitem.type == 1" class="adventBox shopProduct flex item-center" @tap="linkProd(linkitem.goodsId)">
+					<view v-if="linkitem.type == 1" class="adventBox shopProduct flex item-center" @tap="linkProd(linkitem.goods.goodsId)">
 						<view class="p_pic">
 							<image :src="linkitem.goods.imgPath"></image>
 						</view>
 						<view class="p_main flex-1">
 							<view class="name">
-								<text class="textEllipsis">{{ linkitem.goodsName }}</text>
+								<text class="textEllipsis">{{ linkitem.goods.goodsName }}</text>
 							</view>
-							<view class="price red fs12">{{ linkitem.priceSale }}元</view>
+							<view class="price red fs12">{{ linkitem.goods.priceSale }}元</view>
 						</view>
 						<view class="p_buy"><button size="mini" type="red" class="">购买</button></view>
 					</view>
@@ -184,7 +184,7 @@
 
 		</view>
 		<view class="comment">
-			<view class="title">评论 {{dataInfo.articleInfo.numTotalComment}}</view>
+			<view class="title">评论 {{dataInfo.articleInfo.numTotalComment?ataInfo.articleInfo.numTotalComment:0}}</view>
 			<view class="commentList">
 				<block v-if="listData.length>0">
 					<view class="item flex" v-for="(item,ind) in listData" :key="ind">
@@ -392,8 +392,34 @@
 						_obj.articleInfo.imgList.filter((v, i) => {
 							_obj.articleInfo.imgList[i] = self.setImg(v)
 						})
-						_obj.publishUser.imgPathHead = self.setImg(_obj.publishUser.imgPathHead, _obj.publishUser.genderType)
-
+						_obj.itemLinkList && _obj.itemLinkList.filter((val, i) => {
+							if (val.type == 2) {
+								switch (val.rankType) {
+									case 1:
+										val.name = `邀请好友`
+										break;
+									case 2:
+										val.name = '热帖排行'
+										break;
+									case 3:
+										val.name = `话题排行`
+										break;
+									case 4:
+										val.name = `热卖排行`
+										break;
+									default:
+										break;
+								}
+								return false
+							} else {
+								if (val.goods.imgPath) {
+									_obj.itemLinkList[i].goods.imgPath = self.$acFrame.Util.setImgUrl(val.goods.imgPath);
+								}
+							}
+						});
+						if(_obj.publishUser){
+							_obj.publishUser.imgPathHead = self.setImg(_obj.publishUser.imgPathHead, _obj.publishUser.genderType)
+						}
 						self.dataInfo = _obj
 						self.getCommentList()
 						self.rewardRecod()
@@ -592,7 +618,7 @@
 			},
 			linkProd(id) {
 				uni.navigateTo({
-					url: `/pages/myshop/productDetail?goodsId=${id}`
+					url: `/pages/myshop/productDetail?id=${id}`
 				})
 			},
 			shopDetail(id) {
