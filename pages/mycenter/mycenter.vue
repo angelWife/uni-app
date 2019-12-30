@@ -304,7 +304,8 @@ export default {
 			let self = this
 			let params = {
 				pageIndex:this.pageIndex,
-				pageSize:this.pageSize
+				pageSize:this.pageSize,
+				userCode:this.userCode
 			}
 			this.$acFrame.HttpService.rewardTable(params).then(res=>{
 				if(res.success){

@@ -440,7 +440,8 @@ __webpack_require__.r(__webpack_exports__);
       var self = this;
       var params = {
         pageIndex: this.pageIndex,
-        pageSize: this.pageSize };
+        pageSize: this.pageSize,
+        userCode: this.userCode };
 
       this.$acFrame.HttpService.rewardTable(params).then(function (res) {
         if (res.success) {
