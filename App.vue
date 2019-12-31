@@ -5,9 +5,15 @@ export default {
   globalData: {
     config: MyConfig,
     comFunc: AcFrame,
-	userCode:''
+	userCode:'',
+	isShowPic:false,
+	orderType:'', //下单的时候用
+	prodVO:{}//下单的时候用
   },
-  onLaunch: function() {},
+  onLaunch: function(options) {
+	  console.error(options)
+	  // let userCode = 
+  },
   onShow: function() {},
   onHide: function() {
     console.log("App Hide");
@@ -26,6 +32,12 @@ image {
   width: 100%;
   height: 0;
   display: inline-block;
+  &[mode='aspectFit']{
+	  height:100%;
+  }
+  &[mode='aspectFill']{
+	   height:100%;
+  }
 }
 button {
   vertical-align: middle;
@@ -111,7 +123,49 @@ text {
   background: rgba(0, 0, 0, 0.2);
   top: 0;
   left: 0;
-  z-index: 10;
+  z-index: 20;
+  .centerModal{
+	  width:80%;
+	  margin:0 auto;
+	  background: #fff;
+	  border-radius:20rpx;
+	  overflow: hidden;
+	  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+	  .title{
+		  line-height: 80rpx;
+		  padding:0 30rpx;
+		  position:relative;
+		  border-bottom: 1px solid #e6e6e6;
+		  .close{
+			  position:absolute;
+			  top:0;
+			  right:0;
+			  height:80rpx;
+			  width: 80rpx;
+			  text-align:center;
+			  color:#999;
+		  }
+	  }
+	  .center{
+		  padding:20rpx 30rpx;
+		  text-align: center;
+	  }
+	  .foot{
+		  border-top:1px solid #e6e6e6;
+		  > view{
+			  height:80rpx;
+			  line-height: 80rpx;
+			  text-align: center;
+		  }
+		  .sure{
+			  color:#007AFF;
+		  }
+		  .cancel{
+			  color:#999;
+			  border-right:1px solid #e6e6e6;
+		  }
+	  }
+  }
 }
 .comModal {
   position: absolute;
@@ -165,12 +219,13 @@ text {
   border-radius: 100%;
   .headPic {
     border-radius: 100%;
+	height:100%;
   }
   .grade {
     position: absolute;
-    width: calc(100% + 20rpx) !important;
+    width: calc(100% + 30rpx) !important;
     top: -10rpx;
-    left: -10rpx;
+    left: -15rpx;
   }
 }
 .comNews {
@@ -194,6 +249,8 @@ text {
   }
   .newBox {
     position: absolute;
+	height: 140rpx;
+	width: 100%;
     top: 0;
     left: 0;
     z-index: 2;
@@ -207,8 +264,9 @@ text {
       margin: 0 40rpx;
     }
     .main {
+	height: 140rpx;
       border-bottom: 1px solid #ccc;
-      padding: 20rpx 0;
+      padding: 24rpx 0;
       .text {
         margin-top: 10rpx;
       }
@@ -262,7 +320,8 @@ icon.remove {
   right: 0rpx;
   height: 40rpx;
   width: 40rpx;
-  background: #d5d5d5;
+  border-radius:40rpx;
+  background: #b40000;
   color: #fff;
   line-height: 40rpx;
   text-align: center;
@@ -270,13 +329,17 @@ icon.remove {
   &::before {
     line-height: 40rpx;
     position: absolute;
-    top: 4rpx;
-    left: 8rpx;
+    top: 2rpx;
+    left: 10rpx;
     text-align: center;
   }
 }
 .noData {
-  height: 100%;
+	position:absolute;
+	height:100%;
+	top:0;
+	left:0;
+	width: 100%;
   image {
     width: 400rpx;
     margin: 60rpx 20rpx;
@@ -301,6 +364,12 @@ icon.remove {
   text-align: center;
   color: #999;
   font-size: 24rpx;
+}
+.lh42{
+	line-height: 42rpx;
+}
+.pr30{
+	padding-right:30rpx;
 }
 /*字体大小*/
 .fs10 {
@@ -327,9 +396,12 @@ icon.remove {
 .fs20 {
   font-size: 40rpx;
 }
+.lh42{
+  line-height: 42rpx;
+}
 /*字体颜色*/
 .red {
-  color: #b40000;
+  color: #b40000 !important;
 }
 .blue {
   color: #4c8ff7;
@@ -376,6 +448,18 @@ button[type="text"] {
     box-shadow: none !important;
   }
 }
+button[type="share"] {
+  background: none !important;
+  border: none;
+  color:inherit;
+  &::after {
+    border: none !important;
+    box-shadow: none !important;
+  }
+  &.red{
+	 color:#B40000; 
+  }
+}
 button[type="null"] {
   background: none !important;
   color: #666 !important;
@@ -406,7 +490,7 @@ button[type="blue"] {
 }
 button[size="mini"] {
   font-size: 26rpx !important;
-  line-height: 2;
+  line-height: 72rpx;
   &::after {
     box-shadow: none;
     border: 0;

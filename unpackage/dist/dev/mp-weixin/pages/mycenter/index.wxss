@@ -1,0 +1,81 @@
+page {
+  min-height: 100%;
+  background: #efefef;
+}
+.modal {
+  background: #fff;
+  margin-bottom: 20rpx;
+}
+.modal .item {
+  height: 96rpx;
+  line-height: 96rpx;
+}
+.modal .item .icon {
+  width: 40rpx;
+  margin: 0 30rpx;
+}
+.modal .item .right {
+  border-bottom: 1px solid #ccc;
+  position: relative;
+}
+.modal .item .right .mark {
+  position: absolute;
+  width: 16rpx;
+  height: 16rpx;
+  border-radius: 16rpx;
+  top: 16rpx;
+  left: 50rpx;
+  background: #B40000;
+}
+.modal .item .right button {
+  line-height: 100rpx;
+  text-align: left;
+  padding: 0;
+}
+.modal .item:last-child .right {
+  border: 0;
+}
+.head {
+  padding: 20rpx 0;
+}
+.head .pic {
+  width: 100rpx;
+  height: 100rpx;
+  margin: 0 24rpx;
+}
+.head .center {
+  line-height: 40rpx;
+}
+.head .center .mark {
+  display: inline-block;
+  margin-left: 30rpx;
+  border-radius: 40rpx;
+  padding: 0 20rpx;
+  background: #46D88C;
+  color: #fff;
+  font-size: 24rpx;
+}
+.head .center .text {
+  margin-top: 10rpx;
+}
+.head .center image {
+  display: inline-block;
+  margin-left: 20rpx;
+  width: 80rpx;
+}
+.head .btnBox {
+  margin-left: 24rpx;
+}
+.head .right {
+  height: 100rpx;
+  line-height: 100rpx;
+  width: 80rpx;
+  text-align: center;
+}
+.head .right .iconfont {
+  color: #999;
+}
+.message {
+  margin: 40rpx 0;
+}
+

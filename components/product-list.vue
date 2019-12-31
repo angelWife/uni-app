@@ -1,13 +1,21 @@
 <template>
 	<view class="content">
-		<view v-for="(item, index) in list" :key="index" class="item flex item-center">
-			<view class="pic"><image :src="setImg(item.imgPath)" mode="widthFix" @tap="showPic(item.pic)"></image></view>
-			<view class="msg flex-1" @tap="choosePord(item)">
-				<view class="name clamp clamp-2">{{ item.goodsName }}</view>
-				<view class="nums c999">已售{{ item.numTotalSale }}件</view>
-				<view class="price red">
-					<text>¥</text>
-					<text class="fs18">{{ item.priceSale }}</text>
+		<view class="clearfix">
+			<view v-for="(item, index) in list" :key="index" class="item flex item-center">
+				<view class="pic" :style="'background:url('+setImg(item.imgPath)+') center center no-repeat;background-size:100% auto;'" @tap="showPic(item.imgPath)">
+					<!-- <image :src="" mode="widthFix" @tap="showPic(item.imgPath)">
+						
+					</image> -->
+					<text v-if="showNum" class="shownum" :class="'num'+index">item</text>
+				</view>
+				<view class="msg flex-1" @tap="choosePord(item)">
+					<view class="name clamp clamp-2">{{ item.goodsName }}</view>
+					<view class="nums c999" v-if="item.isSellOut">已售罄</view>
+					<view class="nums c999" v-else>已售{{ item.numTotalSale }}件</view>
+					<view class="price red">
+						<text>¥</text>
+						<text class="fs18">{{ item.priceSale }}</text>
+					</view>
 				</view>
 			</view>
 		</view>
@@ -18,6 +26,9 @@
 					这里还没有内容
 				</view>
 			</view>
+		</view>
+		<view class="noMore" v-if="nomore">
+			~已经到底了！~
 		</view>
 	</view>
 </template>
@@ -47,6 +58,13 @@ export default {
 				return false;
 			}
 		},
+		nomore: {
+			// 是否是详情
+			type: Boolean,
+			default() {
+				return false;
+			}
+		},
 	},
 	data() {
 		return {};
@@ -56,10 +74,10 @@ export default {
 			this.$acFrame.Util.showBigPic(src, [src]);
 		},
 		choosePord(obj){
-			// this.$emit('setProduct',obj)
-			uni.navigateTo({
+			 this.$emit('setProduct',obj)
+			/* uni.navigateTo({
 				 url: 'productDetail?id='+obj.goodsId
-			});
+			}); */
 		},
 		setImg(src){
 			return  this.$acFrame.Util.setImgUrl(src);
@@ -79,7 +97,20 @@ export default {
 	width: 200rpx;
 	height: 200rpx;
 	overflow: hidden;
-	border-radius: 0.3em;
+	border-radius: 0.3em !important;
+	position: relative;
+	.shownum{
+		position:absolute;
+		background: #f6f6f6;
+		text-align: center;
+		height:40rpx;
+		width: 40rpx;
+		line-height: 40rpx;
+		border-radius: 40rpx;
+		color:#999;
+		left:10rpx;
+		top:10rpx;
+	}
 }
 .nums{
 	padding:10rpx 0;

@@ -1,5 +1,6 @@
 // 获取时间
-const formatTime = (type, date) => {
+import AcFrame from '@/common/acFrame'
+const formatTime = (date,type) => {
 	const _date = date ? new Date(date) : new Date()
 	const year = _date.getFullYear()
 	const month = _date.getMonth() + 1
@@ -8,29 +9,46 @@ const formatTime = (type, date) => {
 	const minute = _date.getMinutes()
 	const second = _date.getSeconds()
 	if (type == 'day') {
-		return [year, month, day].map(formatNumber).join('/')
+		return [year, month, day].map(formatNumber).join('-')
 	} else if (type == 'dayhm') {
-		return [year, month, day].map(formatNumber).join('/') + ' ' + [hour, minute].map(formatNumber).join(':')
+		return [year, month, day].map(formatNumber).join('-') + ' ' + [hour, minute].map(formatNumber).join(':')
 	} else if (type == 'hm') {
 		return [hour, minute].map(formatNumber).join(':')
 	} else if (type == 'hms') {
 		return [hour, minute, second].map(formatNumber).join(':')
 	} else {
-		return [year, month, day].map(formatNumber).join('/') + ' ' + [hour, minute, second].map(formatNumber).join(':')
+		return [year, month, day].map(formatNumber).join('-') + ' ' + [hour, minute, second].map(formatNumber).join(':')
 	}
 }
 const formatNumber = n => {
 	n = n.toString()
 	return n[1] ? n : '0' + n
 }
+
+//处理价格字段
+const money=(val)=>{
+	if(val){
+		val = Math.round(parseFloat(val)*100)/100
+		if(val<0){
+			val = '0.00'
+		}
+	}else{
+		val = '0.00'
+	}
+	 return val;
+}
 //倒计时间
 const countTime=(time,type)=>{
 	const nowdate = new Date().getTime()
 	const enddate = new Date(time).getTime()
 	const milli = enddate-nowdate;
-	const second=milli/1000
-	const minute= second/60
-	const hour = minute/60
+	const timer = new Date(milli)
+	// const second=milli/1000
+	// const minute= second/60
+	// const hour = minute/60
+	const hour = timer.getHours();
+	const minute = timer.getMinutes();
+	const second = timer.getSeconds(); 
 	if(type == 'hour'){
 		return hour
 	} else if(type == 'minute'){
@@ -50,30 +68,8 @@ const mytotal = (title, icon = 'none', mask = false, duration = 2000) => {
 	});
 }
 
-//分享
-const shareUrl = (res, _data, title) => {
-	let pagePath = '',
-		imageUrl = ''
-		
-	if (res.from === 'button') {
-		if (_data.productId) {
-			pagePath = '?pagePath=/pages/shopmall/shopDetail/shopDetail&productId=' + _data.productId + '&productType=' + _data
-				.productType + '&inviteCode=' + getApp().globalData.rabbitInfo.inviteCode
-			imageUrl = _data.imgMainList[0]
-			title = '在商城发现好物' + _data.name
-		}
-	} else {
-		pagePath = '?inviteCode=' + getApp().globalData.rabbitInfo.inviteCode
-	}
-	return {
-		title: title,
-		path: '/pages/loading/loading' + pagePath,
-		imageUrl: imageUrl
-	}
-}
-
 //处理图片的路径
-const setImgUrl = (imgPath) => {
+const setImgUrl = (imgPath,sex) => {
 	let picPath = ''
 	if(imgPath){
 		if (imgPath.indexOf('http') >= 0) {
@@ -82,7 +78,12 @@ const setImgUrl = (imgPath) => {
 			picPath = getApp().globalData.config.imgPath + imgPath
 		}
 	} else {
-		picPath='../../static/images/head1.png'
+		if(sex){
+			picPath=`/static/images/head${sex}.png`
+		}else{
+			picPath='/static/images/head1.png'
+		}
+		
 	}
 	
 	return picPath
@@ -96,17 +97,58 @@ const showBigPic = (showSrc, list) => {
 	})
 }
 // 上传图片
-const uploadPic = (url) => {
+const uploadPic = (a_url,len) => {
 	return new Promise((resolve, reject) => {
 		let token = uni.getStorageSync('access_token');
 		let channel='MP_WX';
 		uni.chooseImage({
-			count: 9,
+			count: len,
 			sizeType: ['compressed'], // 可以指定是原图还是压缩图，默认二者都有
 			sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
 			success: function(res) {
 				let tempFilePaths = res.tempFilePaths;
-				resolve(tempFilePaths[0]);
+				//resolve(tempFilePaths[0]);
+				if(!a_url){
+					a_url = '/file/upload';
+				}
+				// resolve(tempFilePaths[0]);
+				// return false
+				uni.uploadFile({
+					url: getApp().globalData.config.basePath + a_url, // 仅为示例，非真实的接口地址
+					filePath: tempFilePaths[0],
+					header: {
+						token,
+						channel
+					},
+					name: 'file',
+					success: function(res) {
+						let _data = JSON.parse(res.data)
+						debugger
+						if(a_url){
+							resolve(tempFilePaths[0]); 
+						}else{
+							resolve(_data.data.fullPath);
+						}
+					},
+					fail: (error) => {
+						reject(error);
+					}
+				});
+			}
+		});
+	})
+
+}
+const uploadFullPic = (len) => {
+	return new Promise((resolve, reject) => {
+		let token = uni.getStorageSync('access_token');
+		let channel='MP_WX';
+		uni.chooseImage({
+			count: len,
+			sizeType: ['compressed'], // 可以指定是原图还是压缩图，默认二者都有
+			sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+			success: function(res) {
+				let tempFilePaths = res.tempFilePaths;
 				uni.uploadFile({
 					url: getApp().globalData.config.basePath + '/file/upload', // 仅为示例，非真实的接口地址
 					filePath: tempFilePaths[0],
@@ -116,7 +158,8 @@ const uploadPic = (url) => {
 					},
 					name: 'file',
 					success: function(res) {
-						resolve(tempFilePaths[0]);
+						let _data = JSON.parse(res.data)
+						resolve(_data.data.fullPath);
 					},
 					fail: (error) => {
 						reject(error);
@@ -134,12 +177,11 @@ const getHotList = (type) => {
 	let params = {
 		type:type
 	}
-	self.$acFrame.HttpService.hotList(params).then(res => {
+	return AcFrame.HttpService.hotList(params).then(res => {
 		if (res.success) {
-			let _data = res.data;
-			return _data;
+			return res;
 		} else {
-			self.$acFrame.Util.mytotal(res.code);
+			mytotal(res.code);
 			return []
 		}
 	});
@@ -152,12 +194,12 @@ const setOrderStatus=(status)=>{
 	if(list){
 		
 	} else {
-		self.$acFrame.HttpService.rankList().then(res => {
+		AcFrame.HttpService.rankList().then(res => {
 			if (res.success) {
 				let _data = res.data;
 				return _data;
 			} else {
-				self.$acFrame.Util.mytotal(res.code);
+				mytotal(res.code);
 				return []
 			}
 		});
@@ -171,33 +213,64 @@ const setRankName=(type)=>{
 	let rankName=''
 	if(list){
 		list.filter(v=>{
-			if(v.key==militaryRankType){
+			if(v.key==type){
 				rankName = v.val
 			}
 		})
 	} else {
-		self.$acFrame.HttpService.rankList().then(res => {
+		AcFrame.HttpService.rankList().then(res => {
 			if (res.success) {
 				uni.setStorageSync('rankList',res.data);
-				if(v.key==militaryRankType){
+				if(v.key==type){
 					rankName = v.val
 				}
 			} else {
-				self.$acFrame.Util.mytotal(res.message);
+				mytotal(res.message);
 			}
 		});
 	}
 	
-	return name;
+	return rankName;
+}
+
+//分享
+const shareUrl = (res, settings) => {
+	let title=''
+	let imageUrl= ''
+	let pagePath=''
+	debugger
+  if (res.from === 'button') {
+    title = settings.title
+	imageUrl = settings.imageUrl
+	pagePath = settings.pagePath
+  } else {
+    
+  }
+  return {
+    title: title,
+    path: pagePath,
+    imageUrl: imageUrl
+  }
+}
+//帖子分享计数
+const shareStat=(id,callback)=>{
+	self.$acFrame.HttpService.sharePost(params).then(res => {
+		if (res.success) {
+			callback();
+		}
+	})
 }
 
 module.exports = {
 	formatTime,
 	showBigPic,
 	uploadPic,
+	uploadFullPic,
 	mytotal,
 	shareUrl,
 	setImgUrl,
 	getHotList,
-	countTime
+	countTime,
+	setRankName,
+	money
 }

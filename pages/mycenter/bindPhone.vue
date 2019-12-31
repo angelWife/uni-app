@@ -14,7 +14,8 @@
 			</view>
 		</view>
 		<view class="btnBox">
-			<button type="red" @tap="bindPhone">立即绑定</button>
+			<button type="red" v-if="checkPwd">验证</button>
+			<button type="red" v-else @tap="bindPhone">立即绑定</button>
 		</view>
 		<view class="followUs">
 			<label>
@@ -25,6 +26,7 @@
 </template>
 
 <script>
+
 	export default {
 		data() {
 			return {
@@ -32,8 +34,15 @@
 				isSend:false,
 				phone:'',
 				checked:true,
-				code:''
+				code:'',
+				checkPwd:false
 			};
+		},
+		onLoad(options){
+			let type=options.type
+			if(type){
+				this.checkPwd = true
+			}
 		},
 		methods:{
 			changeInput(e,name){

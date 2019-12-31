@@ -45,12 +45,15 @@ class HttpService extends Core {
 				uni.hideLoading()
 				console.info('HttpService class response :', response)
 				if(!response.data.success){
-					uni.showToast({
-						duration:2000,
-						icon:'none',
-						mask:true,
-						title:'接口有误'
-					})
+					if(response.data.message){
+						uni.showToast({
+							duration:2000,
+							icon:'none',
+							mask:true,
+							title:response.data.message
+						})
+					}
+					
 				}
 				return response.data
 			},

@@ -31,14 +31,14 @@ class AcFrame {
 	  let self = this
       let code = await self._getCode()
 	  let params={
-		  inviteCode:''
+		  inviteCode:getApp().globalData.userCode
 	  }
       return new Promise((resolve, reject)=>{
 		  self.HttpService.getToken(params).then(res => {
 			  if(res.success){
 				  uni.setStorageSync('access_token', res.data.token)
 				  uni.setStorageSync('userCode', res.data.userCode)
-				  getApp().globalData.userCode=res.data.userCode
+				  uni.setStorageSync('secret', res.data.secret)
 				  resolve(res)
 			  }
 		  }).catch(err => {

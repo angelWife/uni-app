@@ -7,7 +7,7 @@
 						{{shopDetail.name}}
 					</view>
 					<view class="text fs13 clamp clamp-2">
-						{{shopDetail.describe}}
+						{{shopDetail.describe?shopDetail.describe:'店主很懒，什么也没留下！'}}
 					</view>
 					<view class="btn" v-if="!shopDetail.isOwner">
 						<button class="contact radiuBtn" open-type="contact" size="mini">客服</button>
@@ -18,20 +18,46 @@
 						<image :src="setImg(shopDetail.imgPath)" mode="widthFix"></image>
 					</view>
 					<view class="btn" v-if="!shopDetail.isOwner">
-						<button v-if="shopDetail.hasFollow" type="red" class="radiuBtn" size="mini" @tap="followShop(shopDetail.id)">关注</button>
-						<button v-else class="contact radiuBtn" size="mini" @tap="followShop(shopDetail.id)">关注</button>
+						<button v-if="shopDetail.hasFollow" class="follow radiuBtn" size="mini" @tap="followShop(shopDetail.id)">已关注</button>
+						<button v-else type="red" class="radiuBtn" size="mini" @tap="followShop(shopDetail.id)">关注</button>
 					</view>
 				</view>
 			</view>
 			<view class="shopCoupon">
 				<scroll-view scroll-x="true">
 					<block  v-for="(item,ind) in shopDetail.couponList" :key="ind">
-						<view class="item" :class="{'hasReceived':item.hasReceived}">
-							<text class="doll">¥</text>
-							<text class="price blod">15</text>
-							<text class="t1 fs12" :class="{'c999':item.hasReceived}">满100元使用</text>
-							<text class="t2">优惠券</text>
-							<text class="t3 white">{{item.hasReceived?'已领取':'立即领取'}}</text>
+						<view v-if="item.hasReceived" class="item hasReceived" @tap="getCoupon(item.couponId,ind)">
+							<image src="/static/images/pic-coupon-d.png" mode="widthFix"></image>
+							<view class="item_box">
+								<view class="text-box">
+									<block v-if="item.effectType==1">
+										<text class="doll">¥</text>
+										<text class="price blod">{{item.effectVal}}</text>
+									</block>
+									<block v-else>
+										<text class="zhekou blod">{{item.effectVal}}</text>
+										<text class="fs12">折</text>
+									</block>
+								</view>
+								<text class="text">满{{item.priceFull}}元使用</text>
+							</view>
+							<view class="couponMark"></view>
+						</view>
+						<view v-else class="item" @tap="getCoupon(item.couponId,ind)">
+							<image src="/static/images/pic-coupon-n.png" mode="widthFix"></image>
+							<view class="item_box">
+								<view class="text-box">
+								<block v-if="item.effectType==1">
+									<text class="doll">¥</text>
+									<text class="price blod">{{item.effectVal}}</text>
+								</block>
+								<block v-else>
+									<text class="zhekou blod">{{item.effectVal}}</text>
+									<text class="fs12">折</text>
+								</block>
+								</view>
+								<text class="text">满{{item.priceFull}}元使用</text>
+							</view>
 						</view>
 					</block>
 				</scroll-view>
@@ -40,9 +66,9 @@
 		<view class="shopNav">
 			<view class="item" v-for="(item,ind) in tabs" :key="ind" :class="{'active':item.choose}" @tap="clickBar(ind)">
 				<text class="name">{{item.name}}</text>
-				<view class="sanjiao" v-if="item.choose">
-					<text class="up" :class="{'red':sortType=='asc'}"></text>
-					<text class="down" :class="{'red':sortType=='desc'}"></text>
+				<view class="sanjiao" v-if="item.choose&&ind!=0">
+					<text class="up" :class="{'red':sortType}"></text>
+					<text class="down" :class="{'red':!sortType}"></text>
 				</view>
 			</view>
 		</view>
@@ -66,16 +92,28 @@
 				pageIndex:1,
 				pageSize:20,
 				pageTotal:1,
-				tabs:[{name:'首页',choose:true},{name:'销量',choose:false},{name:'新品',choose:false},{name:'价格',choose:false}],
+				tabs:[{name:'首页',choose:true,type:2},
+				{name:'销量',choose:false,type:3},
+				{name:'新品',choose:false,type:4},
+				{name:'价格',choose:false,type:5}],
 				shopDetail:{},
 				dataList:[{name:"这边的是产品的名称，最多显示两行，超出两行的省略号",price:'52.00',salesNum:21623,pic:'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1574140134898&di=9b8d75803e617d449499df2f5a8d300f&imgtype=0&src=http%3A%2F%2Fm.360buyimg.com%2Fpop%2Fjfs%2Ft24241%2F145%2F1818221682%2F18886%2F71aac218%2F5b696accN052717a7.jpg'},
 				{name:"韩版新款复古水晶耳饰饰品欧美时尚高档小香耳钉耳环批发",price:'7.50',salesNum:152000,pic:'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2786988750,209248222&fm=15&gp=0.jpg'},
 				{name:"溢彩水彩手帐本随身旅行绘画皮面便携手账本300g中粗纹进口水彩纸",price:'7.50',salesNum:152000,pic:'https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=123919148,3561097999&fm=15&gp=0.jpg'}],
-				sortType:'desc' //asc
+				sortType:false,
+				pageType:2,
 			}
 		},
 		onLoad(options){
 			this.id = options.id;
+			wx.setNavigationBarColor({
+			  frontColor: '#000000',
+			  backgroundColor: '#ffffff',
+			  animation: {
+			    duration: 200,
+			    timingFunc: 'easeIn'
+			  }
+			})
 		},
 		onShow(){
 			this.resetData()
@@ -91,6 +129,9 @@
 				self.$acFrame.HttpService.shopDetail(params).then(res => {
 					if(res.success){
 						self.shopDetail = res.data
+						uni.setNavigationBarTitle({
+							title:res.data.name
+						})
 					}
 				})
 			},
@@ -98,9 +139,8 @@
 				let self = this
 				let params = {
 					shopId:this.id,
-					numTotalSaleAsc:null,
-					priceSaleAsc:null,
-					publishTimeAsc:null,
+					shopPageType :this.pageType,
+					shopPageSortAsc:this.sortType,
 					pageIndex:this.pageIndex,
 					pageSize:this.pageSize
 				}
@@ -109,8 +149,9 @@
 						let list = res.data.rows
 						self.pageTotal = res.data.pageTotal
 						if(list.length>0){
-							self.dataList.push(list)
-							self.nodata = fasle
+							self.dataList=self.dataList.concat(list)
+							console.log(self.dataList)
+							self.nodata = false
 						} else {
 							self.nodata = true
 						}
@@ -120,23 +161,25 @@
 			},
 			clickBar(ind){
 				let choose = this.tabs[ind].choose
-				if(choose){
-					if(this.sortType == 'asc'){
-						this.sortType = 'desc'
+				if(choose&&ind!=0){
+					if(this.sortType){
+						this.sortType = false
 					} else {
-						this.sortType = 'asc'
+						this.sortType = true
 					}
 				} else {
-					this.sortType = 'desc'
+					this.sortType = false
 				}
-				this.resetData()
+				
 				this.tabs.filter((v,i)=>{
 					if(i==ind){
 						v.choose = true
+						this.pageType = v.type
 					} else {
 						v.choose = false
 					}
 				})
+				this.resetData()
 				this.initProduct()
 			},
 			followShop(id){
@@ -154,6 +197,32 @@
 				this.pageIndex=1
 				this.pageSize=20
 				this.dataList=[]
+			},
+			setImg(src){
+				return  this.$acFrame.Util.setImgUrl(src);
+			},
+			getCoupon(id,ind){
+				let self=this
+				let _obj = self.shopDetail.couponList[ind]
+				if(_obj.hasReceived){
+					this.$acFrame.Util.mytotal('亲，该优惠券已经领取过了！')
+					return false;
+				}
+				this.$acFrame.HttpService.getCoupons({id:id}).then(res=>{
+					if(res.success){
+						self.shopDetail.couponList[ind].hasReceived = true
+						let list_c = [] // 未使用的
+						let list_u = [] // 已使用的
+						self.shopDetail.couponList.filter(v=>{
+							if(v.hasReceived){
+								list_u.push(v)
+							}else{
+								list_c.push(v)
+							}
+						})
+						self.shopDetail.couponList = [...list_c,...list_u];
+					}
+				})
 			}
 		}
 	}
@@ -177,9 +246,12 @@ page,.content{
 		padding-top:20rpx;
 		.title{
 			font-size:36rpx;
+			height:60rpx;
+			line-height: 60rpx;
 		}
 		.name{
 			width: 60%;
+			height:200rpx;
 			padding-top:10rpx;
 			.text{
 				height:76rpx;
@@ -199,11 +271,14 @@ page,.content{
 		}
 		button{
 			width: 160rpx;	
+			line-height: 50rpx;
 		}
 		.right{
 			margin-left:20rpx;
 			text-align: center;
+			height:200rpx;
 			.pic{
+				padding-top:10rpx;
 				image{
 					width: 120rpx;
 					height:120rpx;
@@ -212,15 +287,20 @@ page,.content{
 			}
 			.btn{
 				margin-top:20rpx;
-				button{
-					border:1px solid #b40000;
+				.follow{
+					border:1px solid #ccc !important;
+					color:#fff;
+					background: #ccc;
+					&::after{
+						border:none;
+						box-shadow: none;
+					}
 				}
 			}
 		}
 	}
 	.shopCoupon{
 		margin-top:20rpx;
-		height:100rpx;
 		width: 100%;
 		scroll-view{
 			white-space: nowrap;
@@ -228,34 +308,62 @@ page,.content{
 			overflow: hidden;
 			.item{
 				display: inline-block;
-				width: 200rpx;
-				height:100rpx;
+				width: 240rpx;
 				margin-right:20rpx;
 				position:relative;
-				padding-top:20rpx;
-				background: rgb(241, 241, 63);
+				color:#1A0000;
+				image{
+					vertical-align: top;
+				}
+				.item_box{
+					position:absolute;
+					width: 100%;
+					height:100%;
+					top:0;
+					left:0;
+				}
 				&:last-child{
 					margin-right:0;
 				}
-				&.hasReceived{
-					background: #f1f1f1;
+				.zhekou{
+					margin-left:20rpx;
+					line-height: 2.5;
+					font-size:40rpx;
+				}
+				.text-box{
+					display: inline-block;
+					min-width:100rpx;
+					text-align: center;
 				}
 				.doll{
-					float:left;
 					margin-left:20rpx;
+					font-size:20rpx;
+					line-height: 2.5;
 				}
 				.price{
-					float:left;
-					font-size:60rpx;
+					line-height: 2.5;
+					font-size:40rpx;
 				}
-				.t1{
-					float:left;
+				.text{
+					position:absolute;
+					right:30rpx;
+					top:20rpx;
+					color:#604B1B;
+					font-size:10px;
+					
 				}
-				.t2{
-					float:left;
+				.couponMark{
+					position:absolute;
+					width: 100%;
+					height:100%;
+					// background: rgba(0,0,0,0.1);
+					top:0;
+					left:0;
 				}
-				.t3{
-					float:right;
+				&.hasReceived{
+					.text{
+						color:#604B1B;
+					}
 				}
 			}
 		}

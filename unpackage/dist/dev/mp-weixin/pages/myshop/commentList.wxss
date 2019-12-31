@@ -1,0 +1,41 @@
+.item {
+  margin: 0 24rpx;
+  padding: 20rpx;
+  border-bottom: 1px solid #ccc;
+}
+.item .item-top .pic {
+  width: 60rpx;
+  height: 60rpx;
+  margin-right: 20rpx;
+}
+.item .item-top .name {
+  width: 30%;
+}
+.item .item-top .star image {
+  width: 40rpx;
+  display: inline-block;
+  margin-left: 10rpx;
+}
+.item .imgList {
+  margin-top: 20rpx;
+  padding: 0 10rpx;
+}
+.item .imgList .imgItem {
+  width: 25%;
+  height: calc((100vw - 20rpx) / 4 - 20rpx);
+  float: left;
+  padding: 0 10rpx;
+  margin-bottom: 20rpx;
+}
+.item .imgList .imgItem .imgBox {
+  overflow: hidden;
+  height: 100%;
+}
+.item .text {
+  margin: 20rpx 0;
+}
+.item .time text {
+  display: inline-block;
+  margin-right: 20rpx;
+}
+

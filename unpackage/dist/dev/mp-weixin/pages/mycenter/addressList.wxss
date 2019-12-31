@@ -1,0 +1,121 @@
+page {
+  min-height: 100%;
+  background: #efefef;
+}
+.item {
+  background: #fff;
+  padding: 0 24rpx;
+  margin-bottom: 20rpx;
+  position: relative;
+}
+.item text {
+  display: inline-block;
+}
+.item .top {
+  line-height: 40rpx;
+  padding-top: 20rpx;
+}
+.item .top text {
+  margin-right: 30rpx;
+}
+.item .center {
+  padding: 10rpx 0;
+}
+.item .center .text {
+  width: 80%;
+}
+.item .center .btn {
+  padding-left: 40rpx;
+}
+.item .center .btn button {
+  padding: 0;
+  line-height: 40rpx;
+  width: 80rpx;
+  font-size: 24rpx;
+}
+.item .iconfont {
+  position: absolute;
+  height: 50rpx;
+  line-height: 50rpx;
+  width: 60rpx;
+  text-align: center;
+  color: #999;
+  top: 0;
+  right: 0;
+}
+.item .foot {
+  border-top: 1px solid #ccc;
+  padding: 16rpx 0;
+}
+.item .foot text {
+  margin-left: 30rpx;
+}
+.addBtn {
+  margin: 30rpx;
+  border-radius: 0.3em;
+  background: #B40000;
+  color: #fff;
+  height: 80rpx;
+  line-height: 80rpx;
+  text-align: center;
+}
+.addBtn .iconfont {
+  margin-right: 20rpx;
+}
+.addAddr .modalmian {
+  background: #fff;
+  width: 80%;
+  margin: 0 auto;
+  border-radius: 0.3em;
+  overflow: hidden;
+}
+.addAddr .modalmian .title {
+  line-height: 80rpx;
+  text-align: center;
+  position: relative;
+  font-size: 30rpx;
+  border-bottom: 1px solid #ccc;
+}
+.addAddr .modalmian .title .iconfont {
+  position: absolute;
+  width: 100rpx;
+  right: 0;
+  top: 0;
+  color: #999;
+}
+.addAddr .modalmian .input {
+  height: 80rpx;
+  position: relative;
+}
+.addAddr .modalmian .input .mypicker {
+  line-height: 80rpx;
+  padding: 0 20rpx;
+}
+.addAddr .modalmian .input input {
+  line-height: 80rpx;
+  height: 80rpx;
+  padding: 0 20rpx;
+}
+.addAddr .modalmian .input .location {
+  position: absolute;
+  height: 80rpx;
+  line-height: 1;
+  z-index: 5;
+  top: 0;
+  right: 0;
+  width: 80rpx;
+  text-align: center;
+}
+.addAddr .modalmian .input .location .iconfont {
+  color: #B40000;
+}
+.addAddr .modalmian .border {
+  border-bottom: 1px solid #ccc;
+}
+.addAddr .modalmian .border-right {
+  border-right: 1px solid #ccc;
+}
+.addAddr .modalmian .foot {
+  padding: 20rpx;
+}
+

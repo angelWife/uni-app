@@ -1,0 +1,19 @@
+.comModal {
+  padding: 24rpx 30rpx;
+}
+.comModal textarea {
+  height: 240rpx;
+  width: 100%;
+  background: #f9f9f9;
+  border: 1px solid #ccc;
+  border-radius: 0.3em;
+  box-sizing: border-box;
+  padding: 20rpx;
+}
+.comModal .btnBox {
+  margin-top: 24rpx;
+}
+.comModal .btnBox button {
+  display: inline-block;
+}
+

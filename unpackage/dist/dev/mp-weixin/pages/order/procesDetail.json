@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "处理中",
+  "usingComponents": {
+    "uni-count-down": "/components/countDown"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "uni-count-down": "/components/countDown"
+  },
+  "component": true
+}

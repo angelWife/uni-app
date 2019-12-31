@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "正文",
+  "enablePullDownRefresh": true,
+  "usingComponents": {
+    "comment-modal": "/components/comment",
+    "reward-list": "/components/reward-modal",
+    "l-barrage": "/components/l-barrage/l-barrage"
+  }
+}

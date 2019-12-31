@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "帖子排行",
+  "enablePullDownRefresh": true,
+  "usingComponents": {
+    "comment-item": "/components/comment-item"
+  }
+}

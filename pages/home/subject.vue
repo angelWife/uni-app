@@ -2,7 +2,7 @@
 	<view class="content pagebg">
 		<view v-for="(item,ind) in list" :key="ind" class="item flex item-center" @tap="detail(item.id)">
 			<view class="pic">
-				<image :src="item.img" mode="widthFix"></image>
+				<image :src="item.res.data" mode="widthFix"></image>
 			</view>
 			<view class="flex-1 main flex item-center">
 				<view class="left flex-1">
@@ -10,7 +10,7 @@
 						{{item.name}}
 					</view>
 					<view class="text c999">
-						{{item.msg}}
+						{{item.describe}}
 					</view>
 				</view>
 				<view class="btnBox">
@@ -25,10 +25,30 @@
 	export default {
 		data() {
 			return {
-				list:[{name:'测试',msg:'话题描述',pic:'../../static/images/head1.png',id:0}]
+				list:[],
 			};
 		},
+		onShow(){
+			this.list=[]
+			this.intData()
+		},
 		methods:{
+			intData(){
+				let self =this
+				let params ={
+					pageIndex: 1,
+					pageSize: 100
+				}
+				this.$acFrame.HttpService.getToicList().then(res => {
+				  if (res.success) {
+					  let list = res.data
+					  list.filter(v=>{
+						  v.img = self.$acFrame.Util.setImgUrl(v.img)
+					  })
+				    self.list = list
+				  }
+				});
+			},
 			chooseIt(ind){
 				let pages = getCurrentPages()
 				let obj=this.list[ind]
@@ -57,7 +77,7 @@
 		height:80rpx;
 		border-radius: 80rpx;
 		overflow: hidden;
-		margin:0 24rpx;
+		margin:0 30rpx;
 	}
 	.main{
 		padding:20rpx 0;
@@ -66,7 +86,7 @@
 			width: 60%;
 		}
 		.btnBox{
-			margin:0 24rpx;
+			margin:0 30rpx;
 		}
 	}
 }

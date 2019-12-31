@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "拼单详情",
+  "usingComponents": {
+    "uni-count-down": "/components/countDown"
+  }
+}

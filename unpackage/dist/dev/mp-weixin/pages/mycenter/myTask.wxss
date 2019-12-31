@@ -1,0 +1,23 @@
+.item {
+  height: 120rpx;
+}
+.item .pic {
+  width: 80rpx;
+  height: 80rpx;
+  overflow: hidden;
+  margin: 20rpx 30rpx;
+}
+.item .msg {
+  height: 100%;
+  border-bottom: 1px solid #ccc;
+}
+.item .btn {
+  margin: 0 30rpx;
+}
+.item .btn button {
+  min-width: 160rpx;
+}
+.item .name {
+  margin-bottom: 10rpx;
+}
+

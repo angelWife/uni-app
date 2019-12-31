@@ -3,42 +3,54 @@
 		<view class="detail listItem">
 			<block v-if="dataInfo.type == 1">
 				<view class="item-head flex item-center">
-					<view class="img item-center" @tap="userInfo(dataInfo.publishUser.userId)">
-						<image :src="dataInfo.publishUser.imgPathHead" mode="widthFix"></image>
+					<view class="img item-center comHeadPic" @tap="userInfo(dataInfo.publishUser.userCode)">
+						<image class="headPic" :src="dataInfo.publishUser.imgPathHead" mode="aspectFit"></image>
+						<image class="grade" v-if="dataInfo.publishUser.nobilityType>1" :src="'/static/images/juewei/'+(dataInfo.publishUser.nobilityType-1)+'.png'"
+						 mode="widthFix"></image>
 					</view>
 					<view class="flex-1 head-msg">
-						<view class="clearfix">
-							<text class="name fs15" @tap="userInfo(dataInfo.publishUser.userId)">{{ dataInfo.publishUser.userName }}</text>
-							<text v-if="dataInfo.publishUser.militaryRankType" class="rank">{{ dataInfo.rank }}</text>
-							<text v-if="dataInfo.publishUser.shopId" class="shop">店铺</text>
+						<view class="flex item-center clearfix">
+							<view class="name fs15" @tap="userInfo(dataInfo.publishUser.userCode)">{{ dataInfo.publishUser.userName }}</view>
+							<!-- <block v-if="dataInfo.publishUser.militaryRankType">
+								<image :src="'/static/images/junxian/'+dataInfo.publishUser.militaryRankType+'.png'" mode="widthFix"></image>
+							</block> -->
+							<block v-if="dataInfo.publishUser.shopId">
+								<image src="/static/images/shop/dian.png" mode="widthFix" @tap="shopDetail(dataInfo.publishUser.shopId)"></image>
+							</block>
 						</view>
 						<view class="timer c999 fs12 clearfix">
-							<block v-if="pageType == 2">
-								<text>{{ dataInfo.articleInfo.timeInfo }}</text>
-							</block>
-							<block v-else>
-								<text class="mark">受赏</text>
-								<text class="mark">置顶</text>
-							</block>
+							<text>{{ dataInfo.articleInfo.timeInfo }}</text>
+							<!-- <text class="mark">受赏</text>
+								<text class="mark">置顶</text> -->
 						</view>
 					</view>
-					<view class="followBox" @tap="guanzhu(dataInfo.articleInfo.id,index)">
+					<view class="followBox" v-if="!dataInfo.isOwner" @tap="guanzhu(dataInfo.publishUser.userCode)">
 						<text class="follow" v-if="dataInfo.publishUser.hasFollow">已关注</text>
 						<text class="follow active" v-else>关注</text>
 					</view>
 				</view>
-				<block v-if="dataInfo.articleInfo.type == 1">
+				<block v-if="dataInfo.articleInfo.type == 2">
 					<view class="articalBox">
-						<view class="msg" @tap="linkDetail(item)">
-							<block v-for="(conitem, comind) in dataInfo.articleInfo.showContent" :key="comind">
-								<block v-if="conitem.type == 1">
-									<text class="name blue" @tap.stop="linkUser(conitem.atId)">@{{ conitem.atName }}</text>
-									<text class="text">{{ conitem.content }}</text>
+						<view class="msg lh42 fs30" @tap="linkDetail(item)">
+							<block v-if="dataInfo.articleInfo.showContent.length>0">
+								<block v-for="(conitem, comind) in dataInfo.articleInfo.showContent" :key="comind">
+									<block v-if="conitem.type == 'text' ">
+										<text class="text">{{ conitem.content }}</text>
+									</block>
+									<block v-else-if="conitem.type == 'post' ">
+										<!-- @tap.stop="linkUser(conitem.id)" -->
+										<text class="name blue">@{{ conitem.name }}</text>
+									</block>
+									<block v-else-if="conitem.type == 'article' ">
+										<text class="name blue" @tap.stop="linkTheme(conitem.id)">#{{ conitem.name }}#</text>
+									</block>
+									<block v-else>
+										<text class="text">{{conitem.content}}</text>
+									</block>
 								</block>
-								<block v-else>
-									<text class="from blue" @tap.stop="linkTheme(conitem.topicId)">#{{ conitem.topicName }}#</text>
-									<text class="text">{conitem.content}}</text>
-								</block>
+							</block>
+							<block v-else>
+								<text class="text">{{dataInfo.articleInfo.content}}</text>
 							</block>
 							<!-- <view class="blue lookPic">
 								<icon class="iconfont icon-tupian"></icon>
@@ -47,47 +59,51 @@
 						</view>
 					</view>
 					<view class="imgList clearfix">
-						<view v-for="(imgItem, imgInd) in dataInfo.articleInfo.imgList" :key="imgInd" @tap="showBigImg(index, imgInd)"
-						 class="imgItem flex-1">
-							<image :src="imgItem" mode="widthFix"></image>
+						<view v-for="(imgItem, imgInd) in dataInfo.articleInfo.imgList" :key="imgInd" @tap="showBigImg(imgInd)" class="imgItem flex-1">
+							<image :src="imgItem" mode="aspectFill"></image>
 						</view>
 					</view>
 				</block>
 				<block v-else>
-					<view class="articalBox news flex item-center" v-if="dataInfo.articleInfo.imgList.length > 0">
-						<view class="a_pic">
+					<!-- <view class="articalBox news flex item-center" v-if="dataInfo.articleInfo.imgList.length > 0">
+						 <view class="a_pic">
 							<image :src="dataInfo.articleInfo.imgList[0]" mode="widthFix"></image>
-						</view>
-						<view class="a_main flex-1">
+						</view> 
+						<view class="a_main flex-1 lh42 fs30">
 							<view class="title blod clamp clamp-2">{{ dataInfo.articleInfo.title }}</view>
-							<view class="msg fs12 clamp clamp-2">{{ dataInfo.articleInfo.content }}</view>
+							<view class="msg fs12">
+								<rich-text :nodes="dataInfo.articleInfo.content"></rich-text>
+							</view>
 						</view>
-					</view>
-					<view class="articalBox flex item-center" v-else>
-						<view class="a_main flex-1">
+					</view> -->
+					<view class="articalBox flex item-center">
+						<view class="a_main flex-1 lh42 fs30">
 							<view class="title blod clamp clamp-2">{{ dataInfo.articleInfo.title }}</view>
-							<view class="msg fs12 clamp clamp-2">{{ dataInfo.articleInfo.content }}</view>
+							<view class="msg fs12">
+								<rich-text :nodes="dataInfo.articleInfo.content"></rich-text>
+							</view>
 						</view>
 					</view>
 				</block>
 				<block v-for="(linkitem, linkInd) in dataInfo.itemLinkList" :key="linkInd">
-					<view v-if="linkitem.type == 1" class="adventBox shopProduct flex item-center" @tap="linkProd(linkitem.goodsId)">
+					<view v-if="linkitem.type == 1" class="adventBox shopProduct flex item-center" @tap="linkProd(linkitem.goods.goodsId)">
 						<view class="p_pic">
-							<image :src="linkitem.imgPath" mode="widthFix"></image>
+							<image :src="linkitem.goods.imgPath"></image>
 						</view>
 						<view class="p_main flex-1">
 							<view class="name">
-								<text class="textEllipsis">{{ linkitem.goodsName }}</text>
+								<text class="textEllipsis">{{ linkitem.goods.goodsName }}</text>
 							</view>
-							<view class="price red fs12">{{ linkitem.priceSale }}元</view>
+							<view class="price red fs12">{{ linkitem.goods.priceSale }}元</view>
 						</view>
 						<view class="p_buy"><button size="mini" type="red" class="">购买</button></view>
 					</view>
-					<view v-else class="adventBox ranking flex item-center" @tap="linkRanking(linkitem.goodsId)">
-						<view class="p_pic">
-							<image src="/static/images/defaultpro.png" mode="widthFix"></image>
+					<view v-else class="adventBox ranking flex item-center" @tap="linkRanking(linkitem.rankType)">
+						<view class="p_pic icon">
+
+							<image :src="'/static/images/ranking/'+linkitem.rankType+'.png'" mode="widthFix"></image>
 						</view>
-						<view class="p_main flex-1">邀请好友排行榜</view>
+						<view class="p_main flex-1">{{linkitem.name}}</view>
 						<view class="p_buy"><button size="mini" type="red" class="radiuBtn">去看看</button></view>
 					</view>
 				</block>
@@ -106,45 +122,41 @@
 						<text>{{ dataInfo.articleInfo.numTotalUp }}</text>
 					</view>
 				</view> -->
-				<view class="readNums text-right">1234阅读</view>
+				<view class="readNums text-right c999">{{dataInfo.articleInfo.numTotalRead}}阅读</view>
 				<!-- <view class="shareBox flex">
 					<view>分享到：</view>
 					<view class="flex-1"><icon class="iconfont icon-shang"></icon></view>
 				</view> -->
 				<view class="operBox clearfix">
-					<view class="item " @tap="reward">
-						<view class="mybtn item_red">
-							<icon class="iconfont icon-shang"></icon>
+					<view class="item " @tap="reward(dataInfo.publishUser.userCode)">
+						<view class="mybtn item_red flex item-center just-con-c">
+							<!-- <icon class="iconfont icon-shang"></icon> -->
+							<image src="/static/images/icon/icon-reward.png" mode="widthFix"></image>
 							<text>打赏</text>
 						</view>
 					</view>
-					<view class="item" @tap="report">
-						<view class="mybtn">
+					<view class="item" @tap="report(dataInfo.articleInfo.id)">
+						<view class="mybtn flex item-center just-con-c">
 							<icon class="iconfont icon-jubao"></icon>
 							<text>举报</text>
 						</view>
 					</view>
 					<view class="item">
-						<view class="mybtn">
+						<view class="mybtn flex item-center just-con-c" :class="{'item_red':dataInfo.articleInfo.hasUp}" @tap="dianzan">
 							<icon class="iconfont icon-dianzan"></icon>
-							<text>999</text>
+							<text>{{dataInfo.articleInfo.numTotalUp}}</text>
 						</view>
 					</view>
 					<view class="item">
-						<view class="mybtn">
-							<icon class="iconfont icon-share"></icon>
+						<view class="mybtn flex item-center just-con-c">
+							<icon class="iconfont iconshare2"></icon>
 							<text>分享</text>
+							<button type="share" class="mybtn" open-type="share"></button>
 						</view>
 					</view>
 				</view>
-				<view class="adventPicBox" v-if="dataInfo.isAdvent">
-					<view class="adventPic">
-						<image src="http://www.mypcera.com/star/mm/uploadfile/201005/4/A142330696.jpg" mode="widthFix"></image>
-						<text>广告</text>
-					</view>
-				</view>
 			</block>
-			<block v-elid="dataInfo.type == 2">
+			<block v-else-if="dataInfo.type == 2">
 				<!-- dataInfo.adInfo -->
 				<view class="item-head flex item-center">
 					<view class="img item-center">
@@ -171,106 +183,271 @@
 			</block>
 
 		</view>
-
 		<view class="comment">
-			<view class="title">评论 23</view>
+			<view class="title">评论 {{dataInfo.articleInfo.numTotalComment?dataInfo.articleInfo.numTotalComment:0}}</view>
 			<view class="commentList">
-				<view class="item flex" v-for="(item,ind) in listData" :key="ind">
-					<view class="pic">
-						<image :src="item.headPic" mode="widthFix"></image>
-					</view>
-					<view class="flex-1">
-						<view class="name">
-							<text class="blod">{{item.userName}}</text>
-							<text class="follow">{{item.militaryRankType}}</text>
+				<block v-if="listData.length>0">
+					<view class="item flex" v-for="(item,ind) in listData" :key="ind">
+						<view class="pic comHeadPic" @tap="userInfo(item.userCode)">
+							<image class="grade" v-if="item.nobilityType>1" :src="'/static/images/juewei/'+(item.nobilityType-1)+'.png'"
+							 mode="widthFix"></image>
+							<image class="headPic" :src="setImg(item.headPic,item.genderType)"></image>
 						</view>
-						<view class="msg">{{item.content}}</view>
-						<view class="oper flex item-center">
-							<view class="timer c999 fs12 flex-1">{{item.timeInfo}}</view>
-							<view class="operIocn clearfix" v-if="item.childs.length>0" @tap="commentDetail(item.id)">
-								<icon class="iconfont icon-dianzan"></icon>
-								<text>{{item.numTotalReply}}</text>
+						<!-- <view class="img item-center comHeadPic" @tap="userInfo(item.publishUser.userId)">
+							<image class="headPic" :src="item.publishUser.imgPathHead"></image>
+							<image class="grade" :src="'/static/images/juewei/'+item.publishUser.nobilityType+'.png'" mode="widthFix"></image>
+						</view> -->
+						<view class="commentMain flex-1">
+							<view class="name" @tap="userInfo(item.userCode)">
+								<text class="blod">{{item.userName}}</text>
+								<!-- <text class="follow">{{item.militaryRankType}}</text> -->
 							</view>
-							<view class="operIocn clearfix" :class="{'hasUp':item.hasUp}">
-								<icon class="iconfont icon-dianzan"></icon>
-								<text>100</text>
+							<view class="msg clamp clamp-2">{{item.content}}</view>
+							<view class="oper flex item-center">
+								<view class="timer c999 fs12 flex-1">{{item.timeInfo}}</view>
+								<view class="operIocn flex item-center c999" @tap="commentDetail(item)">
+									<icon class="iconfont icon-comment"></icon>
+									<text>{{item.numTotalReply>0?item.numTotalReply:0}}</text>
+								</view>
+								<view class="operIocn flex item-center" :class="{'red':item.hasUp}" @tap="commentDianzan(item.id,ind)">
+									<icon class="iconfont icon-dianzan"></icon>
+									<text>{{item.numTotalUp }}</text>
+								</view>
 							</view>
 						</view>
 					</view>
-				</view>
+				</block>
+				<block v-else>
+					<view class="noData flex f-row just-con-c item-center" style="padding:40px 0;">
+						<view class="text-center">
+							<image src="/static/images/nodata.png" mode="widthFix"></image>
+							<view class="text-center c666 fs16">
+								这里还没有内容
+							</view>
+						</view>
+					</view>
+				</block>
 			</view>
 		</view>
 		<view class="operFoot flex">
 			<view class="flex-1">
-				
-				<input type="text" value="" disabled="true" placeholder="说点什么吧"  @tap="showComment"/>
+
+				<input type="text" value="" disabled="true" placeholder="说点什么吧" @tap="showComment" />
 			</view>
 			<!-- @tap="commentClick" -->
-			<view class="oper flex f-col" @tap="commentDetail(11)">
+			<view class="oper flex f-col" @tap="commentClick">
 				<icon class="iconfont icon-comment"></icon>
-				<text>评论266</text>
+				<text>评论</text>
+				<text v-if="dataInfo.articleInfo.numTotalComment>0" class="mark">{{dataInfo.articleInfo.numTotalComment}}</text>
 			</view>
-			<view class="oper flex f-col">
+			<view class="oper flex f-col" :class="[dataInfo.articleInfo.hasUp?'red':'']" @tap="dianzan">
 				<icon class="iconfont icon-dianzan"></icon>
-				<text>赞255</text>
+				<text>赞</text>
 			</view>
-			<view class="oper flex f-col">
+			<button type="share" class="oper flex f-col shareBtn" open-type="share">
 				<icon class="iconfont icon-share-b"></icon>
 				<text>分享</text>
-			</view>
+			</button>
 		</view>
 		<commentModal :showModal="showModal" @relaseComment="relaseComment" @cancelRelase="cancelRelase"></commentModal>
+		<!-- <view class="noData" v-if="showFoot">
+			~没有更多~
+		</view> -->
+		<RewardList :showReward="showReward" :accountVO="accountVO" :userCode="dataInfo.publishUser.userCode" :rewardList="rewardList"
+		 @chooseReward="chooseReward" @hideModal="hideModal" @getRewardList="getRewardList"></RewardList>
+		<!-- 	<view class="rewardListBox">
+			 <view class="item" v-for="(item,ind) in rewardRecodList" :key="ind">
+				 {{item}}
+			 </view>
+		 </view> -->
+		<l-barrage ref="lBarrage" @end="loadRewardAnimate"></l-barrage>
 	</view>
 </template>
 
 <script>
 	import commentModal from '@/components/comment.vue';
+	import RewardList from '@/components/reward-modal.vue';
+	import LBarrage from '@/components/l-barrage/l-barrage.vue'
 	export default {
 		components: {
-			commentModal
+			commentModal,
+			RewardList,
+			LBarrage
 		},
 		data() {
 			return {
 				isDetail: true,
-				dataInfo: {
-					headImg: '/static/images/head1.png',
-					name: '哈利路亚妈妈咪呀sda',
-					rank: '少校',
-					hasShop: true,
-					follow: true,
-					timer: '5分钟前',
-					showMore: false,
-					isAdvent: true,
-					type: 1,
-					richNode: '<p class="pd10">这边是文章内容，主要显示文章的段落，通过后台编辑过来</p><p class="pd10"><img style="width:100%;" src="http://www.mypcera.com/star/mm/uploadfile/201005/4/A142330696.jpg"/></p>',
-					imgList: ['/static/images/head1.png', '/static/images/head2.png', '/static/images/head1.png',
-						'/static/images/head2.png'
-					]
-				},
-			    listData:[],
-				pageIndex:1,
-				pageSize:10,
-				pageTotal:1,
-				showModal:false
+				dataInfo: {},
+				listData: [],
+				rewardList: [],
+				pageIndex: 1,
+				pageSize: 10,
+				pageTotal: 1,
+				showModal: false,
+				showFoot: false,
+				isComent: false, //是否滚动到底部
+				showReward: false,
+				accountVO: {},
+				rewardRecodList: '',
+				id: ''
 			};
 		},
 		onLoad(options) {
-			let detail = JSON.parse(decodeURIComponent(options.data));
-			this.pageType = options.pageType
-			this.dataInfo = detail
+			this.id = options.id;
+			this.detailtype = options.type
+			setTimeout(() => {
+				if (this.detailtype == 'showReward') {
+					this.showReward = true
+					this.getRewardList();
+				}
+			}, 500)
+		},
+		onShow() {
+			let self = this
+			if (getApp().globalData.isShowPic) {
+				getApp().globalData.isShowPic = false
+			} else {
+				this.listData = []
+				this.postDetail()
+
+
+				this.getAccount()
+			}
+			var animation = uni.createAnimation({
+				duration: 2000,
+				timingFunction: 'ease',
+			})
+
+			this.animation = animation
+
+
+		},
+		onShareAppMessage(res) {
+			let self = this
+			getApp().globalData.isShowPic = true
+			let settings = {}
+			if (res.from === 'button') {
+				let title = self.dataInfo.articleInfo.content.replace(new RegExp("{-----}", "gm"), "").substr(0, 24);
+				this.shareStat(self.dataInfo.articleInfo.id);
+				settings.imageUrl = ''
+				if (self.dataInfo.articleInfo.type == 1) {
+					settings.title = self.dataInfo.articleInfo.title
+					settings.pagePath =
+						`/pages/home/commentDetail?id=${self.dataInfo.articleInfo.id}&userCode=${uni.getStorageSync('userCode')}`
+				} else {
+					settings.title = title
+					settings.pagePath =
+						`/pages/home/commentDetail?id=${self.dataInfo.articleInfo.id}&userCode=${uni.getStorageSync('userCode')}`
+				}
+			} else {
+				settings.imageUrl = '/static/images/sharePic.png'
+				settings.title = ''
+				settings.pagePath = ''
+			}
+			return settings
+		},
+		onReachBottom() {
+			if (this.pageTotal > this.pageIndex) {
+				this.pageIndex++
+				this.getCommentList()
+				this.showFoot = false
+			} else {
+				this.showFoot = true
+			}
 		},
 		methods: {
-			getCommentList(){
-				let self=this
+			shareStat(id) {
+				let self = this
 				let params = {
-					id:this.dataInfo.userId,
-					pageIndex:this.pageIndex,
-					pageSize:this.pageSize
+					articleId: id,
+				}
+
+				self.$acFrame.HttpService.sharePost(params).then(res => {
+					if (res.success) {
+						self.dataInfo.articleInfo.numTotalShare++
+					}
+				})
+			},
+			getReadNum() {
+				let self = this
+				this.$acFrame.HttpService.readPost({
+					id: this.dataInfo.articleInfo.id
+				}).then(res => {
+					if (res.success) {
+						self.dataInfo.articleInfo.numTotalRead = res.data
+					}
+				})
+			},
+			postDetail() {
+				let self = this
+				let params = {
+					id: this.id,
+				}
+				self.$acFrame.HttpService.postDetail(params).then(res => {
+					if (res.success) {
+						let _obj = res.data
+						if (_obj.type == 1) {
+							_obj.articleInfo.showContent = this.setContent(_obj.articleInfo);
+						}
+						_obj.articleInfo.imgList.filter((v, i) => {
+							_obj.articleInfo.imgList[i] = self.setImg(v)
+						})
+						_obj.itemLinkList && _obj.itemLinkList.filter((val, i) => {
+							if (val.type == 2) {
+								switch (val.rankType) {
+									case 1:
+										val.name = `邀请好友`
+										break;
+									case 2:
+										val.name = '热帖排行'
+										break;
+									case 3:
+										val.name = `话题排行`
+										break;
+									case 4:
+										val.name = `热卖排行`
+										break;
+									default:
+										break;
+								}
+								return false
+							} else {
+								if (val.goods.imgPath) {
+									_obj.itemLinkList[i].goods.imgPath = self.$acFrame.Util.setImgUrl(val.goods.imgPath);
+								}
+							}
+						});
+						if(_obj.publishUser){
+							_obj.publishUser.imgPathHead = self.setImg(_obj.publishUser.imgPathHead, _obj.publishUser.genderType)
+						}
+						self.dataInfo = _obj
+						self.getCommentList()
+						self.rewardRecod()
+						self.getReadNum()
+					}
+				})
+			},
+			getCommentList() {
+				let self = this
+				let params = {
+					articleId: this.dataInfo.articleInfo.id,
+					pageIndex: this.pageIndex,
+					pageSize: this.pageSize
 				}
 				self.$acFrame.HttpService.commentList(params).then(res => {
-					if(res.success){
-						self.listData = res.data.rows
-						self.pageTotal  = res.data.pageTotal
+					if (res.success) {
+						let _row = res.data.rows
+						// _row.filter(v => {
+						// 	v.militaryRankType = self.$acFrame.Util.setRankName(v.militaryRankType)
+						// })
+						self.listData = self.listData.concat(_row);
+						self.pageTotal = res.data.pageTotal
+						if (self.detailtype == "isComment") {
+							self.isComent = false
+							setTimeout(() => {
+								self.commentClick()
+							}, 300)
+						}
 					}
 				})
 			},
@@ -278,46 +455,295 @@
 				const query = uni.createSelectorQuery().in(this);
 				query.select('#myContent').boundingClientRect(data => {
 					uni.pageScrollTo({
-						scrollTop: data.bottom,
+						scrollTop: 230,
 						duration: 300
 					})
 				}).exec();
 			},
-			reward() {
+			setContent(mydata) {
+				let showContent = [];
+				let type = mydata.type; //1帖子  2文章
+				let content = mydata.content;
+				let star = 0;
+				let contentExtendList = mydata.contentExtendList;
+				var texts = [];
+				var i = 0;
+				var k = 100;
+				while ((i = content.indexOf('{-----}')) >= 0 && k > 0) {
+					k--;
+					if (i > 0) {
+						texts.push(content.slice(0, i));
+						content = content.slice(i);
+					} else {
+						content = content.replace("{-----}", "");
+						texts.push("");
+					}
+				}
+				texts.forEach(function(item) {
+					var obj = {};
+					if (item != '') {
+						obj["type"] = "text";
+						obj["content"] = item;
+						showContent.push(obj);
+					} else {
+						if (contentExtendList.length > 0) {
+							var ext = contentExtendList.shift();
+							//console.log(ext);
+							if (ext.type == 1) {
+								obj["type"] = "post";
+								obj["id"] = ext.atUserCode;
+								obj["name"] = ext.atName;
+							} else if (ext.type == 2) {
+								obj["type"] = "article";
+								obj["id"] = ext.topicId;
+								obj["name"] = ext.topicName;
+							}
+							showContent.push(obj);
+						}
+					}
+				});
+				return showContent;
+			},
+			linkUser(id) {
 				uni.navigateTo({
-					url: '/pages/home/reward'
+					url: `/pages/mycenter/mycenter?userCode=${id}`
 				})
 			},
-			report() {
-				uni.navigateTo({
-					url: '/pages/home/report'
-				})
-			},
-			guanzhu(id, ind) {
-				let selef = this
-				this.$acFrame.HttpService.followPost({
+			linkTheme(id) {
+				this.$acFrame.HttpService.readTopic({
 					id: id
 				}).then(res => {
+					if (res.success) {}
+				})
+				uni.navigateTo({
+					url: `/pages/home/topicIndex?id=${id}`
+				})
+			},
+			reward(code) {
+				// uni.navigateTo({
+				// 	url: '/pages/home/reward?id=' + id
+				// })
+				this.showReward = true
+				this.getRewardList();
+			},
+			hideModal() {
+				this.showReward = false
+				this.rewardList = []
+			},
+			report(id) {
+				uni.navigateTo({
+					url: '/pages/home/report?id=' + id
+				})
+			},
+			guanzhu(code) {
+				let self = this
+				this.$acFrame.HttpService.followPost({
+					userCode: code
+				}).then(res => {
 					if (res.success) {
-						selef.dataList[ind].hasFollow = !selef.dataList[ind].hasFollow
+						self.dataInfo.publishUser.hasFollow = res.data
 					}
 				})
 			},
-			commentDetail(id){
+			commentDetail(obj) {
+				obj = JSON.stringify(obj)
 				uni.navigateTo({
-					url:`/pages/home/commentList?id=${id}`
+					url: `/pages/home/commentList?obj=${obj}`
 				})
 			},
-			showComment(){
-				this.showModal=true
+			showComment() {
+				this.showModal = true
 			},
-			relaseComment(val){
-				console.log(val)
+			relaseComment(val) {
+				let self = this
+				let params = {
+					articleId: this.dataInfo.articleInfo.id,
+					content: val
+				}
+				self.$acFrame.HttpService.relasePublish(params).then(res => {
+					if (res.success) {
+						self.$acFrame.Util.mytotal('评论成功！');
+						self.showModal = false
+						self.listData = []
+						self.getCommentList()
+					}
+				})
 			},
-			cancelRelase(){
-				this.showModal=false
-			}
+			cancelRelase() {
+				this.showModal = false
+			},
+			dianzan() { //likeComment
+				let self = this
+				let params = {
+					articleId: this.dataInfo.articleInfo.id,
+				}
+				self.$acFrame.HttpService.likeComment(params).then(res => {
+					if (res.success) {
+						if (res.data) {
+							self.$acFrame.Util.mytotal('点赞成功！');
+							self.dataInfo.articleInfo.numTotalUp++
+						} else {
+							self.dataInfo.articleInfo.numTotalUp--
+							self.$acFrame.Util.mytotal('已取消！');
+						}
+						self.dataInfo.articleInfo.hasUp = res.data
+					}
+				})
+			},
+			userInfo(userCode) {
+				uni.navigateTo({
+					url: `/pages/mycenter/mycenter?userCode=${userCode}`
+				})
+			},
+			commentDianzan(id, ind) {
+				let self = this
+				let params = {
+					articleCommentId: id,
+				}
+				self.$acFrame.HttpService.commentPublish(params).then(res => {
+					if (res.success) {
+						if (res.data) {
+							self.$acFrame.Util.mytotal('点赞成功！');
+							self.listData[ind].numTotalUp++
+						} else {
+							self.listData[ind].numTotalUp--
+							self.$acFrame.Util.mytotal('已取消！');
+						}
+						self.listData[ind].hasUp = res.data
+					}
+				})
+			},
+			setImg(src, sex) {
+				return this.$acFrame.Util.setImgUrl(src, sex);
+			},
+			linkProd(id) {
+				uni.navigateTo({
+					url: `/pages/myshop/productDetail?id=${id}`
+				})
+			},
+			shopDetail(id) {
+				uni.navigateTo({
+					url: "/pages/myshop/shopDetail?id=" + id
+				})
+			},
+			linkRanking(type) {
+				let url = ''
+				debugger
+				switch (type) {
+					case 1:
+						url = `/pages/ranking/friends?type=${type}`
+						break;
+					case 2:
+						url = `/pages/ranking/post?type=${type}`
+						break;
+					case 3:
+						url = `/pages/ranking/invitation?type=${type}`
+						break;
+					case 4:
+						url = `/pages/ranking/product?type=${type}`
+						break;
+					case 5:
+						url = '/pages/ranking/product'
+						break;
+					default:
+						break;
+				}
+				uni.navigateTo({
+					url: url
+				})
+			},
+			getRewardList(useType = 5) { // virtualList
+				let self = this
+				let params = {
+					pageIndex: 1,
+					pageSize: 100,
+					// useType: useType,
+					sceneType: 2
+				}
+				this.$acFrame.HttpService.virtualDashang(params).then(res => {
+					if (res.success) {
+						let list = res.data
+						list.filter(v => {
+							v.imgPath = self.$acFrame.Util.setImgUrl(v.imgPath);
+							v.choose = false
+						})
+						self.rewardList = list
+
+					}
+				})
+			},
+			rewardUser(id, type) {
+				let self = this
+				let params = {
+					buyNum: 1,
+					userCode: 100,
+					virtualId: id,
+					sceneType: type
+				}
+				this.$acFrame.HttpService.virtualBuy(params).then(res => {
+					if (res.success) {
+
+					}
+				})
+			},
+			chooseReward(ind) {
+				// let list = this.rewardList
+				this.rewardList.filter((v, i) => {
+					if (i == ind) {
+						v.choose = true
+					} else {
+						v.choose = false
+					}
+				})
+				// this.rewardList = list
+			},
+			rewardRecod() {
+				let self = this
+				let params = {
+					filterConfig:true,
+					userCode: this.dataInfo.publishUser.userCode
+				}
+				this.$acFrame.HttpService.rewardRecod(params).then(res => {
+					if (res.success) {
+						let list = res.data
+						if (list.length > 0) {
+							// for(let i = 0;i<10;i++){
+							// 	list.push('')
+							// }
+							self.rewardRecodList = list
+							self.loadRewardAnimate(list)
+						}
+					}
+				})
+			},
+			loadRewardAnimate() {
+				this.$refs.lBarrage.start(this.rewardRecodList);
+			},
+			getAccount() {
+				let self = this
+				let params = {
+					type: 2
+				}
+				this.$acFrame.HttpService.accountNums(params).then(res => {
+					if (res.success) {
+						self.accountVO = res.data
+					}
+				})
+			},
+			showBigImg(imgInd) {
+				let imgList = this.dataInfo.articleInfo.imgList;
+				this.$acFrame.Util.showBigPic(imgList[imgInd], imgList);
+				getApp().globalData.isShowPic = true
+			},
+		},
+		onHide() {
+			this.$refs.lBarrage.over();
+		},
+		onUnload() {
+			this.$refs.lBarrage.over();
 		}
+
+
 	};
 </script>
 
@@ -332,7 +758,18 @@
 	}
 
 	.content {
-		padding-bottom: 100rpx;
+		padding-bottom: 120rpx;
+		position: relative;
+
+		.noData {
+			position: absolute;
+			height: auto;
+			width: 100%;
+			line-height: 40rpx;
+			bottom: 110rpx;
+			left: 0;
+			text-align: center;
+		}
 	}
 
 	.detail {
@@ -346,7 +783,6 @@
 				width: 100rpx;
 				height: 100rpx;
 				border-radius: 100rpx;
-				overflow: hidden;
 
 				image {
 					width: 100%;
@@ -356,12 +792,14 @@
 			.head-msg {
 				line-height: 50rpx;
 
-				text {
-					float: left;
+				image {
 					margin-right: 20rpx;
+					width: 60rpx;
 				}
 
+
 				.name {
+					margin-right: 20rpx;
 					max-width: 240rpx;
 					white-space: nowrap;
 					overflow: hidden;
@@ -427,9 +865,13 @@
 		}
 
 		.articalBox {
-			margin: 20rpx auto;
+			margin: 20rpx auto 0;
 
 			.msg {
+				text-align: justify;
+				word-break: break-all;
+				overflow: hidden;
+
 				text {
 					display: inline;
 				}
@@ -440,6 +882,15 @@
 
 				.from {
 					margin-left: 10rpx;
+				}
+
+				p {
+					margin: 5px 0;
+					overflow: hidden;
+
+					img {
+						width: 100% !important;
+					}
 				}
 			}
 
@@ -469,22 +920,22 @@
 
 		.imgList {
 			margin: 0 -10rpx;
+			padding: 20rpx 0 0;
 
 			.imgItem {
 				float: left;
-				width: 30.55%;
-				margin: 0 10rpx 20rpx;
-				background: #f1f1f1;
-
-				image {
-					width: 100%;
-				}
+				width: 33.3333%;
+				padding: 0 15rpx;
+				height: calc((100vw - 24rpx) / 3 - 20rpx);
+				overflow: hidden;
+				margin-bottom: 20rpx;
 			}
 		}
 
 		.adventBox {
-			background: #efefef;
-			margin-bottom: 20rpx;
+			background: #FEF6F6;
+			margin-top: 20rpx;
+			height: 128rpx;
 			padding: 16rpx 20rpx 16rpx 16rpx;
 
 			.p_main {
@@ -497,7 +948,43 @@
 			}
 
 			.p_pic {
-				width: 80rpx;
+				width: 96rpx;
+				height: 96rpx;
+
+				image {
+					height: 96rpx;
+				}
+
+				&.icon {
+					width: 40rpx;
+					margin: 0 20rpx;
+					height: 40rpx;
+					overflow: hidden;
+					position: relative;
+
+					image {
+						position: absolute;
+						top: 0;
+						left: 0;
+
+						&.pic1 {
+							top: -54rpx;
+						}
+
+						&.pic2 {
+							top: -118rpx;
+						}
+
+						&.pic3 {
+							top: -182rpx;
+						}
+
+						&.pic4 {
+							top: -240rpx;
+						}
+					}
+
+				}
 			}
 		}
 
@@ -546,42 +1033,75 @@
 			}
 		}
 
+		.readNums {
+			margin-top: 20rpx;
+		}
+
 		.operBox {
-			padding: 20rpx 0;
+			padding: 20rpx 0 0;
 			text-align: center;
 			overflow: hidden;
 			margin: 0 -10rpx;
+
 			.item {
-				float:left;
+				float: left;
 				width: 25%;
-				padding:0 10rpx;
+				padding: 0 10rpx;
 				overflow: hidden;
-                .mybtn{
-					padding: 0 30rpx 10rpx;
-					line-height: 50rpx;
+
+				.mybtn {
+					// padding: 0 0 10rpx;
+					height: 70rpx;
+					line-height: 70rpx;
 					border-radius: 50rpx;
 					color: #999;
+					position: relative;
+					overflow: hidden;
+					background: #fff;
 					border: 1px solid #9f9f9f;
+
+					image {
+						width: 40rpx;
+						display: inline-block;
+						margin-right: 10rpx;
+					}
+
+					&.item_red {
+						height: 70rpx;
+						background: #b40000;
+						border-color: #b40000;
+						padding: 0;
+						color: #fff;
+					}
+
+					button {
+						position: absolute;
+						width: 100%;
+						height: 100%;
+						opacity: 0;
+						z-index: 1;
+					}
 				}
+
+
+
 				.iconfont {
-					height: 40rpx;
+					height: 70rpx;
 					width: 40rpx;
 					text-align: center;
-					line-height: 40rpx;
+					line-height: 70rpx;
+					font-size: 40rpx;
+					margin-right: 10rpx;
 
 					&::before {
 						line-height: 100%;
 					}
 				}
-                .item_red {
-                	background: #b40000;
-                	border-color: #b40000;
-                	color: #fff;
-                }
-				
+
+
 			}
 
-			
+
 		}
 	}
 
@@ -595,13 +1115,29 @@
 			padding: 0 20rpx;
 		}
 
+		.commentList {
+			.noData {
+				position: relative !important;
+			}
+
+			.commentMain {
+				width: 60%;
+			}
+		}
+
 		.item {
 			padding: 20rpx;
 			border-top: 1px solid #e9e9e9;
 
 			.pic {
 				width: 80rpx;
-				margin-right: 20rpx;
+				height: 80rpx;
+				margin: 0 30rpx 0 20rpx;
+
+				.headPic {
+					height: 100%;
+					border-radius: 80rpx;
+				}
 			}
 
 			.name {
@@ -623,10 +1159,13 @@
 
 			.msg {
 				min-height: 60rpx;
+				text-align: justify;
 			}
 
 			.oper {
-				line-height: 30rpx;
+				text {
+					margin-left: 10rpx;
+				}
 
 				.timer {}
 			}
@@ -634,23 +1173,19 @@
 			.operIocn {
 				margin-left: 20rpx;
 				color: #999;
-
 				.iconfont {
 					position: relative;
-					top: -6rpx;
-				}
-				text {
-					position: relative;
-					top: -6rpx;
+					top: -5rpx;
 				}
 			}
-			.hasUp{
-				.iconfont{
-					color:#B40000;
+
+			.hasUp {
+				.iconfont {
+					color: #B40000;
 				}
-				
+
 			}
-			
+
 		}
 	}
 
@@ -658,11 +1193,10 @@
 		position: fixed;
 		z-index: 10;
 		width: 100%;
-		height: 100rpx;
 		left: 0;
 		bottom: 0;
 		padding-bottom: env(safe-area-inset-bottom);
-		box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+		box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
 		background: #fff;
 
 		input {
@@ -676,13 +1210,49 @@
 		}
 
 		.oper {
-			width: 120rpx;
+			width: 80rpx;
+			height: 100rpx;
 			text-align: center;
 			color: #999;
+			position: relative;
 
 			text {
 				font-size: 24rpx;
 			}
+
+			&.shareBtn {
+				line-height: 1.3;
+				padding: 0;
+			}
+
+			&.red {
+				color: #d40000;
+
+				.iconfont {
+					color: #d40000;
+				}
+			}
+
+			.mark {
+				position: absolute;
+				background: #B40000;
+				font-size: 20rpx;
+				width: 30rpx;
+				height: 30rpx;
+				border-radius: 30rpx;
+				line-height: 30rpx;
+				text-align: center;
+				color: #fff;
+				top: 10rpx;
+				right: 0rpx;
+			}
 		}
+	}
+
+	.rewardListBox {
+		position: fixed;
+		top: 0;
+		right: 0;
+		z-index: 20;
 	}
 </style>
