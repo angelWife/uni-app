@@ -16,6 +16,7 @@ page {
 }
 .modal .item .right {
   border-bottom: 1px solid #ccc;
+<<<<<<< HEAD
   position: relative;
 }
 .modal .item .right .mark {
@@ -26,6 +27,8 @@ page {
   top: 16rpx;
   left: 50rpx;
   background: #B40000;
+=======
+>>>>>>> af1c4a79800e89c3a485c5c9038f58cdf3ebe64e
 }
 .modal .item .right button {
   line-height: 100rpx;

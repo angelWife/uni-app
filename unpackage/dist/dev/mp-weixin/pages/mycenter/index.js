@@ -281,7 +281,10 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> af1c4a79800e89c3a485c5c9038f58cdf3ebe64e
 {
   components: {
     MessageModal: MessageModal },
@@ -292,13 +295,21 @@ __webpack_require__.r(__webpack_exports__);
       showCheckModal: false,
       showShopModal: false,
       checktitle: '资料审核种',
+<<<<<<< HEAD
       shoptitle: '你已具备开店资格',
       hasNews: false };
+=======
+      shoptitle: '你已具备开店资格' };
+
+>>>>>>> af1c4a79800e89c3a485c5c9038f58cdf3ebe64e
 
   },
   onShow: function onShow() {
     this.infoData();
+<<<<<<< HEAD
     this.getNewsType();
+=======
+>>>>>>> af1c4a79800e89c3a485c5c9038f58cdf3ebe64e
   },
   methods: {
     infoData: function infoData() {var _this = this;
@@ -311,6 +322,7 @@ __webpack_require__.r(__webpack_exports__);
         }
       });
     },
+<<<<<<< HEAD
     getNewsType: function getNewsType() {
       var self = this;
       this.$acFrame.HttpService.newsType().then(function (res) {
@@ -328,6 +340,8 @@ __webpack_require__.r(__webpack_exports__);
         }
       });
     },
+=======
+>>>>>>> af1c4a79800e89c3a485c5c9038f58cdf3ebe64e
     linkTo: function linkTo(url) {
       if (url == "mysettings") {
         url += '?passwdPaySet=' + userInfo.passwdPaySet;

@@ -165,11 +165,15 @@ var _default =
 
       this.$acFrame.HttpService.getToicList().then(function (res) {
         if (res.success) {
+<<<<<<< HEAD
           var list = res.data;
           list.filter(function (v) {
             v.img = self.$acFrame.Util.setImgUrl(v.img);
           });
           self.list = list;
+=======
+          self.list = res.data;
+>>>>>>> af1c4a79800e89c3a485c5c9038f58cdf3ebe64e
         }
       });
     },

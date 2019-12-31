@@ -195,7 +195,11 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
           if (res.success) {
             console.log(res.data);
             var goods = res.data.rows;
+<<<<<<< HEAD
             self.productList = goods.concat(goods).concat(goods);
+=======
+            self.productList = goods;
+>>>>>>> af1c4a79800e89c3a485c5c9038f58cdf3ebe64e
           } else {
 
           }

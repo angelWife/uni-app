@@ -101,13 +101,20 @@
   width: 100rpx;
   height: 100rpx;
   line-height: 100rpx;
+<<<<<<< HEAD
   border-radius: 10rpx;
   margin: 0 40rpx;
   position: relative;
+=======
+  overflow: hidden;
+  border-radius: 10rpx;
+  margin: 0 40rpx;
+>>>>>>> af1c4a79800e89c3a485c5c9038f58cdf3ebe64e
 }
 .goods .newBox .pic image {
   height: 100%;
 }
+<<<<<<< HEAD
 .goods .newBox .pic text {
   position: absolute;
   color: #fff;
@@ -123,6 +130,8 @@
   top: -8rpx;
   right: -16rpx;
 }
+=======
+>>>>>>> af1c4a79800e89c3a485c5c9038f58cdf3ebe64e
 .goods .newBox .main {
   height: 140rpx;
   padding: 24rpx 0;

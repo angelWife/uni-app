@@ -141,9 +141,12 @@
   overflow: hidden;
   margin-top: 20rpx;
 }
+<<<<<<< HEAD
 .listItem .imgList .imgItem image {
   height: 100%;
 }
+=======
+>>>>>>> af1c4a79800e89c3a485c5c9038f58cdf3ebe64e
 .listItem .adventBox {
   background: #FEF6F6;
   margin: 20rpx 30rpx 0;

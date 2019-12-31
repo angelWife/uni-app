@@ -266,11 +266,18 @@ var _default =
             }
           },
           fail: function fail(error) {
+<<<<<<< HEAD
             self.$acFrame.Util.mytotal(error);
           } });
 
       } else {
         uni.hideLoading();
+=======
+            self.$acFrame.Util.mytotal("error");
+          } });
+
+      } else {
+>>>>>>> af1c4a79800e89c3a485c5c9038f58cdf3ebe64e
         uni.navigateBack({});
       }
     },
@@ -391,6 +398,7 @@ var _default =
       //return ;
       this.$acFrame.HttpService.raleasePost(params).then(function (res) {
         if (res.success) {
+<<<<<<< HEAD
           self.$acFrame.Util.mytotal('发帖成功', 'none', true);
           // uni.showLoading({
           // 	title:'发帖成功！',
@@ -408,6 +416,13 @@ var _default =
           // setTimeout(()=>{
           // 	uni.navigateBack({});
           // },1500)
+=======
+          if (self.picList.length > 0) {
+            self.uploadPic(res.data);
+          } else {
+            uni.navigateBack({});
+          }
+>>>>>>> af1c4a79800e89c3a485c5c9038f58cdf3ebe64e
         }
       });
     } } };exports.default = _default;

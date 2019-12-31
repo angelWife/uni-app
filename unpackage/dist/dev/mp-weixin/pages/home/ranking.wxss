@@ -2,18 +2,24 @@ page,
 .content {
   min-height: 100%;
 }
+<<<<<<< HEAD
 .listBox {
   padding-left: 200rpx;
   padding-bottom: 20rpx;
 }
+=======
+>>>>>>> af1c4a79800e89c3a485c5c9038f58cdf3ebe64e
 .navBar {
   min-height: 100vh;
   width: 200rpx;
   background: #f8f8f8;
+<<<<<<< HEAD
   position: fixed;
   z-index: 10;
   top: 0;
   left: 0;
+=======
+>>>>>>> af1c4a79800e89c3a485c5c9038f58cdf3ebe64e
 }
 .navBar .item {
   line-height: 100rpx;

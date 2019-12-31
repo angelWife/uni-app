@@ -734,7 +734,11 @@ function initData(vueOptions, context) {
     try {
       data = data.call(context); // 支持 Vue.prototype 上挂的数据
     } catch (e) {
+<<<<<<< HEAD
       if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
+=======
+      if (Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
+>>>>>>> af1c4a79800e89c3a485c5c9038f58cdf3ebe64e
         console.warn('根据 Vue 的 data 函数初始化小程序 data 失败，请尽量确保 data 函数中不访问 vm 对象，否则可能影响首次数据渲染速度。', data);
       }
     }
@@ -2473,7 +2477,10 @@ Service = /*#__PURE__*/function (_HttpService) {_inherits(Service, _HttpService)
       followPost: 'app/user_follow/exc', //关注
       followList: 'app/user_follow/list_data', //我的关注列表
       followListOwner: 'app/user_follow/table_data', //关注
+<<<<<<< HEAD
       getFollowList: 'app/user_follow/table_data2',
+=======
+>>>>>>> af1c4a79800e89c3a485c5c9038f58cdf3ebe64e
       rewardRecod: 'app/user_reward/list_data', //打赏飘窗
       rewardTable: 'app/user_reward/table_data', //d打赏记录
 
@@ -2832,11 +2839,14 @@ Service = /*#__PURE__*/function (_HttpService) {_inherits(Service, _HttpService)
       return this.postRequest(this.$$path.followListOwner, {
         data: params });
 
+<<<<<<< HEAD
     } }, { key: "getFollowList", value: function getFollowList(
     params) {
       return this.postRequest(this.$$path.getFollowList, {
         data: params });
 
+=======
+>>>>>>> af1c4a79800e89c3a485c5c9038f58cdf3ebe64e
     } }, { key: "orderDetail", value: function orderDetail(
     params) {
       return this.postRequest(this.$$path.orderDetail, {
@@ -8816,7 +8826,11 @@ function type(obj) {
 
 function flushCallbacks$1(vm) {
     if (vm.__next_tick_callbacks && vm.__next_tick_callbacks.length) {
+<<<<<<< HEAD
         if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
+=======
+        if (Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
+>>>>>>> af1c4a79800e89c3a485c5c9038f58cdf3ebe64e
             var mpInstance = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + vm._uid +
                 ']:flushCallbacks[' + vm.__next_tick_callbacks.length + ']');
@@ -8837,14 +8851,22 @@ function nextTick$1(vm, cb) {
     //1.nextTick 之前 已 setData 且 setData 还未回调完成
     //2.nextTick 之前存在 render watcher
     if (!vm.__next_tick_pending && !hasRenderWatcher(vm)) {
+<<<<<<< HEAD
         if(Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG){
+=======
+        if(Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG){
+>>>>>>> af1c4a79800e89c3a485c5c9038f58cdf3ebe64e
             var mpInstance = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + vm._uid +
                 ']:nextVueTick');
         }
         return nextTick(cb, vm)
     }else{
+<<<<<<< HEAD
         if(Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG){
+=======
+        if(Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG){
+>>>>>>> af1c4a79800e89c3a485c5c9038f58cdf3ebe64e
             var mpInstance$1 = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance$1.is || mpInstance$1.route) + '][' + vm._uid +
                 ']:nextMPTick');
@@ -8920,7 +8942,11 @@ var patch = function(oldVnode, vnode) {
     });
     var diffData = diff(data, mpData);
     if (Object.keys(diffData).length) {
+<<<<<<< HEAD
       if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
+=======
+      if (Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
+>>>>>>> af1c4a79800e89c3a485c5c9038f58cdf3ebe64e
         console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + this._uid +
           ']差量更新',
           JSON.stringify(diffData));
@@ -11638,7 +11664,11 @@ module.exports = {"_from":"@dcloudio/uni-stat@^2.0.0-alpha-24420191128001","_id"
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
+<<<<<<< HEAD
 Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "pages": { "pages/index/index": { "navigationBarTitleText": "星购", "usingComponents": {} }, "pages/home/index": { "navigationBarTitleText": "首页", "enablePullDownRefresh": true, "usingComponents": { "comment-item": "/components/comment-item" } }, "pages/home/commentDetail": { "navigationBarTitleText": "正文", "enablePullDownRefresh": true, "usingComponents": { "comment-modal": "/components/comment", "reward-list": "/components/reward-modal", "l-barrage": "/components/l-barrage/l-barrage" } }, "pages/home/reward": { "navigationBarTitleText": "打赏", "usingComponents": { "reward-list": "/components/reward-modal" } }, "pages/home/posting": { "navigationBarTitleText": "发帖", "usingComponents": {} }, "pages/home/report": { "navigationBarTitleText": "举报", "usingComponents": {} }, "pages/home/ranking": { "navigationBarTitleText": "选择连接", "usingComponents": { "product-list": "/components/product-list", "rank-list": "/components/ranking-item" } }, "pages/home/editArticle": { "navigationBarTitleText": "写文章", "usingComponents": {} }, "pages/home/topicIndex": { "navigationBarTitleText": "话题主页", "enablePullDownRefresh": true, "usingComponents": { "comment-item": "/components/comment-item" } }, "pages/home/friends": { "navigationBarTitleText": "选择好友", "usingComponents": {} }, "pages/home/subject": { "navigationBarTitleText": "选择话题", "usingComponents": {} }, "pages/home/commentList": { "usingComponents": { "comment-modal": "/components/comment" } }, "pages/myshop/index": { "navigationBarTitleText": "小店集市", "enablePullDownRefresh": true, "usingComponents": {} }, "pages/myshop/shopDetail": { "usingComponents": { "product-list": "/components/shop-product" } }, "pages/myshop/productDetail": { "navigationBarTitleText": "商品详情", "usingComponents": { "uni-count-down": "/components/countDown" } }, "pages/myshop/confirmOrder": { "navigationBarTitleText": "确认订单", "usingComponents": {} }, "pages/myshop/payWay": { "navigationBarTitleText": "选择支付方式", "usingComponents": { "uni-count-down": "/components/countDown" } }, "pages/myshop/payResult": { "navigationBarTitleText": "支付结果", "usingComponents": { "uni-count-down": "/components/countDown" } }, "pages/mycenter/index": { "navigationBarTitleText": "我的", "usingComponents": { "message-modal": "/components/messageModal" } }, "pages/mycenter/mycenter": { "navigationBarTitleText": "我的主页", "usingComponents": { "comment-item": "/components/comment-item", "product-list": "/components/shop-product" } }, "pages/mycenter/baseInfo": { "navigationBarTitleText": "编辑资料", "usingComponents": {} }, "pages/mycenter/addressList": { "navigationBarTitleText": "收货地址", "usingComponents": {} }, "pages/mycenter/bindPhone": { "navigationBarTitleText": "绑定手机号码", "usingComponents": {} }, "pages/mycenter/evaluate": { "navigationBarTitleText": "评价", "usingComponents": {} }, "pages/mycenter/myWallet": { "navigationBarTitleText": "我的钱包", "usingComponents": {} }, "pages/mycenter/cashOut": { "navigationBarTitleText": "提现", "usingComponents": {} }, "pages/mycenter/bankCards": { "navigationBarTitleText": "银行卡", "usingComponents": {} }, "pages/mycenter/checkCard": { "navigationBarTitleText": "验证银行卡", "usingComponents": {} }, "pages/mycenter/cashOutSucces": { "navigationBarTitleText": "星票提现", "usingComponents": {} }, "pages/mycenter/createShop": { "navigationBarTitleText": "开店认证", "usingComponents": {} }, "pages/mycenter/activityLevel": { "navigationBarTitleText": "", "usingComponents": {} }, "pages/mycenter/militaryRank": { "navigationBarTitleText": "军衔", "usingComponents": {} }, "pages/mycenter/mySpirit": { "navigationBarTitleText": "我的精灵", "usingComponents": {} }, "pages/mycenter/myTask": { "navigationBarTitleText": "我的任务", "usingComponents": {} }, "pages/mycenter/mySettings": { "navigationBarTitleText": "设置", "usingComponents": {} }, "pages/mycenter/myNews": { "navigationBarTitleText": "消息", "usingComponents": {} }, "pages/mycenter/friends": { "navigationBarTitleText": "好友", "usingComponents": {} }, "pages/mycenter/followList": { "navigationBarTitleText": "", "usingComponents": {} }, "pages/ranking/product": { "navigationBarTitleText": "产品排行", "enablePullDownRefresh": true, "usingComponents": {} }, "pages/ranking/invitation": { "navigationBarTitleText": "话题排行", "enablePullDownRefresh": true, "usingComponents": {} }, "pages/ranking/post": { "navigationBarTitleText": "帖子排行", "enablePullDownRefresh": true, "usingComponents": { "comment-item": "/components/comment-item" } }, "pages/ranking/friends": { "navigationBarTitleText": "邀请排行", "enablePullDownRefresh": true, "usingComponents": {} }, "pages/order/index": { "navigationBarTitleText": "订单", "enablePullDownRefresh": true, "usingComponents": { "order-item": "/components/order-item" } }, "pages/order/receivedOrder": { "navigationBarTitleText": "待收货", "usingComponents": { "uni-count-down": "/components/countDown" } }, "pages/order/applyAfter": { "navigationBarTitleText": "申请售后", "usingComponents": {} }, "pages/order/afterSale": { "navigationBarTitleText": "售后", "enablePullDownRefresh": true, "usingComponents": { "order-item": "/components/order-item" } }, "pages/order/returnForm": { "navigationBarTitleText": "", "usingComponents": {} }, "pages/order/procesDetail": { "navigationBarTitleText": "处理中", "usingComponents": { "uni-count-down": "/components/countDown" } }, "pages/mycenter/treasury": { "navigationBarTitleText": "宝库", "usingComponents": {} }, "pages/mycenter/goodsList": { "navigationBarTitleText": "商品", "enablePullDownRefresh": true, "usingComponents": { "product-list": "/components/shop-product" } }, "pages/order/orderDetail": { "navigationBarTitleText": "订单详情", "usingComponents": { "uni-count-down": "/components/countDown" } }, "pages/order/orderDetailSpeci": { "navigationBarTitleText": "拼单详情", "usingComponents": { "uni-count-down": "/components/countDown" } }, "pages/mycenter/payPassword": { "navigationBarTitleText": "设置支付密码", "usingComponents": {} }, "pages/order/refundDetail": { "usingComponents": {} }, "pages/myshop/commentList": { "enablePullDownRefresh": true, "usingComponents": {} }, "pages/mycenter/spiritDetail": { "usingComponents": {} }, "pages/mycenter/newsList": { "enablePullDownRefresh": true, "usingComponents": {} } }, "globalStyle": { "navigationBarTextStyle": "white", "navigationBarTitleText": "uni-app", "navigationBarBackgroundColor": "#b40000", "backgroundColor": "#eee", "backgroundTextStyle": "dark" } };exports.default = _default;
+=======
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "pages": { "pages/index/index": { "navigationBarTitleText": "星购" }, "pages/home/index": { "navigationBarTitleText": "首页", "enablePullDownRefresh": true }, "pages/home/commentDetail": { "navigationBarTitleText": "正文", "enablePullDownRefresh": true }, "pages/home/reward": { "navigationBarTitleText": "打赏" }, "pages/home/posting": { "navigationBarTitleText": "发帖" }, "pages/home/report": { "navigationBarTitleText": "举报" }, "pages/home/ranking": { "navigationBarTitleText": "选择连接" }, "pages/home/editArticle": { "navigationBarTitleText": "写文章" }, "pages/home/topicIndex": { "navigationBarTitleText": "话题主页", "enablePullDownRefresh": true }, "pages/home/friends": { "navigationBarTitleText": "选择好友" }, "pages/home/subject": { "navigationBarTitleText": "选择话题" }, "pages/home/commentList": {}, "pages/myshop/index": { "navigationBarTitleText": "小店集市", "enablePullDownRefresh": true }, "pages/myshop/shopDetail": {}, "pages/myshop/productDetail": { "navigationBarTitleText": "商品详情" }, "pages/myshop/confirmOrder": { "navigationBarTitleText": "确认订单" }, "pages/myshop/payWay": { "navigationBarTitleText": "选择支付方式" }, "pages/myshop/payResult": { "navigationBarTitleText": "支付结果" }, "pages/mycenter/index": { "navigationBarTitleText": "我的" }, "pages/mycenter/mycenter": { "navigationBarTitleText": "我的主页" }, "pages/mycenter/baseInfo": { "navigationBarTitleText": "编辑资料" }, "pages/mycenter/addressList": { "navigationBarTitleText": "收货地址" }, "pages/mycenter/bindPhone": { "navigationBarTitleText": "绑定手机号码" }, "pages/mycenter/evaluate": { "navigationBarTitleText": "评价" }, "pages/mycenter/myWallet": { "navigationBarTitleText": "我的钱包" }, "pages/mycenter/cashOut": { "navigationBarTitleText": "提现" }, "pages/mycenter/bankCards": { "navigationBarTitleText": "银行卡" }, "pages/mycenter/checkCard": { "navigationBarTitleText": "验证银行卡" }, "pages/mycenter/cashOutSucces": { "navigationBarTitleText": "星票提现" }, "pages/mycenter/createShop": { "navigationBarTitleText": "开店认证" }, "pages/mycenter/activityLevel": { "navigationBarTitleText": "" }, "pages/mycenter/militaryRank": { "navigationBarTitleText": "军衔" }, "pages/mycenter/mySpirit": { "navigationBarTitleText": "我的精灵" }, "pages/mycenter/myTask": { "navigationBarTitleText": "我的任务" }, "pages/mycenter/mySettings": { "navigationBarTitleText": "设置" }, "pages/mycenter/myNews": { "navigationBarTitleText": "消息" }, "pages/mycenter/friends": { "navigationBarTitleText": "好友" }, "pages/mycenter/followList": { "navigationBarTitleText": "" }, "pages/ranking/product": { "navigationBarTitleText": "产品排行", "enablePullDownRefresh": true }, "pages/ranking/invitation": { "navigationBarTitleText": "话题排行", "enablePullDownRefresh": true }, "pages/ranking/post": { "navigationBarTitleText": "帖子排行", "enablePullDownRefresh": true }, "pages/ranking/friends": { "navigationBarTitleText": "邀请排行", "enablePullDownRefresh": true }, "pages/order/index": { "navigationBarTitleText": "订单", "enablePullDownRefresh": true }, "pages/order/receivedOrder": { "navigationBarTitleText": "待收货" }, "pages/order/applyAfter": { "navigationBarTitleText": "申请售后" }, "pages/order/afterSale": { "navigationBarTitleText": "售后", "enablePullDownRefresh": true }, "pages/order/returnForm": { "navigationBarTitleText": "" }, "pages/order/procesDetail": { "navigationBarTitleText": "处理中" }, "pages/mycenter/treasury": { "navigationBarTitleText": "宝库" }, "pages/mycenter/goodsList": { "navigationBarTitleText": "商品", "enablePullDownRefresh": true }, "pages/order/orderDetail": { "navigationBarTitleText": "订单详情" }, "pages/order/orderDetailSpeci": { "navigationBarTitleText": "拼单详情" }, "pages/mycenter/payPassword": { "navigationBarTitleText": "设置支付密码" }, "pages/order/refundDetail": {}, "pages/myshop/commentList": { "enablePullDownRefresh": true }, "pages/mycenter/spiritDetail": {}, "pages/mycenter/newsList": { "enablePullDownRefresh": true } }, "globalStyle": { "navigationBarTextStyle": "white", "navigationBarTitleText": "uni-app", "navigationBarBackgroundColor": "#b40000", "backgroundColor": "#eee", "backgroundTextStyle": "dark" } };exports.default = _default;
+>>>>>>> af1c4a79800e89c3a485c5c9038f58cdf3ebe64e
 
 /***/ }),
 

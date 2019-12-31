@@ -108,9 +108,12 @@ page {
 .myscroll .comItem .pic {
   width: 60rpx;
 }
+<<<<<<< HEAD
 .myscroll .comItem .pic image {
   vertical-align: top;
 }
+=======
+>>>>>>> af1c4a79800e89c3a485c5c9038f58cdf3ebe64e
 .myscroll .comItem .right-pic {
   width: 96rpx;
   margin-right: 30rpx;

@@ -331,8 +331,11 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> af1c4a79800e89c3a485c5c9038f58cdf3ebe64e
 {
   components: {
     uniCountDown: uniCountDown },

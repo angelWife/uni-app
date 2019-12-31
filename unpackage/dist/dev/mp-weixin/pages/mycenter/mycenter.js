@@ -641,7 +641,11 @@ __webpack_require__.r(__webpack_exports__);
     followList: function followList(type) {
       if (type) {
         uni.navigateTo({
+<<<<<<< HEAD
           url: 'followList?type=' + type + '&userCode=' + this.userCode });
+=======
+          url: 'followList?type=' + type });
+>>>>>>> af1c4a79800e89c3a485c5c9038f58cdf3ebe64e
 
       }
     } } };exports.default = _default;

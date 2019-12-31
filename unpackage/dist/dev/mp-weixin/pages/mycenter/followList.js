@@ -167,8 +167,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+<<<<<<< HEAD
 //
 //
+=======
+>>>>>>> af1c4a79800e89c3a485c5c9038f58cdf3ebe64e
 var _default =
 {
   data: function data() {
@@ -179,13 +182,18 @@ var _default =
       pageIndex: 1,
       nodata: false,
       nomore: false,
+<<<<<<< HEAD
       type: 1,
       userCode: '',
       isOwner: true };
+=======
+      type: 1 };
+>>>>>>> af1c4a79800e89c3a485c5c9038f58cdf3ebe64e
 
   },
   onLoad: function onLoad(options) {
     this.type = options.type;
+<<<<<<< HEAD
     var userCode = options.userCode;
     this.userCode = userCode;
     var myCode = uni.getStorageSync('userCode');
@@ -195,6 +203,8 @@ var _default =
       this.isOwner = false;
     }
 
+=======
+>>>>>>> af1c4a79800e89c3a485c5c9038f58cdf3ebe64e
     if (this.type == '1') {
       uni.setNavigationBarTitle({
         title: '我的关注' });
@@ -223,8 +233,12 @@ var _default =
       var params = {
         pageSize: this.pageSize,
         pageIndex: this.pageIndex,
+<<<<<<< HEAD
         fromType: self.type == '1' ? true : false,
         userCode: this.userCode };
+=======
+        fromType: self.type == '1' ? true : false };
+>>>>>>> af1c4a79800e89c3a485c5c9038f58cdf3ebe64e
 
       self.$acFrame.HttpService.followListOwner(params).then(function (res) {
         if (res.success) {

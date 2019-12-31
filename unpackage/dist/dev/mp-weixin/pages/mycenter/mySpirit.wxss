@@ -6,6 +6,10 @@
   margin-left: 20rpx;
   border-radius: 0.3em;
   position: relative;
+<<<<<<< HEAD
+=======
+  overflow: hidden;
+>>>>>>> af1c4a79800e89c3a485c5c9038f58cdf3ebe64e
 }
 .desc .pic text {
   position: absolute;
@@ -22,6 +26,7 @@
   font-size: 20rpx;
   height: 40px;
 }
+<<<<<<< HEAD
 .desc .pic .mark {
   position: absolute;
   width: 100rpx;
@@ -29,6 +34,8 @@
   right: -6rpx;
   z-index: 5;
 }
+=======
+>>>>>>> af1c4a79800e89c3a485c5c9038f58cdf3ebe64e
 .desc .detail {
   line-height: 50rpx;
 }
