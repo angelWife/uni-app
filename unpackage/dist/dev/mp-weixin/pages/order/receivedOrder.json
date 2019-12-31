@@ -1,6 +1,0 @@
-{
-  "navigationBarTitleText": "待收货",
-  "usingComponents": {
-    "uni-count-down": "/components/countDown"
-  }
-}

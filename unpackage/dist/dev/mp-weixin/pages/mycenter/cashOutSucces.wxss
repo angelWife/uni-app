@@ -1,9 +1,0 @@
-.comListBox text {
-  display: inline-block;
-  margin-left: 20rpx;
-}
-.btnBox {
-  margin-top: 30px;
-  padding: 0 24rpx;
-}
-

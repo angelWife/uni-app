@@ -1,7 +1,0 @@
-{
-  "navigationBarTitleText": "话题主页",
-  "enablePullDownRefresh": true,
-  "usingComponents": {
-    "comment-item": "/components/comment-item"
-  }
-}

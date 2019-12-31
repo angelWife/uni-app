@@ -1,1 +1,0 @@
-<view class="l-barrage"><block wx:for="{{$root.l0}}" wx:for-item="item" wx:for-index="index" wx:key="index"><block><block wx:if="{{item.$orig.display}}"><text class="aon" style="{{'top:'+(item.$orig.top+'%')+';'+('color:'+(item.$orig.color)+';')+('animation:'+('mymove '+item.m0+'s linear forwards')+';')}}">{{''+item.$orig.text+''}}</text></block></block></block></view>

@@ -1,6 +1,0 @@
-{
-  "navigationBarTitleText": "打赏",
-  "usingComponents": {
-    "reward-list": "/components/reward-modal"
-  }
-}
